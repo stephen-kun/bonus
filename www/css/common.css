@@ -1,0 +1,68 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+	margin:0;
+	padding:0;
+	color:#2a2a2a;
+	font:1.25em STHeiti,"Microsoft YaHei",Arial,SimSun;
+	line-height:1.8;
+	background:#f7f7f4;
+}
+ul, li, input, select, textarea {
+	margin:0;
+	padding:0;
+	font:18px STHeiti,"Microsoft YaHei",Arial,SimSun;
+}
+form {
+    border: medium none;
+    font-style: normal;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+table, tr, th, td {
+	padding:0;
+}
+.box-food-gray {
+	color:#6d6d6d;
+	font-size:0.675em;
+}
+textarea {
+	vertical-align:middle;
+}
+ul, li {
+	list-style:none;}
+h1,h2,h3,h4,h5,h6,iframe {
+	margin:0;
+	padding:0;
+}
+img {
+	border:0 none;
+}
+
+p{padding:0; margin:0;}
+a{ text-decoration:none; color:#242422;}
+a:hover{ text-decoration:underline; color:#d4372c;}
+.clear{ clear:both;}
+.lfloat {
+	float:left;
+}
+.rfloat {
+	float:right;
+}
+td,tr,table {
+	border-collapse:collapse;
+	border:none;
+}
+.box_auto {
+	width:100%;
+}
+.tj_main {
+	width:1012px;
+	margin:0px auto;
+}
+
+
+
+
+
