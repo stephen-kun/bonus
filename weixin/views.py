@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.conf.settings import STATIC_URL
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import get_template 
