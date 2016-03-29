@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
+from django.template.loader import get_template 
+from django.template import RequestContext
 from wechat_sdk import WechatConf
 from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
 import re
-from django.shortcuts import render
+ 
 
 
 conf = WechatConf(
@@ -23,7 +24,10 @@ wechat = WechatBasic(conf = conf)
 
 #抢红包
 def rcv_bonus(request):
-    return render(request, 'qianghongbao.html')
+    temp = get_template('qianghongbao.html')
+    html = temp.render(RequestContext(request,{'STATIC_URL': STATIC_URL}))
+    return HttpResponse(html)
+    
 
 @csrf_exempt
 def token(request):
