@@ -24,7 +24,7 @@ wechat = WechatBasic(conf = conf)
 # Create your views here.
 
 #抢红包
-def rcv_bonus(request):
+def get_bonus(request):
     temp = get_template('qianghongbao.html')
     html = temp.render(RequestContext(request,{'STATIC_URL': settings.STATIC_URL}))
     return HttpResponse(html)
