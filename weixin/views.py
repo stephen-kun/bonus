@@ -23,13 +23,25 @@ wechat = WechatBasic(conf = conf)
 
 # Create your views here.
 
+#test asp
+@csrf_exempt
+def asp_test(request):
+	name = request.POST.get('name')
+	city = request.POST.get('city')
+	print('I am %s and at %s\n' %(name, city))
+	return HttpResponse('')
+	
+	
+
 #抢红包
+@csrf_exempt
 def rcv_bonus(request):
     temp = get_template('qianghongbao.html')
     html = temp.render(RequestContext(request,{'STATIC_URL': settings.STATIC_URL}))
     return HttpResponse(html)
 
 #抢到的红包
+@csrf_exempt
 def geted_bonus(request):
     temp = get_template('qiangdaohongbao.html')
     html = temp.render(RequestContext(request, {'STATIC_URL': settings.STATIC_URL}))

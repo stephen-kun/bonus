@@ -9,24 +9,22 @@
 <link href="{{STATIC_URL}}css/common.css" rel="stylesheet" type="text/css">
 <meta name="keywords" content="东启湘厨">
 <meta name="description" content="东启湘厨">
-<script type="text/javascript">
-function get_bonus()
-{
-alert("抢红包！")
-}
+<script src="/jquery/jquery-1.11.1.min.js">
+</script>
+<script>
+$(document).ready(function(){
+	$("button").click(function(){
+		$.post("http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/asp_test", 
+		{name:"stephen",city:"shaoyang"},
+		function(){
+			alert("红包")
+		});
+	});
+});
 </script>
 </head>
 
 <body class="red_q">
-<!---
-<hgroup>
-	<header class="hongbao">
-    	<i>&nbsp;</i>
-        <h4 class="fae920">东启湘厨</h4>
-    </header>
-</hgroup>
---->
-
 
 <article>
 
@@ -35,7 +33,7 @@ alert("抢红包！")
   	<div class="qiang">
     	<h4>红包来了！</h4>
         <div class="button-qhb">
-       	 <input type="button" class="huang" onclick="get_bonus()" value="抢红包">
+       	 <input type="button" class="huang" value="抢红包">
         </div>
         <div class="qhbyes"><a href="http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/geted_bonus" target="_blank">抢到的红包</a></div>
     </div>
