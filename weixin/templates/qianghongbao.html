@@ -12,15 +12,14 @@
 <script src="{{STATIC_URL}}js/jquery-1.11.1.min.js">
 </script>
 <script>
-$(document).ready(function(){
-	$("button").click(function(){
-		$.post("http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/asp_test", 
-		{name:"stephen",city:"shaoyang"},
-		function(){
-			alert("红包")
-		});
+function get_bonus()
+{
+	$.post("http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/asp_test", 
+	{name:"stephen",city:"shaoyang"},
+	function(){
+		alert("红包")
 	});
-});
+}
 </script>
 </head>
 
@@ -33,7 +32,7 @@ $(document).ready(function(){
   	<div class="qiang">
     	<h4>红包来了！</h4>
         <div class="button-qhb">
-       	 <input type="button" class="huang" value="抢红包">
+       	 <input type="button" class="huang" onclick="get_bonus()" value="抢红包">
         </div>
         <div class="qhbyes"><a href="http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/geted_bonus" target="_blank">抢到的红包</a></div>
     </div>
