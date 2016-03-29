@@ -9,6 +9,12 @@
 <link href="{{STATIC_URL}}css/common.css" rel="stylesheet" type="text/css">
 <meta name="keywords" content="东启湘厨">
 <meta name="description" content="东启湘厨">
+<script type="text/javascript">
+function get_bonus()
+{
+alert("抢红包！")
+}
+</script>
 </head>
 
 <body>
@@ -27,9 +33,9 @@
   	<div class="qiang">
     	<h4>红包来了！</h4>
         <div class="button-qhb">
-       	 <input type="button" class="huang" value="抢红包">
+       	 <input type="button" class="huang" onclick="get_bonus()" value="抢红包">
         </div>
-        <div class="qhbyes"><a href="#" target="_blank">抢到的红包</a></div>
+        <div class="qhbyes"><a href="{{have_bonus_url}}" target="_blank">抢到的红包</a></div>
     </div>
     
   </section>
