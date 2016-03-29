@@ -2,7 +2,6 @@
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import get_template 
-from django.template import RequestContext, Context
 from django.conf import settings
 from wechat_sdk import WechatConf
 from wechat_sdk import WechatBasic
@@ -37,15 +36,14 @@ def asp_test(request):
 @csrf_exempt
 def rcv_bonus(request):
     temp = get_template('qianghongbao.html')
-    #html = temp.render(RequestContext(request,{'STATIC_URL': settings.STATIC_URL}))
-    html = temp.render(Context({'STATIC_URL': settings.STATIC_URL}))
+    html = temp.render({'STATIC_URL': settings.STATIC_URL},request)
     return HttpResponse(html)
 
 #抢到的红包
 @csrf_exempt
 def geted_bonus(request):
     temp = get_template('qiangdaohongbao.html')
-    html = temp.render(RequestContext(request, {'STATIC_URL': settings.STATIC_URL}))
+    html = temp.render({'STATIC_URL': settings.STATIC_URL},request)
     return HttpResponse(html)
     
 
