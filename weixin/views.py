@@ -27,7 +27,13 @@ wechat = WechatBasic(conf = conf)
 def rcv_bonus(request):
     temp = get_template('qianghongbao.html')
     html = temp.render(RequestContext(request,{'STATIC_URL': settings.STATIC_URL}))
-    return HttpResponse(html) 
+    return HttpResponse(html)
+
+#抢到的红包
+def geted_bonus(request):
+    temp = get_template('qiangdaohongbao.html')
+    html = temp.render(RequestContext(request, {'STATIC_URL': settings.STATIC_URL}))
+    return HttpResponse(html)
     
 
 @csrf_exempt
