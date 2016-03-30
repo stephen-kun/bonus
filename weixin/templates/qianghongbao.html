@@ -9,23 +9,11 @@
 <link href="{{STATIC_URL}}css/common.css" rel="stylesheet" type="text/css">
 <meta name="keywords" content="东启湘厨">
 <meta name="description" content="东启湘厨">
-<!---
-<script src="{{STATIC_URL}}js/jquery-1.11.1.min.js">
-</script>
-<script>
-function get_bonus()
-{
-	$.post("http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/asp_test", 
-	{name:"stephen",city:"shaoyang"},
-	function(){
-		alert("红包")
-	});
-}
-</script>
---->
 </head>
 
 <body class="red_q">
+
+
 
 <article>
 
@@ -34,7 +22,27 @@ function get_bonus()
   	<div class="qiang">
     	<h4>红包来了！</h4>
         <div class="button-qhb">
-       	 <input type="button" class="huang" value="抢红包">
+        	<!--红包效果开始-->
+       	 <!--<input type="button" class="huang" value="抢红包">-->
+         	<section class="cd-section">
+                <a class="cd-bouncy-nav-trigger" href="#0" >抢红包</a>
+            </section> 
+        
+            <div class="cd-bouncy-nav-modal">
+                <nav>
+                    <ul class="cd-bouncy-nav">
+                        <li>
+                        	
+                        	<h4>恭喜您，抢到串串！！</h4>
+                            <h5><a href="http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/geted_bonus">查看</a></h5>
+                        </li>
+                    </ul>
+                </nav>
+                <a href="#0" class="cd-close">Close modal</a>
+            </div>
+            <script src="{{STATIC_URL}}js/jquery-2.1.1.js"></script>
+			<script src="{{STATIC_URL}}js/main.js"></script> 
+            <!--红包效果结束-->
         </div>
         <div class="qhbyes"><a href="http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/geted_bonus" target="_blank">抢到的红包</a></div>
     </div>
@@ -45,10 +53,29 @@ function get_bonus()
   
   </section>
   
-  
-<footer id="footer" role="conteninfo">
-    	
-</footer>
+<script>
+function loadXMLDoc()
+{
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+    }
+  }
+xmlhttp.open("GET","http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/asp_test",true);
+xmlhttp.send();
+}
+</script>
   
 </article>
 
