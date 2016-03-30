@@ -7,7 +7,24 @@
 --><title>东启湘厨</title>
 <link href="{{STATIC_URL}}css/main.css" rel="stylesheet" type="text/css">
 <link href="{{STATIC_URL}}css/common.css" rel="stylesheet" type="text/css">
-<script src="{{STATIC_URL}}js/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script>
+function get_bonus()
+{
+$(document).ready(function(){
+  $("button").click(function(){
+    $.post("http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/asp_test",
+    {
+      name:"Donald Duck",
+      city:"Duckburg"
+    },
+    function(data){
+      document.getElementById("bonus").innerHTML=data;
+    });
+  });
+});
+}
+</script>
 <meta name="keywords" content="东启湘厨">
 <meta name="description" content="东启湘厨">
 </head>
@@ -53,24 +70,6 @@
   <section>
   
   </section>
-  
-<script>
-function get_bonus()
-{
-$(document).ready(function(){
-  $("button").click(function(){
-    $.post("http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/asp_test",
-    {
-      name:"Donald Duck",
-      city:"Duckburg"
-    },
-    function(data){
-      document.getElementById("bonus").innerHTML=data;
-    });
-  });
-});
-}
-</script>
   
 </article>
 
