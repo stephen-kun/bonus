@@ -25,10 +25,13 @@ wechat = WechatBasic(conf = conf)
 #test asp
 @csrf_exempt
 def asp_test(request):
-	name = request.POST.get('name')
-	city = request.POST.get('city')
-	print('I am %s and at %s\n' %(name, city))
-	return HttpResponse('')
+	#name = request.POST.get('name')
+	#city = request.POST.get('city')
+	print('recive asp_test request\n')
+	response = HttpResponse()
+        response['Access-Control-Allow-Origin'] = 'http://www.w3school.com.cn'
+        response.write('request ok')
+        return response
 	
 	
 
