@@ -34,8 +34,11 @@ def asp_test(request):
         return response
 
 #发红包
+@csrf_exempt
 def snd_bonus(request):
-	pass
+	temp = get_template('fahongbao.html')
+	html = temp.render({'STATIC_URL': settings.STATIC_URL},request)
+	return HttpResponse(html)
 	
 
 #抢红包

@@ -5,10 +5,15 @@
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=2.0">
 <!--<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 --><title>选择红包-东启湘厨</title>
-<link href="css/main.css" rel="stylesheet" type="text/css">
-<link href="css/common.css" rel="stylesheet" type="text/css">
+<link href="{{STATIC_URL}}css/main.css" rel="stylesheet" type="text/css">
+<link href="{{STATIC_URL}}css/common.css" rel="stylesheet" type="text/css">
 <meta name="keywords" content="东启湘厨">
 <meta name="description" content="东启湘厨">
+<script type="text/javascript">
+function on_click(){
+ document.getElementById("bonus").innerHTML=document.URL;
+}
+</script>
 </head>
 
 <body class="red_cen">
@@ -16,7 +21,7 @@
 	<header class="hongbao">
     	<!--<i class="icon-q"><a href="#" target="_parent"></a></i>-->
         <h4 class="tit-q"><span class="rfloat">我的红包</span>选择红包类型</h4>
-        <link href="css/component.css" rel="stylesheet" type="text/css" />
+        <link href="{{STATIC_URL}}css/component.css" rel="stylesheet" type="text/css" />
         
         <div id="dl-menu" class="dl-menuwrapper">
             <button id="dl-menu-button">我的红包</button>
@@ -27,9 +32,9 @@
             </ul>
         </div>
     </header>
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/modernizr.custom.js"></script>
-<script type="text/javascript" src="js/jquery.dlmenu.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/modernizr.custom.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/jquery.dlmenu.js"></script>
 <script type="text/javascript">
 $(function(){
 	$( '#dl-menu' ).dlmenu();
@@ -44,7 +49,7 @@ $(function(){
   <section>
   	<div class="q-box">
     	<div class="f-box">
-        	<input type="button" class="jin" value="普通红包">
+        	<input type="button" class="jin" value="普通红包" onclick="on_click()">
             <input type="button" class="bai" value="手气红包">
         </div>
         <div class="qhbyestwo">&nbsp;</div>
@@ -52,9 +57,7 @@ $(function(){
   </section>
   
   
-<footer id="footer" role="conteninfo">
-    	
-</footer>
+<p id="bonus"></p>
   
 </article>
 

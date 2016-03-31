@@ -4,10 +4,14 @@ from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
 
+TOKEN = 'token'
+APPID = 'wxc32d7686c0827f2a'
+APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d',
+
 conf = WechatConf(
-    token = 'token',
-    appid = 'wxc32d7686c0827f2a',
-    appsecret = '1981cab986e85ea0aa8e6c13fa2ea59d',
+    token = TOKEN,
+    appid = APPID,
+    appsecret = APPSECRET,
     encrypt_mode = 'normal'
 )
 
@@ -22,6 +26,9 @@ qrcode = {
     }
 }
 
+REDIRECT_URL = 'http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/snd_bonus'
+OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_base&state=1#wechat_redirect"
+
 menu = {
     'button':[
         {
@@ -30,7 +37,7 @@ menu = {
                 {
                     'type': 'view',
                     'name': '发红包',
-                    'url': 'http://www.soso.com/'
+                    'url': OAUTH_URL
                 },
                 {
                     'type': 'view',
@@ -76,5 +83,6 @@ def create_menu(menu):
     print('create menu suc!\n')
 
 if __name__ == '__main__':
-    create_qrcode(qrcode, 'table2.jpg')
+    #create_qrcode(qrcode, 'table2.jpg')
+    create_menu(menu)
     
