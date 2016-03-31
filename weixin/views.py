@@ -40,9 +40,9 @@ def asp_test(request):
 
 #发红包	
 def snd_bonus(request):
-	print("snd_bonus:%s\n" %(request.header))
+	print("snd_bonus:%s\n" %(request))
 	temp = get_template('fahongbao.html')
-	html = temp.render({'STATIC_URL': settings.STATIC_URL, 'openid':'koovox'},request)
+	html = temp.render({'STATIC_URL': settings.STATIC_URL},request)
 	return HttpResponse(html)	
 
 #抢红包
