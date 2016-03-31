@@ -38,23 +38,12 @@ def asp_test(request):
         response.write('request ok')
         return response
 
-#发红包
-@csrf_exempt
-def snd_bonus_redirect(request):
-	temp = get_template('fahongbao.html')
-	html = temp.render({'STATIC_URL': settings.STATIC_URL},request)
-	return HttpResponse(html)
-	
+#发红包	
 def snd_bonus(request):
+	print("snd_bonus:%s\n" %(request.header))
 	temp = get_template('fahongbao.html')
-	html = temp.render({'STATIC_URL': settings.STATIC_URL},request)
+	html = temp.render({'STATIC_URL': settings.STATIC_URL, 'openid':'koovox'},request)
 	return HttpResponse(html)	
-
-'''
-def snd_bonus(request):
-	return HttpResponseRedirect(OAUTH_URL)
-'''
-	
 
 #抢红包
 @csrf_exempt
