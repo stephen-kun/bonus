@@ -6,7 +6,7 @@ from wechat_sdk import messages
 
 TOKEN = 'token'
 APPID = 'wxc32d7686c0827f2a'
-APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d',
+APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
 
 conf = WechatConf(
     token = TOKEN,

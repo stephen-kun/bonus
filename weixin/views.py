@@ -9,16 +9,21 @@ from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
 import re
  
-
+TOKEN = 'token'
+APPID = 'wxc32d7686c0827f2a'
+APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
 
 conf = WechatConf(
-    token = 'token',
-    appid = 'wxc32d7686c0827f2a',
-    appsecret = '1981cab986e85ea0aa8e6c13fa2ea59d',
+    token = TOKEN,
+    appid = APPID,
+    appsecret = APPSECRET,
     encrypt_mode = 'normal'
 )
 
 wechat = WechatBasic(conf = conf)
+
+REDIRECT_URL = 'http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/snd_bonus'
+OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_base&state=1#wechat_redirect"
 
 # Create your views here.
 
@@ -35,10 +40,13 @@ def asp_test(request):
 
 #发红包
 @csrf_exempt
-def snd_bonus(request):
+def snd_bonus_redirect(request):
 	temp = get_template('fahongbao.html')
 	html = temp.render({'STATIC_URL': settings.STATIC_URL},request)
 	return HttpResponse(html)
+
+def snd_bonus(request):
+	return HttpResponseRedirect(OAUTH_URL)
 	
 
 #抢红包
