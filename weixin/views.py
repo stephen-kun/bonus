@@ -43,8 +43,8 @@ def snd_bonus(request):
 	return HttpResponseRedirect(OAUTH_URL)	
 	
 @csrf_exempt
-def redirect_snd_bonus(request): 
-	print('---redirect_snd_bonus---\n')
+def redirect_bonus_snd(request): 
+	print('---redirect_bonus_snd---\n')
 	code = request.GET.get(u'code')
 	url = ACCESS_TOKEN_URL.replace('CODE', code)
 	response = urllib2.urlopen(url)
