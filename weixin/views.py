@@ -39,10 +39,12 @@ def asp_test(request):
 #发红包	
 @csrf_exempt
 def snd_bonus(request):
+	print('---**snd_bonus**---\n')
 	return HttpResponseRedirect(OAUTH_URL)	
 	
 @csrf_exempt
 def snd_bonus_redirect(request): 
+	print('---snd_bonus_redirect---\n')
 	code = request.GET.get(u'code')
 	url = ACCESS_TOKEN_URL.replace('CODE', code)
 	response = urllib2.urlopen(url)
