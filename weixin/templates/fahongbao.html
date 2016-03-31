@@ -12,7 +12,7 @@
 <meta name="openid" content="{{openid}}">
 <script type="text/javascript">
 function on_click(){
- document.getElementById("bonus").innerHTML="koovox";
+ document.getElementById("bonus").innerHTML=document.getElementById("openid").textContent;
 }
 </script>
 </head>
@@ -58,7 +58,8 @@ $(function(){
   </section>
   
   
-<p id="bonus">{{openid}}</p>
+<p id="openid" hidden>{{openid}}</p>
+<p id="bonus"></p>
   
 </article>
 
