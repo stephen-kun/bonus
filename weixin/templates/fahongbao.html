@@ -9,9 +9,10 @@
 <link href="{{STATIC_URL}}css/common.css" rel="stylesheet" type="text/css">
 <meta name="keywords" content="东启湘厨">
 <meta name="description" content="东启湘厨">
+<meta name="openid" content="{{openid}}">
 <script type="text/javascript">
 function on_click(){
- document.getElementById("bonus").innerHTML={{openid}};
+ document.getElementById("bonus").innerHTML="koovox";
 }
 </script>
 </head>
@@ -57,7 +58,7 @@ $(function(){
   </section>
   
   
-<p id="bonus"></p>
+<p id="bonus">{{openid}}</p>
   
 </article>
 
