@@ -8,7 +8,9 @@ from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
 import re
- 
+import urllib2
+import json
+
 TOKEN = 'token'
 APPID = 'wxc32d7686c0827f2a'
 APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
