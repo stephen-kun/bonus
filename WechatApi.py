@@ -26,10 +26,6 @@ qrcode = {
     }
 }
 
-REDIRECT_URL = 'http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/snd_bonus'
-OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_base&state=1#wechat_redirect"
-#OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect"
-
 
 menu = {
     'button':[
@@ -39,7 +35,7 @@ menu = {
                 {
                     'type': 'view',
                     'name': '发红包',
-                    'url': OAUTH_URL
+                    'url': 'http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/snd_bonus'
                 },
                 {
                     'type': 'view',

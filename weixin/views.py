@@ -12,6 +12,9 @@ import re
 TOKEN = 'token'
 APPID = 'wxc32d7686c0827f2a'
 APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
+REDIRECT_URL = 'http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/snd_bonus_redirect'
+ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=CODE&grant_type=authorization_code'%(APPID,APPSECRET)
+OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_base&state=1#wechat_redirect"
 
 conf = WechatConf(
     token = TOKEN,
@@ -36,9 +39,20 @@ def asp_test(request):
 #发红包	
 @csrf_exempt
 def snd_bonus(request):
+	return HttpResponseRedirect(OAUTH_URL)	
+	
+@csrf_exempt
+def snd_bonus_redirect(request): 
+	code = request.GET.get(u'code')
+	url = ACCESS_TOKEN_URL.replace('CODE', code)
+	response = urllib2.urlopen(url)
+	content = response.read()
+	access_token = json.loads(content)	
+	openid = access_token['openid']
+	print('======openid:%s\n' %(openid))
 	temp = get_template('fahongbao.html')
-	html = temp.render({'STATIC_URL': settings.STATIC_URL},request)
-	return HttpResponse(html)	
+	html = temp.render({'STATIC_URL': settings.STATIC_URL, 'openid':openid},request)
+	return HttpResponse(html)		
 
 #抢红包
 @csrf_exempt
