@@ -44,9 +44,16 @@ def snd_bonus_redirect(request):
 	temp = get_template('fahongbao.html')
 	html = temp.render({'STATIC_URL': settings.STATIC_URL},request)
 	return HttpResponse(html)
+	
+def snd_bonus(request):
+	temp = get_template('fahongbao.html')
+	html = temp.render({'STATIC_URL': settings.STATIC_URL},request)
+	return HttpResponse(html)	
 
+'''
 def snd_bonus(request):
 	return HttpResponseRedirect(OAUTH_URL)
+'''
 	
 
 #抢红包
