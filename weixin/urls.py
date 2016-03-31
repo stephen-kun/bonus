@@ -8,5 +8,5 @@ urlpatterns = [
     url(r'^geted_bonus',views.geted_bonus, name='geted_bonus'),
     url(r'^asp_test',views.asp_test, name='asp_test'),
     url(r'^snd_bonus',views.snd_bonus, name='snd_bonus'),
-    url(r'^snd_bonus_redirect',views.snd_bonus_redirect, name='snd_bonus_redirect'),
+    url(r'^redirect_snd_bonus',views.redirect_snd_bonus, name='redirect_snd_bonus'),
 ]
