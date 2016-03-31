@@ -32,7 +32,10 @@ def asp_test(request):
         response['Access-Control-Allow-Origin'] = 'http://www.w3school.com.cn'
         response.write('request ok')
         return response
-	
+
+#发红包
+def snd_bonus(request):
+	pass
 	
 
 #抢红包
