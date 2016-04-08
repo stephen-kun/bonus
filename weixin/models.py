@@ -4,13 +4,47 @@ from __future__ import unicode_literals
 from django.db import models
 from django.conf import settings
 
-class Admin_bonus(models.Model):
-    create_time = models.DateTimeField()
-    valid_time = models.DateTimeField()
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=settings.AUTH_USER_MODEL[0])
+class SysBonus(models.Model):
+	id_bonus = models.IntegerField(primary_key=True)
+	create_time = models.DateTimeField()
+	valid_time = models.DateTimeField()
+	message = models.CharField(max_length=45)
+	title = models.CharField(max_length=20)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, default=settings.AUTH_USER_MODEL[0])
 
-    def __unicode__(self):
-            return "admin bonus"
+	def __unicode__(self):
+		return "System Bonus"
+			
+class DiningTable(models.Model):
+	index_table = models.IntegerField(primary_key=True)
+	status = models.BooleanField()
+	seats = models.IntegerField()
+	is_private = models.BooleanField()
+
+	def __unicode__(self):
+		return "table %d"%(self.indexTable)
+		
+class Consumer(models.Model):
+	open_id = models.CharField(max_length=30, primary_key=True)
+	name = models.CharField(max_length=30)
+	sex = models.BooleanField(default=True)
+	phone_num = models.CharField(max_length=20)
+	address = models.CharField(max_length=30)
+	is_dining = models.BooleanField(default=False)
+	snd_bonus_num = models.IntegerField(default=0)
+	rcv_bonus_num = models.IntegerField(default=0)
+	snd_bonus_value = models.IntegerField(default=0)
+	own_bonus_value = models.IntegerField(default=0)
+	own_ticket_value = models.IntegerField(default=0)
+	create_time = models.DateTimeField()
+	on_table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)
+	
+	def __unicode__(self):
+		return self.name
+		
+class Dining(models.Model):
+	pass
+	
 
 class Good(models.Model):
     name = models.CharField(max_length=20)
@@ -26,26 +60,7 @@ class Bonus_content(models.Model):
     quantity = models.IntegerField(default=0)
     left_quantity = models.IntegerField(default=0)
 
-class Consumer(models.Model):
-    openId = models.CharField(max_length=30, primary_key=True)
-    name = models.CharField(max_length=30)
-    sex = models.BooleanField(default=True)
-    phoneNum = models.CharField(max_length=20)
-    idVIP = models.CharField(max_length=20)
-    isdining = models.BooleanField(default=False)
 
-    def __unicode__(self):
-            return self.name
-
-class DiningTable(models.Model):
-    indexTable = models.IntegerField(primary_key=True)
-    status = models.BooleanField()
-    seats = models.IntegerField()
-    isPrivate = models.BooleanField()
-    isSync = models.BooleanField()
-
-    def __unicode__(self):
-            return "table %d"%(self.indexTable)
 
 class ConsumeInfo(models.Model):
     totalPrice = models.IntegerField()
