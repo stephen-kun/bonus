@@ -8,6 +8,10 @@ body {
 	line-height:1.8;
 	background:#f7f7f4;
 }
+article,section {
+	padding:0;
+	margin:0;
+}
 ul, li, input, select, textarea {
 	margin:0;
 	padding:0;
@@ -25,7 +29,7 @@ table, tr, th, td {
 }
 .box-food-gray {
 	color:#6d6d6d;
-	font-size:0.675em;
+	font-size:0.875em;
 }
 textarea {
 	vertical-align:middle;
@@ -51,8 +55,8 @@ a:hover{ text-decoration:underline; color:#d4372c;}
 	float:right;
 }
 td,tr,table {
-	border-collapse:collapse;
-	border:none;
+	/*border-collapse:collapse;*/
+	/*border:none;*/
 }
 .box_auto {
 	width:100%;
@@ -64,7 +68,7 @@ td,tr,table {
 /*苹果手机按钮无色*/
 input[type=button], input[type=submit], input[type=file], button { cursor: pointer; -webkit-appearance: none; } 
 .red_q {
-	background:#f8292f;
+	background:#939598;
 }
 .red_cen {
 background-color:#d74f43;
@@ -181,3 +185,100 @@ input[type="number"]{-moz-appearance:textfield;}
 	top: 4px;
 }
 /*=========单选按钮====结束======*/
+
+/*=========留言隐藏====开始======*/
+.am-share {
+	font-size: 14px;
+	border-radius: 0;
+	bottom: 0;
+	left: 0;
+	position: fixed;
+	text-align: center;
+	-webkit-transform: translateY(100%);
+	-ms-transform: translateY(100%);
+	transform: translateY(100%);
+	-webkit-transition: -webkit-transform 300ms;
+	transition: transform 300ms ;
+	width: 100%;
+	z-index: 1110;
+	border-top:#e2e2de 1px solid;
+}
+.am-modal-active {
+	transform: translateY(0px);
+	-webkit-transform: translateY(0);
+	-ms-transform: translateY(0);
+	transform: translateY(0);
+}
+.am-modal-out {
+	z-index: 1109;
+	-webkit-transform: translateY(100%);
+	-ms-transform: translateY(100%);
+	transform: translateY(100%);
+}
+
+.am-share-title {
+	background-color: #ffffff;
+	border-bottom: 0px solid #fff;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+	color: #555; 
+	font-weight: 400; 
+	margin: 0 0px; 
+	padding: .625em 0 0 .625em;
+	text-align: center;
+}
+.am-share-title h3 {
+	padding:0;
+	margin:0;
+	text-align: center;
+}
+.am-share-title::after {
+	border-bottom: 1px solid #ffffff;
+	content: "";
+	display: block;
+	height: 0;
+	margin-top: 5px;
+	width: 100%;
+}
+.sharebg {
+	background-color: rgba(0, 0, 0, 0.0);
+	bottom: 0;
+	height: 100%;
+	left: 0;
+	opacity: 0;
+	position: fixed;
+	right: 0;
+	top: 0;
+	width: 100%;
+	z-index: 1100;
+	display:none; }
+.sharebg-active {
+	opacity: 1;
+	display:block;
+}
+input.blankin {
+	height:2em;
+	border:#333 0px solid;
+	border-bottom:#e8e8e5 1px solid;
+	margin:0;
+	width:80%;
+	font-size:1em;
+	color:#494848;
+}
+input.blankin:hover {
+	border-bottom:#a0d578 1px solid;
+}
+input.send_out {
+	height:2.2em;
+	border:#333 0px solid;
+	border-radius:.25em;
+	margin:0 0 0 .25em;
+	width:13%;
+	font-size:.8em;
+	color:#ffffff;
+	background-color: #5abd22;
+}
+
+/*=========留言隐藏====结束======*/
+
+

@@ -5,28 +5,12 @@
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=2.0">
 <!--<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 --><title>东启湘厨</title>
+
 <link href="{{STATIC_URL}}css/main.css" rel="stylesheet" type="text/css">
 <link href="{{STATIC_URL}}css/common.css" rel="stylesheet" type="text/css">
-<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-<script>
-function get_bonus()
-{
-$(document).ready(function(){
-  $("a").click(function(){
-    $.post("http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/asp_test",
-    {
-      name:"Donald Duck",
-      city:"Duckburg"
-    },
-    function(data){
-      document.getElementById("bonus").innerHTML=data;
-    });
-  });
-});
-}
-</script>
 <meta name="keywords" content="东启湘厨">
 <meta name="description" content="东启湘厨">
+<script src="{{STATIC_URL}}js/prefixfree.min.js"></script>
 </head>
 
 <body class="red_q">
@@ -38,21 +22,23 @@ $(document).ready(function(){
   
   <section>
   	<div class="qiang">
-    	<h4>红包来了！</h4>
+    	<!--<h4>红包来了！</h4>-->
         <div class="button-qhb">
         	<!--红包效果开始-->
        	 <!--<input type="button" class="huang" value="抢红包">-->
          	<section class="cd-section">
-                <a class="cd-bouncy-nav-trigger" href="#0" onclick="get_bonus()">抢红包</a>
+                <div class="blades">
+                    <div class="blade3"></div>
+                </div>
+                <h4><a class="cd-bouncy-nav-trigger" href="#0"><img src="{{STATIC_URL}}images/qubaba1_03.png"></a></h4>
             </section> 
         
             <div class="cd-bouncy-nav-modal">
                 <nav>
                     <ul class="cd-bouncy-nav">
                         <li>
-                        	
-                        	<h4 id="bonus"></h4>
-                            <h5><a href="http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/geted_bonus">查看</a></h5>
+                        	<h4>恭喜您，抢到15串串！！</h4>
+                            <h5><a href="#">查看</a></h5>
                         </li>
                     </ul>
                 </nav>
@@ -60,9 +46,13 @@ $(document).ready(function(){
             </div>
             <script src="{{STATIC_URL}}js/jquery-2.1.1.js"></script>
 			<script src="{{STATIC_URL}}js/main.js"></script> 
+            
+            <style type="text/css">
+				.blades{animation: spin 100s linear infinite;}
+            </style>
             <!--红包效果结束-->
         </div>
-        <div class="qhbyes"><a href="http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/geted_bonus" target="_blank">抢到的红包</a></div>
+        <!--<div class="qhbyes"><a href="#" target="_blank">抢到的红包</a></div>-->
     </div>
     
   </section>
@@ -70,6 +60,8 @@ $(document).ready(function(){
   <section>
   
   </section>
+  
+
   
 </article>
 

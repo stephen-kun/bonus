@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>东启湘厨后台管理首页</title>
+<link href="../css/common.css" rel="stylesheet" type="text/css">
+<link href="../css/admin/admin.css" rel="stylesheet" type="text/css">
+<meta name="keywords" content="东启湘厨">
+<meta name="description" content="东启湘厨">
+<script type="text/javascript" src="../js/menu.js"></script>
+<script type="text/javascript" src="../js/jquery-1.2.6.js"></script>
+<script type="text/javascript" src="../js/jquery.funkyUI.js"></script>
+</head>
+
+<body onload="init_menu('menu');">
+<article>
+	<header class="admin_top">
+    	<h4>
+        您好！&nbsp;<font class="redse">Admin</font>&nbsp;
+        	[<a href="#" target="mainFrame">修改密码</a>]&nbsp;
+        	[<a href="#" target="mainFrame">退出系统</a>]
+        </h4>
+    </header>
+    <nav class="navlist navc">
+        <span>您好！admin</span>
+            <ul>
+                <li><a href="#" target="mainFrame">首页</a></li>
+                <li><a href="#" target="mainFrame">账户设置</a></li>
+                <li><a href="#" target="mainFrame">红包统计</a></li>
+                <li><a href="#" target="mainFrame">论坛</a></li>
+            </ul>
+    </nav>
+    
+    <section>
+    	<div class="left-frame">
+        	<div class="left-f-title">设置</div>
+            <div class="left-f-content">
+            	<ul id="menu">
+                	<li><span class="menu-list"><img src="../images/admin/admin_01.png" align="absmiddle">管理员</span>
+                    	<ul class="menu-undis">
+                        	<li><span class="menu-l-s"><a href="create_admin.html" target="mainFrame">管理员管理</a></span> </li>
+                        	<li><span class="menu-l-s"><a href="admin_password.html" target="mainFrame">修改密码</a></span> </li>
+                        	<li><span class="menu-l-s"><a href="admin_new.html" target="mainFrame">新建管理员</a></span> </li>
+                        </ul>
+                    </li>
+                    <li><span class="menu-list"><img src="../images/admin/admin_02.png" align="absmiddle">修改密码</span>
+                    	<ul class="menu-undis">
+                        	<li><span class="menu-l-s"><a href="modify_password.html" target="mainFrame">修改密码</a></span></li>
+                        </ul>
+                    </li>
+                     <li><span class="menu-list"><img src="../images/admin/tit_hongbao.png" align="absmiddle">红包</span>
+                     	<ul class="menu-undis">
+                        	<li><span class="menu-l-s"><a href="create_red_envelope.html" target="mainFrame">创建红包</a></span></li>
+                        	<li><span class="menu-l-s"><a href="admin_credit.html" target="mainFrame">红包额度</a></span></li>
+                        </ul>
+                     </li>
+                    <li><span class="menu-list"><img src="../images/admin/admin_03.png" align="absmiddle">礼券额度</span>
+                    	<ul class="menu-undis">
+                        	<li><span class="menu-l-s"><a href="create_coupon.html" target="mainFrame">创建礼券</a></span></li>
+                            <li><span class="menu-l-s"><a href="admin_coupon.html" target="mainFrame">礼券额度</a></span></li>
+                   		</ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="right-frame">
+          <div class="right-f-title">
+            <b>当前位置：</b><a href="index.html" target="mainFrame">管理首页</a> > 管理员设置
+          </div>
+          <iframe id="mainFrame" name="mainFrame" src="create_admin.html"  frameborder="0" ></iframe>
+        </div>
+    </section>
+    
+    
+    
+</article>
+
+</body>
+</html>
