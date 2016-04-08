@@ -25,34 +25,59 @@
     	<!--<h4>红包来了！</h4>-->
         <div class="button-qhb">
         	<!--红包效果开始-->
-       	 <!--<input type="button" class="huang" value="抢红包">-->
          	<section class="cd-section">
                 <div class="blades">
                     <div class="blade3"></div>
                 </div>
-                <h4><a class="cd-bouncy-nav-trigger" href="#0"><img src="{{STATIC_URL}}images/qubaba1_03.png"></a></h4>
+                <div class="main">
+                    <div class="item1">
+                        <div class="kodai">
+                            <img src="{{STATIC_URL}}images/qubaba1_03.png" class="full" onClick="toshare()" />
+                            <img src="{{STATIC_URL}}images/qubaba1_03_zhse.png" class="empty" />
+                        </div>
+                        <div class="clipped-box">
+                
+                        </div>
+                    </div>
+                </div>
             </section> 
-        
-            <div class="cd-bouncy-nav-modal">
-                <nav>
-                    <ul class="cd-bouncy-nav">
-                        <li>
-                        	<h4>恭喜您，抢到15串串！！</h4>
-                            <h5><a href="#">查看</a></h5>
-                        </li>
-                    </ul>
-                </nav>
-                <a href="#0" class="cd-close">Close modal</a>
-            </div>
-            <script src="{{STATIC_URL}}js/jquery-2.1.1.js"></script>
-			<script src="{{STATIC_URL}}js/main.js"></script> 
-            
+<script src="{{STATIC_URL}}js/jquery-1.8.2.min.js"></script><!--掉红包-->
+<script src="{{STATIC_URL}}js/javascript.js"></script><!--掉红包-->
+<script type="text/javascript">
+	function toshare(){
+		$(".tch-share").addClass("tch-modal-active");	
+		if($(".tchsharebg").length>0){
+			$(".tchsharebg").addClass("tchsharebg-active");
+		}else{
+			$("body").append('<div class="tchsharebg"></div>');
+			$(".tchsharebg").addClass("tchsharebg-active");
+		}
+		$(".tchsharebg-active,.tchshare_btn").click(function(){
+			$(".tch-share").removeClass("tch-modal-active");	
+			setTimeout(function(){
+				$(".tchsharebg-active").removeClass("tchsharebg-active");	
+				$(".tchsharebg").remove();	
+			},300);
+		})
+	}	
+</script>
+<!--抢到的串串开始-->
+<div class="tch-share">
+  <h3 class="tch-share-title"><br>恭喜您!<br>抢到<font class="">155</font>串串！</h3>
+  <ul class="tch-share-sns">
+    <li><a href="#" target="_blank">查看串串</a></li>
+  </ul>
+  <div class="tch-share-footer"><a href="">继续抢串串</a></div>
+</div>
+<!--抢到的串串结束-->
+<link href="{{STATIC_URL}}css/animator.css" rel="stylesheet" /><!--依赖于animator.css-->
+
             <style type="text/css">
 				.blades{animation: spin 100s linear infinite;}
             </style>
             <!--红包效果结束-->
         </div>
-        <!--<div class="qhbyes"><a href="#" target="_blank">抢到的红包</a></div>-->
+        
     </div>
     
   </section>

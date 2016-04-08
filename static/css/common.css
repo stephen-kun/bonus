@@ -71,13 +71,13 @@ input[type=button], input[type=submit], input[type=file], button { cursor: point
 	background:#939598;
 }
 .red_cen {
-background-color:#d74f43;
+background-color:#939598;
 }
 .hui_se {
 background:#e1e1e1;
 }
 
-/*去除小箭头*/
+/*去除文本小箭头*/
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button{
     -webkit-appearance: none !important;
