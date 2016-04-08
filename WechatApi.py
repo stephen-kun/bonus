@@ -8,6 +8,7 @@ TOKEN = 'token'
 APPID = 'wxc32d7686c0827f2a'
 APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
 
+
 conf = WechatConf(
     token = TOKEN,
     appid = APPID,
@@ -35,12 +36,12 @@ menu = {
                 {
                     'type': 'view',
                     'name': '发红包',
-                    'url': 'http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/snd_bonus'
+                    'url': 'http://120.76.122.53/weixin/snd_bonus'
                 },
                 {
                     'type': 'view',
                     'name': '抢红包',
-                    'url': 'http://ec2-54-200-11-160.us-west-2.compute.amazonaws.com/weixin/rcv_bonus'
+                    'url': 'http://120.76.122.53/weixin/rcv_bonus'
                 }
             ]
         },        

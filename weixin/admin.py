@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Admin_bonus,Good,Bonus_content,Consumer,DiningTable
+from .models import SysBonus,Good,Bonus_content,Consumer,DiningTable
 from .models import ConsumeInfo,ConsumeRecord,Account
 from .models import SndBonus, RcvBonus, AccountContent
 from .models import SndBonusContent,RcvBonusContent
@@ -13,7 +13,7 @@ class AdminBonus(admin.ModelAdmin):
     inlines = [Bonus_contentInline]
 
 
-admin.site.register(Admin_bonus, AdminBonus)
+admin.site.register(SysBonus, AdminBonus)
 admin.site.register(Good)
 
 
