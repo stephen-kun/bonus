@@ -8,7 +8,7 @@ $(document).ready(function () {
         var y = 0;
         var index = 1;
         for (var z = 0; z <= (amount * width) ; z = z + width) {
-            $('<img class="clipped" src="images/jb' + index + '.png" />').appendTo($('.item1 .clipped-box'));
+            $('<img class="clipped" src="{{STATIC_URL}}images/jb' + index + '.png" />').appendTo($('.item1 .clipped-box'));
             if (z === (amount * width) - width) {
                 y = y + height;
                 z = -width;
