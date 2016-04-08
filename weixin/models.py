@@ -55,7 +55,7 @@ class Good(models.Model):
             return self.name
 
 class Bonus_content(models.Model):
-    admin_bonus = models.ForeignKey(Admin_bonus)
+    admin_bonus = models.ForeignKey(SysBonus)
     good = models.ForeignKey(Good)
     quantity = models.IntegerField(default=0)
     left_quantity = models.IntegerField(default=0)
