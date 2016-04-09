@@ -36,14 +36,26 @@ class PostResponse():
 		self.type = wechat.message.type
 		self.raw = wechat.message.raw
 		self.message = wechat.message
-		
+	
+	#关注
 	def _subscribe():
+		# 查询Consumer，如果有记录则修改subscribe/is_dining值；如果没有记录，则先从微信获取用户信息，然后新建一条记录
+		# 修改DiningTable表中status/seats值
+		# 在Dining表中创建一条记录
+		# 返回选座信息
 		pass
-		
+	
+	#取消关注
 	def _unsubscribe():
+		# 查找Consumer，将subscribe置为False
 		pass
-		
+	
+	#扫码
 	def _scan():
+		# 查询Consumer, 修改is_dining值为True
+		# 修改DiningTable表中status/seats值
+		# 在Dining表中创建一条记录
+		# 返回选座信息
 		pass
 	
 	def replay():

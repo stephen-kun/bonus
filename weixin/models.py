@@ -22,7 +22,7 @@ class BonusCountMonth(models.Model):
 class DiningTable(models.Model):
 	index_table = models.IntegerField(primary_key=True)	#桌台编号
 	status = models.BooleanField(default=False)			#桌台状态
-	seats = models.IntegerField(default=4)					#桌台拥有的座位
+	seats = models.IntegerField(default=0)					#桌台入座人数
 	is_private = models.BooleanField(default=False)		#是否是包厢
 
 	def __unicode__(self):
@@ -42,6 +42,7 @@ class Consumer(models.Model):
 	own_bonus_value = models.IntegerField(default=0)				#可用红包金额
 	own_ticket_value = models.IntegerField(default=0)				#可用礼券金额
 	create_time = models.DateTimeField()							#首次关注时间
+	subscribe = models.BooleanField(default=True)					#是否关注
 	on_table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)	#就餐桌台
 	
 	def __unicode__(self):
