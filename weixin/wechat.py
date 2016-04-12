@@ -57,6 +57,14 @@ class PostResponse():
 		# 在Dining表中创建一条记录
 		# 返回选座信息
 		pass
+		
+	#菜单跳转事件
+	def _view_jump():
+		'''结算菜单跳转事件
+		1、根据openid,查询consumer，获取当前用户的ownBonusValue,ownTicketValue，idTable.
+		2、根据idtable，查询RcvBonus，获取该桌抢到的所有红包
+		'''
+		pass
 	
 	def replay():
 		pass
