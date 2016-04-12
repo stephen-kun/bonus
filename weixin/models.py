@@ -1,17 +1,17 @@
-# -*-utf-8 -*-
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from django.db import models
 from django.conf import settings
 
-#红包日统计表
+# 红包日统计表
 class BonusCountDay(models.Model):
 	consumer = models.CharField(primary_key=True, max_length=30)	#用户唯一id
 	count_num = models.IntegerField(default=0)						#主排行统计数
 	other_info = models.CharField(max_length=30)					#其他物品统计数，字符串形式
 
 
-#红包月统计表
+# 红包月统计表
 class BonusCountMonth(models.Model):
 	consumer = models.CharField(primary_key=True, max_length=30)	#用户唯一id
 	count_num = models.IntegerField(default=0)						#主排行统计数
