@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>东启湘厨后台管理首页</title>
+<link href="../css/common.css" rel="stylesheet" type="text/css">
+<link href="../css/admin/admin.css" rel="stylesheet" type="text/css">
+<meta name="keywords" content="东启湘厨">
+<meta name="description" content="东启湘厨">
+</head>
+
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="award_box_title">发出的红包</div>
+            <div class="award_box_content">
+                <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
+                  <tr>
+                    <th width="10%">序号</th>
+                    <th width="60%">桌号</th>
+                    <th width="30%">数量</th>
+                  </tr>
+                  <tr>
+                    <td>01</td>
+                    <td align="left" class="color_a">8号桌</td>
+                    <td align="left" class="color_b">8个</td>
+                  </tr>
+                  <tr>
+                    <td>05</td>
+                    <td align="left" class="color_a">8号桌</td>
+                    <td align="left" class="color_b">8个</td>
+                  </tr>
+                  <tr>
+                    <td>11</td>
+                    <td align="left" class="color_a">8号桌</td>
+                    <td align="left" class="color_b">8个</td>
+                  </tr>
+                  <tr>
+                    <td>11</td>
+                    <td align="left" class="color_a">8号桌</td>
+                    <td align="left" class="color_b">8个</td>
+                  </tr>
+                  <tr>
+                    <td>11</td>
+                    <td align="left" class="color_a">8号桌</td>
+                    <td align="left" class="color_b">8个</td>
+                  </tr>
+                  <tr>
+                    <td>11</td>
+                    <td align="left" class="color_a">8号桌</td>
+                    <td align="left" class="color_b">8个</td>
+                  </tr>
+                  <tr>
+                    <td>11</td>
+                    <td align="left" class="color_a">8号桌</td>
+                    <td align="left" class="color_b">8个</td>
+                  </tr>
+                  <tr>
+                    <td>11</td>
+                    <td align="left" class="color_a">8号桌</td>
+                    <td align="left" class="color_b">8个</td>
+                  </tr>
+                </table>
+                
+                <div class="award_page">
+                	<a href="#" target="_parent">上一页</a>
+                    <a href="#" target="_parent" class="pageope">1</a>
+                    <span>2</span>
+                    <a href="#" target="_parent" class="pageope">3</a>
+                    <a href="#" target="_parent">下一页</a>
+                </div>
+            </div>
+        </div>
+    </section>
+<script language="JavaScript">
+var TbRow = document.getElementById("tab-color");
+if (TbRow != null)
+{
+for (var i=0;i<TbRow.rows.length ;i++ )
+{
+if (TbRow.rows[i].rowIndex%2==1)
+{
+TbRow.rows[i].style.backgroundColor="#ffffff";
+}
+else
+{
+TbRow.rows[i].style.backgroundColor="#f7f7f4";
+}
+}
+}
+</script>    
+    
+    
+</article>
+
+</body>
+</html>
