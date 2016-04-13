@@ -51,7 +51,7 @@ class PostResponse():
 		index_table = re.findall(r'\d+',self.message.key)[0]
 		table = DiningTable.objects.get(index_table=index_table)
 		table.status = True
-		table.seats++
+		table.seats += 1
 		table.save()
 		# 查询Consumer，如果有记录则修改subscribe/is_dining值；如果没有记录，则先从微信获取用户信息，然后新建一条记录
 		try:
@@ -87,7 +87,7 @@ class PostResponse():
 		index_table = re.findall(r'\d+',self.message.key)[0]
 		table = DiningTable.objects.get(index_table=index_table)
 		table.status = True
-		table.seats++
+		table.seats += 1
 		table.save()		
 		# 查询Consumer, 修改is_dining值为True
 		consumer = Consumer.objects.get(open_id=self.source)
