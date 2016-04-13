@@ -66,6 +66,7 @@ class PostResponse():
 		'''
 		pass
 	
+	#×Ô¶¯»Ø¸´
 	def replay():
 		pass
 		
