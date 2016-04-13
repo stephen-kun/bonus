@@ -48,7 +48,7 @@ class PostResponse():
 	def _subscribe(self):
 		# 修改DiningTable表中status/seats值
 		curr_time = timezone.now()
-		index_table = re.findall(r'\d+',self.message.key)[0])
+		index_table = re.findall(r'\d+',self.message.key)[0]
 		table = DiningTable.objects.get(index_table=index_table)
 		table.status = True
 		table.seats++
