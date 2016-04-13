@@ -30,100 +30,100 @@ conf = WechatConf(
 WECHAT = WechatBasic(conf = conf)
 
 class PostResponse():
-	wechat = WECHAT
-	def __init__(self, request):
-		try:
-			wechat.parse_data(data = request.body)
-		except ParseError:
-			return HttpResponseBadRequest('Invalid XML Data')
-		self.id = wechat.message.id
-		self.target = wechat.message.target
-		self.source = wechat.message.source
-		self.time = wechat.message.time
-		self.type = wechat.message.type
-		self.raw = wechat.message.raw
-		self.message = wechat.message
-	
-	#¹Ø×¢
-	def _subscribe(self):
-		# ĞŞ¸ÄDiningTable±íÖĞstatus/seatsÖµ
-		curr_time = timezone.now()
-		index_table = re.findall(r'\d+',self.message.key)[0]
-		table = DiningTable.objects.get(index_table=index_table)
-		table.status = True
-		table.seats += 1
-		table.save()
-		# ²éÑ¯Consumer£¬Èç¹ûÓĞ¼ÇÂ¼ÔòĞŞ¸Äsubscribe/is_diningÖµ£»Èç¹ûÃ»ÓĞ¼ÇÂ¼£¬ÔòÏÈ´ÓÎ¢ĞÅ»ñÈ¡ÓÃ»§ĞÅÏ¢£¬È»ºóĞÂ½¨Ò»Ìõ¼ÇÂ¼
-		try:
-			consumer = Consumer.objects.get(open_id=self.source)
-			if consumer.subscribe == False:
-				consumer.subscribe = True
-		except ObjectDoesNotExist:
-			# Í¨¹ıÍøÒ³ÊÚÈ¨»ñÈ¡ÓÃ»§ĞÅÏ¢
-			consumer = Consumer.objects.create(open_id=self.source)
-			consumer.create_time = curr_time
-		consumer.is_dining = True
-		consumer.on_table = table
-		consumer.save()
-		# ÔÚDining±íÖĞ´´½¨Ò»Ìõ¼ÇÂ¼
-		dining = Dining.objects.create(id_table=index_table, begin_time=curr_time, consumer=consumer)
-		dining.save()
-		# ·µ»ØÑ¡×ùĞÅÏ¢	
-		return wechat.response_text(content =  u'ÄúÒÑÈë×ù%sºÅ×À' %(index_table))
-		
-	
-	#È¡Ïû¹Ø×¢
-	def _unsubscribe(self):
-		# ²éÕÒConsumer£¬½«subscribeÖÃÎªFalse
-		consumer = Consumer.objects.get(open_id=self.source)
-		consumer.subscribe = False
-		consumer.save()
-		return ''
-	
-	#É¨Âë
-	def _scan(self):
-		# ĞŞ¸ÄDiningTable±íÖĞstatus/seatsÖµ
-		curr_time = timezone.now()
-		index_table = re.findall(r'\d+',self.message.key)[0]
-		table = DiningTable.objects.get(index_table=index_table)
-		table.status = True
-		table.seats += 1
-		table.save()		
-		# ²éÑ¯Consumer, ĞŞ¸Äis_diningÖµÎªTrue
-		consumer = Consumer.objects.get(open_id=self.source)
-		consumer.is_dining = True
-		consumer.on_table = table
-		consumer.save()		
-		# ÔÚDining±íÖĞ´´½¨Ò»Ìõ¼ÇÂ¼
-		dining = Dining.objects.create(id_table=index_table, begin_time=curr_time, consumer=consumer)
-		dining.save()		
-		# ·µ»ØÑ¡×ùĞÅÏ¢
-		return wechat.response_text(content =  u'ÄúÒÑÈë×ù%sºÅ×À' %(index_table))
-		
-		
-	#²Ëµ¥Ìø×ªÊÂ¼ş
-	def _view_jump(self):
-		'''½áËã²Ëµ¥Ìø×ªÊÂ¼ş
-		1¡¢¸ù¾İopenid,²éÑ¯consumer£¬»ñÈ¡µ±Ç°ÓÃ»§µÄownBonusValue,ownTicketValue£¬idTable.
-		2¡¢¸ù¾İidtable£¬²éÑ¯RcvBonus£¬»ñÈ¡¸Ã×ÀÇÀµ½µÄËùÓĞºì°ü
-		'''
-		pass
-		
-	#×Ô¶¯´¦Àí
-	def auto_handle(self):
-		response = wechat.response_text(content='')
-		if isinstance(self.message, messages.TextMessage):
-			response = wechat.response_text(content=self.message.content)
-		elif isinstance(self.message, messages.EventMessage):
-			if self.type == 'subscribe':
-				response = self._subscribe()
-			elif self.type == 'unsubscribe':
-				response = self._unsubscribe()
-			elif self.type == 'scan':
-				response = self._scan()
-			elif self.type == 'view':
-				pass
-		
-		return HttpResponse(response, content_type='application/xml')
-			
-		
+    wechat = WECHAT
+    def __init__(self, request):
+        try:
+            wechat.parse_data(data = request.body)
+        except ParseError:
+            return HttpResponseBadRequest('Invalid XML Data')
+        self.id = wechat.message.id
+        self.target = wechat.message.target
+        self.source = wechat.message.source
+        self.time = wechat.message.time
+        self.type = wechat.message.type
+        self.raw = wechat.message.raw
+        self.message = wechat.message
+    
+    #å…³æ³¨
+    def _subscribe(self):
+        # ä¿®æ”¹DiningTableè¡¨ä¸­status/seatså€¼
+        curr_time = timezone.now()
+        index_table = re.findall(r'\d+',self.message.key)[0]
+        table = DiningTable.objects.get(index_table=index_table)
+        table.status = True
+        table.seats += 1
+        table.save()
+        # æŸ¥è¯¢Consumerï¼Œå¦‚æœæœ‰è®°å½•åˆ™ä¿®æ”¹subscribe/is_diningå€¼ï¼›å¦‚æœæ²¡æœ‰è®°å½•ï¼Œåˆ™å…ˆä»å¾®ä¿¡è·å–ç”¨æˆ·ä¿¡æ¯ï¼Œç„¶åæ–°å»ºä¸€æ¡è®°å½•
+        try:
+            consumer = Consumer.objects.get(open_id=self.source)
+            if consumer.subscribe == False:
+                consumer.subscribe = True
+        except ObjectDoesNotExist:
+            # é€šè¿‡ç½‘é¡µæˆæƒè·å–ç”¨æˆ·ä¿¡æ¯
+            consumer = Consumer.objects.create(open_id=self.source)
+            consumer.create_time = curr_time
+        consumer.is_dining = True
+        consumer.on_table = table
+        consumer.save()
+        # åœ¨Diningè¡¨ä¸­åˆ›å»ºä¸€æ¡è®°å½•
+        dining = Dining.objects.create(id_table=index_table, begin_time=curr_time, consumer=consumer)
+        dining.save()
+        # è¿”å›é€‰åº§ä¿¡æ¯    
+        return wechat.response_text(content =  u'æ‚¨å·²å…¥åº§%så·æ¡Œ' %(index_table))
+        
+    
+    #å–æ¶ˆå…³æ³¨
+    def _unsubscribe(self):
+        # æŸ¥æ‰¾Consumerï¼Œå°†subscribeç½®ä¸ºFalse
+        consumer = Consumer.objects.get(open_id=self.source)
+        consumer.subscribe = False
+        consumer.save()
+        return ''
+    
+    #æ‰«ç 
+    def _scan(self):
+        # ä¿®æ”¹DiningTableè¡¨ä¸­status/seatså€¼
+        curr_time = timezone.now()
+        index_table = self.message.key
+        table = DiningTable.objects.get(index_table=index_table)
+        table.status = True
+        table.seats += 1
+        table.save()        
+        # æŸ¥è¯¢Consumer, ä¿®æ”¹is_diningå€¼ä¸ºTrue
+        consumer = Consumer.objects.get(open_id=self.source)
+        consumer.is_dining = True
+        consumer.on_table = table
+        consumer.save()     
+        # åœ¨Diningè¡¨ä¸­åˆ›å»ºä¸€æ¡è®°å½•
+        dining = Dining.objects.create(id_table=index_table, begin_time=curr_time, consumer=consumer)
+        dining.save()       
+        # è¿”å›é€‰åº§ä¿¡æ¯
+        return wechat.response_text(content =  u'æ‚¨å·²å…¥åº§%så·æ¡Œ' %(index_table))
+        
+        
+    #èœå•è·³è½¬äº‹ä»¶
+    def _view_jump(self):
+        '''ç»“ç®—èœå•è·³è½¬äº‹ä»¶
+        1ã€æ ¹æ®openid,æŸ¥è¯¢consumerï¼Œè·å–å½“å‰ç”¨æˆ·çš„ownBonusValue,ownTicketValueï¼ŒidTable.
+        2ã€æ ¹æ®idtableï¼ŒæŸ¥è¯¢RcvBonusï¼Œè·å–è¯¥æ¡ŒæŠ¢åˆ°çš„æ‰€æœ‰çº¢åŒ…
+        '''
+        pass
+        
+    #è‡ªåŠ¨å¤„ç†
+    def auto_handle(self):
+        response = wechat.response_text(content='')
+        if isinstance(self.message, messages.TextMessage):
+            response = wechat.response_text(content=self.message.content)
+        elif isinstance(self.message, messages.EventMessage):
+            if self.type == 'subscribe':
+                response = self._subscribe()
+            elif self.type == 'unsubscribe':
+                response = self._unsubscribe()
+            elif self.type == 'scan':
+                response = self._scan()
+            elif self.type == 'view':
+                pass
+        
+        return HttpResponse(response, content_type='application/xml')
+            
+        
