@@ -143,8 +143,6 @@ class BonusMessage(models.Model):
 #系统虚拟钱币
 class SystemMoney(models.Model):
 	id_money = models.IntegerField(primary_key=True)				#虚拟钱币的唯一id
-	money_name = models.CharField(max_length=40)					#虚拟钱币的名字
-	money_value = models.FloatField(default=0.0)					#虚拟钱币的面值
 	create_time = models.DateTimeField()							#发行时间
 	valid_time = models.DateTimeField()							#有效时间
 	is_valid = models.BooleanField(default=True)					#是否有效
@@ -154,12 +152,11 @@ class SystemMoney(models.Model):
 	ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)			#消费券唯一id
 	recharge = models.ForeignKey(SystemRecharge, on_delete=models.CASCADE)	#充值记录id
 	rcv_bonus = models.ForeignKey(RcvBonus, on_delete=models.CASCADE)		#抢到的红包唯一id
+	money = OneToOneField(VirtualMoney, on_delete=models.CASCADE)			#虚拟货币
 	
 #个人虚拟钱币
 class PersonMoney(models.Model):
 	id_money = models.IntegerField(primary_key=True)				#虚拟钱币的唯一id
-	money_name = models.CharField(max_length=40)					#虚拟钱币的名字
-	money_value = models.FloatField(default=0.0)					#虚拟钱币的面值
 	create_time = models.DateTimeField()							#发行时间
 	valid_time = models.DateTimeField()							#有效时间
 	is_valid = models.BooleanField(default=True)					#是否有效
@@ -169,5 +166,12 @@ class PersonMoney(models.Model):
 	ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)			#消费券唯一id
 	recharge = models.ForeignKey(PersonRecharge, on_delete=models.CASCADE)	#充值记录id
 	rcv_bonus = models.ForeignKey(RcvBonus, on_delete=models.CASCADE)		#抢到的红包唯一id
+	money = OneToOneField(VirtualMoney, on_delete=models.CASCADE)			#虚拟货币
+	
+#虚拟货币
+class VirtualMoney(models.Model):
+	name = models.CharField(primary_key=True,max_length=40)	#虚拟钱币的名字
+	price = models.FloatField(default=0.0)						#虚拟钱币的面值
 
-
+	def __unicode__(self):
+		return self.name
