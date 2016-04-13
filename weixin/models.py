@@ -20,7 +20,7 @@ class BonusCountMonth(models.Model):
 	
 #桌台表，维护桌台状态		
 class DiningTable(models.Model):
-	index_table = models.IntegerField(primary_key=True)	#桌台编号
+	index_table = models.CharField(primary_key=True, max_length=3)	#桌台编号
 	status = models.BooleanField(default=False)			#桌台状态
 	seats = models.IntegerField(default=0)					#桌台入座人数
 	is_private = models.BooleanField(default=False)		#是否是包厢
@@ -72,7 +72,6 @@ class SystemRecharge(models.Model):
 
 #就餐记录表		
 class Dining(models.Model):
-	id_dining = models.IntegerField(primary_key=True)
 	id_table = models.IntegerField()		#桌号
 	begin_time = models.DateTimeField() 	#开始就餐时间
 	over_time = models.DateTimeField()		#结束就餐时间
@@ -139,14 +138,18 @@ class BonusMessage(models.Model):
 	message = models.CharField(max_length=140)								#留言内容
 	rcv_bonus = models.OneToOneField(RcvBonus, on_delete=models.CASCADE)	#接收的红包唯一id
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)		#留言者唯一id
+	
+#虚拟货币
+class VirtualMoney(models.Model):
+	name = models.CharField(primary_key=True,max_length=40)	#虚拟钱币的名字
+	price = models.FloatField(default=0.0)						#虚拟钱币的面值
+
+	def __unicode__(self):
+		return self.name
 		
 #系统虚拟钱币
 class SystemMoney(models.Model):
 	id_money = models.IntegerField(primary_key=True)				#虚拟钱币的唯一id
-	money_name = models.CharField(max_length=40)					#虚拟钱币的名字
-	money_value = models.FloatField(default=0.0)					#虚拟钱币的面值
-	create_time = models.DateTimeField()							#发行时间
-	valid_time = models.DateTimeField()							#有效时间
 	is_valid = models.BooleanField(default=True)					#是否有效
 	is_used = models.BooleanField(default=False)					#是否已用
 	admin = models.ForeignKey(settings.AUTH_USER_MODEL, default=settings.AUTH_USER_MODEL[0])	#钱包拥有者
@@ -154,14 +157,11 @@ class SystemMoney(models.Model):
 	ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)			#消费券唯一id
 	recharge = models.ForeignKey(SystemRecharge, on_delete=models.CASCADE)	#充值记录id
 	rcv_bonus = models.ForeignKey(RcvBonus, on_delete=models.CASCADE)		#抢到的红包唯一id
+	money = models.OneToOneField(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
 	
 #个人虚拟钱币
 class PersonMoney(models.Model):
 	id_money = models.IntegerField(primary_key=True)				#虚拟钱币的唯一id
-	money_name = models.CharField(max_length=40)					#虚拟钱币的名字
-	money_value = models.FloatField(default=0.0)					#虚拟钱币的面值
-	create_time = models.DateTimeField()							#发行时间
-	valid_time = models.DateTimeField()							#有效时间
 	is_valid = models.BooleanField(default=True)					#是否有效
 	is_used = models.BooleanField(default=False)					#是否已用
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)		#钱包拥有着
@@ -169,5 +169,5 @@ class PersonMoney(models.Model):
 	ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)			#消费券唯一id
 	recharge = models.ForeignKey(PersonRecharge, on_delete=models.CASCADE)	#充值记录id
 	rcv_bonus = models.ForeignKey(RcvBonus, on_delete=models.CASCADE)		#抢到的红包唯一id
-
-
+	money = models.OneToOneField(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
+	

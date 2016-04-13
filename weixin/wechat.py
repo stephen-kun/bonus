@@ -7,6 +7,13 @@ from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
 
+from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,PersonRecharge,SystemRecharge,VirtualMoney
+from .models import Dining,Ticket, PersonBonus, SystemBonus, RcvBonus, BonusMessage, SystemMoney, PersonMoney
+from django.core.exceptions import ObjectDoesNotExist 
+import pytz
+from django.utils import timezone
+import re
+
 TOKEN = 'token'
 APPID = 'wxc32d7686c0827f2a'
 APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
@@ -38,35 +45,85 @@ class PostResponse():
 		self.message = wechat.message
 	
 	#关注
-	def _subscribe():
-		# 查询Consumer，如果有记录则修改subscribe/is_dining值；如果没有记录，则先从微信获取用户信息，然后新建一条记录
+	def _subscribe(self):
 		# 修改DiningTable表中status/seats值
+		curr_time = timezone.now()
+		index_table = re.findall(r'\d+',self.message.key)[0])
+		table = DiningTable.objects.get(index_table=index_table)
+		table.status = True
+		table.seats++
+		table.save()
+		# 查询Consumer，如果有记录则修改subscribe/is_dining值；如果没有记录，则先从微信获取用户信息，然后新建一条记录
+		try:
+			consumer = Consumer.objects.get(open_id=self.source)
+			if consumer.subscribe == False:
+				consumer.subscribe = True
+		except ObjectDoesNotExist:
+			# 通过网页授权获取用户信息
+			consumer = Consumer.objects.create(open_id=self.source)
+			consumer.create_time = curr_time
+		consumer.is_dining = True
+		consumer.on_table = table
+		consumer.save()
 		# 在Dining表中创建一条记录
-		# 返回选座信息
-		pass
+		dining = Dining.objects.create(id_table=index_table, begin_time=curr_time, consumer=consumer)
+		dining.save()
+		# 返回选座信息	
+		return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))
+		
 	
 	#取消关注
-	def _unsubscribe():
+	def _unsubscribe(self):
 		# 查找Consumer，将subscribe置为False
-		pass
+		consumer = Consumer.objects.get(open_id=self.source)
+		consumer.subscribe = False
+		consumer.save()
+		return ''
 	
 	#扫码
-	def _scan():
-		# 查询Consumer, 修改is_dining值为True
+	def _scan(self):
 		# 修改DiningTable表中status/seats值
+		curr_time = timezone.now()
+		index_table = re.findall(r'\d+',self.message.key)[0])
+		table = DiningTable.objects.get(index_table=index_table)
+		table.status = True
+		table.seats++
+		table.save()		
+		# 查询Consumer, 修改is_dining值为True
+		consumer = Consumer.objects.get(open_id=self.source)
+		consumer.is_dining = True
+		consumer.on_table = table
+		consumer.save()		
 		# 在Dining表中创建一条记录
+		dining = Dining.objects.create(id_table=index_table, begin_time=curr_time, consumer=consumer)
+		dining.save()		
 		# 返回选座信息
-		pass
+		return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))
+		
 		
 	#菜单跳转事件
-	def _view_jump():
+	def _view_jump(self):
 		'''结算菜单跳转事件
 		1、根据openid,查询consumer，获取当前用户的ownBonusValue,ownTicketValue，idTable.
 		2、根据idtable，查询RcvBonus，获取该桌抢到的所有红包
 		'''
 		pass
-	
-	#自动回复
-	def replay():
-		pass
+		
+	#自动处理
+	def auto_handle(self):
+		response = wechat.response_text(content='')
+		if isinstance(self.message, messages.TextMessage):
+			response = wechat.response_text(content=self.message.content)
+		elif isinstance(self.message, messages.EventMessage):
+			if self.type == 'subscribe':
+				response = self._subscribe()
+			elif self.type == 'unsubscribe':
+				response = self._unsubscribe()
+			elif self.type == 'scan':
+				response = self._scan()
+			elif self.type == 'view':
+				pass
+		
+		return HttpResponse(response, content_type='application/xml')
+			
 		
