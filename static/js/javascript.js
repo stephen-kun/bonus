@@ -8,7 +8,7 @@ $(document).ready(function () {
         var y = 0;
         var index = 1;
         for (var z = 0; z <= (amount * width) ; z = z + width) {
-            $('<img class="clipped" src="/static/images/jb' + index + '.png" />').appendTo($('.item1 .clipped-box'));
+            $('<img class="clipped" src="images/jb' + index + '.png" />').appendTo($('.item1 .clipped-box'));
             if (z === (amount * width) - width) {
                 y = y + height;
                 z = -width;
@@ -95,9 +95,9 @@ $(document).ready(function () {
     });
     r = setInterval(function () {
         if (first === true) {
-            $('.empty').addClass("Shake");//晃动空袋子
-            //TODO:空袋子晃动几下 就弹出 奖项框
+            $('.empty').addClass("Shake");//晃动
+            //TODO:晃动几下
             first = false;
         }
-    }, 300);
+    }, 50);
 });

@@ -1,0 +1,1174 @@
+﻿@charset "utf-8";
+/* CSS Document 响应网页设计*/
+
+
+@media screen and (min-width:1025px) and (max-width:2000px) {
+.bbs_box_bj {
+	background-image:url('../../images/bbs/bbs_bj.png');
+	background-repeat: no-repeat;
+	background-size:cover;
+	background-color:#e7e8e9;
+	min-height:568px;
+}
+.bbs_box {
+	background:#ffffff;
+	margin-top:.5em;
+}
+.bbs_box_tit {
+	border-bottom:#d0d1d1 1px solid;
+	margin:0 1em 0 1em;
+	height:2em;
+	padding:.5em 0;
+}
+.bbs_box_tit h2 {
+	overflow:hidden;
+	width:1.542em;
+	height:1.542em;
+	border-radius:.771em;
+	float:left;
+	border:#d0d1d1 1px solid;
+	padding:0;
+	margin:0;
+}
+.bbs_box_tit h2 img {
+	width:1.542em;
+}
+.bbs_box_tit h4 {
+	overflow:hidden;
+	font-weight:normal;
+	font-size:.8em;
+	padding:0 0 0 .5em;
+	margin:0;
+	height:1.5em;
+}
+.bbs_box_tit span {
+	font-weight:normal;
+	font-size:.6em;
+	display:block;
+	color:#747473;
+	padding:0 0 0 .7em;
+	margin:0;
+	float:left;
+}
+.bbs_box_c {
+	margin:0 1.2em 0 1.2em;
+	height: auto;
+	padding:.5em 0 0em 0;
+	line-height:1.5;
+	font-size:.7em;
+	color:#4d4d4c;
+}
+.bbs_box_cd {
+	height:4.5em;
+	overflow:hidden;
+}
+.bbs_box_c h2 {
+	margin:0;
+	padding:.5em 0 0em 0;
+	text-align: left;
+}
+.bbs_box_c h2 img {
+	width:50%;
+}
+.bbs_box_bottom {
+	border-top:#eeefef 1px solid;
+	border-bottom:#eeefef 1px solid;
+	padding:.3em 0;
+	height:1.2em;
+}
+.bbs_box_bottom h5 {
+	width:49%;
+	float:left;
+	padding:0;
+	margin:0;
+	text-align:center;
+	font-size:.6em;
+	font-weight:normal;
+	border-right:#eeefef 1px solid;
+	color:#a1a1a0;
+}
+.bbs_box_bottom h5:last-child {
+	border-right:#666 0px solid;
+}
+.bbs_box_bottom h5 img {
+	width:1.3em;
+	margin-right:.2em;
+}
+
+/*========论坛首页结束======*/
+
+
+/*========正文内容======*/
+.bbs_d {
+	padding:.8em 0 1.2em 0;
+	margin-bottom:1em;
+}
+.bbs_d_tit {
+	background:#b6d554;
+	height:2em;
+	line-height:2em;
+}
+.bbs_d_tit h4 {
+	padding:0 .5em;
+	margin:0;
+	font-weight:normal;
+	font-size:.9em;
+	color:#ffffff;
+}
+.bbs_d_list {
+	padding:0;
+}
+.bbs_d_list ul li {
+	padding:.8em .5em .5em .5em;
+	margin:0;
+	background:#ffffff;
+	position:relative;
+	border-bottom:#d0d1d1 solid 1px;
+}
+.bbs_d_list ul li h2 {
+	overflow:hidden;
+	width:2.242em;
+	height:2.242em;
+	border-radius:1.121em;
+	float:left;
+	border:#d0d1d1 1px solid;
+	padding:0;
+	margin:0;
+	float:left;
+}
+.bbs_d_list ul li h2 img {
+	width:2.242em;
+}
+.bbs_d_list ul li ul {
+	padding:0;
+	margin:0 0 0 3.5em;
+	position:relative;
+}
+.bbs_d_list ul li ul li h4 {
+	padding:0;
+	margin:0;
+	font-size:.9em;
+	font-weight:normal;
+}
+.bbs_d_list ul li ul li {
+	border:#d0d1d1 0px solid;
+	padding:.2em .5em .2em .5em;
+	margin:0;
+}
+.bbs_d_list ul li ul li time {
+	padding:0;
+	margin:0;
+	font-size:.7em;
+	font-weight:normal;
+	color:#747473;
+}
+.bbs_d_list ul li ul li span {
+	font-size:.8em;
+	font-weight:normal;
+	display:block;
+	padding:.8em 0 0 0;
+	line-height:1.5em;
+}
+.bbs_fix {
+	position:fixed;
+	bottom:0;
+	width:100%;
+	background:#ffffff;
+	border-bottom:#000 0px solid;
+}
+/*========正文内容====结束======*/
+
+
+/*========写评论内容====开始======*/
+.bbs_wr_tit {
+	background:#b6d554;
+	height:2.5em;
+}
+.bbs_wr_tit h4 {
+	color:#ffffff;
+	width:33.33%;
+	float:left;
+	text-align:center;
+	font-weight:normal;
+	font-size:.9em;
+	padding:0;
+	margin:0;
+	height:1.2em;
+}
+.bbs_wr_tit h4 a {
+	color:#ffffff;
+}
+input.wrsub {
+	border:#333 0em solid;
+	background:#a97b50;
+	color:#ffffff;
+	padding:.2em .5em;
+	border-radius:.5em;
+	font-size:.8em;
+}
+.bbs_wr_tit h5 {
+	color:#efefef;
+	width:100%;
+	float:left;
+	text-align:center;
+	font-weight:normal;
+	font-size:.6em;
+	padding:0;
+	margin:0;
+}
+.bbs_wr_c {
+	margin:.5em;
+	text-align:center;
+}
+.wrtext {
+	border:#333 0em solid;
+	width:94%;
+	height:10em;
+	font-size:.8em;
+	font-weight:normal;
+	color:#CCC;
+}
+/*========写评论内容====结束======*/
+
+/
+}
+
+@media screen and (min-width:737px) and (max-width:1024px) {
+
+.bbs_box_bj {
+	background-image:url('../../images/bbs/bbs_bj.png');
+	background-repeat: no-repeat;
+	background-size:cover;
+	background-color:#e7e8e9;
+	min-height:568px;
+}
+.bbs_box {
+	background:#ffffff;
+	margin-top:.5em;
+}
+.bbs_box_tit {
+	border-bottom:#d0d1d1 1px solid;
+	margin:0 1em 0 1em;
+	height:2em;
+	padding:.5em 0;
+}
+.bbs_box_tit h2 {
+	overflow:hidden;
+	width:1.542em;
+	height:1.542em;
+	border-radius:.771em;
+	float:left;
+	border:#d0d1d1 1px solid;
+	padding:0;
+	margin:0;
+}
+.bbs_box_tit h2 img {
+	width:1.542em;
+}
+.bbs_box_tit h4 {
+	overflow:hidden;
+	font-weight:normal;
+	font-size:.8em;
+	padding:0 0 0 .5em;
+	margin:0;
+	height:1.5em;
+}
+.bbs_box_tit span {
+	font-weight:normal;
+	font-size:.6em;
+	display:block;
+	color:#747473;
+	padding:0 0 0 .7em;
+	margin:0;
+	float:left;
+}
+.bbs_box_c {
+	margin:0 1.2em 0 1.2em;
+	height: auto;
+	padding:.5em 0 0em 0;
+	line-height:1.5;
+	font-size:.7em;
+	color:#4d4d4c;
+}
+.bbs_box_cd {
+	height:4.5em;
+	overflow:hidden;
+}
+.bbs_box_c h2 {
+	margin:0;
+	padding:.5em 0 0em 0;
+	text-align: left;
+}
+.bbs_box_c h2 img {
+	width:50%;
+}
+.bbs_box_bottom {
+	border-top:#eeefef 1px solid;
+	border-bottom:#eeefef 1px solid;
+	padding:.3em 0;
+	height:1.2em;
+}
+.bbs_box_bottom h5 {
+	width:49%;
+	float:left;
+	padding:0;
+	margin:0;
+	text-align:center;
+	font-size:.6em;
+	font-weight:normal;
+	border-right:#eeefef 1px solid;
+	color:#a1a1a0;
+}
+.bbs_box_bottom h5:last-child {
+	border-right:#666 0px solid;
+}
+.bbs_box_bottom h5 img {
+	width:1.3em;
+	margin-right:.2em;
+}
+
+/*========论坛首页结束======*/
+
+
+/*========正文内容======*/
+.bbs_d {
+	padding:.8em 0 1.2em 0;
+	margin-bottom:1em;
+}
+.bbs_d_tit {
+	background:#b6d554;
+	height:2em;
+	line-height:2em;
+}
+.bbs_d_tit h4 {
+	padding:0 .5em;
+	margin:0;
+	font-weight:normal;
+	font-size:.9em;
+	color:#ffffff;
+}
+.bbs_d_list {
+	padding:0;
+}
+.bbs_d_list ul li {
+	padding:.8em .5em .5em .5em;
+	margin:0;
+	background:#ffffff;
+	position:relative;
+	border-bottom:#d0d1d1 solid 1px;
+}
+.bbs_d_list ul li h2 {
+	overflow:hidden;
+	width:2.242em;
+	height:2.242em;
+	border-radius:1.121em;
+	float:left;
+	border:#d0d1d1 1px solid;
+	padding:0;
+	margin:0;
+	float:left;
+}
+.bbs_d_list ul li h2 img {
+	width:2.242em;
+}
+.bbs_d_list ul li ul {
+	padding:0;
+	margin:0 0 0 3.5em;
+	position:relative;
+}
+.bbs_d_list ul li ul li h4 {
+	padding:0;
+	margin:0;
+	font-size:.9em;
+	font-weight:normal;
+}
+.bbs_d_list ul li ul li {
+	border:#d0d1d1 0px solid;
+	padding:.2em .5em .2em .5em;
+	margin:0;
+}
+.bbs_d_list ul li ul li time {
+	padding:0;
+	margin:0;
+	font-size:.7em;
+	font-weight:normal;
+	color:#747473;
+}
+.bbs_d_list ul li ul li span {
+	font-size:.8em;
+	font-weight:normal;
+	display:block;
+	padding:.8em 0 0 0;
+	line-height:1.5em;
+}
+.bbs_fix {
+	position:fixed;
+	bottom:0;
+	width:100%;
+	background:#ffffff;
+	border-bottom:#000 0px solid;
+}
+/*========正文内容====结束======*/
+
+
+/*========写评论内容====开始======*/
+.bbs_wr_tit {
+	background:#b6d554;
+	height:2.5em;
+}
+.bbs_wr_tit h4 {
+	color:#ffffff;
+	width:33.33%;
+	float:left;
+	text-align:center;
+	font-weight:normal;
+	font-size:.9em;
+	padding:0;
+	margin:0;
+	height:1.2em;
+}
+.bbs_wr_tit h4 a {
+	color:#ffffff;
+}
+input.wrsub {
+	border:#333 0em solid;
+	background:#a97b50;
+	color:#ffffff;
+	padding:.2em .5em;
+	border-radius:.5em;
+	font-size:.8em;
+}
+.bbs_wr_tit h5 {
+	color:#efefef;
+	width:100%;
+	float:left;
+	text-align:center;
+	font-weight:normal;
+	font-size:.6em;
+	padding:0;
+	margin:0;
+}
+.bbs_wr_c {
+	margin:.5em;
+	text-align:center;
+}
+.wrtext {
+	border:#333 0em solid;
+	width:94%;
+	height:10em;
+	font-size:.8em;
+	font-weight:normal;
+	color:#CCC;
+}
+/*========写评论内容====结束======*/
+
+
+
+
+}
+
+@media screen and (min-width:411px) and (max-width:736px) {
+.bbs_box_bj {
+	background-image:url('../../images/bbs/bbs_bj.png');
+	background-repeat: no-repeat;
+	background-size:cover;
+	background-color:#e7e8e9;
+	min-height:568px;
+}
+.bbs_box {
+	background:#ffffff;
+	margin-top:.5em;
+}
+.bbs_box_tit {
+	border-bottom:#d0d1d1 1px solid;
+	margin:0 1em 0 1em;
+	height:2em;
+	padding:.5em 0;
+}
+.bbs_box_tit h2 {
+	overflow:hidden;
+	width:1.542em;
+	height:1.542em;
+	border-radius:.771em;
+	float:left;
+	border:#d0d1d1 1px solid;
+	padding:0;
+	margin:0;
+}
+.bbs_box_tit h2 img {
+	width:1.542em;
+}
+.bbs_box_tit h4 {
+	overflow:hidden;
+	font-weight:normal;
+	font-size:.8em;
+	padding:0 0 0 .5em;
+	margin:0;
+	height:1.5em;
+}
+.bbs_box_tit span {
+	font-weight:normal;
+	font-size:.6em;
+	display:block;
+	color:#747473;
+	padding:0 0 0 .7em;
+	margin:0;
+	float:left;
+}
+.bbs_box_c {
+	margin:0 1.2em 0 1.2em;
+	height: auto;
+	padding:.5em 0 0em 0;
+	line-height:1.5;
+	font-size:.7em;
+	color:#4d4d4c;
+}
+.bbs_box_cd {
+	height:4.5em;
+	overflow:hidden;
+}
+.bbs_box_c h2 {
+	margin:0;
+	padding:.5em 0 0em 0;
+	text-align: left;
+}
+.bbs_box_c h2 img {
+	width:50%;
+}
+.bbs_box_bottom {
+	border-top:#eeefef 1px solid;
+	border-bottom:#eeefef 1px solid;
+	padding:.3em 0;
+	height:1.2em;
+}
+.bbs_box_bottom h5 {
+	width:49%;
+	float:left;
+	padding:0;
+	margin:0;
+	text-align:center;
+	font-size:.6em;
+	font-weight:normal;
+	border-right:#eeefef 1px solid;
+	color:#a1a1a0;
+}
+.bbs_box_bottom h5:last-child {
+	border-right:#666 0px solid;
+}
+.bbs_box_bottom h5 img {
+	width:1.3em;
+	margin-right:.2em;
+}
+
+/*========论坛首页结束======*/
+
+
+/*========正文内容======*/
+.bbs_d {
+	padding:.8em 0 1.2em 0;
+	margin-bottom:1em;
+}
+.bbs_d_tit {
+	background:#b6d554;
+	height:2em;
+	line-height:2em;
+}
+.bbs_d_tit h4 {
+	padding:0 .5em;
+	margin:0;
+	font-weight:normal;
+	font-size:.9em;
+	color:#ffffff;
+}
+.bbs_d_list {
+	padding:0;
+}
+.bbs_d_list ul li {
+	padding:.8em .5em .5em .5em;
+	margin:0;
+	background:#ffffff;
+	position:relative;
+	border-bottom:#d0d1d1 solid 1px;
+}
+.bbs_d_list ul li h2 {
+	overflow:hidden;
+	width:2.242em;
+	height:2.242em;
+	border-radius:1.121em;
+	float:left;
+	border:#d0d1d1 1px solid;
+	padding:0;
+	margin:0;
+	float:left;
+}
+.bbs_d_list ul li h2 img {
+	width:2.242em;
+}
+.bbs_d_list ul li ul {
+	padding:0;
+	margin:0 0 0 3.5em;
+	position:relative;
+}
+.bbs_d_list ul li ul li h4 {
+	padding:0;
+	margin:0;
+	font-size:.9em;
+	font-weight:normal;
+}
+.bbs_d_list ul li ul li {
+	border:#d0d1d1 0px solid;
+	padding:.2em .5em .2em .5em;
+	margin:0;
+}
+.bbs_d_list ul li ul li time {
+	padding:0;
+	margin:0;
+	font-size:.7em;
+	font-weight:normal;
+	color:#747473;
+}
+.bbs_d_list ul li ul li span {
+	font-size:.8em;
+	font-weight:normal;
+	display:block;
+	padding:.8em 0 0 0;
+	line-height:1.5em;
+}
+.bbs_fix {
+	position:fixed;
+	bottom:0;
+	width:100%;
+	background:#ffffff;
+	border-bottom:#000 0px solid;
+}
+/*========正文内容====结束======*/
+
+
+/*========写评论内容====开始======*/
+.bbs_wr_tit {
+	background:#b6d554;
+	height:2.5em;
+}
+.bbs_wr_tit h4 {
+	color:#ffffff;
+	width:33.33%;
+	float:left;
+	text-align:center;
+	font-weight:normal;
+	font-size:.9em;
+	padding:0;
+	margin:0;
+	height:1.2em;
+}
+.bbs_wr_tit h4 a {
+	color:#ffffff;
+}
+input.wrsub {
+	border:#333 0em solid;
+	background:#a97b50;
+	color:#ffffff;
+	padding:.2em .5em;
+	border-radius:.5em;
+	font-size:.8em;
+}
+.bbs_wr_tit h5 {
+	color:#efefef;
+	width:100%;
+	float:left;
+	text-align:center;
+	font-weight:normal;
+	font-size:.6em;
+	padding:0;
+	margin:0;
+}
+.bbs_wr_c {
+	margin:.5em;
+	text-align:center;
+}
+.wrtext {
+	border:#333 0em solid;
+	width:94%;
+	height:10em;
+	font-size:.8em;
+	font-weight:normal;
+	color:#CCC;
+}
+/*========写评论内容====结束======*/
+
+}
+
+@media screen and (min-width:320px) and (max-width:410px) {
+.bbs_box_bj {
+	background-image:url('../../images/bbs/bbs_bj.png');
+	background-repeat: no-repeat;
+	background-size:cover;
+	background-color:#e7e8e9;
+	min-height:568px;
+}
+.bbs_box {
+	background:#ffffff;
+	margin-top:.5em;
+}
+.bbs_box_tit {
+	border-bottom:#d0d1d1 1px solid;
+	margin:0 1em 0 1em;
+	height:2em;
+	padding:.5em 0;
+}
+.bbs_box_tit h2 {
+	overflow:hidden;
+	width:1.542em;
+	height:1.542em;
+	border-radius:.771em;
+	float:left;
+	border:#d0d1d1 1px solid;
+	padding:0;
+	margin:0;
+}
+.bbs_box_tit h2 img {
+	width:1.542em;
+}
+.bbs_box_tit h4 {
+	overflow:hidden;
+	font-weight:normal;
+	font-size:.8em;
+	padding:0 0 0 .5em;
+	margin:0;
+	height:1.5em;
+}
+.bbs_box_tit span {
+	font-weight:normal;
+	font-size:.6em;
+	display:block;
+	color:#747473;
+	padding:0 0 0 .7em;
+	margin:0;
+	float:left;
+}
+.bbs_box_c {
+	margin:0 1.2em 0 1.2em;
+	height: auto;
+	padding:.5em 0 0em 0;
+	line-height:1.5;
+	font-size:.7em;
+	color:#4d4d4c;
+}
+.bbs_box_cd {
+	height:4.5em;
+	overflow:hidden;
+}
+.bbs_box_c h2 {
+	margin:0;
+	padding:.5em 0 0em 0;
+	text-align: left;
+}
+.bbs_box_c h2 img {
+	width:50%;
+}
+.bbs_box_bottom {
+	border-top:#eeefef 1px solid;
+	border-bottom:#eeefef 1px solid;
+	padding:.3em 0;
+	height:1.2em;
+}
+.bbs_box_bottom h5 {
+	width:49%;
+	float:left;
+	padding:0;
+	margin:0;
+	text-align:center;
+	font-size:.6em;
+	font-weight:normal;
+	border-right:#eeefef 1px solid;
+	color:#a1a1a0;
+}
+.bbs_box_bottom h5:last-child {
+	border-right:#666 0px solid;
+}
+.bbs_box_bottom h5 img {
+	width:1.3em;
+	margin-right:.2em;
+}
+/*=========论坛首页结束=======*/
+
+
+/*========正文内容======*/
+.bbs_d {
+	padding:.8em 0 1.2em 0;
+	margin-bottom:1em;
+}
+.bbs_d_tit {
+	background:#b6d554;
+	height:2em;
+	line-height:2em;
+}
+.bbs_d_tit h4 {
+	padding:0 .5em;
+	margin:0;
+	font-weight:normal;
+	font-size:.9em;
+	color:#ffffff;
+}
+.bbs_d_list {
+	padding:0;
+}
+.bbs_d_list ul li {
+	padding:.8em .5em .5em .5em;
+	margin:0;
+	background:#ffffff;
+	position:relative;
+	border-bottom:#d0d1d1 solid 1px;
+}
+.bbs_d_list ul li h2 {
+	overflow:hidden;
+	width:2.242em;
+	height:2.242em;
+	border-radius:1.121em;
+	float:left;
+	border:#d0d1d1 1px solid;
+	padding:0;
+	margin:0;
+	float:left;
+}
+.bbs_d_list ul li h2 img {
+	width:2.242em;
+}
+.bbs_d_list ul li ul {
+	padding:0;
+	margin:0 0 0 3.5em;
+	position:relative;
+}
+.bbs_d_list ul li ul li h4 {
+	padding:0;
+	margin:0;
+	font-size:.9em;
+	font-weight:normal;
+}
+.bbs_d_list ul li ul li {
+	border:#d0d1d1 0px solid;
+	padding:.2em .5em .2em .5em;
+	margin:0;
+}
+.bbs_d_list ul li ul li time {
+	padding:0;
+	margin:0;
+	font-size:.7em;
+	font-weight:normal;
+	color:#747473;
+}
+.bbs_d_list ul li ul li span {
+	font-size:.8em;
+	font-weight:normal;
+	display:block;
+	padding:.8em 0 0 0;
+	line-height:1.5em;
+}
+.bbs_fix {
+	position:fixed;
+	bottom:0;
+	width:100%;
+	background:#ffffff;
+	border-bottom:#000 0px solid;
+}
+/*========正文内容====结束======*/
+
+/*========写评论内容====开始======*/
+.bbs_wr_tit {
+	background:#b6d554;
+	height:2.5em;
+}
+.bbs_wr_tit h4 {
+	color:#ffffff;
+	width:33.33%;
+	float:left;
+	text-align:center;
+	font-weight:normal;
+	font-size:.9em;
+	padding:0;
+	margin:0;
+	height:1.2em;
+}
+.bbs_wr_tit h4 a {
+	color:#ffffff;
+}
+input.wrsub {
+	border:#333 0em solid;
+	background:#a97b50;
+	color:#ffffff;
+	padding:.2em .5em;
+	border-radius:.5em;
+	font-size:.8em;
+}
+.bbs_wr_tit h5 {
+	color:#efefef;
+	width:100%;
+	float:left;
+	text-align:center;
+	font-weight:normal;
+	font-size:.6em;
+	padding:0;
+	margin:0;
+}
+.bbs_wr_c {
+	margin:.5em;
+	text-align:center;
+}
+.wrtext {
+	border:#333 0em solid;
+	width:94%;
+	height:10em;
+	font-size:.8em;
+	font-weight:normal;
+	color:#CCC;
+}
+/*========写评论内容====结束======*/
+
+
+}
+
+@media screen and (min-width:100px) and (max-width:319px) {
+.bbs_box_bj {
+	background-image:url('../../images/bbs/bbs_bj.png');
+	background-repeat: no-repeat;
+	background-size:cover;
+	background-color:#e7e8e9;
+	min-height:568px;
+}
+.bbs_box {
+	background:#ffffff;
+	margin-top:.5em;
+}
+.bbs_box_tit {
+	border-bottom:#d0d1d1 1px solid;
+	margin:0 1em 0 1em;
+	height:2em;
+	padding:.5em 0;
+}
+.bbs_box_tit h2 {
+	overflow:hidden;
+	width:1.542em;
+	height:1.542em;
+	border-radius:.771em;
+	float:left;
+	border:#d0d1d1 1px solid;
+	padding:0;
+	margin:0;
+}
+.bbs_box_tit h2 img {
+	width:1.542em;
+}
+.bbs_box_tit h4 {
+	overflow:hidden;
+	font-weight:normal;
+	font-size:.8em;
+	padding:0 0 0 .5em;
+	margin:0;
+	height:1.5em;
+}
+.bbs_box_tit span {
+	font-weight:normal;
+	font-size:.6em;
+	display:block;
+	color:#747473;
+	padding:0 0 0 .7em;
+	margin:0;
+	float:left;
+}
+.bbs_box_c {
+	margin:0 1.2em 0 1.2em;
+	height: auto;
+	padding:.5em 0 0em 0;
+	line-height:1.5;
+	font-size:.7em;
+	color:#4d4d4c;
+}
+.bbs_box_cd {
+	height:4.5em;
+	overflow:hidden;
+}
+.bbs_box_c h2 {
+	margin:0;
+	padding:.5em 0 0em 0;
+	text-align: left;
+}
+.bbs_box_c h2 img {
+	width:50%;
+}
+.bbs_box_bottom {
+	border-top:#eeefef 1px solid;
+	border-bottom:#eeefef 1px solid;
+	padding:.3em 0;
+	height:1.2em;
+}
+.bbs_box_bottom h5 {
+	width:49%;
+	float:left;
+	padding:0;
+	margin:0;
+	text-align:center;
+	font-size:.6em;
+	font-weight:normal;
+	border-right:#eeefef 1px solid;
+	color:#a1a1a0;
+}
+.bbs_box_bottom h5:last-child {
+	border-right:#666 0px solid;
+}
+.bbs_box_bottom h5 img {
+	width:1.3em;
+	margin-right:.2em;
+}
+/*=========论坛首页结束=======*/
+
+
+/*========正文内容======*/
+.bbs_d {
+	padding:.8em 0 1.2em 0;
+	margin-bottom:1em;
+}
+.bbs_d_tit {
+	background:#b6d554;
+	height:2em;
+	line-height:2em;
+}
+.bbs_d_tit h4 {
+	padding:0 .5em;
+	margin:0;
+	font-weight:normal;
+	font-size:.9em;
+	color:#ffffff;
+}
+.bbs_d_list {
+	padding:0;
+}
+.bbs_d_list ul li {
+	padding:.8em .5em .5em .5em;
+	margin:0;
+	background:#ffffff;
+	position:relative;
+	border-bottom:#d0d1d1 solid 1px;
+}
+.bbs_d_list ul li h2 {
+	overflow:hidden;
+	width:2.242em;
+	height:2.242em;
+	border-radius:1.121em;
+	float:left;
+	border:#d0d1d1 1px solid;
+	padding:0;
+	margin:0;
+	float:left;
+}
+.bbs_d_list ul li h2 img {
+	width:2.242em;
+}
+.bbs_d_list ul li ul {
+	padding:0;
+	margin:0 0 0 3.5em;
+	position:relative;
+}
+.bbs_d_list ul li ul li h4 {
+	padding:0;
+	margin:0;
+	font-size:.9em;
+	font-weight:normal;
+}
+.bbs_d_list ul li ul li {
+	border:#d0d1d1 0px solid;
+	padding:.2em .5em .2em .5em;
+	margin:0;
+}
+.bbs_d_list ul li ul li time {
+	padding:0;
+	margin:0;
+	font-size:.7em;
+	font-weight:normal;
+	color:#747473;
+}
+.bbs_d_list ul li ul li span {
+	font-size:.8em;
+	font-weight:normal;
+	display:block;
+	padding:.8em 0 0 0;
+	line-height:1.5em;
+}
+.bbs_fix {
+	position:fixed;
+	bottom:0;
+	width:100%;
+	background:#ffffff;
+	border-bottom:#000 0px solid;
+}
+/*========正文内容====结束======*/
+
+/*========写评论内容====开始======*/
+.bbs_wr_tit {
+	background:#b6d554;
+	height:2.5em;
+}
+.bbs_wr_tit h4 {
+	color:#ffffff;
+	width:33.33%;
+	float:left;
+	text-align:center;
+	font-weight:normal;
+	font-size:.9em;
+	padding:0;
+	margin:0;
+	height:1.2em;
+}
+.bbs_wr_tit h4 a {
+	color:#ffffff;
+}
+input.wrsub {
+	border:#333 0em solid;
+	background:#a97b50;
+	color:#ffffff;
+	padding:.2em .5em;
+	border-radius:.5em;
+	font-size:.8em;
+}
+.bbs_wr_tit h5 {
+	color:#efefef;
+	width:100%;
+	float:left;
+	text-align:center;
+	font-weight:normal;
+	font-size:.6em;
+	padding:0;
+	margin:0;
+}
+.bbs_wr_c {
+	margin:.5em;
+	text-align:center;
+}
+.wrtext {
+	border:#333 0em solid;
+	width:94%;
+	height:10em;
+	font-size:.8em;
+	font-weight:normal;
+	color:#CCC;
+}
+/*========写评论内容====结束======*/
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

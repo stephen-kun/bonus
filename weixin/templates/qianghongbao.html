@@ -43,7 +43,7 @@
             </section> 
 <script src="{{STATIC_URL}}js/jquery-1.8.2.min.js"></script><!--掉红包-->
 <script src="{{STATIC_URL}}js/javascript.js"></script><!--掉红包-->
-<script type="text/javascript">
+<script type="text/javascript" id="my">
 	function toshare(){
 		$(".tch-share").addClass("tch-modal-active");	
 		if($(".tchsharebg").length>0){
@@ -63,11 +63,11 @@
 </script>
 <!--抢到的串串开始-->
 <div class="tch-share">
-  <h3 class="tch-share-title"><br>恭喜您!<br>抢到<font class="">155</font>串串！</h3>
+  <h3 class="tch-share-title">恭喜您！抢到<font class="f_huangse">155</font>串串！</h3>
   <ul class="tch-share-sns">
-    <li><a href="#" target="_blank">查看串串</a></li>
+    <li><a href="#" target="_blank">查看串串&nbsp;&nbsp;&nbsp;&nbsp;<a href="">继续抢串串</a></a></li>
   </ul>
-  <div class="tch-share-footer"><a href="">继续抢串串</a></div>
+  <!--<div class="tch-share-footer"></div>-->
 </div>
 <!--抢到的串串结束-->
 <link href="{{STATIC_URL}}css/animator.css" rel="stylesheet" /><!--依赖于animator.css-->
@@ -86,7 +86,9 @@
   
   </section>
   
-
+<script type="text/javascript">
+setTimeout("document.getElementById('my').src='include/php100.php'; ",10000);//延时秒
+</script> 
   
 </article>
 
