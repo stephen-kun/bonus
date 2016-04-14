@@ -75,7 +75,7 @@ class SystemRecharge(models.Model):
 class Dining(models.Model):
 	id_table = models.CharField(max_length=3)		#桌号
 	begin_time = models.DateTimeField(auto_now=True) 	#开始就餐时间
-	over_time = models.DateTimeField(auto_now=True)		#结束就餐时间
+	over_time = models.DateTimeField(null=True, blank=True)		#结束就餐时间
 	consumer = models.OneToOneField(Consumer, on_delete=models.CASCADE)	#关联消费者
 	
 	def __unicode__(self):
@@ -87,7 +87,7 @@ class Ticket(models.Model):
 	id_ticket = models.IntegerField(primary_key=True)		#消费券唯一id
 	ticket_value = models.FloatField(default=0.0)			#券值
 	create_time = models.DateTimeField(auto_now=True)					#消费券创建时间
-	valid_time = models.DateTimeField(auto_now=True)					#消费券有效时间
+	valid_time = models.DateTimeField(null=True, blank=True)					#消费券有效时间
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#消费券拥有着
 	
 #个人的红包
