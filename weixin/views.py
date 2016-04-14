@@ -85,8 +85,8 @@ def token(request):
 				signature, timestamp, nonce):
 			return HttpResponseBadRequest('Verify Failed')
 
-		return HttpResponse(
-			request.GET.get('echostr', ''), content_type="text/plain")  
+		return HttpResponse(request.GET.get('echostr', ''), content_type="text/plain")  
 	
-	PostResponse(request)
+	response = PostResponse(request)
+	return response.auto_handle()
 

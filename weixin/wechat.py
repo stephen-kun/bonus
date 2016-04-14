@@ -20,6 +20,8 @@ APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
 ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=CODE&grant_type=authorization_code'%(APPID,APPSECRET)
 OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_base&state=1#wechat_redirect"%(APPID)
 
+global wechat
+
 conf = WechatConf(
     token = TOKEN,
     appid = APPID,
@@ -27,10 +29,9 @@ conf = WechatConf(
     encrypt_mode = 'normal'
 )
 
-WECHAT = WechatBasic(conf = conf)
+wechat = WechatBasic(conf = conf)
 
 class PostResponse():
-    wechat = WECHAT
     def __init__(self, request):
         try:
             wechat.parse_data(data = request.body)
@@ -53,20 +54,19 @@ class PostResponse():
         table.status = True
         table.seats += 1
         table.save()
-        # 查询Consumer，如果有记录则修改subscribe/is_dining值；如果没有记录，则先从微信获取用户信息，然后新建一条记录
+        # 查询Consumer，如果有记录则修改subscribe；如果没有记录，则先从微信获取用户信息，然后新建一条记录
         try:
             consumer = Consumer.objects.get(open_id=self.source)
             if consumer.subscribe == False:
                 consumer.subscribe = True
+                consumer.on_table = table
         except ObjectDoesNotExist:
             # 通过网页授权获取用户信息
-            consumer = Consumer.objects.create(open_id=self.source)
+            consumer = Consumer.objects.create(open_id=self.source, on_table=table)
             consumer.create_time = curr_time
-        consumer.is_dining = True
-        consumer.on_table = table
         consumer.save()
         # 在Dining表中创建一条记录
-        dining = Dining.objects.create(id_table=index_table, begin_time=curr_time, consumer=consumer)
+        dining = Dining.objects.create(id_table=index_table, consumer=consumer)
         dining.save()
         # 返回选座信息    
         return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))
@@ -85,17 +85,18 @@ class PostResponse():
         # 修改DiningTable表中status/seats值
         curr_time = timezone.now()
         index_table = self.message.key
-        table = DiningTable.objects.get(index_table=index_table)
-        table.status = True
-        table.seats += 1
-        table.save()        
+        table = DiningTable.objects.get(index_table=index_table)       
         # 查询Consumer, 修改is_dining值为True
         consumer = Consumer.objects.get(open_id=self.source)
-        consumer.is_dining = True
+        if consumer.on_table.index_table != index_table:
+            return wechat.response_text(content =  u'请您先结算%s号桌所抢红包，再扫描该桌'%(consumer.on_table.index_table))
         consumer.on_table = table
-        consumer.save()     
+        consumer.save()
+        table.status = True
+        table.seats += 1
+        table.save()         
         # 在Dining表中创建一条记录
-        dining = Dining.objects.create(id_table=index_table, begin_time=curr_time, consumer=consumer)
+        dining = Dining.objects.create(id_table=index_table, consumer=consumer)
         dining.save()       
         # 返回选座信息
         return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))
