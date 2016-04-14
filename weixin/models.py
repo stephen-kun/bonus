@@ -1,177 +1,190 @@
-ï»¿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from django.db import models
 from django.conf import settings
+import django.utils.timezone as timezone
 
-# çº¢åŒ…æ—¥ç»Ÿè®¡è¡¨
+# Create your models here.
+# ºì°üÈÕÍ³¼Æ±í
 class BonusCountDay(models.Model):
-	consumer = models.CharField(primary_key=True, max_length=30)	#ç”¨æˆ·å”¯ä¸€id
-	count_num = models.IntegerField(default=0)						#ä¸»æ’è¡Œç»Ÿè®¡æ•°
-	other_info = models.CharField(max_length=30)					#å…¶ä»–ç‰©å“ç»Ÿè®¡æ•°ï¼Œå­—ç¬¦ä¸²å½¢å¼
+	consumer = models.CharField(primary_key=True, max_length=30)	#ÓÃ»§Î¨Ò»id
+	count_num = models.IntegerField(default=0)						#Ö÷ÅÅĞĞÍ³¼ÆÊı
+	other_info = models.CharField(max_length=30, null=True, blank=True)					#ÆäËûÎïÆ·Í³¼ÆÊı£¬×Ö·û´®ĞÎÊ½
 
 
-# çº¢åŒ…æœˆç»Ÿè®¡è¡¨
+# ºì°üÔÂÍ³¼Æ±í
 class BonusCountMonth(models.Model):
-	consumer = models.CharField(primary_key=True, max_length=30)	#ç”¨æˆ·å”¯ä¸€id
-	count_num = models.IntegerField(default=0)						#ä¸»æ’è¡Œç»Ÿè®¡æ•°
-	other_info = models.CharField(max_length=30)					#å…¶ä»–ç‰©å“ç»Ÿè®¡æ•°ï¼Œå­—ç¬¦ä¸²å½¢å¼
-	
-	
-#æ¡Œå°è¡¨ï¼Œç»´æŠ¤æ¡Œå°çŠ¶æ€		
+	consumer = models.CharField(primary_key=True, max_length=30)	#ÓÃ»§Î¨Ò»id
+	count_num = models.IntegerField(default=0)						#Ö÷ÅÅĞĞÍ³¼ÆÊı
+	other_info = models.CharField(max_length=30, null=True, blank=True)					#ÆäËûÎïÆ·Í³¼ÆÊı£¬×Ö·û´®ĞÎÊ½
+
+#×ÀÌ¨±í£¬Î¬»¤×ÀÌ¨×´Ì¬		
 class DiningTable(models.Model):
-	index_table = models.IntegerField(primary_key=True)	#æ¡Œå°ç¼–å·
-	status = models.BooleanField(default=False)			#æ¡Œå°çŠ¶æ€
-	seats = models.IntegerField(default=0)					#æ¡Œå°å…¥åº§äººæ•°
-	is_private = models.BooleanField(default=False)		#æ˜¯å¦æ˜¯åŒ…å¢
+	index_table = models.CharField(primary_key=True, max_length=3)	#×ÀÌ¨±àºÅ
+	status = models.BooleanField(default=False)			#×ÀÌ¨×´Ì¬
+	seats = models.IntegerField(default=0)					#×ÀÌ¨Èë×ùÈËÊı
+	is_private = models.BooleanField(default=False)		#ÊÇ·ñÊÇ°üÏá
 
 	def __unicode__(self):
-		return "table %d"%(self.indexTable)
-
-#æ¶ˆè´¹è€…æ•°æ®è¡¨		
+		return "table %s"%(self.index_table)
+		
+#Ïû·ÑÕßÊı¾İ±í		
 class Consumer(models.Model):
-	open_id = models.CharField(max_length=30, primary_key=True)	#å¾®ä¿¡openId
-	name = models.CharField(max_length=30)							#ç”¨æˆ·å
-	sex = models.BooleanField(default=True)						#æ€§åˆ«
-	phone_num = models.CharField(max_length=20)					
-	address = models.CharField(max_length=30)
-	is_dining = models.BooleanField(default=False)					#æ˜¯å¦å¤„äºå°±é¤çŠ¶æ€
-	snd_bonus_num = models.IntegerField(default=0)					#å‘çº¢åŒ…æ€»æ•°
-	rcv_bonus_num = models.IntegerField(default=0)					#æ”¶çº¢åŒ…æ€»æ•°
-	snd_bonus_value = models.IntegerField(default=0)				#å‘çº¢åŒ…é‡‘é¢
-	own_bonus_value = models.IntegerField(default=0)				#å¯ç”¨çº¢åŒ…é‡‘é¢
-	own_bonus_detail = models.CharField(max_length=30)				#å¯ç”¨çº¢åŒ…æ˜ç»†
-	own_ticket_value = models.IntegerField(default=0)				#å¯ç”¨ç¤¼åˆ¸é‡‘é¢
-	create_time = models.DateTimeField()							#é¦–æ¬¡å…³æ³¨æ—¶é—´
-	subscribe = models.BooleanField(default=True)					#æ˜¯å¦å…³æ³¨
-	on_table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)	#å°±é¤æ¡Œå°
+	open_id = models.CharField(max_length=30, primary_key=True)	#Î¢ĞÅopenId
+	name = models.CharField(max_length=30, null=True, blank=True)							#ÓÃ»§Ãû
+	sex = models.BooleanField(default=True)						#ĞÔ±ğ
+	phone_num = models.CharField(max_length=20, null=True, blank=True)					
+	address = models.CharField(max_length=30, null=True, blank=True)
+	is_dining = models.BooleanField(default=False)					#ÊÇ·ñ´¦ÓÚ¾Í²Í×´Ì¬
+	snd_bonus_num = models.IntegerField(default=0)					#·¢ºì°ü×ÜÊı
+	rcv_bonus_num = models.IntegerField(default=0)					#ÊÕºì°ü×ÜÊı
+	snd_bonus_value = models.IntegerField(default=0)				#·¢ºì°ü½ğ¶î
+	own_bonus_value = models.IntegerField(default=0)				#¿ÉÓÃºì°ü½ğ¶î
+	own_bonus_detail = models.CharField(max_length=30, null=True, blank=True)				#¿ÉÓÃºì°üÃ÷Ï¸
+	own_ticket_value = models.IntegerField(default=0)				#¿ÉÓÃÀñÈ¯½ğ¶î
+	create_time = models.DateTimeField(default=timezone.now)							#Ê×´Î¹Ø×¢Ê±¼ä
+	subscribe = models.BooleanField(default=True)					#ÊÇ·ñ¹Ø×¢
+	on_table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)	#¾Í²Í×ÀÌ¨
 	
 	def __unicode__(self):
 		return self.name
 		
-#ä¸ªäººå……å€¼
-class PersonRecharge(models.Model):
-	id_recharge = models.IntegerField(primary_key=True)		#å……å€¼è®°å½•id
-	recharge_value = models.FloatField(default=0.0)			#å……å€¼é‡‘é¢
-	recharge_time = models.DateTimeField()						#å……å€¼æ—¶é—´
-	recharge_person = models.CharField(max_length=30)			#å……å€¼äºº
-	recharge_type = models.IntegerField(default=0)				#å……å€¼æ–¹å¼ï¼šå¾®ä¿¡/ä¹°å•ç»“ä½™/å©‰æ‹’/çº¢åŒ…æœªè¢«é¢†å–
-	
-	def __unicode__(self):
-		return self.recharge_person
-		
-#ç³»ç»Ÿå……å€¼è®°å½•
-class SystemRecharge(models.Model):
-	id_recharge = models.IntegerField(primary_key=True)		#å……å€¼è®°å½•id
-	recharge_value = models.FloatField(default=0.0)			#å……å€¼é‡‘é¢
-	recharge_time = models.DateTimeField()						#å……å€¼æ—¶é—´
-	recharge_person = models.CharField(max_length=30)			#å……å€¼äºº
-	
-	def __unicode__(self):
-		return self.recharge_person
-
-#å°±é¤è®°å½•è¡¨		
+#¾Í²Í¼ÇÂ¼±í		
 class Dining(models.Model):
-	id_dining = models.IntegerField(primary_key=True)
-	id_table = models.IntegerField()		#æ¡Œå·
-	begin_time = models.DateTimeField() 	#å¼€å§‹å°±é¤æ—¶é—´
-	over_time = models.DateTimeField()		#ç»“æŸå°±é¤æ—¶é—´
-	consumer = models.OneToOneField(Consumer, on_delete=models.CASCADE)	#å…³è”æ¶ˆè´¹è€…
+	id_table = models.CharField(max_length=3, null=True, blank=True)		#×ÀºÅ
+	begin_time = models.DateTimeField(auto_now=True) 	#¿ªÊ¼¾Í²ÍÊ±¼ä
+	over_time = models.DateTimeField(null=True, blank=True)		#½áÊø¾Í²ÍÊ±¼ä
+	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#¹ØÁªÏû·ÑÕß
 	
 	def __unicode__(self):
 		return "Dining Record %s"%(self.consumer.name)
 		
-		
-#æ¶ˆè´¹åˆ¸
-class Ticket(models.Model):
-	id_ticket = models.IntegerField(primary_key=True)		#æ¶ˆè´¹åˆ¸å”¯ä¸€id
-	ticket_value = models.FloatField(default=0.0)			#åˆ¸å€¼
-	create_time = models.DateTimeField()					#æ¶ˆè´¹åˆ¸åˆ›å»ºæ—¶é—´
-	valid_time = models.DateTimeField()					#æ¶ˆè´¹åˆ¸æœ‰æ•ˆæ—¶é—´
-	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#æ¶ˆè´¹åˆ¸æ‹¥æœ‰ç€
-	
-#ä¸ªäººçš„çº¢åŒ…
-class PersonBonus(models.Model):
-	id_bonus = models.IntegerField(primary_key=True)		#ä¸ªäººçº¢åŒ…å”¯ä¸€id
-	bonus_type = models.IntegerField(default=0)			#çº¢åŒ…ç±»å‹ï¼šæ™®é€šçº¢åŒ…/æ‰‹æ°”çº¢åŒ…/ç³»ç»Ÿçº¢åŒ…
-	to_table = models.IntegerField()						#æ”¶çº¢åŒ…çš„æ¡Œå°
-	from_table = models.IntegerField()						#å‘çº¢åŒ…çš„æ¡Œå°
-	to_message = models.CharField(max_length=140)			#èµ è¨€
-	title = models.CharField(max_length=40)				#å† å
-	bonus_num = models.IntegerField(default=0)				#çº¢åŒ…ä¸ªæ•°
-	bonus_remain = models.IntegerField(default=0)			#å‰©ä½™çº¢åŒ…ä¸ªæ•°
-	is_exhausted = models.BooleanField(default=False)		#çº¢åŒ…å·²è€—å°½
-	create_time = models.DateTimeField()					#å‘é€æ—¶é—´
-	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#å‘é€çº¢åŒ…è€…
+#¸öÈË³äÖµ
+class PersonRecharge(models.Model):
+	id_recharge = models.IntegerField(primary_key=True)		#³äÖµ¼ÇÂ¼id
+	recharge_value = models.FloatField(default=0.0)			#³äÖµ½ğ¶î
+	recharge_time = models.DateTimeField(default=timezone.now)						#³äÖµÊ±¼ä
+	recharge_type = models.IntegerField(default=0)				#³äÖµ·½Ê½£ºÎ¢ĞÅ/Âòµ¥½áÓà/Íñ¾Ü/ºì°üÎ´±»ÁìÈ¡
+	recharge_person = models.ForeignKey(Consumer, on_delete=models.CASCADE)			#³äÖµÈË			
 	
 	def __unicode__(self):
-		return self.consume.name
+		return '%s PersonRecharge %d'%(self.recharge_person.name, self.id_recharge)
 		
-#ç³»ç»Ÿçº¢åŒ…
+#ÏµÍ³³äÖµ¼ÇÂ¼
+class SystemRecharge(models.Model):
+	id_recharge = models.IntegerField(primary_key=True)		#³äÖµ¼ÇÂ¼id
+	recharge_value = models.FloatField(default=0.0)			#³äÖµ½ğ¶î
+	recharge_time = models.DateTimeField(default=timezone.now)						#³äÖµÊ±¼ä
+	recharge_person = models.CharField(max_length=30, default='admin')			#³äÖµÈË
+	
+	def __unicode__(self):
+		return 'SystemRecharge %d'%(self.id_recharge)		
+		
+#Ïû·ÑÈ¯
+class Ticket(models.Model):
+	id_ticket = models.IntegerField(primary_key=True)		#Ïû·ÑÈ¯Î¨Ò»id
+	ticket_value = models.FloatField(default=0.0)			#È¯Öµ
+	create_time = models.DateTimeField(default=timezone.now)					#Ïû·ÑÈ¯´´½¨Ê±¼ä
+	valid_time = models.DateTimeField(null=True, blank=True)					#Ïû·ÑÈ¯ÓĞĞ§Ê±¼ä
+	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#Ïû·ÑÈ¯ÓµÓĞ×Å
+	
+	def __unicode__(self):
+		return '%s ticket id%d'%(self.consumer.name, self.id_ticket)
+	
+	
+#¸öÈËµÄºì°ü
+class PersonBonus(models.Model):
+	id_bonus = models.IntegerField(primary_key=True)		#¸öÈËºì°üÎ¨Ò»id
+	bonus_type = models.IntegerField(default=0)			#ºì°üÀàĞÍ£ºÆÕÍ¨ºì°ü/ÊÖÆøºì°ü/ÏµÍ³ºì°ü
+	to_table = models.CharField(max_length=3,null=True, blank=True)						#ÊÕºì°üµÄ×ÀÌ¨
+	from_table = models.CharField(max_length=3,null=True, blank=True)						#·¢ºì°üµÄ×ÀÌ¨
+	to_message = models.CharField(max_length=140, null=True, blank=True)			#ÔùÑÔ
+	title = models.CharField(max_length=40, null=True, blank=True)				#¹ÚÃû
+	bonus_num = models.IntegerField(default=0)				#ºì°ü¸öÊı
+	bonus_remain = models.IntegerField(default=0)			#Ê£Óàºì°ü¸öÊı
+	is_exhausted = models.BooleanField(default=False)		#ºì°üÒÑºÄ¾¡
+	create_time = models.DateTimeField(default=timezone.now)					#·¢ËÍÊ±¼ä
+	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#·¢ËÍºì°üÕß
+	
+	def __unicode__(self):
+		return '%s PersonBonus %d'%(self.consumer.name, self.id_bonus)
+		
+#ÏµÍ³ºì°ü
 class SystemBonus(models.Model):
-	id_bonus = models.IntegerField(primary_key=True)		#ç³»ç»Ÿçº¢åŒ…å”¯ä¸€id
-	bonus_type = models.IntegerField(default=0)			#çº¢åŒ…ç±»å‹ï¼šæ™®é€šçº¢åŒ…/æ‰‹æ°”çº¢åŒ…/ç³»ç»Ÿçº¢åŒ…
-	to_message = models.CharField(max_length=45)			#èµ è¨€
-	title = models.CharField(max_length=20)				#å† å
-	bonus_num = models.IntegerField(default=0)				#çº¢åŒ…ä¸ªæ•°
-	bonus_remain = models.IntegerField(default=0)			#å‰©ä½™çº¢åŒ…ä¸ªæ•°
-	is_exhausted = models.BooleanField(default=False)		#çº¢åŒ…å·²è€—å°½
-	create_time = models.DateTimeField()					#å‘é€æ—¶é—´
-	admin = models.ForeignKey(settings.AUTH_USER_MODEL, default=settings.AUTH_USER_MODEL[0])	#å‘é€çº¢åŒ…è€…
+	id_bonus = models.IntegerField(primary_key=True)		#ÏµÍ³ºì°üÎ¨Ò»id
+	bonus_type = models.IntegerField(default=0)			#ºì°üÀàĞÍ£ºÆÕÍ¨ºì°ü/ÊÖÆøºì°ü/ÏµÍ³ºì°ü
+	to_message = models.CharField(max_length=45, null=True, blank=True)		#ÔùÑÔ
+	title = models.CharField(max_length=20, null=True, blank=True)				#¹ÚÃû
+	bonus_num = models.IntegerField(default=0)				#ºì°ü¸öÊı
+	bonus_remain = models.IntegerField(default=0)			#Ê£Óàºì°ü¸öÊı
+	is_exhausted = models.BooleanField(default=False)		#ºì°üÒÑºÄ¾¡
+	create_time = models.DateTimeField(default=timezone.now)					#·¢ËÍÊ±¼ä
+	admin = models.ForeignKey(settings.AUTH_USER_MODEL, default=settings.AUTH_USER_MODEL[0])	#·¢ËÍºì°üÕß
 
 	def __unicode__(self):
-		return "System Bonus"
+		return "SystemBonus %d"%(self.id_bonus)	
 		
-#æ¥æ”¶çš„çº¢åŒ…
+#½ÓÊÕµÄºì°ü
 class RcvBonus(models.Model):
-	id_bonus = models.IntegerField(primary_key=True)						#æ”¶åˆ°çš„çº¢åŒ…å”¯ä¸€id
-	is_message = models.BooleanField(default=False)						#æ˜¯å¦å·²ç•™è¨€
-	is_refuse = models.BooleanField(default=False)							#æ˜¯å¦èƒ½å¤Ÿæ‹’ç»
-	person_bonus = models.ForeignKey(PersonBonus, on_delete=models.CASCADE)#ä¸ªäººçº¢åŒ…çš„å”¯ä¸€id
-	system_bonus = models.ForeignKey(SystemBonus, on_delete=models.CASCADE)#ç³»ç»Ÿçº¢åŒ…çš„å”¯ä¸€id
-	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)		#æ¶ˆè´¹è€…çš„å”¯ä¸€id
-	table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)		#æ¡Œå°å·
+	id_bonus = models.IntegerField(primary_key=True)						#ÊÕµ½µÄºì°üÎ¨Ò»id
+	is_message = models.BooleanField(default=False)						#ÊÇ·ñÒÑÁôÑÔ
+	is_refuse = models.BooleanField(default=False)							#ÊÇ·ñÄÜ¹»¾Ü¾ø
+	person_bonus = models.ForeignKey(PersonBonus, on_delete=models.CASCADE)#¸öÈËºì°üµÄÎ¨Ò»id
+	system_bonus = models.ForeignKey(SystemBonus, on_delete=models.CASCADE)#ÏµÍ³ºì°üµÄÎ¨Ò»id
+	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)		#Ïû·ÑÕßµÄÎ¨Ò»id
+	table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)		#×ÀÌ¨ºÅ
+	
+	def __unicode__(self):
+		return '%s RcvBonus %d'%(self.consumer.name, self.id_bonus)	
 	
 	
-#çº¢åŒ…ç•™è¨€
+#ºì°üÁôÑÔ
 class BonusMessage(models.Model):
-	id_message = models.IntegerField(primary_key=True)						#çº¢åŒ…ç•™è¨€å”¯ä¸€id
-	message = models.CharField(max_length=140)								#ç•™è¨€å†…å®¹
-	rcv_bonus = models.OneToOneField(RcvBonus, on_delete=models.CASCADE)	#æ¥æ”¶çš„çº¢åŒ…å”¯ä¸€id
-	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)		#ç•™è¨€è€…å”¯ä¸€id
-		
-#ç³»ç»Ÿè™šæ‹Ÿé’±å¸
-class SystemMoney(models.Model):
-	id_money = models.IntegerField(primary_key=True)				#è™šæ‹Ÿé’±å¸çš„å”¯ä¸€id
-	create_time = models.DateTimeField()							#å‘è¡Œæ—¶é—´
-	valid_time = models.DateTimeField()							#æœ‰æ•ˆæ—¶é—´
-	is_valid = models.BooleanField(default=True)					#æ˜¯å¦æœ‰æ•ˆ
-	is_used = models.BooleanField(default=False)					#æ˜¯å¦å·²ç”¨
-	admin = models.ForeignKey(settings.AUTH_USER_MODEL, default=settings.AUTH_USER_MODEL[0])	#é’±åŒ…æ‹¥æœ‰è€…
-	bonus = models.ForeignKey(SystemBonus, on_delete=models.CASCADE)		#çº¢åŒ…å”¯ä¸€id
-	ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)			#æ¶ˆè´¹åˆ¸å”¯ä¸€id
-	recharge = models.ForeignKey(SystemRecharge, on_delete=models.CASCADE)	#å……å€¼è®°å½•id
-	rcv_bonus = models.ForeignKey(RcvBonus, on_delete=models.CASCADE)		#æŠ¢åˆ°çš„çº¢åŒ…å”¯ä¸€id
-	money = OneToOneField(VirtualMoney, on_delete=models.CASCADE)			#è™šæ‹Ÿè´§å¸
+	id_message = models.IntegerField(primary_key=True)						#ºì°üÁôÑÔÎ¨Ò»id
+	message = models.CharField(max_length=140, null=True, blank=True)							#ÁôÑÔÄÚÈİ
+	rcv_bonus = models.OneToOneField(RcvBonus, on_delete=models.CASCADE)	#½ÓÊÕµÄºì°üÎ¨Ò»id
+	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)		#ÁôÑÔÕßÎ¨Ò»id
+
+	def __unicode__(self):
+		return '%s BonusMessage %d'%(self.consumer.name, self.id_message)	
 	
-#ä¸ªäººè™šæ‹Ÿé’±å¸
-class PersonMoney(models.Model):
-	id_money = models.IntegerField(primary_key=True)				#è™šæ‹Ÿé’±å¸çš„å”¯ä¸€id
-	create_time = models.DateTimeField()							#å‘è¡Œæ—¶é—´
-	valid_time = models.DateTimeField()							#æœ‰æ•ˆæ—¶é—´
-	is_valid = models.BooleanField(default=True)					#æ˜¯å¦æœ‰æ•ˆ
-	is_used = models.BooleanField(default=False)					#æ˜¯å¦å·²ç”¨
-	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)		#é’±åŒ…æ‹¥æœ‰ç€
-	bonus = models.ForeignKey(PersonBonus, on_delete=models.CASCADE)		#çº¢åŒ…å”¯ä¸€id
-	ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)			#æ¶ˆè´¹åˆ¸å”¯ä¸€id
-	recharge = models.ForeignKey(PersonRecharge, on_delete=models.CASCADE)	#å……å€¼è®°å½•id
-	rcv_bonus = models.ForeignKey(RcvBonus, on_delete=models.CASCADE)		#æŠ¢åˆ°çš„çº¢åŒ…å”¯ä¸€id
-	money = OneToOneField(VirtualMoney, on_delete=models.CASCADE)			#è™šæ‹Ÿè´§å¸
 	
-#è™šæ‹Ÿè´§å¸
+#ĞéÄâ»õ±Ò
 class VirtualMoney(models.Model):
-	name = models.CharField(primary_key=True,max_length=40)	#è™šæ‹Ÿé’±å¸çš„åå­—
-	price = models.FloatField(default=0.0)						#è™šæ‹Ÿé’±å¸çš„é¢å€¼
+	name = models.CharField(primary_key=True,max_length=40)	#ĞéÄâÇ®±ÒµÄÃû×Ö
+	price = models.FloatField(default=0.0)						#ĞéÄâÇ®±ÒµÄÃæÖµ
 
 	def __unicode__(self):
 		return self.name
+		
+#ÏµÍ³ĞéÄâÇ®±Ò
+class SystemMoney(models.Model):
+	id_money = models.IntegerField(primary_key=True)				#ĞéÄâÇ®±ÒµÄÎ¨Ò»id
+	is_valid = models.BooleanField(default=True)					#ÊÇ·ñÓĞĞ§
+	is_used = models.BooleanField(default=False)					#ÊÇ·ñÒÑÓÃ
+	admin = models.ForeignKey(settings.AUTH_USER_MODEL, default=settings.AUTH_USER_MODEL[0])	#Ç®°üÓµÓĞÕß
+	bonus = models.ForeignKey(SystemBonus, on_delete=models.CASCADE)		#ºì°üÎ¨Ò»id
+	ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)			#Ïû·ÑÈ¯Î¨Ò»id
+	recharge = models.ForeignKey(SystemRecharge, on_delete=models.CASCADE)	#³äÖµ¼ÇÂ¼id
+	rcv_bonus = models.ForeignKey(RcvBonus, on_delete=models.CASCADE)		#ÇÀµ½µÄºì°üÎ¨Ò»id
+	money = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#ĞéÄâ»õ±Ò
+	
+	def __unicode__(self):
+		return 'SystemMoney %d'%(self.id_money)
+	
+#¸öÈËĞéÄâÇ®±Ò
+class PersonMoney(models.Model):
+	id_money = models.IntegerField(primary_key=True)				#ĞéÄâÇ®±ÒµÄÎ¨Ò»id
+	is_valid = models.BooleanField(default=True)					#ÊÇ·ñÓĞĞ§
+	is_used = models.BooleanField(default=False)					#ÊÇ·ñÒÑÓÃ
+	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)		#Ç®°üÓµÓĞ×Å
+	bonus = models.ForeignKey(PersonBonus, on_delete=models.CASCADE)		#ºì°üÎ¨Ò»id
+	ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)			#Ïû·ÑÈ¯Î¨Ò»id
+	recharge = models.ForeignKey(PersonRecharge, on_delete=models.CASCADE)	#³äÖµ¼ÇÂ¼id
+	rcv_bonus = models.ForeignKey(RcvBonus, on_delete=models.CASCADE)		#ÇÀµ½µÄºì°üÎ¨Ò»id
+	money = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#ĞéÄâ»õ±Ò
+	
+	def __unicode__(self):
+		return '%s PersonMoney %d'%(self.consumer.name, self.id_money)
+		
