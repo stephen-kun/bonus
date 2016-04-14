@@ -42,7 +42,7 @@ class Consumer(models.Model):
 	own_bonus_value = models.IntegerField(default=0)				#可用红包金额
 	own_bonus_detail = models.CharField(max_length=30, null=True, blank=True)				#可用红包明细
 	own_ticket_value = models.IntegerField(default=0)				#可用礼券金额
-	create_time = models.DateTimeField()							#首次关注时间
+	create_time = models.DateTimeField(auto_now=True)							#首次关注时间
 	subscribe = models.BooleanField(default=True)					#是否关注
 	on_table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)	#就餐桌台
 	
@@ -53,7 +53,7 @@ class Consumer(models.Model):
 class PersonRecharge(models.Model):
 	id_recharge = models.IntegerField(primary_key=True)		#充值记录id
 	recharge_value = models.FloatField(default=0.0)			#充值金额
-	recharge_time = models.DateTimeField()						#充值时间
+	recharge_time = models.DateTimeField(auto_now=True)						#充值时间
 	recharge_person = models.CharField(max_length=30, null=True, blank=True)			#充值人
 	recharge_type = models.IntegerField(default=0)				#充值方式：微信/买单结余/婉拒/红包未被领取
 	
@@ -64,7 +64,7 @@ class PersonRecharge(models.Model):
 class SystemRecharge(models.Model):
 	id_recharge = models.IntegerField(primary_key=True)		#充值记录id
 	recharge_value = models.FloatField(default=0.0)			#充值金额
-	recharge_time = models.DateTimeField()						#充值时间
+	recharge_time = models.DateTimeField(auto_now=True)						#充值时间
 	recharge_person = models.CharField(max_length=30, null=True, blank=True)			#充值人
 	
 	def __unicode__(self):
@@ -72,9 +72,9 @@ class SystemRecharge(models.Model):
 
 #就餐记录表		
 class Dining(models.Model):
-	id_table = models.IntegerField()		#桌号
-	begin_time = models.DateTimeField() 	#开始就餐时间
-	over_time = models.DateTimeField()		#结束就餐时间
+	id_table = models.CharField(max_length=3)		#桌号
+	begin_time = models.DateTimeField(auto_now=True) 	#开始就餐时间
+	over_time = models.DateTimeField(auto_now=True)		#结束就餐时间
 	consumer = models.OneToOneField(Consumer, on_delete=models.CASCADE)	#关联消费者
 	
 	def __unicode__(self):
@@ -85,22 +85,22 @@ class Dining(models.Model):
 class Ticket(models.Model):
 	id_ticket = models.IntegerField(primary_key=True)		#消费券唯一id
 	ticket_value = models.FloatField(default=0.0)			#券值
-	create_time = models.DateTimeField()					#消费券创建时间
-	valid_time = models.DateTimeField()					#消费券有效时间
+	create_time = models.DateTimeField(auto_now=True)					#消费券创建时间
+	valid_time = models.DateTimeField(auto_now=True)					#消费券有效时间
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#消费券拥有着
 	
 #个人的红包
 class PersonBonus(models.Model):
 	id_bonus = models.IntegerField(primary_key=True)		#个人红包唯一id
 	bonus_type = models.IntegerField(default=0)			#红包类型：普通红包/手气红包/系统红包
-	to_table = models.IntegerField()						#收红包的桌台
-	from_table = models.IntegerField()						#发红包的桌台
+	to_table = models.CharField(max_length=3,null=True, blank=True)						#收红包的桌台
+	from_table = models.CharField(max_length=3,null=True, blank=True)						#发红包的桌台
 	to_message = models.CharField(max_length=140, null=True, blank=True)			#赠言
 	title = models.CharField(max_length=40, null=True, blank=True)				#冠名
 	bonus_num = models.IntegerField(default=0)				#红包个数
 	bonus_remain = models.IntegerField(default=0)			#剩余红包个数
 	is_exhausted = models.BooleanField(default=False)		#红包已耗尽
-	create_time = models.DateTimeField()					#发送时间
+	create_time = models.DateTimeField(auto_now=True)					#发送时间
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#发送红包者
 	
 	def __unicode__(self):
@@ -115,7 +115,7 @@ class SystemBonus(models.Model):
 	bonus_num = models.IntegerField(default=0)				#红包个数
 	bonus_remain = models.IntegerField(default=0)			#剩余红包个数
 	is_exhausted = models.BooleanField(default=False)		#红包已耗尽
-	create_time = models.DateTimeField()					#发送时间
+	create_time = models.DateTimeField(auto_now=True)					#发送时间
 	admin = models.ForeignKey(settings.AUTH_USER_MODEL, default=settings.AUTH_USER_MODEL[0])	#发送红包者
 
 	def __unicode__(self):
