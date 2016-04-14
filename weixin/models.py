@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.conf import settings
+import django.utils.timezone as timezone
 
 # 红包日统计表
 class BonusCountDay(models.Model):
