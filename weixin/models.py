@@ -8,14 +8,14 @@ from django.conf import settings
 class BonusCountDay(models.Model):
 	consumer = models.CharField(primary_key=True, max_length=30)	#用户唯一id
 	count_num = models.IntegerField(default=0)						#主排行统计数
-	other_info = models.CharField(max_length=30)					#其他物品统计数，字符串形式
+	other_info = models.CharField(max_length=30, null=True, blank=True)					#其他物品统计数，字符串形式
 
 
 # 红包月统计表
 class BonusCountMonth(models.Model):
 	consumer = models.CharField(primary_key=True, max_length=30)	#用户唯一id
 	count_num = models.IntegerField(default=0)						#主排行统计数
-	other_info = models.CharField(max_length=30)					#其他物品统计数，字符串形式
+	other_info = models.CharField(max_length=30, null=True, blank=True)					#其他物品统计数，字符串形式
 	
 	
 #桌台表，维护桌台状态		
@@ -31,16 +31,16 @@ class DiningTable(models.Model):
 #消费者数据表		
 class Consumer(models.Model):
 	open_id = models.CharField(max_length=30, primary_key=True)	#微信openId
-	name = models.CharField(max_length=30)							#用户名
+	name = models.CharField(max_length=30, null=True, blank=True)							#用户名
 	sex = models.BooleanField(default=True)						#性别
-	phone_num = models.CharField(max_length=20)					
-	address = models.CharField(max_length=30)
+	phone_num = models.CharField(max_length=20, null=True, blank=True)					
+	address = models.CharField(max_length=30, null=True, blank=True)
 	is_dining = models.BooleanField(default=False)					#是否处于就餐状态
 	snd_bonus_num = models.IntegerField(default=0)					#发红包总数
 	rcv_bonus_num = models.IntegerField(default=0)					#收红包总数
 	snd_bonus_value = models.IntegerField(default=0)				#发红包金额
 	own_bonus_value = models.IntegerField(default=0)				#可用红包金额
-	own_bonus_detail = models.CharField(max_length=30)				#可用红包明细
+	own_bonus_detail = models.CharField(max_length=30, null=True, blank=True)				#可用红包明细
 	own_ticket_value = models.IntegerField(default=0)				#可用礼券金额
 	create_time = models.DateTimeField()							#首次关注时间
 	subscribe = models.BooleanField(default=True)					#是否关注
@@ -54,7 +54,7 @@ class PersonRecharge(models.Model):
 	id_recharge = models.IntegerField(primary_key=True)		#充值记录id
 	recharge_value = models.FloatField(default=0.0)			#充值金额
 	recharge_time = models.DateTimeField()						#充值时间
-	recharge_person = models.CharField(max_length=30)			#充值人
+	recharge_person = models.CharField(max_length=30, null=True, blank=True)			#充值人
 	recharge_type = models.IntegerField(default=0)				#充值方式：微信/买单结余/婉拒/红包未被领取
 	
 	def __unicode__(self):
@@ -65,7 +65,7 @@ class SystemRecharge(models.Model):
 	id_recharge = models.IntegerField(primary_key=True)		#充值记录id
 	recharge_value = models.FloatField(default=0.0)			#充值金额
 	recharge_time = models.DateTimeField()						#充值时间
-	recharge_person = models.CharField(max_length=30)			#充值人
+	recharge_person = models.CharField(max_length=30, null=True, blank=True)			#充值人
 	
 	def __unicode__(self):
 		return self.recharge_person
@@ -95,8 +95,8 @@ class PersonBonus(models.Model):
 	bonus_type = models.IntegerField(default=0)			#红包类型：普通红包/手气红包/系统红包
 	to_table = models.IntegerField()						#收红包的桌台
 	from_table = models.IntegerField()						#发红包的桌台
-	to_message = models.CharField(max_length=140)			#赠言
-	title = models.CharField(max_length=40)				#冠名
+	to_message = models.CharField(max_length=140, null=True, blank=True)			#赠言
+	title = models.CharField(max_length=40, null=True, blank=True)				#冠名
 	bonus_num = models.IntegerField(default=0)				#红包个数
 	bonus_remain = models.IntegerField(default=0)			#剩余红包个数
 	is_exhausted = models.BooleanField(default=False)		#红包已耗尽
@@ -110,8 +110,8 @@ class PersonBonus(models.Model):
 class SystemBonus(models.Model):
 	id_bonus = models.IntegerField(primary_key=True)		#系统红包唯一id
 	bonus_type = models.IntegerField(default=0)			#红包类型：普通红包/手气红包/系统红包
-	to_message = models.CharField(max_length=45)			#赠言
-	title = models.CharField(max_length=20)				#冠名
+	to_message = models.CharField(max_length=45, null=True, blank=True)		#赠言
+	title = models.CharField(max_length=20, null=True, blank=True)				#冠名
 	bonus_num = models.IntegerField(default=0)				#红包个数
 	bonus_remain = models.IntegerField(default=0)			#剩余红包个数
 	is_exhausted = models.BooleanField(default=False)		#红包已耗尽
@@ -135,7 +135,7 @@ class RcvBonus(models.Model):
 #红包留言
 class BonusMessage(models.Model):
 	id_message = models.IntegerField(primary_key=True)						#红包留言唯一id
-	message = models.CharField(max_length=140)								#留言内容
+	message = models.CharField(max_length=140, null=True, blank=True)							#留言内容
 	rcv_bonus = models.OneToOneField(RcvBonus, on_delete=models.CASCADE)	#接收的红包唯一id
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)		#留言者唯一id
 	
