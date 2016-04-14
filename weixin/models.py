@@ -74,7 +74,7 @@ class SystemRecharge(models.Model):
 #就餐记录表		
 class Dining(models.Model):
 	id_table = models.CharField(max_length=3)		#桌号
-	begin_time = models.DateTimeField(auto_now=True) 	#开始就餐时间
+	begin_time = models.DateTimeField(auto_now_add=True) 	#开始就餐时间
 	over_time = models.DateTimeField(null=True, blank=True)		#结束就餐时间
 	consumer = models.OneToOneField(Consumer, on_delete=models.CASCADE)	#关联消费者
 	
