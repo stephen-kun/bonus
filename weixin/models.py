@@ -33,10 +33,10 @@ class DiningTable(models.Model):
 class Consumer(models.Model):
 	open_id = models.CharField(max_length=30, primary_key=True)	#微信openId
 	name = models.CharField(max_length=30, default='小明')							#用户名
-	sex = models.BooleanField(default=True)						#性别
+	sex = models.CharField(max_length=1, default='0')						#性别
 	phone_num = models.CharField(max_length=20, null=True, blank=True)		#电话			
 	address = models.CharField(max_length=30, null=True, blank=True)			#地址
-	picture = models.URLField(max_length=60, null=True, blank=True)			#头像地址
+	picture = models.URLField(max_length=200, null=True, blank=True)			#头像地址
 	snd_bonus_num = models.IntegerField(default=0)					#发红包总数
 	rcv_bonus_num = models.IntegerField(default=0)					#收红包总数
 	snd_bonus_value = models.IntegerField(default=0)				#发红包金额

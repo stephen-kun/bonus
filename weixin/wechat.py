@@ -41,20 +41,19 @@ wechat = WechatBasic(conf = conf)
 
 class UserInfo():
 	def __init__(self, url):
+		self.url = url
 		response = urllib2.urlopen(self.url)
-		self.user_info = response.read().decode('utf-8')	
-
-	def get_name(self):
+		user_info = response.read().decode('utf-8')
+		self.user_info = json.loads(user_info)
 		
-
-	
-
-def get_user_info(url=USER_INFO_URL, access_token, openid):
-	re_url = url.replace('ACCESS_TOKEN', access_token)
-	url = re_url.replace("OPENID", openid)
-	response = urllib2.urlopen(url)
-	user_info = response.read().decode('utf-8')
-	return user_info
+	def get_name(self):
+		return self.user_info['nickname']
+		
+	def get_sex(self):
+		return self.user_info['sex']
+		
+	def get_headimgurl(self):
+		return self.user_info['headimgurl']
 
 class PostResponse():
     def __init__(self, request):
@@ -87,7 +86,13 @@ class PostResponse():
                 consumer.on_table = table
         except ObjectDoesNotExist:
             # 获取用户信息
-            consumer = Consumer.objects.create(open_id=self.source, on_table=table)
+            url = USER_INFO_URL.replace('ACCESS_TOKEN', wechat.access_token)
+            url = url.replace('OPENID', self.source)
+            user_info = UserInfo(url)
+            name = user_info.get_name()
+            sex = user_info.get_sex()
+            headimgurl = user_info.get_headimgurl()
+            consumer = Consumer.objects.create(open_id=self.source, on_table=table, name=name, sex=sex, picture=headimgurl)
             consumer.create_time = curr_time
         consumer.save()
         # 在Dining表中创建一条记录
