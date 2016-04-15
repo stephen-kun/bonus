@@ -3,29 +3,15 @@ from django.http.response import HttpResponse, HttpResponseBadRequest,HttpRespon
 from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import get_template 
 from django.conf import settings
-from wechat_sdk import WechatConf
-from wechat_sdk import WechatBasic
-from wechat_sdk.exceptions import ParseError
-from wechat_sdk import messages
 import urllib2
 import json
-from .wechat import PostResponse
+from .wechat import PostResponse, wechat, TOKEN, APPID, APPSECRET
 
-TOKEN = 'token'
-APPID = 'wxc32d7686c0827f2a'
-APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
-REDIRECT_URL = 'http://120.76.122.53/weixin/redirect_bonus_snd'
+
+REDIRECT_BS_URL = 'http://120.76.122.53/weixin/redirect_bonus_snd'
+REDIRECT_RS_URL = 'http://120.76.122.53/weixin/view_redirect_bonus_rcv'
 ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=CODE&grant_type=authorization_code'%(APPID,APPSECRET)
-OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_base&state=1#wechat_redirect"%(APPID,REDIRECT_URL)
-
-conf = WechatConf(
-    token = TOKEN,
-    appid = APPID,
-    appsecret = APPSECRET,
-    encrypt_mode = 'normal'
-)
-
-wechat = WechatBasic(conf = conf)
+OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_base&state=1#wechat_redirect"%(APPID)
 
 # Create your views here.
 
@@ -42,6 +28,7 @@ def asp_test(request):
 @csrf_exempt
 def snd_bonus(request):
 	print('---**snd_bonus**---\n')
+	url = OAUTH_URL.replace('REDIRECT_URL', )
 	return HttpResponseRedirect(OAUTH_URL)	
 	
 @csrf_exempt
@@ -64,6 +51,19 @@ def rcv_bonus(request):
 	temp = get_template('qianghongbao.html')
 	html = temp.render({'STATIC_URL': settings.STATIC_URL},request)
 	return HttpResponse(html)
+	
+#抢红包界面
+@csrf_exempt
+def view_rcv_bonus(request):
+	print('---**snd_bonus**---\n')
+	return HttpResponseRedirect(OAUTH_URL)	
+	
+#抢红包界面认证
+@csrf_exempt
+def view_redirect_bonus_rcv(request):
+	#获取openid
+	#刷新页面中openid
+	pass	
 
 #抢到的红包
 @csrf_exempt
@@ -81,8 +81,7 @@ def token(request):
 		timestamp = request.GET.get('timestamp')
 		nonce = request.GET.get('nonce')
 
-		if not wechat.check_signature(
-				signature, timestamp, nonce):
+		if not wechat.check_signature(signature, timestamp, nonce):
 			return HttpResponseBadRequest('Verify Failed')
 
 		return HttpResponse(request.GET.get('echostr', ''), content_type="text/plain")  

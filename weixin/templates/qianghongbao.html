@@ -59,6 +59,10 @@
 				$(".tchsharebg").remove();	
 			},300);
 		})
+		
+		// 向后台服务器发起抢红包请求
+		
+		// 根据返回结果，刷新页面
 	}	
 </script>
 <!--抢到的串串开始-->
@@ -88,9 +92,12 @@
   
 <script type="text/javascript">
 setTimeout("document.getElementById('my').src='include/php100.php'; ",10000);//延时秒
-</script> 
+</script>  
   
 </article>
+
+<h1 id="openid">{{openid}}</h1>
+<h2 id="table">{{table}}</h2>
 
 </body>
 </html>

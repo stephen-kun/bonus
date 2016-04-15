@@ -4,9 +4,16 @@ from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
 
+import urllib
+import urllib2
+import urlparse
+import json
+
 TOKEN = 'token'
 APPID = 'wxc32d7686c0827f2a'
 APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
+OPENID = 'oJvvJwirY1ed8C2jdRGc2wPFZGmo'
+USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=%s&lang=zh_CN"%(OPENID)
 
 
 conf = WechatConf(
@@ -68,6 +75,8 @@ menu = {
     ]
 }
 
+
+
 def create_qrcode(qrcode, filename):
     ticket = wechat.create_qrcode(qrcode)['ticket']
     result = wechat.show_qrcode(ticket)
@@ -81,7 +90,14 @@ def create_menu(menu):
     wechat.create_menu(menu)
     print('create menu suc!\n')
 
+def get_user_info(access_token):
+	url = USER_INFO_URL.replace('ACCESS_TOKEN', access_token)
+	response = urllib2.urlopen(url)
+	user_info = response.read().decode('utf-8')
+	return user_info
+
 if __name__ == '__main__':
     #create_qrcode(qrcode, 'table2.jpg')
-    create_menu(menu)
+    #create_menu(menu)
+    get_user_info(wechat.access_token)
     
