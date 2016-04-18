@@ -11,6 +11,7 @@
 <meta name="keywords" content="东启湘厨">
 <meta name="description" content="东启湘厨">
 <script src="{{STATIC_URL}}js/prefixfree.min.js"></script>
+<script src="{{STATIC_URL}}js/getbonus.js"></script>
 </head>
 
 <body class="red_q">
@@ -61,15 +62,16 @@
 		})
 		
 		// 向后台服务器发起抢红包请求
+		var x = document.getElementById("openid")
+		get_bonus(x.innerHTML)
 		
-		// 根据返回结果，刷新页面
 	}	
 </script>
 <!--抢到的串串开始-->
 <div class="tch-share">
   <h3 class="tch-share-title" id="rcv_bonus">恭喜您！抢到<font class="f_huangse">155</font>串串！</h3>
   <ul class="tch-share-sns">
-    <li><a href="#" target="_blank">查看串串&nbsp;&nbsp;&nbsp;&nbsp;<a href="">继续抢串串</a></a></li>
+    <li><a href="#" target="_blank">查看串串&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://120.76.122.53/weixin/view_rcv_bonus">继续抢串串</a></a></li>
   </ul>
   <!--<div class="tch-share-footer"></div>-->
 </div>
@@ -90,14 +92,10 @@
   
   </section>
   
-<script type="text/javascript">
-setTimeout("document.getElementById('my').src='include/php100.php'; ",10000);//延时秒
-</script>  
-  
+
 </article>
 
-<h1 id="openid">{{openid}}</h1>
-<h2 id="table">{{table}}</h2>
+<h1 id="openid" hidden>{{openid}}</h1>
 
 </body>
 </html>
