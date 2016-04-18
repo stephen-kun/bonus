@@ -7,11 +7,20 @@ from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
 
+from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,PersonRecharge,SystemRecharge,VirtualMoney
+from .models import Dining,Ticket, PersonBonus, SystemBonus, RcvBonus, BonusMessage, SystemMoney, PersonMoney
+from django.core.exceptions import ObjectDoesNotExist 
+import pytz
+from django.utils import timezone
+import re
+
 TOKEN = 'token'
 APPID = 'wxc32d7686c0827f2a'
 APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
 ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=CODE&grant_type=authorization_code'%(APPID,APPSECRET)
 OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_base&state=1#wechat_redirect"%(APPID)
+
+global wechat
 
 conf = WechatConf(
     token = TOKEN,
@@ -20,53 +29,102 @@ conf = WechatConf(
     encrypt_mode = 'normal'
 )
 
-WECHAT = WechatBasic(conf = conf)
+wechat = WechatBasic(conf = conf)
 
 class PostResponse():
-	wechat = WECHAT
-	def __init__(self, request):
-		try:
-			wechat.parse_data(data = request.body)
-		except ParseError:
-			return HttpResponseBadRequest('Invalid XML Data')
-		self.id = wechat.message.id
-		self.target = wechat.message.target
-		self.source = wechat.message.source
-		self.time = wechat.message.time
-		self.type = wechat.message.type
-		self.raw = wechat.message.raw
-		self.message = wechat.message
-	
-	#¹Ø×¢
-	def _subscribe():
-		# ²éÑ¯Consumer£¬Èç¹ûÓĞ¼ÇÂ¼ÔòĞŞ¸Äsubscribe/is_diningÖµ£»Èç¹ûÃ»ÓĞ¼ÇÂ¼£¬ÔòÏÈ´ÓÎ¢ĞÅ»ñÈ¡ÓÃ»§ĞÅÏ¢£¬È»ºóĞÂ½¨Ò»Ìõ¼ÇÂ¼
-		# ĞŞ¸ÄDiningTable±íÖĞstatus/seatsÖµ
-		# ÔÚDining±íÖĞ´´½¨Ò»Ìõ¼ÇÂ¼
-		# ·µ»ØÑ¡×ùĞÅÏ¢
-		pass
-	
-	#È¡Ïû¹Ø×¢
-	def _unsubscribe():
-		# ²éÕÒConsumer£¬½«subscribeÖÃÎªFalse
-		pass
-	
-	#É¨Âë
-	def _scan():
-		# ²éÑ¯Consumer, ĞŞ¸Äis_diningÖµÎªTrue
-		# ĞŞ¸ÄDiningTable±íÖĞstatus/seatsÖµ
-		# ÔÚDining±íÖĞ´´½¨Ò»Ìõ¼ÇÂ¼
-		# ·µ»ØÑ¡×ùĞÅÏ¢
-		pass
-		
-	#²Ëµ¥Ìø×ªÊÂ¼ş
-	def _view_jump():
-		'''½áËã²Ëµ¥Ìø×ªÊÂ¼ş
-		1¡¢¸ù¾İopenid,²éÑ¯consumer£¬»ñÈ¡µ±Ç°ÓÃ»§µÄownBonusValue,ownTicketValue£¬idTable.
-		2¡¢¸ù¾İidtable£¬²éÑ¯RcvBonus£¬»ñÈ¡¸Ã×ÀÇÀµ½µÄËùÓĞºì°ü
-		'''
-		pass
-	
-	#×Ô¶¯»Ø¸´
-	def replay():
-		pass
-		
+    def __init__(self, request):
+        try:
+            wechat.parse_data(data = request.body)
+        except ParseError:
+            return HttpResponseBadRequest('Invalid XML Data')
+        self.id = wechat.message.id
+        self.target = wechat.message.target
+        self.source = wechat.message.source
+        self.time = wechat.message.time
+        self.type = wechat.message.type
+        self.raw = wechat.message.raw
+        self.message = wechat.message
+    
+    #å…³æ³¨
+    def _subscribe(self):
+        # ä¿®æ”¹DiningTableè¡¨ä¸­status/seatså€¼
+        curr_time = timezone.now()
+        index_table = re.findall(r'\d+',self.message.key)[0]
+        table = DiningTable.objects.get(index_table=index_table)
+        table.status = True
+        table.seats += 1
+        table.save()
+        # æŸ¥è¯¢Consumerï¼Œå¦‚æœæœ‰è®°å½•åˆ™ä¿®æ”¹subscribeï¼›å¦‚æœæ²¡æœ‰è®°å½•ï¼Œåˆ™å…ˆä»å¾®ä¿¡è·å–ç”¨æˆ·ä¿¡æ¯ï¼Œç„¶åæ–°å»ºä¸€æ¡è®°å½•
+        try:
+            consumer = Consumer.objects.get(open_id=self.source)
+            if consumer.subscribe == False:
+                consumer.subscribe = True
+                consumer.on_table = table
+        except ObjectDoesNotExist:
+            # é€šè¿‡ç½‘é¡µæˆæƒè·å–ç”¨æˆ·ä¿¡æ¯
+            consumer = Consumer.objects.create(open_id=self.source, on_table=table)
+            consumer.create_time = curr_time
+        consumer.save()
+        # åœ¨Diningè¡¨ä¸­åˆ›å»ºä¸€æ¡è®°å½•
+        dining = Dining.objects.create(id_table=index_table, consumer=consumer)
+        dining.save()
+        # è¿”å›é€‰åº§ä¿¡æ¯    
+        return wechat.response_text(content =  u'æ‚¨å·²å…¥åº§%så·æ¡Œ' %(index_table))
+        
+    
+    #å–æ¶ˆå…³æ³¨
+    def _unsubscribe(self):
+        # æŸ¥æ‰¾Consumerï¼Œå°†subscribeç½®ä¸ºFalse
+        consumer = Consumer.objects.get(open_id=self.source)
+        consumer.subscribe = False
+        consumer.save()
+        return ''
+    
+    #æ‰«ç 
+    def _scan(self):
+        # ä¿®æ”¹DiningTableè¡¨ä¸­status/seatså€¼
+        curr_time = timezone.now()
+        index_table = self.message.key
+        table = DiningTable.objects.get(index_table=index_table)       
+        # æŸ¥è¯¢Consumer, ä¿®æ”¹is_diningå€¼ä¸ºTrue
+        consumer = Consumer.objects.get(open_id=self.source)
+        if consumer.on_table.index_table != index_table:
+            return wechat.response_text(content =  u'è¯·æ‚¨å…ˆç»“ç®—%så·æ¡Œæ‰€æŠ¢çº¢åŒ…ï¼Œå†æ‰«æè¯¥æ¡Œ'%(consumer.on_table.index_table))
+        consumer.on_table = table
+        consumer.save()
+        table.status = True
+        table.seats += 1
+        table.save()         
+        # åœ¨Diningè¡¨ä¸­åˆ›å»ºä¸€æ¡è®°å½•
+        dining = Dining.objects.create(id_table=index_table, consumer=consumer)
+        dining.save()       
+        # è¿”å›é€‰åº§ä¿¡æ¯
+        return wechat.response_text(content =  u'æ‚¨å·²å…¥åº§%så·æ¡Œ' %(index_table))
+        
+        
+    #èœå•è·³è½¬äº‹ä»¶
+    def _view_jump(self):
+        '''ç»“ç®—èœå•è·³è½¬äº‹ä»¶
+        1ã€æ ¹æ®openid,æŸ¥è¯¢consumerï¼Œè·å–å½“å‰ç”¨æˆ·çš„ownBonusValue,ownTicketValueï¼ŒidTable.
+        2ã€æ ¹æ®idtableï¼ŒæŸ¥è¯¢RcvBonusï¼Œè·å–è¯¥æ¡ŒæŠ¢åˆ°çš„æ‰€æœ‰çº¢åŒ…
+        '''
+        return ''
+        
+    #è‡ªåŠ¨å¤„ç†
+    def auto_handle(self):
+        response = wechat.response_text(content='')
+        if isinstance(self.message, messages.TextMessage):
+            response = wechat.response_text(content=self.message.content)
+        elif isinstance(self.message, messages.EventMessage):
+            if self.type == 'subscribe':
+                response = self._subscribe()
+            elif self.type == 'unsubscribe':
+                response = self._unsubscribe()
+            elif self.type == 'scan':
+                response = self._scan()
+            elif self.type == 'view':
+                pass
+        
+        return HttpResponse(response, content_type='application/xml')
+            
+        

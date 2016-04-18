@@ -7,9 +7,9 @@ from wechat_sdk import WechatConf
 from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
-import re
 import urllib2
 import json
+from .wechat import PostResponse
 
 TOKEN = 'token'
 APPID = 'wxc32d7686c0827f2a'
@@ -85,20 +85,8 @@ def token(request):
 				signature, timestamp, nonce):
 			return HttpResponseBadRequest('Verify Failed')
 
-		return HttpResponse(
-			request.GET.get('echostr', ''), content_type="text/plain")  
-
-	try:
-		wechat.parse_data(data = request.body)
-	except ParseError:
-		return HttpResponseBadRequest('Invalid XML Data')
-		
-	print("****POST request body:%s\n" %(request.body))
+		return HttpResponse(request.GET.get('echostr', ''), content_type="text/plain")  
 	
-	response = wechat.response_text(content ='')
-	if isinstance(wechat.message, messages.EventMessage):
-		if wechat.message.type == 'subscribe':
-			response = wechat.response_text(content = u'您已入座%s号桌' %(re.findall(r'\d+',wechat.message.key)[0]))
-		elif wechat.message.type == 'scan':
-			response = wechat.response_text(content =  u'您已入座%s号桌' %(wechat.message.key))
-	return HttpResponse(response, content_type='application/xml')
+	response = PostResponse(request)
+	return response.auto_handle()
+

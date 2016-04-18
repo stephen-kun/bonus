@@ -4,12 +4,12 @@
 
 .dl-menuwrapper {
 	width: 100%;
-	max-width: 140px;
+	max-width: 120px;
 	float: right;
 	position: absolute;
 	top:0;
 	right:0;
-	padding-top: 35px;
+	padding-top: 46px;
 	z-index: 999;
 	-webkit-perspective: 1000px;
 	-moz-perspective: 1000px;
@@ -27,7 +27,7 @@
 	/*background: url(../images/header-bg.png) repeat-x bottom left;*/
 	border: none;
 	width: 100px;
-	height: 35px;
+	height: 46px;
 	text-indent: -900em;
 	overflow: hidden;
 	position: absolute;
@@ -45,7 +45,7 @@
 }
 
 .dl-menuwrapper ul {
-	background: #403f3f;
+	background: #b6d554;
 }
 
 /*
@@ -73,6 +73,7 @@
 
 .dl-menuwrapper li {
 	position: relative;
+	
 }
 
 .dl-menuwrapper li a {
@@ -82,9 +83,9 @@
 	font-size: 16px;
 	line-height: 20px;
 	font-weight: 300;
-	color: #fff;
+	color: #39393b;
 	border-top: 0px solid #0576ec;
-	border-bottom:1px solid #000000;
+	border-bottom:1px solid #a1c040;
 	outline: none;
 	text-align:center;
 }

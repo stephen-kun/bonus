@@ -1,12 +1,27 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
+'''
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')
+'''
+
 from wechat_sdk import WechatConf
 from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
 
+import urllib
+import urllib2
+import urlparse
+import json
+
+
 TOKEN = 'token'
 APPID = 'wxc32d7686c0827f2a'
 APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
+OPENID = 'oJvvJwmI3WHtHKDV1N5liNsdMFTU'
+USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=%s&lang=zh_CN"%(OPENID)
 
 
 conf = WechatConf(
@@ -68,6 +83,8 @@ menu = {
     ]
 }
 
+
+
 def create_qrcode(qrcode, filename):
     ticket = wechat.create_qrcode(qrcode)['ticket']
     result = wechat.show_qrcode(ticket)
@@ -80,8 +97,40 @@ def create_qrcode(qrcode, filename):
 def create_menu(menu):
     wechat.create_menu(menu)
     print('create menu suc!\n')
+	
+class UserInfo():
+	def __init__(self, url):
+		self.url = url
+		response = urllib2.urlopen(self.url)
+		user_info = response.read().decode('utf-8')
+		self.user_info = json.loads(user_info)
+		
+	def get_name(self):
+		return self.user_info['nickname']
+		
+	def get_sex(self):
+		return self.user_info['sex']
+		
+	def get_headimgurl(self):
+		return self.user_info['headimgurl']
+
+	    
+
+def get_user_info(access_token):
+	url = USER_INFO_URL.replace('ACCESS_TOKEN', access_token)
+	response = urllib2.urlopen(url)
+	user_info = response.read()
+	print(user_info)
+	return user_info
 
 if __name__ == '__main__':
     #create_qrcode(qrcode, 'table2.jpg')
-    create_menu(menu)
+    #create_menu(menu)
+    #user_info = get_user_info(wechat.access_token)
+	
+	url = USER_INFO_URL.replace('ACCESS_TOKEN', wechat.access_token)
+	user_info = UserInfo(url)
+	print(user_info.get_name())
+	print(user_info.get_sex())
+	print(user_info.get_headimgurl())
     
