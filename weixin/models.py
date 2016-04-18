@@ -98,9 +98,8 @@ class PersonBonus(models.Model):
 	id_bonus = models.IntegerField(primary_key=True)		#个人红包唯一id
 	bonus_type = models.IntegerField(default=0)			#红包类型：普通红包/手气红包/系统红包
 	to_table = models.CharField(max_length=3,null=True, blank=True)						#收红包的桌台
-	from_table = models.CharField(max_length=3,null=True, blank=True)						#发红包的桌台
 	to_message = models.CharField(max_length=140, null=True, blank=True)			#赠言
-	title = models.CharField(max_length=40, null=True, blank=True)				#冠名
+	#title = models.CharField(max_length=40, null=True, blank=True)				#冠名
 	bonus_num = models.IntegerField(default=0)				#红包个数
 	bonus_remain = models.IntegerField(default=0)			#剩余红包个数
 	is_exhausted = models.BooleanField(default=False)		#红包已耗尽
@@ -114,16 +113,16 @@ class PersonBonus(models.Model):
 class SystemBonus(models.Model):
 	id_bonus = models.IntegerField(primary_key=True)		#系统红包唯一id
 	bonus_type = models.IntegerField(default=0)			#红包类型：普通红包/手气红包/系统红包
-	to_message = models.CharField(max_length=45, null=True, blank=True)		#赠言
+	to_message = models.CharField(max_length=140, null=True, blank=True)		#赠言
 	title = models.CharField(max_length=20, null=True, blank=True)				#冠名
 	bonus_num = models.IntegerField(default=0)				#红包个数
 	bonus_remain = models.IntegerField(default=0)			#剩余红包个数
 	is_exhausted = models.BooleanField(default=False)		#红包已耗尽
 	create_time = models.DateTimeField(default=timezone.now)					#发送时间
-	admin = models.ForeignKey(settings.AUTH_USER_MODEL, default=settings.AUTH_USER_MODEL[0])	#发送红包者
+	administrator = models.CharField(max_length=40,default='admin')	#发送红包者
 
 	def __unicode__(self):
-		return "SystemBonus %d"%(self.id_bonus)	
+		return 'SystemBonus %d'%(self.id_bonus)	
 		
 #接收的红包
 class RcvBonus(models.Model):
@@ -165,9 +164,11 @@ class SystemMoney(models.Model):
 	is_used = models.BooleanField(default=False)					#是否已用
 	admin = models.ForeignKey(settings.AUTH_USER_MODEL, default=settings.AUTH_USER_MODEL[0])	#钱包拥有者
 	bonus = models.ForeignKey(SystemBonus, on_delete=models.CASCADE)		#红包唯一id
+	is_send = models.BooleanField(default=False)							#是否已发做红包
 	ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)			#消费券唯一id
 	recharge = models.ForeignKey(SystemRecharge, on_delete=models.CASCADE)	#充值记录id
 	rcv_bonus = models.ForeignKey(RcvBonus, on_delete=models.CASCADE)		#抢到的红包唯一id
+	is_receive = models.BooleanField(default=False)						#是否已接收红包
 	money = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
 	
 	def __unicode__(self):
@@ -180,9 +181,11 @@ class PersonMoney(models.Model):
 	is_used = models.BooleanField(default=False)					#是否已用
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)		#钱包拥有着
 	bonus = models.ForeignKey(PersonBonus, on_delete=models.CASCADE)		#红包唯一id
+	is_send = models.BooleanField(default=False)							#是否已发做红包
 	ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)			#消费券唯一id
 	recharge = models.ForeignKey(PersonRecharge, on_delete=models.CASCADE)	#充值记录id
 	rcv_bonus = models.ForeignKey(RcvBonus, on_delete=models.CASCADE)		#抢到的红包唯一id
+	is_receive = models.BooleanField(default=False)						#是否已接收红包
 	money = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
 	
 	def __unicode__(self):

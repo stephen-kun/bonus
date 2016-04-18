@@ -2,9 +2,17 @@
 # utils.py
 # Create your utils here.
 import random, string
+from django.core.exceptions import ObjectDoesNotExist 
+from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,PersonRecharge,SystemRecharge,VirtualMoney
+from .models import Dining,Ticket, PersonBonus, SystemBonus, RcvBonus, BonusMessage, SystemMoney, PersonMoney
+from .admin import null_person_bonus,null_system_bonus,null_dining_table,null_consumer,null_person_recharge,null_system_recharge,null_ticket,null_rcv_bonus
+
+import pytz
+from django.utils import timezone
+
 
 #主键生成方法
-def create_primary_key(key='10', length=8):
+def create_primary_key(key='1', length=9):
     a = list(string.digits)
     random.shuffle(a)   
     primary = key + ''.join(a[:length])
@@ -41,12 +49,31 @@ def action_create_ticket(request):
 
 
 #抢红包事件
-def action_get_bonus(request):
-	#解析request中openId和tableId
+def action_get_bonus(openid):
 	#抢系统红包：查询SystemBonus表中is_exhausted字段为false的记录，根据结果在RcvBonus表中创建记录，更新SystemMoney表中rcv_bonus字段
 	#抢普通红包：查询PersonBonus表中to_table==tableId，根据tableId,查找DiningTable表中seats值，将红包平分，在RcvBonus表中创建记录，更新PersonMoney表中rcv_bonus字段
 	#抢手气红包：查询PersonBonus表中bonus_type==手气红包&&is_exhausted==False的记录，根据结果在RcvBonus表中创建记录，更新PersonMoney表中rcv_bonus字段
 	#返回抢到的红包个数
+	'''bonus_num = 0	#统计抢到的红包个数
+	consumer = Consumer.objects.get(open_id=openid)
+	sys_bonus = SystemBonus.objects.filter(is_exhausted=false)
+	if len(sys_bonus):
+		for bonus in sys_bonus:
+			rcv_bonus = RcvBonus.objects.filter(consumer=consumer,system_bonus=bonus)
+			if len(rcv_bonus) == 0:
+				sys_money = SystemMoney.objects.filter(bonus=bonus)
+				get_num = random.randint(1, len(sys_money))
+				key = create_primary_key()
+				#rcv_bonus = RcvBonus.objects.create(id_bonus=key, person_bonus=, system_bonus=bonus, consumer=consumer, table=)
+	
+	for bonus in sys_bonus:
+		try:
+			rcv_bonus = RcvBonus.objects.get(consumer=consumer,system_bonus=bonus)
+		except ObjectDoesNotExist:
+			pass
+	
+	primary_key = create_primary_key()'''
+		
 	pass
 	
 #发普通红包事件

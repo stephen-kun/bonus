@@ -12,7 +12,7 @@ import json
 TOKEN = 'token'
 APPID = 'wxc32d7686c0827f2a'
 APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
-OPENID = 'oJvvJwirY1ed8C2jdRGc2wPFZGmo'
+OPENID = 'oJvvJwmI3WHtHKDV1N5liNsdMFTU'
 USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=%s&lang=zh_CN"%(OPENID)
 
 
@@ -48,7 +48,7 @@ menu = {
                 {
                     'type': 'view',
                     'name': '抢红包',
-                    'url': 'http://120.76.122.53/weixin/rcv_bonus'
+                    'url': 'http://120.76.122.53/weixin/view_rcv_bonus'
                 }
             ]
         },        
@@ -62,7 +62,7 @@ menu = {
             'sub_button': [
                 {
                     'type': 'view',
-                    'name': '我的钱包',
+                    'name': '我',
                     'url': 'http://www.soso.com/'
                 },
                 {
@@ -98,6 +98,6 @@ def get_user_info(access_token):
 
 if __name__ == '__main__':
     #create_qrcode(qrcode, 'table2.jpg')
-    #create_menu(menu)
-    get_user_info(wechat.access_token)
+    create_menu(menu)
+    #get_user_info(wechat.access_token)
     

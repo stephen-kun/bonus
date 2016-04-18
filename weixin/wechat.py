@@ -9,6 +9,8 @@ from wechat_sdk import messages
 
 from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,PersonRecharge,SystemRecharge,VirtualMoney
 from .models import Dining,Ticket, PersonBonus, SystemBonus, RcvBonus, BonusMessage, SystemMoney, PersonMoney
+from .admin import null_person_bonus, null_system_bonus, null_dining_table,null_consumer,null_person_recharge,null_system_recharge,null_ticket,null_rcv_bonus
+
 from django.core.exceptions import ObjectDoesNotExist 
 import pytz
 from django.utils import timezone
