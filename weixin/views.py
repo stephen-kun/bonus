@@ -6,7 +6,7 @@ from django.conf import settings
 import urllib2
 import json
 from .wechat import PostResponse, wechat, TOKEN, APPID, APPSECRET
-from .utils import  action_get_bonus
+from .utils import  action_get_bonus, is_consumer_dining
 
 
 REDIRECT_BS_URL = 'http://120.76.122.53/weixin/redirect_bonus_snd'
@@ -73,9 +73,12 @@ def view_redirect_bonus_rcv(request):
 	content = response.read()
 	access_token = json.loads(content)	
 	openid = access_token['openid']
-	print('======openid:%s\n' %(openid))
-	temp = get_template('qianghongbao.html')
-	html = temp.render({'STATIC_URL': settings.STATIC_URL, 'openid':openid},request)	
+	#检测用户是否在用餐状态
+	if is_consumer_dining(openid):
+		temp = get_template('qianghongbao.html')
+		html = temp.render({'STATIC_URL': settings.STATIC_URL, 'openid':openid},request)	
+	else:
+		html = '您未选座就餐，不能抢红包！'
 	return HttpResponse(html)
 
 #抢到的红包
@@ -91,8 +94,8 @@ def view_action_get_bonus(request):
 	print('***view_action_get_bonus ***\n')
 	print(request.body)
 	openid = request.body
-	action_get_bonus(openid)
-	return HttpResponse('ok')
+	response=action_get_bonus(openid)
+	return HttpResponse(response)
     
 @csrf_exempt
 def token(request):
