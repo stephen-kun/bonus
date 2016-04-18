@@ -30,15 +30,6 @@ admin.site.register(SystemMoney)
 admin.site.register(PersonMoney)
 admin.site.register(VirtualMoney)
 
-null_person_bonus = 1
-null_system_bonus = 1
-null_dining_table = 1
-null_consumer = 1
-null_person_recharge = 1
-null_system_recharge = 1
-null_ticket = 1
-null_rcv_bonus = 1
-
 
 table = DiningTable.objects.get_or_create(index_table='0')
 null_dining_table=table[0]
