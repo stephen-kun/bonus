@@ -8,7 +8,7 @@ $(document).ready(function () {
         var y = 0;
         var index = 1;
         for (var z = 0; z <= (amount * width) ; z = z + width) {
-            $('<img class="clipped" src="/static/images/jb' + index + '.png" />').appendTo($('.item1 .clipped-box'));
+            $('<img class="clipped" src="images/jb' + index + '.png" />').appendTo($('.item1 .clipped-box'));
             if (z === (amount * width) - width) {
                 y = y + height;
                 z = -width;
@@ -44,22 +44,22 @@ $(document).ready(function () {
             });
             // Apply to each clipped-box div.
             $('.clipped-box img').each(function () {
-                var v = rand(120, 90),
+                var v = rand(220, 89),
                     angle = rand(80, 89), 
-                    theta = (angle * Math.PI) / 180, 
+                    theta = (angle * Math.PI) / 140, 
                     g = -9.8; 
 
                 // $(this) as self
                 var self = $(this);
                 var t = 0,
                     z, r, nx, ny,
-                    totalt =10;
+                    totalt =20;
                 var negate = [1, -1, 0],
                     direction = negate[Math.floor(Math.random() * negate.length)];
 
                 var randDeg = rand(-5, 10),
                     randScale = rand(0.9, 1.1),
-                    randDeg2 = rand(30, 5);
+                    randDeg2 = rand(60, 5);
 
                 // And apply those
                 $(this).css({
@@ -69,7 +69,7 @@ $(document).ready(function () {
                 // Set an interval
                 z = setInterval(function () {
                     var ux = (Math.cos(theta) * v) * direction;
-                    var uy = (Math.sin(theta) * v) - ((-g) * t);
+                    var uy = (Math.sin(theta) * v) - ((+g) * t);
                     nx = (ux * t);
                     ny = (uy * t) + (0.25 * (g) * Math.pow(t, 2));
                     if (ny < -40) {
@@ -77,7 +77,7 @@ $(document).ready(function () {
                     }
                     //$("#html").html("g:" + g + "bottom:" + ny + "left:" + nx + "direction:" + direction);
                     $(self).css({
-                        'bottom': (ny) + 'px',
+                        'top': (ny) + '0px',
                         'left': (nx) + 'px'
                     });
                     // Increase the time by 0.10
@@ -95,7 +95,7 @@ $(document).ready(function () {
     });
     r = setInterval(function () {
         if (first === true) {
-            $('.empty').addClass("Shake");//晃动
+            $('.empty').addClass("");//晃动加Shake
             //TODO:晃动几下
             first = false;
         }

@@ -52,10 +52,10 @@ input.green {
 	height:2.5em;
 	border-radius:10px;
 	border:#333 0px solid;
-	background:#6fc751;
+	background:#b6d554;
 	margin:.8em;
 	width:90%;
-	font-size:1.2em;
+	font-size:1em;
 	color:#ffffff;
 	font-weight:normal;
 }
@@ -66,13 +66,14 @@ input.gray {
 	background:#a49e9e;
 	margin:0em .8em .5em .8em;
 	width:90%;
-	font-size:1.2em;
+	font-size:1em;
 	color:#ffffff;
 	font-weight:normal;
 }
 
+
 input.liuyan {
-	width:45em;
+	width:10em;
 	height:1.2em;
 	border:0 #666 solid;
 	color:#ffffff;
@@ -86,13 +87,12 @@ input.liuyan_zs {
 	background:#a97b50;
 	color:#ffffff;
 }
-
 input.red {
 	height:2.5em;
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#d74f43;
-	margin:.8em;
+	margin:1.8em .8em .8em .8em;
 	width:90%;
 	font-size:1em;
 	color:#ffffff;
@@ -104,7 +104,7 @@ input.jin {
 	background:#dcbc83;
 	margin:.2em .8em;
 	width:90%;
-	font-size:1.3em;
+	font-size:1.0em;
 	color:#000000;
 }
 input.bai {
@@ -114,7 +114,7 @@ input.bai {
 	background:#ffffff;
 	margin:.2em .8em;
 	width:90%;
-	font-size:1.3em;
+	font-size:1.0em;
 	color:#000000;
 }
 input.huang {
@@ -134,8 +134,16 @@ input.bule {
 	background:#227fd5;
 	margin:.8em;
 	width:90%;
-	font-size:1.2em;
+	font-size:1em;
 	color:#ffffff;
+}
+input.nichen {
+	width:8em;
+	height:1em;
+	border:0 #666 solid;
+	font-weight: normal;
+	text-align:right;
+	font-size:.9em;
 }
 
 .button-fasong {
@@ -699,7 +707,7 @@ input.bule {
 	width:12.272em;
 }
 .issue-top h5 {
-	padding:0;
+	padding:0 .5em;
 	margin:0;
 	text-align:center;
 }
@@ -837,6 +845,24 @@ input.bule {
 .chch-list ul li h3 span {
 	font-size:.8em;
 	color:#666666;
+}
+.chch-list ul li h3 span.chchshj {
+	font-size:.8em;
+	color:#666666;
+	display:none;
+}
+.chch-list ul li h3 p {
+	font-size:.8em;
+	color:#a0a0a0;
+	padding:0;
+	margin:0;
+	height:auto;
+}
+.chch-list ul li h3 p a {
+	color:#ffffff;
+}
+.chch-list ul li h3 p a.chch_ly {
+	display:none;
 }
 .chch-list ul li h5 {
 	float:right;
@@ -1134,7 +1160,7 @@ input.bule {
 .item1 .kodai {
 	position: absolute;
 	top: 0;
-	cursor: pointer;
+	cursor:crosshair;
 	width:100%;
 }
 .item1 .kodai img {
@@ -1164,7 +1190,7 @@ input.bule {
 	transition: transform 1.4s ease-in;
 }
 /*=====弹出层======样式2016.04.08===结束=======*/
-.tch-share { border-radius: 0; bottom:-2em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); -webkit-transition: -webkit-transform 300ms; transition: transform 300ms ; width: 100%; z-index: 10; }
+.tch-share { border-radius: 0; bottom:-2em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 3s /*infinite*/;animation-delay:.5s;/*Safari and Chrome*/-webkit-animation:mymove 3s /*infinite*/;-webkit-animation-delay:.5s; width: 100%; z-index: 10; }
 .tch-modal-active { transform: translateY(0px);  -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0) }
 .tch-modal-out { z-index: 888; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%) }
 
@@ -1235,6 +1261,66 @@ input.bule {
   height:313px;
 }
 /*============旋转样式====结束===========*/
+/*=========我的界面=====开始=========*/
+.wo {
+	background:#ffffff;
+	height:3em;
+	margin-bottom:1em;
+	margin-top:1em;
+	padding:.5em .8em;
+}
+.wo h2 {
+	width:2em;
+	height:2em;
+	overflow:hidden;
+	float:left;
+	padding:0;
+	margin:0;
+}
+.wo h2 img {
+	width:2.5em;
+}
+.wo h4 {
+	float:left;
+	padding:0 0 0 .8em;
+	margin:0;
+	font-size:1em;
+	font-weight:normal;
+}
+.wo h4 p {
+	color:#a97b50;
+	padding:0;
+	margin:0;
+	font-size:.7em;
+	float:left;
+}
+.wo h4 span {
+	color:#9b9b9c;
+	padding:0;
+	margin:0;
+	font-size:.7em;
+	float:left;
+}
+.box-food ul li h4 a {
+	margin:0;
+	padding:0 0 0 .5em;
+}
+.box-food ul li h4 span.font8 {
+	font-size:.9em;
+	padding:.2em 0 0 0;
+	color:#949492;
+}
+/*=========我的界面=====开始=========*/
+/*=========我的信息=====开始=========*/
+.box-food ul li.us {
+	background:#b6d554;
+	font-size:1em;
+}
+.queding {
+	text-align:center;
+}
+/*=========我的信息=====结束=========*/
+
 
 }
 
@@ -1275,10 +1361,10 @@ input.green {
 	height:2.5em;
 	border-radius:10px;
 	border:#333 0px solid;
-	background:#6fc751;
+	background:#b6d554;
 	margin:.8em;
 	width:90%;
-	font-size:1.2em;
+	font-size:1em;
 	color:#ffffff;
 	font-weight:normal;
 }
@@ -1289,13 +1375,14 @@ input.gray {
 	background:#a49e9e;
 	margin:0em .8em .5em .8em;
 	width:90%;
-	font-size:1.2em;
+	font-size:1em;
 	color:#ffffff;
 	font-weight:normal;
 }
 
+
 input.liuyan {
-	width:15em;
+	width:10em;
 	height:1.2em;
 	border:0 #666 solid;
 	color:#ffffff;
@@ -1314,7 +1401,7 @@ input.red {
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#d74f43;
-	margin:.8em;
+	margin:1.8em .8em .8em .8em;
 	width:90%;
 	font-size:1em;
 	color:#ffffff;
@@ -1326,7 +1413,7 @@ input.jin {
 	background:#dcbc83;
 	margin:.2em .8em;
 	width:90%;
-	font-size:1.3em;
+	font-size:1.0em;
 	color:#000000;
 }
 input.bai {
@@ -1336,7 +1423,7 @@ input.bai {
 	background:#ffffff;
 	margin:.2em .8em;
 	width:90%;
-	font-size:1.3em;
+	font-size:1.0em;
 	color:#000000;
 }
 input.huang {
@@ -1356,8 +1443,16 @@ input.bule {
 	background:#227fd5;
 	margin:.8em;
 	width:90%;
-	font-size:1.2em;
+	font-size:1em;
 	color:#ffffff;
+}
+input.nichen {
+	width:8em;
+	height:1em;
+	border:0 #666 solid;
+	font-weight: normal;
+	text-align:right;
+	font-size:.9em;
 }
 
 .button-fasong {
@@ -1926,21 +2021,12 @@ input.bule {
 	margin:0 auto;position:relative;
 	top:-9.05em;
 	text-align:center;
-	border:#ffffff 1px solid;
-	border-radius:1.971em;
-	overflow:hidden;
-	width:3.942em;
-	height:3.942em;
-	top:-4.88em;
-	margin:0 auto;position:relative;
-	text-align:center;
-	border:#ffffff 1px solid;
 }
 .Angel h2 img {
 	width:10.272em;
 }
 .issue-top h5 {
-	padding:0;
+	padding:0 .5em;
 	margin:0;
 	text-align:center;
 }
@@ -2078,6 +2164,24 @@ input.bule {
 .chch-list ul li h3 span {
 	font-size:.8em;
 	color:#666666;
+}
+.chch-list ul li h3 span.chchshj {
+	font-size:.8em;
+	color:#666666;
+	display:none;
+}
+.chch-list ul li h3 p {
+	font-size:.8em;
+	color:#a0a0a0;
+	padding:0;
+	margin:0;
+	height:auto;
+}
+.chch-list ul li h3 p a {
+	color:#ffffff;
+}
+.chch-list ul li h3 p a.chch_ly {
+	display:none;
 }
 .chch-list ul li h5 {
 	float:right;
@@ -2371,7 +2475,7 @@ input.bule {
 .item1 .kodai {
 	position: absolute;
 	top: 0;
-	cursor: pointer;
+	cursor:crosshair;
 	width:100%;
 }
 .item1 .kodai img {
@@ -2401,7 +2505,7 @@ input.bule {
 	transition: transform 1.4s ease-in;
 }
 /*=====弹出层======样式2016.04.08===结束=======*/
-.tch-share { border-radius: 0; bottom:-1.8em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); -webkit-transition: -webkit-transform 300ms; transition: transform 300ms ; width: 100%; z-index: 10; }
+.tch-share { border-radius: 0; bottom:-1.8em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 2s /*infinite*/;animation-delay:.5s;/*Safari and Chrome*/-webkit-animation:mymove 2s /*infinite*/;-webkit-animation-delay:.5s;  width: 100%; z-index: 10; }
 .tch-modal-active { transform: translateY(0px);  -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0) }
 .tch-modal-out { z-index: 888; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%) }
 
@@ -2471,6 +2575,67 @@ input.bule {
 }
 /*============旋转样式====结束===========*/
 
+/*=========我的界面=====开始=========*/
+.wo {
+	background:#ffffff;
+	height:3em;
+	margin-bottom:1em;
+	margin-top:1em;
+	padding:.5em .8em;
+}
+.wo h2 {
+	width:2em;
+	height:2em;
+	overflow:hidden;
+	float:left;
+	padding:0;
+	margin:0;
+}
+.wo h2 img {
+	width:2.5em;
+}
+.wo h4 {
+	float:left;
+	padding:0 0 0 .8em;
+	margin:0;
+	font-size:1em;
+	font-weight:normal;
+}
+.wo h4 p {
+	color:#a97b50;
+	padding:0;
+	margin:0;
+	font-size:.7em;
+	float:left;
+}
+.wo h4 span {
+	color:#9b9b9c;
+	padding:0;
+	margin:0;
+	font-size:.7em;
+	float:left;
+}
+.box-food ul li h4 a {
+	margin:0;
+	padding:0 0 0 .5em;
+}
+.box-food ul li h4 span.font8 {
+	font-size:.9em;
+	padding:.2em 0 0 0;
+	color:#949492;
+}
+/*=========我的界面=====开始=========*/
+/*=========我的信息=====开始=========*/
+.box-food ul li.us {
+	background:#b6d554;
+	font-size:1em;
+}
+.queding {
+	text-align:center;
+}
+/*=========我的信息=====结束=========*/
+
+
 }
 
 @media screen and (min-width:411px) and (max-width:736px) {
@@ -2509,10 +2674,10 @@ input.green {
 	height:2.5em;
 	border-radius:10px;
 	border:#333 0px solid;
-	background:#6fc751;
+	background:#b6d554;
 	margin:.8em;
 	width:90%;
-	font-size:1.2em;
+	font-size:1em;
 	color:#ffffff;
 	font-weight:normal;
 }
@@ -2523,10 +2688,11 @@ input.gray {
 	background:#a49e9e;
 	margin:0em .8em .5em .8em;
 	width:90%;
-	font-size:1.2em;
+	font-size:1em;
 	color:#ffffff;
 	font-weight:normal;
 }
+
 
 input.liuyan {
 	width:10em;
@@ -2548,7 +2714,7 @@ input.red {
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#d74f43;
-	margin:.8em;
+	margin:1.8em .8em .8em .8em;
 	width:90%;
 	font-size:1em;
 	color:#ffffff;
@@ -2560,7 +2726,7 @@ input.jin {
 	background:#dcbc83;
 	margin:.2em .8em;
 	width:90%;
-	font-size:1.3em;
+	font-size:1.0em;
 	color:#000000;
 }
 input.bai {
@@ -2570,7 +2736,7 @@ input.bai {
 	background:#ffffff;
 	margin:.2em .8em;
 	width:90%;
-	font-size:1.3em;
+	font-size:1.0em;
 	color:#000000;
 }
 input.huang {
@@ -2590,8 +2756,16 @@ input.bule {
 	background:#227fd5;
 	margin:.8em;
 	width:90%;
-	font-size:1.2em;
+	font-size:1em;
 	color:#ffffff;
+}
+input.nichen {
+	width:8em;
+	height:1em;
+	border:0 #666 solid;
+	font-weight: normal;
+	text-align:right;
+	font-size:.9em;
 }
 
 .button-fasong {
@@ -2723,7 +2897,7 @@ input.bule {
 }
 .button-qhb {
 	/*position:relative;*/
-	padding:4em 0 0 0;
+	padding:5em 0 0 0;
 }
 .jxq {
 	text-align:center;
@@ -3159,7 +3333,7 @@ input.bule {
 	border:#ffffff 1px solid;
 }
 .issue-top h5 {
-	padding:0;
+	padding:0 .5em;
 	margin:0;
 	text-align:center;
 }
@@ -3298,6 +3472,24 @@ input.bule {
 .chch-list ul li h3 span {
 	font-size:.8em;
 	color:#666666;
+}
+.chch-list ul li h3 span.chchshj {
+	font-size:.8em;
+	color:#666666;
+	display:none;
+}
+.chch-list ul li h3 p {
+	font-size:.8em;
+	color:#a0a0a0;
+	padding:0;
+	margin:0;
+	height:auto;
+}
+.chch-list ul li h3 p a {
+	color:#ffffff;
+}
+.chch-list ul li h3 p a.chch_ly {
+	display:none;
 }
 .chch-list ul li h5 {
 	float:right;
@@ -3609,7 +3801,7 @@ input.bule {
 	top:-10.95em;
 }
 .item1 {
-	height: 9em;
+	height:22em;
 	position: relative;
 	padding: 0;
 	text-align: center;
@@ -3619,7 +3811,7 @@ input.bule {
 .item1 .kodai {
 	position: absolute;
 	top: 0;
-	cursor: pointer;
+	cursor:crosshair;
 	width:100%;
 }
 .item1 .kodai img {
@@ -3635,9 +3827,9 @@ input.bule {
 .item1 .clipped-box {
 	display: none;
 	position: absolute;
-	bottom: -7em;
+	bottom: 0em;
 	left: 160px;
-	top:-5em;
+	top:-12em;
 	text-align:center;
 }
 .item1 .clipped-box img {
@@ -3649,7 +3841,7 @@ input.bule {
 	transition: transform 1.4s ease-in;
 }
 /*=====弹出层======样式2016.04.08===结束=======*/
-.tch-share { border-radius: 0; bottom:-1.2em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); -webkit-transition: -webkit-transform 300ms; transition: transform 300ms ; width: 100%; z-index: 10;  }
+.tch-share { border-radius: 0; bottom:-1.2em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 3s /*infinite*/;animation-delay:1s;/*Safari and Chrome*/-webkit-animation:mymove 3s /*infinite*/;-webkit-animation-delay:1s; width: 100%; z-index: 10;  }
 .tch-modal-active { transform: translateY(0px);  -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0) }
 .tch-modal-out { z-index: 888; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%) }
 
@@ -3727,6 +3919,67 @@ input.bule {
 }
 /*============旋转样式====结束===========*/
 
+/*=========我的界面=====开始=========*/
+.wo {
+	background:#ffffff;
+	height:3em;
+	margin-bottom:1em;
+	margin-top:1em;
+	padding:.5em .8em;
+}
+.wo h2 {
+	width:2em;
+	height:2em;
+	overflow:hidden;
+	float:left;
+	padding:0;
+	margin:0;
+}
+.wo h2 img {
+	width:2.5em;
+}
+.wo h4 {
+	float:left;
+	padding:0 0 0 .8em;
+	margin:0;
+	font-size:1em;
+	font-weight:normal;
+}
+.wo h4 p {
+	color:#a97b50;
+	padding:0;
+	margin:0;
+	font-size:.7em;
+	float:left;
+}
+.wo h4 span {
+	color:#9b9b9c;
+	padding:0;
+	margin:0;
+	font-size:.7em;
+	float:left;
+}
+.box-food ul li h4 a {
+	margin:0;
+	padding:0 0 0 .5em;
+}
+.box-food ul li h4 span.font8 {
+	font-size:.7em;
+	padding:.4em 0 0 0;
+	color:#949492;
+}
+/*=========我的界面=====开始=========*/
+/*=========我的信息=====开始=========*/
+.box-food ul li.us {
+	background:#b6d554;
+	font-size:1em;
+}
+.queding {
+	text-align:center;
+}
+/*=========我的信息=====结束=========*/
+
+
 }
 
 @media screen and (min-width:320px) and (max-width:410px) {
@@ -3765,7 +4018,7 @@ input.green {
 	height:2.5em;
 	border-radius:10px;
 	border:#333 0px solid;
-	background:#6fc751;
+	background:#b6d554;
 	margin:.8em;
 	width:90%;
 	font-size:1em;
@@ -3849,6 +4102,14 @@ input.bule {
 	width:90%;
 	font-size:1em;
 	color:#ffffff;
+}
+input.nichen {
+	width:8em;
+	height:1em;
+	border:0 #666 solid;
+	font-weight: normal;
+	text-align:right;
+	font-size:.9em;
 }
 
 .button-fasong {
@@ -3982,7 +4243,7 @@ input.bule {
 .button-qhb {
 	/*position:relative;*/
 	
-	padding:3em 0 0 0;
+	padding:5em 0 0 0;
 
 }
 .jxq {
@@ -4428,7 +4689,7 @@ input.bule {
 	border:#ffffff 1px solid;
 }
 .issue-top h5 {
-	padding:0;
+	padding:0 .5em;
 	margin:0;
 	text-align:center;
 }
@@ -4569,6 +4830,24 @@ input.bule {
 .chch-list ul li h3 span {
 	font-size:.8em;
 	color:#666666;
+}
+.chch-list ul li h3 span.chchshj {
+	font-size:.8em;
+	color:#666666;
+	display:none;
+}
+.chch-list ul li h3 p {
+	font-size:.8em;
+	color:#a0a0a0;
+	padding:0;
+	margin:0;
+	height:auto;
+}
+.chch-list ul li h3 p a {
+	color:#ffffff;
+}
+.chch-list ul li h3 p a.chch_ly {
+	display:none;
 }
 .chch-list ul li h5 {
 	float:right;
@@ -4862,7 +5141,7 @@ input.bule {
 	top:-8.9em;
 }
 .item1 {
-	height: 9em;
+	height:9em;
 	position: relative;
 	padding: 0;
 	text-align: center;
@@ -4872,14 +5151,22 @@ input.bule {
 }
 .item1 .kodai {
 	position: absolute;
+	/*border-radius:52.5px;
+	overflow:hidden;*/
 	top: 0;
-	cursor: pointer;
+	/*cursor: pointer;*/
 	width:100%;
+	/*width:105px;
+	height:105px;
+	margin:0 auto;*/
+	cursor:crosshair;
 }
 .item1 .kodai img {
 	width:105px;
 	margin:0 auto;
-	}
+}
+.item1 .kodai:hover {
+}
 .item1 .kodai .full {
 	display: block;
 }
@@ -4889,9 +5176,9 @@ input.bule {
 .item1 .clipped-box {
 	display: none;
 	position: absolute;
-	bottom:-8em;
+	bottom:0em;
 	left: 140px;
-	top:-5em;
+	top:-12em;
 	text-align:center;
 }
 .item1 .clipped-box img {
@@ -4899,11 +5186,11 @@ input.bule {
 	top: auto;
 	left: 0;
 	bottom: 0;
-	-webkit-transition: -webkit-transform 1.4s ease-in, background 0.3s ease-in;
-	transition: transform 1.4s ease-in;
+	-webkit-transition: -webkit-transform 1.2s ease-in, background 0.3s ease-in;
+	transition: transform 1.2s ease-in;
 }
 /*=====弹出层======样式2016.04.08===结束=======*/
-.tch-share { border-radius: 0; bottom:-1.2em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); -webkit-transition: -webkit-transform 300ms; transition: transform 300ms ; width: 100%; z-index: 10; }
+.tch-share { border-radius: 0; bottom:-1.2em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 3s /*infinite*/;animation-delay:1s;/*Safari and Chrome*/-webkit-animation:mymove 3s /*infinite*/;-webkit-animation-delay:1s; width: 100%; z-index: 10; }
 .tch-modal-active { transform: translateY(0px);  -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0) }
 .tch-modal-out { z-index: 888; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%) }
 
@@ -4984,6 +5271,68 @@ input.bule {
   height:178px;
 }
 /*============旋转样式====结束===========*/
+
+/*=========我的界面=====开始=========*/
+.wo {
+	background:#ffffff;
+	height:3em;
+	margin-bottom:1em;
+	margin-top:1em;
+	padding:.5em .8em;
+}
+.wo h2 {
+	width:2em;
+	height:2em;
+	overflow:hidden;
+	float:left;
+	padding:0;
+	margin:0;
+}
+.wo h2 img {
+	width:2.5em;
+}
+.wo h4 {
+	float:left;
+	padding:0 0 0 .8em;
+	margin:0;
+	font-size:1em;
+	font-weight:normal;
+}
+.wo h4 p {
+	color:#a97b50;
+	padding:0;
+	margin:0;
+	font-size:.7em;
+	float:left;
+}
+.wo h4 span {
+	color:#9b9b9c;
+	padding:0;
+	margin:0;
+	font-size:.7em;
+	float:left;
+}
+.box-food ul li h4 a {
+	margin:0;
+	padding:0 0 0 .5em;
+}
+.box-food ul li h4 span.font8 {
+	font-size:.7em;
+	padding:.4em 0 0 0;
+	color:#949492;
+}
+/*=========我的界面=====开始=========*/
+
+/*=========我的信息=====开始=========*/
+.box-food ul li.us {
+	background:#b6d554;
+	font-size:1em;
+}
+.queding {
+	text-align:center;
+}
+/*=========我的信息=====结束=========*/
+
 }
 @media screen and (min-width:360px) and (max-width:677px) {
 /*======三星S5======*/
@@ -5529,7 +5878,7 @@ background-size:cover;
 	font-size:.5em;
 }
 .issue-top h5 {
-	padding:0;
+	padding:0 .5em;
 	margin:0;
 	text-align:center;
 	font-weight:normal;
@@ -5997,6 +6346,19 @@ background-size:cover;
 100%{
 -ms-transform:rotate(360deg);
 }
+}
+
+/*======CSS==抢串串延时======*/
+@keyframes mymove
+{
+from {bottom:-1000px;}
+to {bottom:-4.8em;}
+}
+
+@-webkit-keyframes mymove 
+{/*Safari and Chrome*/
+from {bottom:-1000px;}
+to {bottom:-4.8em;}
 }
 
 
