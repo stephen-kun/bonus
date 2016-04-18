@@ -90,7 +90,8 @@ class Ticket(models.Model):
 	
 	def __unicode__(self):
 		return '%s ticket id%d'%(self.consumer.name, self.id_ticket)
-	
+
+
 	
 #个人的红包
 class PersonBonus(models.Model):
@@ -99,7 +100,6 @@ class PersonBonus(models.Model):
 	to_table = models.CharField(max_length=3,null=True, blank=True)						#收红包的桌台
 	from_table = models.CharField(max_length=3,null=True, blank=True)						#发红包的桌台
 	to_message = models.CharField(max_length=140, null=True, blank=True)			#赠言
-	title = models.CharField(max_length=40, null=True, blank=True)				#冠名
 	bonus_num = models.IntegerField(default=0)				#红包个数
 	bonus_remain = models.IntegerField(default=0)			#剩余红包个数
 	is_exhausted = models.BooleanField(default=False)		#红包已耗尽

@@ -108,7 +108,7 @@ class PostResponse():
         1、根据openid,查询consumer，获取当前用户的ownBonusValue,ownTicketValue，idTable.
         2、根据idtable，查询RcvBonus，获取该桌抢到的所有红包
         '''
-        pass
+        return ''
         
     #自动处理
     def auto_handle(self):

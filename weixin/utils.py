@@ -1,7 +1,14 @@
 # -*- coding: utf-8 -*-
 # utils.py
 # Create your utils here.
+import random, string
 
+#主键生成方法
+def create_primary_key(key='10', length=8):
+    a = list(string.digits)
+    random.shuffle(a)   
+    primary = key + ''.join(a[:length])
+    return string.atoi(primary, 10)
 
 #红包留言
 def action_bonus_message(request):

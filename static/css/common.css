@@ -58,6 +58,9 @@ td,tr,table {
 	/*border-collapse:collapse;*/
 	/*border:none;*/
 }
+.f_huangse {
+	color:#fffc00;
+	}
 .box_auto {
 	width:100%;
 }
