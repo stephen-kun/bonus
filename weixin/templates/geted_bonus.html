@@ -2,11 +2,10 @@
 
 {% block content %}
 
-<article>
-	<section>
-	
-	</section>
-
-</article>
+{% for bonus in random_bonus %}
+    <div class="box-dongqi">
+		<h4>{{from_user}}</h4>
+	</div>
+{% endfor %}
 
 {% endblock %}

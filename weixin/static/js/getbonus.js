@@ -1,10 +1,7 @@
-function get_bonus(openid)
+function get_bonus(url)
 {
-// 携带openid 发起post请求
+// 携带openid 发起get请求
 var xmlhttp;
-var url = 'http://127.0.0.1:8000/weixin/view_action_get_bonus/?openid=OPENID';
-url = url.replace(/OPENID/, openid);
-//var jsonData = {openid : openid};
 if (window.XMLHttpRequest)
   {// code for IE7+, Firefox, Chrome, Opera, Safari
   xmlhttp=new XMLHttpRequest();

@@ -1,50 +1,47 @@
 ﻿{% extends "_bonus_base.html" %}
 
 {% block content %}
-<article>
-	<section>
-		<div class="qiang">
-			
-			<div class="button-qhb">
-				
-				<section class="cd-section">
-					<div class="blades">
-						<div class="blade3"></div>
-					</div>
-					<div class="main">
-						<div class="item1">
-							<div class="kodai">
-								<img src="{{STATIC_URL}}images/qubaba1_03.png" class="full" onClick="toshare()" />
-								<img src="{{STATIC_URL}}images/qubaba1_03_zhse.png" class="empty" />
-							</div>
-							<div class="clipped-box">
-					
-							</div>
-						</div>
-					</div>
-				</section> 	
-				<div class="tch-share">
-				  <h3 class="tch-share-title" id="rcv_bonus"></h3>
-				  <ul class="tch-share-sns">
-					<li><a href="{{geted_bonus_url}}" target="_blank">查看红包&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{get_bonus_url}}">继续抢红包</a></a></li>
-				  </ul>
-				  
-				</div>	
-				
-				<link href="{{STATIC_URL}}css/animator.css" rel="stylesheet" />			
-				<style type="text/css">
-					.blades{animation: spin 100s linear infinite;}
-				</style>			
+
+<div class="qiang">
+	
+	<div class="button-qhb">
+		
+		<section class="cd-section">
+			<div class="blades">
+				<div class="blade3"></div>
 			</div>
-		</div>
-	</section>
-</article>
+			<div class="main">
+				<div class="item1">
+					<div class="kodai">
+						<img src="{{static_url}}images/qubaba1_03.png" class="full" onClick="toshare()" />
+						<img src="{{static_url}}images/qubaba1_03_zhse.png" class="empty" />
+					</div>
+					<div class="clipped-box">
+			
+					</div>
+				</div>
+			</div>
+		</section> 	
+		<div class="tch-share">
+		  <h3 class="tch-share-title" id="rcv_bonus"></h3>
+		  <ul class="tch-share-sns">
+			<li><a href="{{geted_bonus_url}}" target="_blank">查看红包&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{again_get_bonus_url}}">继续抢红包</a></a></li>
+		  </ul>
+		  
+		</div>	
+		
+		<link href="{{static_url}}css/animator.css" rel="stylesheet" />			
+		<style type="text/css">
+			.blades{animation: spin 100s linear infinite;}
+		</style>			
+	</div>
+</div>
 
-<h1 id="openid" hidden>{{openid}}</h1>
+<h1 id="url" hidden>{{action_get_bonus_url}}</h1>
 
-<script src="{{STATIC_URL}}js/jquery-1.8.2.min.js"></script>
-<script src="{{STATIC_URL}}js/javascript.js"></script>
-<script src="{{STATIC_URL}}js/getbonus.js"></script>
+<script src="{{static_url}}js/jquery-1.8.2.min.js"></script>
+<script src="{{static_url}}js/javascript.js"></script>
+<script src="{{static_url}}js/getbonus.js"></script>
 <script type="text/javascript">
 	function toshare(){
 		$(".tch-share").addClass("tch-modal-active");	
@@ -63,7 +60,7 @@
 		})
 		
 		// 向后台服务器发起抢红包请求
-		var x = document.getElementById("openid");
+		var x = document.getElementById("url");
 		get_bonus(x.innerHTML);		
 	}	
 </script>
