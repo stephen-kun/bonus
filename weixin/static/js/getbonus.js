@@ -1,7 +1,9 @@
-function get_bonus(openid, url)
+function get_bonus(openid)
 {
 // 携带openid 发起post请求
 var xmlhttp;
+var url = 'http://127.0.0.1:8000/weixin/view_action_get_bonus/?openid=OPENID';
+url = url.replace(/OPENID/, openid);
 //var jsonData = {openid : openid};
 if (window.XMLHttpRequest)
   {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -20,6 +22,6 @@ xmlhttp.onreadystatechange=function()
 		document.getElementById("rcv_bonus").innerHTML=html.replace(/NUMBER/,xmlhttp.responseText);
 	}
 }
-xmlhttp.open("POST", url, true);
-xmlhttp.send(openid);
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
 }
