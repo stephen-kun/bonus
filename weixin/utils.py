@@ -115,9 +115,6 @@ def action_create_ticket(request):
 	#更新PersonMoney表中ticket字段
 	pass
 	
-#获取系统红包
-def get_system_bonus():
-	pass
 	
 #抢红包事件
 def action_get_bonus(openid):

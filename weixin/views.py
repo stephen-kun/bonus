@@ -81,13 +81,6 @@ def view_redirect_bonus_rcv(request):
 		html = '您未选座就餐，不能抢红包！'
 	return HttpResponse(html)
 
-#抢到的红包
-@csrf_exempt
-def geted_bonus(request):
-	temp = get_template('qiangdaohongbao.html')
-	html = temp.render({'STATIC_URL': settings.STATIC_URL},request)
-	return HttpResponse(html)
-	
 #抢红包动作
 @csrf_exempt
 def view_action_get_bonus(request):
@@ -96,6 +89,14 @@ def view_action_get_bonus(request):
 	openid = request.body
 	response=action_get_bonus(openid)
 	return HttpResponse(response)
+
+#抢到的红包
+@csrf_exempt
+def view_geted_bonus(request):
+	temp = get_template('qiangdaohongbao.html')
+	html = temp.render({'STATIC_URL': settings.STATIC_URL},request)
+	return HttpResponse(html)	
+
     
 @csrf_exempt
 def token(request):
