@@ -45,8 +45,8 @@ img {
 }
 
 p{padding:0; margin:0;}
-a{ text-decoration:none; color:#242422;}
-a:hover{ text-decoration:underline; color:#d4372c;}
+a{ text-decoration:none; color:#242422;outline:none;}
+a:hover{ text-decoration:underline; color:#d4372c;star:expression(this.onFocus=this.blur());}
 .clear{ clear:both;}
 .lfloat {
 	float:left;
@@ -67,6 +67,9 @@ td,tr,table {
 .tj_main {
 	width:1012px;
 	margin:0px auto;
+}
+.font_admin_ren {
+	color:#F00;
 }
 /*苹果手机按钮无色*/
 input[type=button], input[type=submit], input[type=file], button { cursor: pointer; -webkit-appearance: none; } 

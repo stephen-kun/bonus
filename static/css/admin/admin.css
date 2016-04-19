@@ -512,7 +512,36 @@ background: -o-linear-gradient(top, #ddf8aa, #b0d067);  /*Opera 11.10+*/}
 }
 /*=============登录===结束========*/
 
-
+/*=============用餐统计列表===开始========*/
+.dining_list {
+	padding:1em;
+}
+.dining_list ul li {
+	padding:0;
+	margin:0;
+	line-height:2em;
+	background:#eff0ed;
+	float:left;
+	width:100%;
+}
+.dining_list ul li h4 {
+	padding:0 .2em 0 .2em;
+	margin:0 0 0 0;
+	width:15%;
+	float:left;
+	text-align:left;
+	font-size:1em;
+	font-weight:normal;
+	height:2em;
+	border-right:#ffffff solid 1px;
+}
+.dining_list ul li h4:last-child {
+	border-right:#ffffff solid 0px;
+}
+.dining_list ul li.dining_list_color {
+	background:#ffffff;
+}
+/*=============用餐统计列表===结束========*/
 
 
 
