@@ -2,8 +2,13 @@
 from django.http.response import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import get_template 
+from django.shortcuts import render_to_response
 from django.conf import settings
 
+
+ACTION_GET_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_action_get_bonus/?openid=OPENID'
+GETED_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_geted_bonus'
+AGAIN_GET_BONUS_URL ='http://127.0.0.1:8000/weixin/view_again_rcv_bonus/?openid=OPENID'
 
 # Create your views here.
 
@@ -42,30 +47,27 @@ def view_rcv_bonus(request):
 def view_redirect_bonus_rcv(request):
 	#获取openid
 	#刷新页面中openid
-	temp = get_template('get_bonus.html')
-	html = temp.render(
-	{'title':'东启湘厨',
-	'STATIC_URL': settings.STATIC_URL, 
-	'openid':'koovox',
-	'geted_bonus_url':'http://127.0.0.1:8000/weixin/view_geted_bonus',
-	'get_bonus_url':'http://127.0.0.1:8000/weixin/view_again_rcv_bonus/?openid=koovox'
-	},request)		
-	return HttpResponse(html)
+	title = '东启湘厨'
+	static_url = settings.STATIC_URL
+	openid = 'koovox'
+	action_get_bonus_url = ACTION_GET_BONUS_URL.replace('OPENID', openid)
+	geted_bonus_url = GETED_BONUS_URL
+	again_get_bonus_url = AGAIN_GET_BONUS_URL.replace('OPENID', openid)
+	return render_to_response('get_bonus.html', locals())
+
 	
 #继续抢红包界面
 @csrf_exempt
 def view_again_rcv_bonus(request):
 	openid = request.GET.get('openid')
 	print('**view_again_rcv_bonus:%s***'%(openid))
-	temp = get_template('get_bonus.html')
-	html = temp.render(
-	{'title':'东启湘厨',
-	'STATIC_URL': settings.STATIC_URL, 
-	'openid':'koovox',
-	'geted_bonus_url':'http://127.0.0.1:8000/weixin/view_geted_bonus',
-	'get_bonus_url':'http://127.0.0.1:8000/weixin/view_again_rcv_bonus/?openid=koovox'
-	},request)		
-	return HttpResponse(html)	
+	title = '东启湘厨'
+	base_type = 'get_bonus'
+	static_url = settings.STATIC_URL
+	action_get_bonus_url = ACTION_GET_BONUS_URL.replace('OPENID', openid)
+	geted_bonus_url = GETED_BONUS_URL
+	again_get_bonus_url = AGAIN_GET_BONUS_URL.replace('OPENID', openid)
+	return render_to_response('get_bonus.html', locals())
 	
 #发红包界面认证
 @csrf_exempt
