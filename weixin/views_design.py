@@ -42,7 +42,17 @@ def view_rcv_bonus(request):
 def view_redirect_bonus_rcv(request):
 	#获取openid
 	#刷新页面中openid
-	pass
+	temp = get_template('get_bonus.html')
+	html = temp.render(
+	{'title':'东启湘厨',
+	'STATIC_URL': settings.STATIC_URL, 
+	'bonus_head':'恭喜您抢到红包',
+	'bonus_num':'15',
+	'bonus_tail':'个',
+	'geted_bonus_url':'http://127.0.0.1:8000/weixin/view_geted_bonus',
+	'get_bonus_url':'http://127.0.0.1:8000/weixin/view_redirect_bonus_rcv'
+	},request)		
+	return HttpResponse(html)
 	
 #发红包界面认证
 @csrf_exempt
@@ -72,7 +82,7 @@ def view_system_bonus(request):
 #抢到的红包界面
 @csrf_exempt
 def view_geted_bonus(request):
-	pass
+	return HttpResponse('ok')
 
 #微信token认证
 @csrf_exempt
