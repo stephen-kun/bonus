@@ -1,4 +1,4 @@
-function get_bonus(openid)
+function get_bonus(openid, url)
 {
 // 携带openid 发起post请求
 var xmlhttp;
@@ -16,9 +16,10 @@ xmlhttp.onreadystatechange=function()
 {
 	if(xmlhttp.readyState==4 && xmlhttp.status==200)
 	{
-		document.getElementById("rcv_bonus").innerHTML=xmlhttp.responseText;
+		var html = '恭喜您抢到红包<font class="f_huangse">NUMBER</font>个';
+		document.getElementById("rcv_bonus").innerHTML=html.replace(/NUMBER/,xmlhttp.responseText);
 	}
 }
-xmlhttp.open("POST", "http://120.76.122.53/weixin/view_action_get_bonus", true);
+xmlhttp.open("POST", url, true);
 xmlhttp.send(openid);
 }

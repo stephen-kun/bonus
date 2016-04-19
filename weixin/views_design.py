@@ -46,13 +46,16 @@ def view_redirect_bonus_rcv(request):
 	html = temp.render(
 	{'title':'东启湘厨',
 	'STATIC_URL': settings.STATIC_URL, 
-	'bonus_head':'恭喜您抢到红包',
-	'bonus_num':'15',
-	'bonus_tail':'个',
+	'openid':'koovox',
 	'geted_bonus_url':'http://127.0.0.1:8000/weixin/view_geted_bonus',
-	'get_bonus_url':'http://127.0.0.1:8000/weixin/view_redirect_bonus_rcv'
+	'get_bonus_url':'http://127.0.0.1:8000/weixin/view_redirect_bonus_rcv&openid="openid"'
 	},request)		
 	return HttpResponse(html)
+	
+#继续抢红包界面
+@csrf_exempt
+def view_again_rcv_bonus(request):
+	
 	
 #发红包界面认证
 @csrf_exempt
@@ -78,6 +81,15 @@ def view_system_bonus(request):
 	#从request中解析出adminId
 	#刷新页面中的adminId	
 	pass
+	
+#抢红包动作
+@csrf_exempt
+def view_action_get_bonus(request):
+	print('***view_action_get_bonus ***\n')
+	print(request.body)
+	#openid = request.body
+	#response=action_get_bonus(openid)
+	return HttpResponse('3')
 
 #抢到的红包界面
 @csrf_exempt
