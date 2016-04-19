@@ -1,11 +1,32 @@
-{% extends "_bonus_base.html" %}
+﻿{% extends "_bonus_base.html" %}
 
 {% block content %}
 
 {% for bonus in random_bonus %}
     <div class="box-dongqi">
-		<h4>{{from_user}}</h4>
+		<h4>{{bonus.consumer.name}}</h4>
+        <h5><span class="rfloat">{{bonus.table}}</span>{{bonus.message}}</h5>
+        <h6><span class="rfloat" onClick="toshare()">留言</span>{{bonus.create_time}}</h6>
 	</div>
 {% endfor %}
+
+{% for bonus in common_bonus %}
+    <div class="box-dongqi">
+		<h4>{{bonus.consumer.name}}</h4>
+        <h5><span class="rfloat">{{bonus.table}}</span>{{bonus.message}}</h5>
+        <h6><span class="rfloat" onClick="toshare()">留言</span>{{bonus.create_time}}</h6>
+        <h2><input type="button" class="red" value="回赠"></h2>
+        <span class="wj"><a href="#" target="_blank">婉拒</a></span>	
+	</div>
+{% endfor %}
+
+<section>
+	<div class="am-share">
+	  <h3 class="am-share-title"><input type="text" class="blankin" value=""><input type="button" class="send_out" value="发送"></h3>
+	</div>	
+</section>
+
+<script type="text/javascript" src="{{static_url}}js/jquery.js"></script>
+<script type="text/javascript" src="{{static_url}}js/messagehiding.js"></script>
 
 {% endblock %}
