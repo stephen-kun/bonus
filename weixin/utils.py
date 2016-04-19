@@ -38,7 +38,7 @@ null_rcv_bonus = 1
 null_snd_bonus = 1
 null_recharge = 1 
 
-
+'''
 table = DiningTable.objects.get_or_create(index_table='0')
 null_dining_table=table[0]
 
@@ -71,7 +71,7 @@ null_snd_bonus=snd_bonus[0]
 
 rcv_bonus = RcvBonus.objects.get_or_create(id_bonus=2000000000, snd_bonus=null_snd_bonus, consumer=null_consumer, table=null_dining_table)
 null_rcv_bonus=rcv_bonus[0]
-
+'''
 
 #检测用户是否在就餐状态
 def is_consumer_dining(openid):
