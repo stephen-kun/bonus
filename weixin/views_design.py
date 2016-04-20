@@ -4,11 +4,16 @@ from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import get_template 
 from django.shortcuts import render_to_response
 from django.conf import settings
+import django.utils.timezone as timezone
+import json
 
 
-ACTION_GET_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_action_get_bonus/?openid=OPENID'
-GETED_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_geted_bonus'
+AJAX_REQUEST_URL = 'http://127.0.0.1:8000/weixin/view_ajax_request/?openid=OPENID&action=ACTION'
+GETED_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_geted_bonus/?id_record=ID_RECORD'
 AGAIN_GET_BONUS_URL ='http://127.0.0.1:8000/weixin/view_again_rcv_bonus/?openid=OPENID'
+
+AJAX_GET_BONUS = 'ajax_get_bonus'
+
 
 # Create your views here.
 
@@ -48,9 +53,10 @@ def view_redirect_bonus_rcv(request):
 	#获取openid
 	#刷新页面中openid
 	title = '东启湘厨'
+	base_type = 'get_bonus'
 	static_url = settings.STATIC_URL
 	openid = 'koovox'
-	action_get_bonus_url = ACTION_GET_BONUS_URL.replace('OPENID', openid)
+	ajax_request_url = AJAX_REQUEST_URL.replace('OPENID', openid)
 	geted_bonus_url = GETED_BONUS_URL
 	again_get_bonus_url = AGAIN_GET_BONUS_URL.replace('OPENID', openid)
 	return render_to_response('get_bonus.html', locals())
@@ -64,7 +70,7 @@ def view_again_rcv_bonus(request):
 	title = '东启湘厨'
 	base_type = 'get_bonus'
 	static_url = settings.STATIC_URL
-	action_get_bonus_url = ACTION_GET_BONUS_URL.replace('OPENID', openid)
+	ajax_request_url = AJAX_REQUEST_URL.replace('OPENID', openid)
 	geted_bonus_url = GETED_BONUS_URL
 	again_get_bonus_url = AGAIN_GET_BONUS_URL.replace('OPENID', openid)
 	return render_to_response('get_bonus.html', locals())
@@ -94,19 +100,62 @@ def view_system_bonus(request):
 	#刷新页面中的adminId	
 	pass
 	
-#抢红包动作
-@csrf_exempt
-def view_action_get_bonus(request):
-	openid = request.GET.get('openid')
-	print('***view_action_get_bonus :%s***\n'%(openid))
-	#openid = request.body
-	#response=action_get_bonus(openid)
-	return HttpResponse('3')
-
+class GetedBonus():
+	def __init__(self, id_bonus, openid, name, picture, message, datetime, content):
+		self.id_bonus = id_bonus
+		self.openid = openid
+		self.name = name
+		self.picture = picture
+		self.message = message
+		self.datetime = datetime
+		self.content = content
+		
+	
+	
 #抢到的红包界面
 @csrf_exempt
 def view_geted_bonus(request):
-	return HttpResponse('ok')
+	id_record = request.GET.get('id_record')
+	print("===view_geted_bonus:%s===\n"%(id_record))
+	title = '东启湘厨'
+	base_type = 'geted_bonus'
+	static_url = settings.STATIC_URL
+	bonus_dir1 = {"串串":"3串", "可乐":"2瓶", "甜品":"3个"}
+	bonus_dir2 = {"串串":"6串", "可乐":"4瓶", "甜品":"7个"}
+	bonus_dir3 = {"串串":"10串", "可乐":"2瓶", "甜品":"8个"}
+	picture1 = 'http://wx.qlogo.cn/mmopen/9T7GtDDMnzaBB0ILSKYVrq1esXAVR4VKtiaYwhxOaFb7VJpgtsrsngBZRiavDsVvMibOnSxfDsZ4zGgbN6NlxB4CTIshrGAOvQD/0'
+	picture2 = ' http://wx.qlogo.cn/mmopen/ZMdxSDafpxR1pC2gQK7tKP7L2fM35ic9dOSG2eAe1icQ3cKoHA34cbWqhHHlv6fKNzFGmiaACiaqSUvQ30jLlxO9R8GQELocGjkib/0'
+	curr_time = timezone.now
+	random1 = GetedBonus(id_bonus='1234', openid="2345", name="stephen", picture=picture1, message="恭喜发财", datetime=curr_time, content=bonus_dir1)
+	random2 = GetedBonus(id_bonus='1454', openid="6345", name="hero", picture=picture2, message="生日快乐", datetime=curr_time, content=bonus_dir2)
+	common = GetedBonus(id_bonus='1904', openid="6225", name="stephen", picture=picture1, message="对面的女孩开过来", datetime=curr_time, content=bonus_dir3)
+	random_bonus = []
+	common_bonus = []
+	random_bonus.append(random1)
+	random_bonus.append(random2)
+	common_bonus.append(common)
+	common_bonus_url = 'http://127.0.0.1:8000/weixin/view_ajax_request/?openid=OPENID&action=ACTION'
+	return render_to_response('geted_bonus.html', locals())
+	
+#网页ajax请求
+@csrf_exempt
+def view_ajax_request(request):
+	if request.method == 'GET':
+		openid = request.GET.get('openid')
+		action = request.GET.get('action')
+		print('***view_ajax_request id:%s action:%s****\n'%(openid, action))
+	else:
+		print('***view_ajax_request body:%s ****\n'%(request.body))
+		
+		data = json.loads(request.body)
+		for key, value in data.items():
+			print('%s ==> %s'%(key, value))
+	
+	
+	#实现ajax请求处理函数
+	#response = handle_ajax_request(openid, action)
+	response = '{"number":3, "id_record":"12345"}'
+	return HttpResponse(response)
 
 #微信token认证
 @csrf_exempt

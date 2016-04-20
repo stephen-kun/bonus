@@ -25,7 +25,7 @@
 		<div class="tch-share">
 		  <h3 class="tch-share-title" id="rcv_bonus"></h3>
 		  <ul class="tch-share-sns">
-			<li><a href="{{geted_bonus_url}}" target="_blank">查看红包&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{again_get_bonus_url}}">继续抢红包</a></a></li>
+			<li id="link"></li>
 		  </ul>
 		  
 		</div>	
@@ -37,32 +37,62 @@
 	</div>
 </div>
 
-<h1 id="url" hidden>{{action_get_bonus_url}}</h1>
+<h1 id="url" hidden>{{ajax_request_url}}</h1>
+<h2 id="id_bonus"></h2>
 
 <script src="{{static_url}}js/jquery-1.8.2.min.js"></script>
 <script src="{{static_url}}js/javascript.js"></script>
-<script src="{{static_url}}js/getbonus.js"></script>
 <script type="text/javascript">
-	function toshare(){
-		$(".tch-share").addClass("tch-modal-active");	
-		if($(".tchsharebg").length>0){
-			$(".tchsharebg").addClass("tchsharebg-active");
-		}else{
-			$("body").append('<div class="tchsharebg"></div>');
-			$(".tchsharebg").addClass("tchsharebg-active");
-		}
-		$(".tchsharebg-active,.tchshare_btn").click(function(){
-			$(".tch-share").removeClass("tch-modal-active");	
-			setTimeout(function(){
-				$(".tchsharebg-active").removeClass("tchsharebg-active");	
-				$(".tchsharebg").remove();	
-			},300);
-		})
-		
-		// 向后台服务器发起抢红包请求
-		var x = document.getElementById("url");
-		get_bonus(x.innerHTML);		
-	}	
+function toshare(){
+	$(".tch-share").addClass("tch-modal-active");	
+	if($(".tchsharebg").length>0){
+		$(".tchsharebg").addClass("tchsharebg-active");
+	}else{
+		$("body").append('<div class="tchsharebg"></div>');
+		$(".tchsharebg").addClass("tchsharebg-active");
+	}
+	$(".tchsharebg-active,.tchshare_btn").click(function(){
+		$(".tch-share").removeClass("tch-modal-active");	
+		setTimeout(function(){
+			$(".tchsharebg-active").removeClass("tchsharebg-active");	
+			$(".tchsharebg").remove();	
+		},300);
+	})
+	
+	// 向后台服务器发起抢红包请求
+	var x = document.getElementById("url");
+	url = x.innerHTML.replace(/ACTION/, 'ajax_get_bonus');
+	get_bonus(url);		
+}	
+	
+function get_bonus(url)
+{
+// 携带openid 发起get请求
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  
+xmlhttp.onreadystatechange=function()
+{
+	if(xmlhttp.readyState==4 && xmlhttp.status==200)
+	{
+		var html = '恭喜您抢到红包<font class="f_huangse">NUMBER</font>个';
+		var link = '<a href="{{geted_bonus_url}}" target="_blank">查看红包&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{again_get_bonus_url}}">继续抢红包</a></a>';
+		var JSONObject = JSON.parse(xmlhttp.responseText);
+		document.getElementById("rcv_bonus").innerHTML=html.replace(/NUMBER/,JSONObject.number);
+		document.getElementById("link").innerHTML=link.replace(/ID_RECORD/,JSONObject.id_record);
+	}
+}
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
+}	
+	
 </script>
 
 {% endblock %}
