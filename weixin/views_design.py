@@ -11,6 +11,8 @@ import json
 AJAX_REQUEST_URL = 'http://127.0.0.1:8000/weixin/view_ajax_request/?openid=OPENID&action=ACTION'
 GETED_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_geted_bonus/?id_record=ID_RECORD'
 AGAIN_GET_BONUS_URL ='http://127.0.0.1:8000/weixin/view_again_rcv_bonus/?openid=OPENID'
+CREATE_COMMON_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_again_rcv_bonus/?openid=OPENID'
+CREATE_RANDOM_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_again_rcv_bonus/?openid=OPENID'
 
 AJAX_GET_BONUS = 'ajax_get_bonus'
 
@@ -79,12 +81,21 @@ def view_again_rcv_bonus(request):
 @csrf_exempt
 def view_redirect_bonus_snd(request):
 	#获取openid
-	#刷新页面中openid	
-	pass
+	#刷新页面中openid
+	title = '选择红包类型'
+	base_type = 'bonus_type'
+	static_url = settings.STATIC_URL
+	openid = 'koovox'
+	my_rcv_bonus_url = ''
+	my_snd_bonus_url = ''
+	my_bonus_range_url = ''
+	create_common_bonus_url = CREATE_COMMON_BONUS_URL.replace('OPENID', openid)
+	create_random_bonus_url = CREATE_RANDOM_BONUS_URL.replace('OPENID', openid)
+	return render_to_response('bonus_type.html', locals())
 
 #发普通红包
 def view_common_bonus(request):
-	#从request中解析出openid以及tableid
+	#从request中解析出openid
 	#刷新页面中的openid以及tableid
 	pass
 	

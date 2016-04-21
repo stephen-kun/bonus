@@ -13,15 +13,16 @@
 <script src="{{static_url}}js/prefixfree.min.js"></script>
 </head>
 
-{% ifequal  base_type 'get_bonus' %}
-<body class="red_q">
-{% else %}
-<body>
-{% endifequal %}
+<body class='{{body_class}}'>
+	<hgroup>
+		{% block header %}
+		{% endblock %}	
+	</hgroup>
+
 	<article>
-		<section>
-			{% block content %}{% endblock %}	
-		</section>
+			{% block content %}
+			{% endblock %}	
 	</article>
+	
 </body>
 </html>

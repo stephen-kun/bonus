@@ -1,7 +1,7 @@
 ﻿{% extends "_bonus_base.html" %}
 
 {% block content %}
-
+<section>
 {% for bonus in random_bonus %}
     <div class="head">
 		<h2><img src={{bonus.picture}}></h2>
@@ -46,101 +46,102 @@
 	</div>	
 {% endfor %}
 
-<section>
-	<div class="am-share">
-      <h3 class="am-share-title">
-		<input type="text" class="blankin" name="message" id="message" value="谢谢您的红包">
-		<input type="text" class="blankiny" name="openid" id="openid">
-		<input type="text" class="blankiny" name="id_bonus" id="id_bonus">
-		<input type="text" class="blankiny" name="show_message" id="show_message">
-		<input type="button" class="send_out" value="发送" onClick="send_message()">
-	  </h3>
-	</div>	
+	<section>
+		<div class="am-share">
+		  <h3 class="am-share-title">
+			<input type="text" class="blankin" name="message" id="message" value="谢谢您的红包">
+			<input type="text" class="blankiny" name="openid" id="openid">
+			<input type="text" class="blankiny" name="id_bonus" id="id_bonus">
+			<input type="text" class="blankiny" name="show_message" id="show_message">
+			<input type="button" class="send_out" value="发送" onClick="send_message()">
+		  </h3>
+		</div>	
+	</section>
+
+	<script type="text/javascript" src="{{static_url}}js/jquery.js"></script>
+	<script>
+
+	function refuse_bonus(id_bonus){
+		var url = 'http://127.0.0.1:8000/weixin/view_ajax_request';
+		var xmlhttp;
+
+		data = '{"id_bonus":"ID_BONUS"}';
+		data = data.replace(/ID_BONUS/, id_bonus);
+
+		if (window.XMLHttpRequest)
+		  {// code for IE7+, Firefox, Chrome, Opera, Safari
+		  xmlhttp=new XMLHttpRequest();
+		  }
+		else
+		  {// code for IE6, IE5
+		  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		  }
+		  
+		xmlhttp.onreadystatechange=function()
+		{
+			if(xmlhttp.readyState==4 && xmlhttp.status==200)
+			{
+				//var html = '<input type="button" class="gray" value="婉拒")">';
+				//document.getElementById("refuse_bonus").innerHTML=html;
+			}
+		}
+		xmlhttp.open("POST", url, true);
+		xmlhttp.send(data);		
+	}
+
+	function send_message(){
+		var url = 'http://127.0.0.1:8000/weixin/view_ajax_request';
+		var openid, id_bonus, message, data;
+		var xmlhttp;
+		openid = document.getElementById("openid").value;
+		id_bonus = document.getElementById('id_bonus').value;
+		message = document.getElementById("message").value;
+
+		data = '{"openid":"OPENID","id_bonus":"ID_BONUS","message":"MESSAGE"}';
+		data = data.replace(/OPENID/, openid).replace(/ID_BONUS/, id_bonus).replace(/MESSAGE/, message);
+
+		if (window.XMLHttpRequest)
+		  {// code for IE7+, Firefox, Chrome, Opera, Safari
+		  xmlhttp=new XMLHttpRequest();
+		  }
+		else
+		  {// code for IE6, IE5
+		  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		  }
+		  
+		xmlhttp.onreadystatechange=function()
+		{
+			if(xmlhttp.readyState==4 && xmlhttp.status==200)
+			{
+				var id = document.getElementById("show_message").value;
+				document.getElementById(id).innerHTML=message;
+			}
+		}
+		xmlhttp.open("POST", url, true);
+		xmlhttp.send(data);	
+	}
+		
+	function toshare(openid, id_bonus){
+		$(".am-share").addClass("am-modal-active");	
+		if($(".send_out").length>0){
+			$(".send_out").addClass("sharebg-active");
+		}else{
+			$("body").append('<div class="send_out"></div>');
+			$(".send_out").addClass("sharebg-active");
+		}
+		$(".sharebg-active,.share_btn").click(function(){
+			$(".am-share").removeClass("am-modal-active");	
+			setTimeout(function(){
+				$(".sharebg-active").removeClass("sharebg-active");	
+				$(".send_out").unchanged();	
+			},300);
+		})
+		
+		document.getElementById("openid").value=openid;
+		document.getElementById("id_bonus").value=id_bonus;		
+		document.getElementById("show_message").value=id_bonus;
+	}
+	</script>
 </section>
-
-<script type="text/javascript" src="{{static_url}}js/jquery.js"></script>
-<script>
-
-function refuse_bonus(id_bonus){
-	var url = 'http://127.0.0.1:8000/weixin/view_ajax_request';
-	var xmlhttp;
-
-	data = '{"id_bonus":"ID_BONUS"}';
-	data = data.replace(/ID_BONUS/, id_bonus);
-
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-	  xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-	  
-	xmlhttp.onreadystatechange=function()
-	{
-		if(xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			//var html = '<input type="button" class="gray" value="婉拒")">';
-			//document.getElementById("refuse_bonus").innerHTML=html;
-		}
-	}
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);		
-}
-
-function send_message(){
-	var url = 'http://127.0.0.1:8000/weixin/view_ajax_request';
-	var openid, id_bonus, message, data;
-	var xmlhttp;
-	openid = document.getElementById("openid").value;
-	id_bonus = document.getElementById('id_bonus').value;
-	message = document.getElementById("message").value;
-
-	data = '{"openid":"OPENID","id_bonus":"ID_BONUS","message":"MESSAGE"}';
-	data = data.replace(/OPENID/, openid).replace(/ID_BONUS/, id_bonus).replace(/MESSAGE/, message);
-
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-	  xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-	  
-	xmlhttp.onreadystatechange=function()
-	{
-		if(xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			var id = document.getElementById("show_message").value;
-			document.getElementById(id).innerHTML=message;
-		}
-	}
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);	
-}
-	
-function toshare(openid, id_bonus){
-	$(".am-share").addClass("am-modal-active");	
-	if($(".send_out").length>0){
-		$(".send_out").addClass("sharebg-active");
-	}else{
-		$("body").append('<div class="send_out"></div>');
-		$(".send_out").addClass("sharebg-active");
-	}
-	$(".sharebg-active,.share_btn").click(function(){
-		$(".am-share").removeClass("am-modal-active");	
-		setTimeout(function(){
-			$(".sharebg-active").removeClass("sharebg-active");	
-			$(".send_out").unchanged();	
-		},300);
-	})
-	
-	document.getElementById("openid").value=openid;
-	document.getElementById("id_bonus").value=id_bonus;		
-	document.getElementById("show_message").value=id_bonus;
-}
-</script>
 
 {% endblock %}
