@@ -145,6 +145,12 @@ input.nichen {
 	text-align:right;
 	font-size:.9em;
 }
+.subf {
+	width:135px;
+	height:135px;
+	border:0 #666 solid;
+	background:url(../images/qubaba2_03_pt_135X135.png) left top no-repeat;
+}
 
 .button-fasong {
 	text-align:center;
@@ -395,8 +401,8 @@ input.nichen {
 	padding:0;
 	position:relative;
 	z-index:2;
-	top:-10.945em;
-	margin-left:5.3em;
+	top:-11.105em;
+	text-align:center;
 }
 .fei_box h4.ptf {
 	top:-11.945em;
@@ -786,6 +792,10 @@ input.nichen {
 	margin:0;
 	height:2em;
 	background:#b6d554;
+	color:#ffffff;
+}
+.issue-list ul li.stansonzse a h3,.issue-list ul li.stansonzse a h5 {
+	color:#ffffff;
 }
 .issue-list ul li h3,.issue-list ul li h5{
 	float:left;
@@ -1510,6 +1520,12 @@ input.nichen {
 	text-align:right;
 	font-size:.9em;
 }
+.subf {
+	width:135px;
+	height:135px;
+	border:0 #666 solid;
+	background:url(../images/qubaba2_03_pt_135X135.png) left top no-repeat;
+}
 
 .button-fasong {
 	text-align:center;
@@ -1768,8 +1784,8 @@ input.nichen {
 	padding:0;
 	position:relative;
 	z-index:2;
-	top:-10.975em;
-	margin-left:5.3em;
+	top:-11.095em;
+	text-align:center;
 }
 .fei_box h4.ptf {
 	top:-11.945em;
@@ -2162,6 +2178,10 @@ input.nichen {
 	margin:0;
 	height:2em;
 	background:#b6d554;
+	color:#ffffff;
+}
+.issue-list ul li.stansonzse a h3,.issue-list ul li.stansonzse a h5 {
+	color:#ffffff;
 }
 .issue-list ul li h3,.issue-list ul li h5{
 	float:left;
@@ -2882,6 +2902,13 @@ input.nichen {
 	text-align:right;
 	font-size:.9em;
 }
+.subf {
+	width:100px;
+	height:100px;
+	border:0 #666 solid;
+	background:url(../images/qubaba2_03_pt_100X100.png) left top no-repeat;
+}
+
 
 .button-fasong {
 	text-align:center;
@@ -3130,7 +3157,7 @@ input.nichen {
 	position:relative;
 	z-index:2;
 	top:-8.745em;
-	margin-left:5.4em;
+	text-align:center;
 }
 .fei_box h4 a img {
 	width:100px;
@@ -3529,6 +3556,10 @@ input.nichen {
 	margin:0;
 	height:1.2em;
 	background:#b6d554;
+	color:#ffffff;
+}
+.issue-list ul li.stansonzse a h3,.issue-list ul li.stansonzse a h5 {
+	color:#ffffff;
 }
 .issue-list ul li h3,.issue-list ul li h5{
 	float:left;
@@ -4164,7 +4195,7 @@ input.kongbai {
 	color:#ffffff;
 	font-weight: normal;
 	text-align:right;
-	font-size:1.2em;
+	font-size:1em;
 	padding:0 0.2em 0 0;
 	background:#d1d2d4;
 }
@@ -4237,6 +4268,12 @@ input.red {
 	font-size:1em;
 	color:#ffffff;
 }
+/*input.red:focus {
+	background:#bdbec0;
+	}
+input.red:focus:visited {
+		background:#bdbec0;
+	}*/
 input.jin {
 	height:2.5em;
 	border-radius:10px;
@@ -4285,6 +4322,13 @@ input.nichen {
 	text-align:right;
 	font-size:.9em;
 }
+.subf {
+	width:70px;
+	height:70px;
+	border:0 #666 solid;
+	background:url(../images/qubaba2_03_pt_70X70.png) left top no-repeat;
+}
+
 
 .button-fasong {
 	text-align:center;
@@ -4305,13 +4349,16 @@ input.nichen {
 }
 /*======选择抢串串==开始==*/
 .hongbao {
-	background:#f3f3f4;
+	/*background:#f3f3f4;*/
 	height:2em;
-	padding:0.5em 0 0 .5em;
+	padding:0em 0 0 .5em;
+	position:absolute;
+	z-index:2;
+	width:96%;
 }
 .hongbao h4 {
 	font-size:.875em;
-	color:#6e7072;
+	color:#ffffff;
 	font-weight:normal;
 	float:left;
 	padding:.2em 0 0 0;
@@ -4553,7 +4600,7 @@ input.nichen {
 	position:relative;
 	z-index:2;
 	top:-6.205em;
-	margin-left:6.25em;
+	text-align:center;
 }
 .fei_box h4 a img {
 	width:70px;
@@ -4941,7 +4988,18 @@ input.nichen {
 	margin:0;
 	height:1.2em;
 	background:#b6d554;
+	color:#ffffff;
 }
+.issue-list ul li.stansonzse a h3,.issue-list ul li.stansonzse a h5 {
+	color:#ffffff;
+}
+.issue-list ul li a h3,.issue-list ul li a h5{
+	color:#ffffff;
+}
+.issue-list ul li.shdbai a h3,.issue-list ul li.shdbai a h5{
+	color:#666666;
+}
+
 .issue-list ul li h3,.issue-list ul li h5{
 	float:left;
 	width:100px;

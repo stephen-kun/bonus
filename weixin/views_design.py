@@ -17,6 +17,7 @@ CREATE_RANDOM_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_random_bonus/?openi
 SELF_RCV_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_self_rcv_bonus/?openid=OPENID'
 SELF_SND_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_self_snd_bonus/?openid=OPENID'
 SELF_BONUS_LIST_URL = 'http://127.0.0.1:8000/weixin/view_bonus_list/?openid=OPENID'
+CHOOSE_PAY_URL = 'http://127.0.0.1:8000/weixin/view_choose_pay/?openid=OPENID'
 
 AJAX_GET_BONUS = 'ajax_get_bonus'
 
@@ -145,7 +146,7 @@ def view_common_bonus(request):
 	g2 = BonusContent('份', '(5元/份)')
 	g3 = BonusContent('瓶', '(6元/瓶)')
 	good_list = {"串串":g1, "甜品":g2, "可乐":g3}
-	choose_pay_url = ''
+	choose_pay_url = CHOOSE_PAY_URL.replace("OPENID", openid)
 	return render_to_response('common_bonus.html', locals())
 	
 #发手气红包
@@ -161,7 +162,7 @@ def view_random_bonus(request):
 	g2 = BonusContent('份', '(5元/份)')
 	g3 = BonusContent('瓶', '(6元/瓶)')
 	good_list = {"串串":g1, "甜品":g2, "可乐":g3}
-	choose_pay_url = ''	
+	choose_pay_url = CHOOSE_PAY_URL.replace("OPENID", openid)
 	return render_to_response('random_bonus.html', locals())
 	
 #发系统红包
@@ -171,7 +172,7 @@ def view_system_bonus(request):
 	pass
 	
 class GetedBonus():
-	def __init__(self, id_bonus, openid, name, picture, message, datetime, content):
+	def __init__(self, id_bonus, openid, name, picture, message, datetime, content, title=None):
 		self.id_bonus = id_bonus
 		self.openid = openid
 		self.name = name
@@ -179,9 +180,8 @@ class GetedBonus():
 		self.message = message
 		self.datetime = datetime
 		self.content = content
+		self.title = title
 		
-	
-	
 #抢到的红包界面
 @csrf_exempt
 def view_geted_bonus(request):
@@ -196,17 +196,23 @@ def view_geted_bonus(request):
 	picture1 = 'http://wx.qlogo.cn/mmopen/9T7GtDDMnzaBB0ILSKYVrq1esXAVR4VKtiaYwhxOaFb7VJpgtsrsngBZRiavDsVvMibOnSxfDsZ4zGgbN6NlxB4CTIshrGAOvQD/0'
 	picture2 = ' http://wx.qlogo.cn/mmopen/ZMdxSDafpxR1pC2gQK7tKP7L2fM35ic9dOSG2eAe1icQ3cKoHA34cbWqhHHlv6fKNzFGmiaACiaqSUvQ30jLlxO9R8GQELocGjkib/0'
 	curr_time = timezone.now
-	random1 = GetedBonus(id_bonus='1234', openid="2345", name="stephen", picture=picture1, message="恭喜发财", datetime=curr_time, content=bonus_dir1)
-	random2 = GetedBonus(id_bonus='1454', openid="6345", name="hero", picture=picture2, message="生日快乐", datetime=curr_time, content=bonus_dir2)
+	random = GetedBonus(id_bonus='1234', openid="2345", name="stephen", picture=picture1, message="恭喜发财", datetime=curr_time, content=bonus_dir1)
+	system = GetedBonus(id_bonus='1454', openid="6345", name="hero", picture=picture2, message="生日快乐", datetime=curr_time, content=bonus_dir2, title=title)
 	common = GetedBonus(id_bonus='1904', openid="6225", name="stephen", picture=picture1, message="对面的女孩开过来", datetime=curr_time, content=bonus_dir3)
 	random_bonus = []
 	common_bonus = []
-	random_bonus.append(random1)
-	random_bonus.append(random2)
+	system_bonus = []
+	random_bonus.append(random)
+	system_bonus.append(system)
 	common_bonus.append(common)
-	common_bonus_url = 'http://127.0.0.1:8000/weixin/view_ajax_request/?openid=OPENID&action=ACTION'
+	common_bonus_url = CREATE_COMMON_BONUS_URL.replace('OPENID', id_record)
 	return render_to_response('geted_bonus.html', locals())
-	
+
+#支付页面
+@csrf_exempt	
+def view_choose_pay(request):
+	return HttpResponse('ok')
+
 #网页ajax请求
 @csrf_exempt
 def view_ajax_request(request):

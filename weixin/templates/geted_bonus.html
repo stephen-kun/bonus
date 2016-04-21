@@ -2,6 +2,28 @@
 
 {% block content %}
 <section>
+{% for bonus in system_bonus %}
+    <div class="head">
+		<h2><img src={{bonus.picture}}></h2>
+		<h4>{{bonus.name}}的红包</h4>
+        <h5>{{bonus.message}}</h5>
+		<h6>{{bonus.title}}</h6>
+	</div>
+    <div class="box-food qbbaise headmarg">
+		<ul>
+			{% for key, value in bonus.content.items %}
+			<li>
+				<h4><span class="rfloat">{{value}}</span>{{key}}</h4>	
+			</li>
+			{% endfor %}
+		</ul>
+	</div>	
+	<div class="box-dongqi">
+		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="toshare('{{bonus.openid}}', '{{bonus.id_bonus}}')">留言</span></h6>
+		<h6>{{bonus.datetime|date:"F-j-Y"}}</h6>
+	</div>
+{% endfor %}
+
 {% for bonus in random_bonus %}
     <div class="head">
 		<h2><img src={{bonus.picture}}></h2>
@@ -41,7 +63,7 @@
 	<div class="box-dongqi">
 		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="toshare('{{bonus.openid}}', '{{bonus.id_bonus}}')">留言</span></h6>
 		<h6>{{bonus.datetime|date:"F-j-Y"}}</h6>
-        <h2 id="refuse_bonus"><input type="button" class="red" value="婉拒" onClick="refuse_bonus('{{bonus.id_bonus}}')"></h2>
+        <h2 id="refuse_bonus"><input type="button" id="button" class="red" value="婉拒" onClick="refuse_bonus('{{bonus.id_bonus}}')"></h2>
         <span class="wj"><a href="{{common_bonus_url}}" target="_blank">回赠</a></span>	
 	</div>	
 {% endfor %}
@@ -60,6 +82,18 @@
 
 	<script type="text/javascript" src="{{static_url}}js/jquery.js"></script>
 	<script>
+	
+	function button_change(){
+	 var a=document.getElementById("button")
+	 var b=a.style.backgroundColor;
+	 if(b==""){
+	  a.style.backgroundColor="#bdbec0";
+	  c.style.display="block";
+	 }else{
+	  a.style.backgroundColor="#bdbec0";
+	  c.style.display="none";
+	 }
+	}	
 
 	function refuse_bonus(id_bonus){
 		var url = 'http://127.0.0.1:8000/weixin/view_ajax_request';
@@ -81,12 +115,12 @@
 		{
 			if(xmlhttp.readyState==4 && xmlhttp.status==200)
 			{
-				//var html = '<input type="button" class="gray" value="婉拒")">';
-				//document.getElementById("refuse_bonus").innerHTML=html;
+				button_change()
 			}
 		}
 		xmlhttp.open("POST", url, true);
 		xmlhttp.send(data);		
+		
 	}
 
 	function send_message(){

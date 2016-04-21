@@ -792,6 +792,10 @@ input.nichen {
 	margin:0;
 	height:2em;
 	background:#b6d554;
+	color:#ffffff;
+}
+.issue-list ul li.stansonzse a h3,.issue-list ul li.stansonzse a h5 {
+	color:#ffffff;
 }
 .issue-list ul li h3,.issue-list ul li h5{
 	float:left;
@@ -2174,6 +2178,10 @@ input.nichen {
 	margin:0;
 	height:2em;
 	background:#b6d554;
+	color:#ffffff;
+}
+.issue-list ul li.stansonzse a h3,.issue-list ul li.stansonzse a h5 {
+	color:#ffffff;
 }
 .issue-list ul li h3,.issue-list ul li h5{
 	float:left;
@@ -3548,6 +3556,10 @@ input.nichen {
 	margin:0;
 	height:1.2em;
 	background:#b6d554;
+	color:#ffffff;
+}
+.issue-list ul li.stansonzse a h3,.issue-list ul li.stansonzse a h5 {
+	color:#ffffff;
 }
 .issue-list ul li h3,.issue-list ul li h5{
 	float:left;
@@ -4187,8 +4199,6 @@ input.kongbai {
 	padding:0 0.2em 0 0;
 	background:#d1d2d4;
 }
-input.kongbai {
-}
 input.lvse {
 	width:3em;
 	height:1.2em;
@@ -4339,13 +4349,16 @@ input.nichen {
 }
 /*======选择抢串串==开始==*/
 .hongbao {
-	background:#f3f3f4;
+	/*background:#f3f3f4;*/
 	height:2em;
-	padding:0.5em 0 0 .5em;
+	padding:0em 0 0 .5em;
+	position:absolute;
+	z-index:2;
+	width:96%;
 }
 .hongbao h4 {
 	font-size:.875em;
-	color:#6e7072;
+	color:#ffffff;
 	font-weight:normal;
 	float:left;
 	padding:.2em 0 0 0;
@@ -4975,7 +4988,18 @@ input.nichen {
 	margin:0;
 	height:1.2em;
 	background:#b6d554;
+	color:#ffffff;
 }
+.issue-list ul li.stansonzse a h3,.issue-list ul li.stansonzse a h5 {
+	color:#ffffff;
+}
+.issue-list ul li a h3,.issue-list ul li a h5{
+	color:#ffffff;
+}
+.issue-list ul li.shdbai a h3,.issue-list ul li.shdbai a h5{
+	color:#666666;
+}
+
 .issue-list ul li h3,.issue-list ul li h5{
 	float:left;
 	width:100px;

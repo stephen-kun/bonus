@@ -122,10 +122,10 @@ class RecordRcvBonus(models.Model):
 	id_record = models.IntegerField(primary_key=True)				#收红包记录的唯一id
 	bonus_num = models.IntegerField(default=0)						#收到的红包个数
 	record_time = models.DateTimeField(default=timezone.now)		#记录时间
-	rcv_bonus = models.ForeignKey(RcvBonus, on_delete=models.CASCADE) #具体红包
+	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE) #具体红包
 	
 	def __unicode__(self):
-		return '%s RecordRcvBonus %d'%(self.rcv_bonus.consumer.name, self.id_record)	
+		return '%s RecordRcvBonus %d'%(self.consumer.name, self.id_record)
 	
 	
 	

@@ -12,4 +12,5 @@ urlpatterns = [
 	url(r'^view_random_bonus',views_design.view_random_bonus, name='view_random_bonus'),	
 	url(r'^view_self_rcv_bonus',views_design.view_self_rcv_bonus, name='view_self_rcv_bonus'),		
 	url(r'^view_self_snd_bonus',views_design.view_self_snd_bonus, name='view_self_snd_bonus'),	
+	url(r'^view_choose_pay',views_design.view_choose_pay, name='view_choose_pay'),		
 ]

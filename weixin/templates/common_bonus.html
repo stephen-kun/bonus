@@ -1,9 +1,10 @@
 ﻿{% extends "_bonus_base.html" %}
 
 {% block content %}
+<form action="{{choose_pay_url}}" method="get">  
 <section>
   	<div class="box-duixiang">
-    	<h4><span class="rfloat"><input type="number" class="lvse">号桌</span>发送对象
+    	<h4><span class="rfloat"><input type="number" name="桌台" class="lvse">号桌</span>发送对象
         <img src="{{static_url}}images/qubaba2_01.png" width="40">
         </h4>
     </div>
@@ -11,25 +12,26 @@
 		<ul>
 		{% for key, value in good_list.items %}
 			<li>
-            	<h4><span class="rfloat"><input type="number" class="kongbai">{{value.name}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
+            	<h4><span class="rfloat"><input type="number" name='{{value.name}}' class="kongbai">{{value.name}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
             </li>
 		{% endfor %}
 		</ul>
 	</div>
     <div class="box-duixiang liuyanbj">
-    	<h4><span class="rfloat"><input type="text" class="liuyan"></span>留言</h4>
+    	<h4><span class="rfloat"><input type="text" class="liuyan" name="留言" value="恭喜发财，大吉大利！"></span>留言</h4>
     </div>	
 </section>
 
 <section>
    	<div class="fei_box">
-    	<!--<h2 class="yaobai"></h2>-->
         <div class="blades">
 			<div class="blade3 bladep-pt"></div>
 		</div>
-        <h4 class="ptf"><a href="{{choose_pay_url}}" target="_parent"><img src="{{static_url}}images/qubaba2_03.png"></a></h4>
+		<input hidden name="openid" value="{{openid}}">
+        <h4 class="ptf"><input type="submit" class="subf" value=""></h4>
     </div>
 </section>
+</form>  
 
 <style type="text/css">
 	.blades{animation: spin 100s linear infinite;}
