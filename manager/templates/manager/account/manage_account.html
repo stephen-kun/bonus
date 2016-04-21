@@ -3,6 +3,8 @@
 {% include 'header.html'%}
 
 <body>
+<link href="/static/css/admin/showBo.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/static/js/showBo.js"></script>
 <article>
     <section>
     	<div class="right_award_box">
@@ -14,55 +16,15 @@
                     <th width="20%">修改密码</th>
                     <th width="20%">操作</th>
                   </tr>
+                  {% for user in user_list %}
                   <tr>
-                    <td align="left" class="color_a">admin01</td>
-                    <td><img src="/static/images/admin/admin_04.png" align="absmiddle"><a href="modify_password.html" class="color_a" target="mainFrame">重新密码</a></td>
-                    <td><img src="/static/images/admin/admin_05.png" align="absmiddle"><a href="delete.html" class="color_c" target="mainFrame">删除</a></td>
+                      <td align="left" class="color_a">{{ user.username}}</td>
+                    <td><img src="/static/images/admin/admin_04.png" align="absmiddle"><a href="#" onclick="modify_password('{{ user.username }}')" class="color_a">重新密码</a></td>
+                    <td><img src="/static/images/admin/admin_05.png" align="absmiddle"><a href="#" onclick="delete_account('{{ user.username }}')" class="color_c">删除</a></td>
                   </tr>
-                  <tr>
-                    <td align="left" class="color_a">admin01</td>
-                    <td><img src="/static/images/admin/admin_04.png" align="absmiddle"><a href="modify_password.html" class="color_a" target="mainFrame">重新密码</a></td>
-                    <td><img src="/static/images/admin/admin_05.png" align="absmiddle"><a href="delete.html" class="color_c" target="mainFrame">删除</a></td>
-                  </tr>
-                  <tr>
-                    <td align="left" class="color_a">admin01</td>
-                    <td><img src="/static/images/admin/admin_04.png" align="absmiddle"><a href="modify_password.html" class="color_a" target="mainFrame">重新密码</a></td>
-                    <td><img src="/static/images/admin/admin_05.png" align="absmiddle"><a href="delete.html" class="color_c" target="mainFrame">删除</a></td>
-                  </tr>
-                  <tr>
-                    <td align="left" class="color_a">admin01</td>
-                    <td><img src="/static/images/admin/admin_04.png" align="absmiddle"><a href="modify_password.html" class="color_a" target="mainFrame">重新密码</a></td>
-                    <td><img src="/static/images/admin/admin_05.png" align="absmiddle"><a href="delete.html" class="color_c" target="mainFrame">删除</a></td>
-                  </tr>
-                  <tr>
-                    <td align="left" class="color_a">admin01</td>
-                    <td><img src="/static/images/admin/admin_04.png" align="absmiddle"><a href="modify_password.html" class="color_a" target="mainFrame">重新密码</a></td>
-                    <td><img src="/static/images/admin/admin_05.png" align="absmiddle"><a href="delete.html" class="color_c" target="mainFrame">删除</a></td>
-                  </tr>
-                  <tr>
-                    <td align="left" class="color_a">admin01</td>
-                    <td><img src="/static/images/admin/admin_04.png" align="absmiddle"><a href="modify_password.html" class="color_a" target="mainFrame">重新密码</a></td>
-                    <td><img src="/static/images/admin/admin_05.png" align="absmiddle"><a href="delete.html" class="color_c" target="mainFrame">删除</a></td>
-                  </tr>
-                  <tr>
-                    <td align="left" class="color_a">admin01</td>
-                    <td><img src="/static/images/admin/admin_04.png" align="absmiddle"><a href="modify_password.html" class="color_a" target="mainFrame">重新密码</a></td>
-                    <td><img src="/static/images/admin/admin_05.png" align="absmiddle"><a href="delete.html" class="color_c" target="mainFrame">删除</a></td>
-                  </tr>
-                  <tr>
-                    <td align="left" class="color_a">admin01</td>
-                    <td><img src="/static/images/admin/admin_04.png" align="absmiddle"><a href="modify_password.html" class="color_a" target="mainFrame">重新密码</a></td>
-                    <td><img src="/static/images/admin/admin_05.png" align="absmiddle"><a href="delete.html" class="color_c" target="mainFrame">删除</a></td>
-                  </tr>
+                  {% endfor %}
                 </table>
                 
-                <div class="award_page">
-                	<a href="#" target="_parent">上一页</a>
-                    <a href="#" target="_parent" class="pageope">1</a>
-                    <span>2</span>
-                    <a href="#" target="_parent" class="pageope">3</a>
-                    <a href="#" target="_parent">下一页</a>
-                </div>
             </div>
         </div>
     </section>
@@ -82,9 +44,36 @@ TbRow.rows[i].style.backgroundColor="#f7f7f4";
 }
 }
 }
+
+function delete_account( username ){
+    Showbo.Msg.confirm("delete?", function(val){
+            if(val=="yes"){
+                $.post("/manager/account/action", {"action":"delete", "username": username },function(data){
+                    if(data.state==1)
+                        Showbo.Msg.alert("失败:"+data.message);
+                    else
+                        Showbo.Msg.alert("成功:"+data.message);
+                },"json")
+            };
+    })
+}
+
+function modify_password( username ){
+    Showbo.Msg.prompt( "新密码 ","","password_dialog", function(){
+            new_password = $("#password_dialog").val()
+            if(new_password!=''){
+                $.post("/manager/account/action", {"action":"modify_password", "username": username, "new_password":new_password },function(data){
+                    if(data.state==1)
+                        Showbo.Msg.alert("失败:" + data.message);
+                    else
+                        Showbo.Msg.alert("成功:" + data.message);
+                }, "json")
+            }
+            else
+                Showbo.Msg.alert("新密码为空！");
+    })
+}
 </script>    
-    
-    
 </article>
 
 </body>

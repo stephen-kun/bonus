@@ -6,17 +6,16 @@
 <article>
 	<header class="admin_top">
     	<h4>
-        您好！&nbsp;<font class="redse">Admin</font>&nbsp;
-        	[<a href="#" target="mainFrame">修改密码</a>]&nbsp;
-        	[<a href="#" target="mainFrame">退出系统</a>]
+            您好！&nbsp;<font class="redse">{{ current_user.username }}</font>&nbsp;
+        	[<a href="#">修改密码</a>]&nbsp;
+            [<a href="{% url 'logout' %}">退出系统</a>]
         </h4>
     </header>
     <nav class="navlist navc">
             <ul>
-                <li><a href="#">首页</a></li>
-                <li><a href="{% url 'dining' %}">用餐统计</a></li>
-                <li><a href="{% url 'index' %}">红包统计</a></li>
                 <li><a href="{% url 'account' %}">账户设置</a></li>
+                <li><a href="{% url 'dining' %}">用餐统计</a></li>
+                <li><a href="{% url 'bonus_info' %}">红包统计</a></li>
                 <li><a href="#">论坛</a></li>
             </ul>
     </nav>

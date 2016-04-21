@@ -118,18 +118,24 @@ font.redse {
 	line-height:47px;
 	font-size:.875em;
 	border-bottom:#3b86d3 2px solid;
-}
+	width:100%;
+}/*
 .navc {
 	margin:0 auto;
 }
 .navc span {
 	float:left;
-	margin-left:40%;
+	margin-left:45%;
 	padding:0 1em 0 0;
-}
+	position:absolute;left:expression((body.clientWidth-600)/2);
+}*/
 .navlist ul {
+	width:540px;
 	padding:0;
-	margin:0;
+	margin:0 auto 0 auto;
+}
+.navlist ul li span {
+	padding:0 .5em 0 0;
 }
 .navlist ul li {
 	float: left;
@@ -485,7 +491,7 @@ background: -o-linear-gradient(top, #ddf8aa, #b0d067);  /*Opera 11.10+*/}
 	border-bottom:#89b850 3px solid;
 	/*border-bottom-color:#89b850;*/
 	background:#ffffff;
-	padding:3em 0 0 0;
+	padding:1em 0 0 0;
 }
 .dl_box ul li {
 	color:#4c4c4c;
@@ -509,6 +515,19 @@ background: -o-linear-gradient(top, #ddf8aa, #b0d067);  /*Opera 11.10+*/}
 }
 .dl_mm {
 	background:url(../../images/admin/admin_07.png) .2em center no-repeat #ffffff;
+}
+/*2016.04.19新增*/
+.admin_dl_box p {
+	padding:0 0 .2em 0em;
+	margin:0;
+	font-size:.8em;
+	color:#89b850;
+	text-align:center;
+	}
+.admin_dl_y {
+	padding:0em 1.5em 1.2em 1.5em;
+	text-align:right;
+	font-size:.9em
 }
 /*=============登录===结束========*/
 
