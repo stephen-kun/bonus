@@ -6,13 +6,17 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 import django.utils.timezone as timezone
 import json
-
+from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
+from .models import Dining,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
 
 AJAX_REQUEST_URL = 'http://127.0.0.1:8000/weixin/view_ajax_request/?openid=OPENID&action=ACTION'
 GETED_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_geted_bonus/?id_record=ID_RECORD'
 AGAIN_GET_BONUS_URL ='http://127.0.0.1:8000/weixin/view_again_rcv_bonus/?openid=OPENID'
-CREATE_COMMON_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_again_rcv_bonus/?openid=OPENID'
-CREATE_RANDOM_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_again_rcv_bonus/?openid=OPENID'
+CREATE_COMMON_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_common_bonus/?openid=OPENID'
+CREATE_RANDOM_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_random_bonus/?openid=OPENID'
+SELF_RCV_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_self_rcv_bonus/?openid=OPENID'
+SELF_SND_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_self_snd_bonus/?openid=OPENID'
+SELF_BONUS_LIST_URL = 'http://127.0.0.1:8000/weixin/view_bonus_list/?openid=OPENID'
 
 AJAX_GET_BONUS = 'ajax_get_bonus'
 
@@ -55,7 +59,7 @@ def view_redirect_bonus_rcv(request):
 	#获取openid
 	#刷新页面中openid
 	title = '东启湘厨'
-	base_type = 'get_bonus'
+	body_class = 'red_q'
 	static_url = settings.STATIC_URL
 	openid = 'koovox'
 	ajax_request_url = AJAX_REQUEST_URL.replace('OPENID', openid)
@@ -70,7 +74,7 @@ def view_again_rcv_bonus(request):
 	openid = request.GET.get('openid')
 	print('**view_again_rcv_bonus:%s***'%(openid))
 	title = '东启湘厨'
-	base_type = 'get_bonus'
+	body_class = 'red_q'
 	static_url = settings.STATIC_URL
 	ajax_request_url = AJAX_REQUEST_URL.replace('OPENID', openid)
 	geted_bonus_url = GETED_BONUS_URL
@@ -81,29 +85,84 @@ def view_again_rcv_bonus(request):
 @csrf_exempt
 def view_redirect_bonus_snd(request):
 	#获取openid
-	#刷新页面中openid
 	title = '选择红包类型'
-	base_type = 'bonus_type'
+	body_class = 'red_cen'
 	static_url = settings.STATIC_URL
 	openid = 'koovox'
-	my_rcv_bonus_url = ''
-	my_snd_bonus_url = ''
-	my_bonus_range_url = ''
+	self_rcv_bonus_url = SELF_RCV_BONUS_URL.replace('OPENID', openid)
+	self_snd_bonus_url = SELF_SND_BONUS_URL.replace('OPENID', openid)
+	self_bonus_list_url = SELF_BONUS_LIST_URL.replace('OPENID', openid)
 	create_common_bonus_url = CREATE_COMMON_BONUS_URL.replace('OPENID', openid)
 	create_random_bonus_url = CREATE_RANDOM_BONUS_URL.replace('OPENID', openid)
 	return render_to_response('bonus_type.html', locals())
+	
+#check收到的串串
+@csrf_exempt
+def view_self_rcv_bonus(request):
+	#获取openid
+	openid = request.GET.get('openid')
+	print("========view_self_rcv_bonus :%s=========\n"%(openid))	
+	title = '收到的串串'
+	article_class = 'issue-bj'
+	static_url = settings.STATIC_URL
+	picture = 'http://wx.qlogo.cn/mmopen/9T7GtDDMnzaBB0ILSKYVrq1esXAVR4VKtiaYwhxOaFb7VJpgtsrsngBZRiavDsVvMibOnSxfDsZ4zGgbN6NlxB4CTIshrGAOvQD/0'
+	table = DiningTable.objects.get(index_table='1')
+	consumer_tuple = Consumer.objects.get_or_create(open_id=openid, name="stephen", picture=picture, on_table=table)
+	consumer = consumer_tuple[0]
+	rcv_bonus = RcvBonus.objects.filter(consumer=consumer).order_by("datetime").reverse()
+	return render_to_response('self_rcv_bonus.html', locals())
+
+#check发出的串串
+@csrf_exempt
+def view_self_snd_bonus(request):
+	#获取openid
+	openid = request.GET.get('openid')
+	print("========view_self_rcv_bonus :%s=========\n"%(openid))	
+	title = '收到的串串'
+	article_class = 'issue-bj stanson'
+	static_url = settings.STATIC_URL
+	consumer = Consumer.objects.get(open_id=openid)
+	rcv_bonus = SndBonus.objects.filter(consumer=consumer).order_by("create_time").reverse()
+	return render_to_response('self_snd_bonus.html', locals())
+	
+
+class BonusContent():
+	def __init__(self, name, price):
+		self.name = name
+		self.price = price
+		
 
 #发普通红包
 def view_common_bonus(request):
 	#从request中解析出openid
-	#刷新页面中的openid以及tableid
-	pass
+	openid = request.GET.get('openid')
+	print("========view_common_bonus :%s=========\n"%(openid))
+	title = '普通红包'
+	body_class = 'qubaba_hsbj'
+	static_url = settings.STATIC_URL
+	openid = 'stephen'	
+	g1 = BonusContent('串', '(15元/串)')
+	g2 = BonusContent('份', '(5元/份)')
+	g3 = BonusContent('瓶', '(6元/瓶)')
+	good_list = {"串串":g1, "甜品":g2, "可乐":g3}
+	choose_pay_url = ''
+	return render_to_response('common_bonus.html', locals())
 	
 #发手气红包
 def view_random_bonus(request):
-	#从request中解析出openid以及tableid
-	#刷新页面中的openid以及tableid	
-	pass
+	#从request中解析出openid
+	openid = request.GET.get('openid')
+	print("========view_random_bonus :%s=========\n"%(openid))
+	title = '手气红包'
+	body_class = 'qubaba_hsbj'
+	static_url = settings.STATIC_URL
+	openid = 'stephen'		
+	g1 = BonusContent('串', '(15元/串)')
+	g2 = BonusContent('份', '(5元/份)')
+	g3 = BonusContent('瓶', '(6元/瓶)')
+	good_list = {"串串":g1, "甜品":g2, "可乐":g3}
+	choose_pay_url = ''	
+	return render_to_response('random_bonus.html', locals())
 	
 #发系统红包
 def view_system_bonus(request):
@@ -129,7 +188,7 @@ def view_geted_bonus(request):
 	id_record = request.GET.get('id_record')
 	print("===view_geted_bonus:%s===\n"%(id_record))
 	title = '东启湘厨'
-	base_type = 'geted_bonus'
+	body_class = 'qubaba_hsbj'
 	static_url = settings.STATIC_URL
 	bonus_dir1 = {"串串":"3串", "可乐":"2瓶", "甜品":"3个"}
 	bonus_dir2 = {"串串":"6串", "可乐":"4瓶", "甜品":"7个"}

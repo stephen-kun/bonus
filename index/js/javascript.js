@@ -28,7 +28,7 @@ $(document).ready(function () {
     var first = false,
         clicked = false;
     // On click
-    $('.item1 div.kodai').on('click', function () {
+    $('.item1 div.kodai img').on('click', function () {
 
         if (clicked === false) {
             $('.full').css({
@@ -85,11 +85,11 @@ $(document).ready(function () {
 
                     //Ìø³öÑ­»·
                     if (t > totalt) {
-                        clicked = false;
+                        clicked = stop;//Ô­false
                         first = true;
                         clearInterval(z);
                     }
-                }, 20);
+                }, 30);
             });
         }
     });

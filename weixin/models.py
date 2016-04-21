@@ -84,12 +84,13 @@ class Ticket(models.Model):
 		
 #发出的红包
 class SndBonus(models.Model):
-	id_bonus = models.IntegerField(primary_key=True)		#个人红包唯一id
-	bonus_type = models.IntegerField(default=0)			#红包类型：普通红包/手气红包/系统红包
-	to_table = models.CharField(max_length=3,null=True, blank=True)						#收红包的桌台
-	to_message = models.CharField(max_length=140, null=True, blank=True)			#赠言
-	title = models.CharField(max_length=40, null=True, blank=True)				#冠名
+	id_bonus = models.IntegerField(primary_key=True)							#个人红包唯一id
+	bonus_type = models.CharField(max_length=10, default='普通红包')			#红包类型：普通红包/手气红包/系统红包
+	to_table = models.CharField(max_length=3,null=True, blank=True)			#收红包的桌台
+	to_message = models.CharField(max_length=140, null=True, blank=True)		#赠言
+	title = models.CharField(max_length=40, null=True, blank=True)			#冠名
 	bonus_num = models.IntegerField(default=0)				#红包个数
+	number = models.IntegerField(default=0)				#串串个数
 	bonus_remain = models.IntegerField(default=0)			#剩余红包个数
 	is_exhausted = models.BooleanField(default=False)		#红包已耗尽
 	create_time = models.DateTimeField(default=timezone.now)					#发送时间
@@ -102,10 +103,13 @@ class SndBonus(models.Model):
 #接收的红包
 class RcvBonus(models.Model):
 	id_bonus = models.IntegerField(primary_key=True)						#收到的红包唯一id
-	bonus_type = models.IntegerField(default=0)							#红包类型：普通红包/手气红包/系统红包
+	bonus_type = models.CharField(max_length=10, default='普通红包')		#红包类型：普通红包/手气红包/系统红包
 	is_message = models.BooleanField(default=False)						#是否已留言
 	is_refuse = models.BooleanField(default=False)							#是否已拒绝
 	content = models.CharField(max_length=100, null=True, blank=True)		#红包内容
+	datetime = models.DateTimeField(default=timezone.now)					#接收时间
+	number = models.IntegerField(default=0)								#串串个数
+	is_best = models.BooleanField(default=False)							#是否手气最佳
 	snd_bonus = models.ForeignKey(SndBonus, on_delete=models.CASCADE)		#红包的唯一id
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)		#消费者的唯一id
 	table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)		#桌台号

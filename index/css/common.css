@@ -246,6 +246,7 @@ input[type="number"]{-moz-appearance:textfield;}
 	margin-top: 5px;
 	width: 100%;
 }
+
 .sharebg {
 	background-color: rgba(0, 0, 0, 0.0);
 	bottom: 0;
@@ -257,21 +258,35 @@ input[type="number"]{-moz-appearance:textfield;}
 	top: 0;
 	width: 100%;
 	z-index: 1100;
-	display:none; }
+	display: none; }
 .sharebg-active {
 	opacity: 1;
 	display:block;
 }
 input.blankin {
-	height:2em;
+	height:1.8em;
 	border:#333 0px solid;
 	border-bottom:#e8e8e5 1px solid;
-	margin:0;
+	margin:0 0 .2em 0;
+	width:75%;
+	font-size:1em;
+	color:#494848;
+	float:left;
+}
+input.blankin:hover {
+	border-bottom:#a0d578 1px solid;
+}
+input.blankiny {
+	height:1.8em;
+	border:#333 0px solid;
+	border-bottom:#e8e8e5 1px solid;
+	margin:0 0 .2em 0;
 	width:80%;
 	font-size:1em;
 	color:#494848;
+	display:none;
 }
-input.blankin:hover {
+input.blankiny:hover {
 	border-bottom:#a0d578 1px solid;
 }
 input.send_out {
@@ -279,10 +294,11 @@ input.send_out {
 	border:#333 0px solid;
 	border-radius:.25em;
 	margin:0 0 0 .25em;
-	width:13%;
+	width:18%;
 	font-size:.8em;
 	color:#ffffff;
 	background-color: #5abd22;
+	display: block;
 }
 
 /*=========留言隐藏====结束======*/

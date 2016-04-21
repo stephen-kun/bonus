@@ -145,6 +145,12 @@ input.nichen {
 	text-align:right;
 	font-size:.9em;
 }
+.subf {
+	width:135px;
+	height:135px;
+	border:0 #666 solid;
+	background:url(../images/qubaba2_03_pt_135X135.png) left top no-repeat;
+}
 
 .button-fasong {
 	text-align:center;
@@ -395,8 +401,8 @@ input.nichen {
 	padding:0;
 	position:relative;
 	z-index:2;
-	top:-10.945em;
-	margin-left:5.3em;
+	top:-11.105em;
+	text-align:center;
 }
 .fei_box h4.ptf {
 	top:-11.945em;
@@ -459,7 +465,7 @@ input.nichen {
 	background:#ffffff;
 	border-bottom:#e4e1e1 0px solid;
 	border-top:#e4e1e1 1px solid;
-	margin:0.8em 0 0 0;
+	margin:0em 1em 0 1em;
 }
 .box-dongqi h4 {	
 	padding:.3em .8em;
@@ -475,7 +481,7 @@ input.nichen {
 	font-weight:normal;
 }
 .box-dongqi h6 {	
-	padding:0em .9em;
+	padding:.4em .9em;
 	font-size:.9em;
 	font-weight:normal;
 	color:#7e7e7e;
@@ -490,7 +496,8 @@ input.nichen {
 	text-align:center;
 	color:#227fd5;
 	display:block;
-	padding:0 0 1em 0;
+	padding:0 0 0em 0;
+	font-size:.8em;
 }
 .box-dongqi span.wj a {
 	text-align:center;
@@ -505,6 +512,37 @@ input.nichen {
 	font-weight:normal;
 	font-size:1em;
 }
+.head {
+	padding:1em 0 .5em 0;
+}
+.head h2 {
+	margin: 0 auto 0 auto;
+	width:200px;
+	height:200px;
+	overflow:hidden;
+	border-radius:100px;
+	box-shadow:#CCC 2px 2px 2px;
+}
+.head h2 img {
+	width:200px;
+}
+.head h4 {
+	margin: 0 auto 0 auto;
+	font-size:1.5em;
+	font-weight:normal;
+	text-align:center;
+}
+.head h5 {
+	margin: 0 auto 0 auto;
+	font-size:.9em;
+	font-weight:normal;
+	text-align:center;
+	color:#b6d554;
+}
+.headmarg {
+	margin-bottom:0;
+}
+
 .snag {
 	padding:.5em 0 0 0;
 	position:relative;
@@ -1319,6 +1357,31 @@ input.nichen {
 	text-align:center;
 }
 /*=========我的信息=====结束=========*/
+/*=========用户提示=====开始=========*/
+.tip-box {
+	height:1024px;
+}
+.tip {
+	 background:url(../images/tip.png) center top no-repeat #e7e8e9;
+	 position:relative;
+	 top:230px;
+	 height:229px;
+	 width:593px;
+	 margin:0 auto;
+	animation:mytip 5s;
+	-moz-animation:mytip 5s; /* Firefox */
+	-webkit-animation:mytip 5s; /* Safari and Chrome */
+	-o-animation:mytip 5s; /* Opera */
+}
+.tip h4 {
+	padding:3em 0 0 5.3em;
+	margin:0;
+	font-size:1.5em;
+	font-weight:normal;
+	line-height:1.5;
+	color:#5d6519;
+}
+/*=========用户提示=====结束=========*/
 
 
 }
@@ -1452,6 +1515,12 @@ input.nichen {
 	font-weight: normal;
 	text-align:right;
 	font-size:.9em;
+}
+.subf {
+	width:135px;
+	height:135px;
+	border:0 #666 solid;
+	background:url(../images/qubaba2_03_pt_135X135.png) left top no-repeat;
 }
 
 .button-fasong {
@@ -1711,8 +1780,8 @@ input.nichen {
 	padding:0;
 	position:relative;
 	z-index:2;
-	top:-10.975em;
-	margin-left:5.3em;
+	top:-11.095em;
+	text-align:center;
 }
 .fei_box h4.ptf {
 	top:-11.945em;
@@ -1776,7 +1845,7 @@ input.nichen {
 	background:#ffffff;
 	border-bottom:#e4e1e1 0px solid;
 	border-top:#e4e1e1 1px solid;
-	margin:0.8em 0 0 0;
+	margin:0em 1em 0 1em;
 }
 .box-dongqi h4 {	
 	padding:.3em .8em;
@@ -1792,7 +1861,7 @@ input.nichen {
 	font-weight:normal;
 }
 .box-dongqi h6 {	
-	padding:0em .9em;
+	padding:.3em .9em;
 	font-size:.9em;
 	font-weight:normal;
 	color:#7e7e7e;
@@ -1807,7 +1876,8 @@ input.nichen {
 	text-align:center;
 	color:#227fd5;
 	display:block;
-	padding:0 0 1em 0;
+	padding:0 0 0em 0;
+	font-size:.8em;
 }
 .box-dongqi span.wj a {
 	text-align:center;
@@ -1822,6 +1892,38 @@ input.nichen {
 	font-weight:normal;
 	font-size:1em;
 }
+.head {
+	padding:1em 0 .5em 0;
+}
+.head h2 {
+	margin: 0 auto 0 auto;
+	width:200px;
+	height:200px;
+	overflow:hidden;
+	border-radius:100px;
+	box-shadow:#CCC 2px 2px 2px;
+}
+.head h2 img {
+	width:200px;
+}
+.head h4 {
+	margin: 0 auto 0 auto;
+	font-size:1.5em;
+	font-weight:normal;
+	text-align:center;
+}
+.head h5 {
+	margin: 0 auto 0 auto;
+	font-size:.9em;
+	font-weight:normal;
+	text-align:center;
+	color:#b6d554;
+}
+.headmarg {
+	margin-bottom:0;
+}
+
+
 .snag {
 	padding:.5em 0 0 0;
 	position:relative;
@@ -2634,6 +2736,31 @@ input.nichen {
 	text-align:center;
 }
 /*=========我的信息=====结束=========*/
+/*=========用户提示=====开始=========*/
+.tip-box {
+	height:1024px;
+}
+.tip {
+	 background:url(../images/tip.png) center top no-repeat #e7e8e9;
+	 position:relative;
+	 top:230px;
+	 height:229px;
+	 width:593px;
+	 margin:0 auto;
+	animation:mytip 5s;
+	-moz-animation:mytip 5s; /* Firefox */
+	-webkit-animation:mytip 5s; /* Safari and Chrome */
+	-o-animation:mytip 5s; /* Opera */
+}
+.tip h4 {
+	padding:3em 0 0 5.3em;
+	margin:0;
+	font-size:1.5em;
+	font-weight:normal;
+	line-height:1.5;
+	color:#5d6519;
+}
+/*=========用户提示=====结束=========*/
 
 
 }
@@ -2767,6 +2894,13 @@ input.nichen {
 	text-align:right;
 	font-size:.9em;
 }
+.subf {
+	width:100px;
+	height:100px;
+	border:0 #666 solid;
+	background:url(../images/qubaba2_03_pt_100X100.png) left top no-repeat;
+}
+
 
 .button-fasong {
 	text-align:center;
@@ -3015,7 +3149,7 @@ input.nichen {
 	position:relative;
 	z-index:2;
 	top:-8.745em;
-	margin-left:5.4em;
+	text-align:center;
 }
 .fei_box h4 a img {
 	width:100px;
@@ -3084,7 +3218,7 @@ input.nichen {
 	background:#ffffff;
 	border-bottom:#e4e1e1 0px solid;
 	border-top:#e4e1e1 1px solid;
-	margin:0.8em 0 0 0;
+	margin:0em 1em 0 1em;
 }
 .box-dongqi h4 {	
 	padding:.3em .8em;
@@ -3100,7 +3234,7 @@ input.nichen {
 	font-weight:normal;
 }
 .box-dongqi h6 {	
-	padding:0em .9em;
+	padding:.3em .9em;
 	font-size:.9em;
 	font-weight:normal;
 	color:#7e7e7e;
@@ -3115,7 +3249,8 @@ input.nichen {
 	text-align:center;
 	color:#227fd5;
 	display:block;
-	padding:0 0 1em 0;
+	padding:0 0 0em 0;
+	font-size:.8em;
 }
 .box-dongqi span.wj a {
 	text-align:center;
@@ -3130,6 +3265,39 @@ input.nichen {
 	font-weight:normal;
 	font-size:1em;
 }
+.head {
+	padding:1em 0 .5em 0;
+}
+.head h2 {
+	margin: 0 auto 0 auto;
+	width:150px;
+	height:150px;
+	overflow:hidden;
+	border-radius:75px;
+	box-shadow:#CCC 2px 2px 2px;
+}
+.head h2 img {
+	width:150px;
+}
+.head h4 {
+	margin: 0 auto 0 auto;
+	font-size:1.2em;
+	font-weight:normal;
+	text-align:center;
+}
+.head h5 {
+	margin: 0 auto 0 auto;
+	font-size:.8em;
+	font-weight:normal;
+	text-align:center;
+	color:#b6d554;
+}
+.headmarg {
+	margin-bottom:0;
+}
+
+
+
 .snag {
 	padding:.5em 0 0 0;
 	position:relative;
@@ -3980,7 +4148,31 @@ input.nichen {
 }
 /*=========我的信息=====结束=========*/
 
-
+/*=========用户提示=====开始=========*/
+.tip-box {
+	height:736px;
+}
+.tip {
+	 background:url(../images/tip6plus.png) center top no-repeat #e7e8e9;
+	 position:relative;
+	 top:230px;
+	 height:154px;
+	 width:400px;
+	 margin:0 auto;
+	animation:mytip 5s;
+	-moz-animation:mytip 5s; /* Firefox */
+	-webkit-animation:mytip 5s; /* Safari and Chrome */
+	-o-animation:mytip 5s; /* Opera */
+}
+.tip h4 {
+	padding:2.5em 0 0 4.5em;
+	margin:0;
+	font-size:1.2em;
+	font-weight:normal;
+	line-height:1.2;
+	color:#5d6519;
+}
+/*=========用户提示=====结束=========*/
 }
 
 @media screen and (min-width:320px) and (max-width:410px) {
@@ -3991,9 +4183,11 @@ input.kongbai {
 	color:#ffffff;
 	font-weight: normal;
 	text-align:right;
-	font-size:1.2em;
+	font-size:1em;
 	padding:0 0.2em 0 0;
 	background:#d1d2d4;
+}
+input.kongbai {
 }
 input.lvse {
 	width:3em;
@@ -4064,6 +4258,12 @@ input.red {
 	font-size:1em;
 	color:#ffffff;
 }
+/*input.red:focus {
+	background:#bdbec0;
+	}
+input.red:focus:visited {
+		background:#bdbec0;
+	}*/
 input.jin {
 	height:2.5em;
 	border-radius:10px;
@@ -4112,6 +4312,13 @@ input.nichen {
 	text-align:right;
 	font-size:.9em;
 }
+.subf {
+	width:70px;
+	height:70px;
+	border:0 #666 solid;
+	background:url(../images/qubaba2_03_pt_70X70.png) left top no-repeat;
+}
+
 
 .button-fasong {
 	text-align:center;
@@ -4380,7 +4587,7 @@ input.nichen {
 	position:relative;
 	z-index:2;
 	top:-6.205em;
-	margin-left:6.25em;
+	text-align:center;
 }
 .fei_box h4 a img {
 	width:70px;
@@ -4446,7 +4653,7 @@ input.nichen {
 	background:#ffffff;
 	border-bottom:#e4e1e1 0px solid;
 	border-top:#e4e1e1 1px solid;
-	margin:0.8em 0 0 0;
+	margin:0em .5em 0 .5em;
 }
 .box-dongqi h4 {	
 	padding:.2em .6em;
@@ -4462,7 +4669,7 @@ input.nichen {
 	font-weight:normal;
 }
 .box-dongqi h6 {	
-	padding:0em .9em;
+	padding:.5em .5em;
 	font-size:.8em;
 	font-weight:normal;
 	color:#7e7e7e;
@@ -4477,7 +4684,7 @@ input.nichen {
 	text-align:center;
 	color:#227fd5;
 	display:block;
-	padding:0 0 1em 0;
+	padding:0 0 0em 0;
 	font-size:.8em;
 }
 .box-dongqi span.wj a {
@@ -4493,6 +4700,37 @@ input.nichen {
 	font-weight:normal;
 	font-size:1em;
 }
+.head {
+	padding:1em 0 .5em 0;
+}
+.head h2 {
+	margin: 0 auto 0 auto;
+	width:150px;
+	height:150px;
+	overflow:hidden;
+	border-radius:75px;
+	box-shadow:#CCC 2px 2px 2px;
+}
+.head h2 img {
+	width:150px;
+}
+.head h4 {
+	margin: 0 auto 0 auto;
+	font-size:.9em;
+	font-weight:normal;
+	text-align:center;
+}
+.head h5 {
+	margin: 0 auto 0 auto;
+	font-size:.8em;
+	font-weight:normal;
+	text-align:center;
+	color:#b6d554;
+}
+.headmarg {
+	margin-bottom:0;
+}
+
 .snag {
 	padding:0em 0 0 0;
 	position:relative;
@@ -5167,6 +5405,7 @@ input.nichen {
 	margin:0 auto;
 }
 .item1 .kodai:hover {
+	text-decoration:none;
 }
 .item1 .kodai .full {
 	display: block;
@@ -5335,9 +5574,38 @@ input.nichen {
 }
 /*=========我的信息=====结束=========*/
 
+/*=========用户提示=====开始=========*/
+.tip-box {
+	height:568px;
+}
+.tip {
+	 background:url(../images/tip5s.png) center top no-repeat #e7e8e9;
+	 position:relative;
+	 top:230px;
+	 height:116px;
+	 width:300px;
+	 margin:0 auto;
+	animation:mytip 5s;
+	-moz-animation:mytip 5s; /* Firefox */
+	-webkit-animation:mytip 5s; /* Safari and Chrome */
+	-o-animation:mytip 5s; /* Opera */
+}
+.tip h4 {
+	padding:2.5em 0 0 4em;
+	margin:0;
+	font-size:1em;
+	font-weight:normal;
+	line-height:1.2;
+	color:#5d6519;
+}
+/*=========用户提示=====结束=========*/
+
 }
 @media screen and (min-width:360px) and (max-width:677px) {
 /*======三星S5======*/
+.tip-box {
+	height:640px;
+}
 .q-box {
 	height:590px;
 }
@@ -5353,6 +5621,9 @@ input.nichen {
 }
 @media screen and (min-width:375px) and (max-width:677px) {
 /*======苹果6======*/
+.tip-box {
+	height:667px;
+}
 .q-box {
 	height:617px;
 }
@@ -5366,6 +5637,9 @@ input.nichen {
 }
 @media screen and (min-width:411px) and (max-width:731px) {
 /*======Nexus 5X======*/
+.tip-box {
+	height:731px;
+}
 .cd-section {
   margin:0 auto 0 auto;
 }
@@ -5376,6 +5650,9 @@ input.nichen {
 }
 @media screen and (min-width:414px) and (max-width:773px) {
 /*======苹果6 plus======*/
+.tip-box {
+	height:736px;
+}
 .q-box {
 	height:686px;
 }
@@ -5390,6 +5667,10 @@ input.nichen {
 @media screen and (min-width:435px) and (max-width:773px) {
 
 /*======Nexus 6p======*/
+
+.tip-box {
+	height:773px;
+}
 .q-box {
 	height:723px;
 }
@@ -5404,6 +5685,9 @@ input.nichen {
 @media screen and (min-width:768px) and (max-width:1024px) {
 
 /*======Nexus 6p======*/
+.tip-box {
+	height:1024px;
+}
 .q-box {
 	height:974px;
 }
@@ -5418,6 +5702,9 @@ input.nichen {
 @media screen and (min-width:1028px) and (max-width:1920px) {
 
 /*===1028===1920======*/
+.tip-box {
+	height:1024px;
+}
 .cd-section {
   margin:0em auto 0 auto;
 }
@@ -6363,4 +6650,39 @@ from {bottom:-1000px;}
 to {bottom:-4.8em;}
 }
 
+/*======CSS==用户提示======*/
+@keyframes mytip
+{
+0%   {left:0px; top:0px;}
+25%  {left:0px; top:100px;}
+50%  {left:0px; top:300px;}
+75%  {left:0px; top:230px;}
+100% {left:0px; top:240px;}
+}
 
+@-moz-keyframes mytip 
+{/* Firefox */
+0%   {left:0px; top:0px;}
+25%  {left:0px; top:100px;}
+50%  {left:0px; top:300px;}
+75%  {left:0px; top:230px;}
+100% {left:0px; top:240px;}
+}
+
+@-webkit-keyframes mytip 
+{/* Safari and Chrome */
+0%   {left:0px; top:0px;}
+25%  {left:0px; top:100px;}
+50%  {left:0px; top:300px;}
+75%  {left:0px; top:230px;}
+100% {left:0px; top:240px;}
+}
+
+@-o-keyframes mytip 
+{/* Opera */
+0%   {left:0px; top:0px;}
+25%  {left:0px; top:100px;}
+50%  {left:0px; top:300px;}
+75%  {left:0px; top:230px;}
+100% {left:0px; top:240px;}
+}

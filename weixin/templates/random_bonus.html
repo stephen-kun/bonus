@@ -1,9 +1,9 @@
-{% extends "_bonus_base.html" %}
+ï»¿{% extends "_bonus_base.html" %}
 
 {% block content %}
 <section>
   	<div class="box-duixiang zhongse">
-    	<h4><span class="rfloat">ËùÓĞ×ÀÌ¨</span>·¢ËÍ¶ÔÏó
+    	<h4><span class="rfloat">æ‰€æœ‰æ¡Œå°</span>å‘é€å¯¹è±¡
         <img src="{{static_url}}images/qubaba3_01.png">
         </h4>
     </div>	
@@ -11,14 +11,14 @@
     	<ul>
 		{% for key, value in good_list.items %}		
         	<li>
-            	<h4><span class="rfloat"><input type="number" class="kongbai">{{value.price}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
+            	<h4><span class="rfloat"><input type="number" class="kongbai">{{value.name}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
             </li>
 		{% endfor %}
         </ul>
     </div>	
 	
     <div class="box-duixiang liuyanbj zhongse">
-    	<h4><span class="rfloat"><input type="text" class="liuyan liuyan_zs"></span>ÁôÑÔ</h4>
+    	<h4><span class="rfloat"><input type="text" class="liuyan liuyan_zs"></span>ç•™è¨€</h4>
     </div>	
 </section>
 
