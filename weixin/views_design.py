@@ -9,6 +9,8 @@ import json
 from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import Dining,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
 
+from .utils import handle_ajax_request
+
 AJAX_REQUEST_URL = 'http://127.0.0.1:8000/weixin/view_ajax_request/?openid=OPENID&action=ACTION'
 GETED_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_geted_bonus/?id_record=ID_RECORD'
 AGAIN_GET_BONUS_URL ='http://127.0.0.1:8000/weixin/view_again_rcv_bonus/?openid=OPENID'
@@ -68,7 +70,6 @@ def view_redirect_bonus_rcv(request):
 	again_get_bonus_url = AGAIN_GET_BONUS_URL.replace('OPENID', openid)
 	return render_to_response('get_bonus.html', locals())
 
-	
 #继续抢红包界面
 @csrf_exempt
 def view_again_rcv_bonus(request):
@@ -86,16 +87,24 @@ def view_again_rcv_bonus(request):
 @csrf_exempt
 def view_redirect_bonus_snd(request):
 	#获取openid
-	title = '选择红包类型'
-	body_class = 'red_cen'
-	static_url = settings.STATIC_URL
-	openid = 'koovox'
-	self_rcv_bonus_url = SELF_RCV_BONUS_URL.replace('OPENID', openid)
-	self_snd_bonus_url = SELF_SND_BONUS_URL.replace('OPENID', openid)
-	self_bonus_list_url = SELF_BONUS_LIST_URL.replace('OPENID', openid)
-	create_common_bonus_url = CREATE_COMMON_BONUS_URL.replace('OPENID', openid)
-	create_random_bonus_url = CREATE_RANDOM_BONUS_URL.replace('OPENID', openid)
-	return render_to_response('bonus_type.html', locals())
+	switch = False
+	if switch:
+		title = '选择红包类型'
+		body_class = 'red_cen'
+		static_url = settings.STATIC_URL
+		openid = 'koovox'
+		self_rcv_bonus_url = SELF_RCV_BONUS_URL.replace('OPENID', openid)
+		self_snd_bonus_url = SELF_SND_BONUS_URL.replace('OPENID', openid)
+		self_bonus_list_url = SELF_BONUS_LIST_URL.replace('OPENID', openid)
+		create_common_bonus_url = CREATE_COMMON_BONUS_URL.replace('OPENID', openid)
+		create_random_bonus_url = CREATE_RANDOM_BONUS_URL.replace('OPENID', openid)
+		return render_to_response('bonus_type.html', locals())
+	else:
+		title = '提示'
+		article_class = 'issue-bj stanson'
+		static_url = settings.STATIC_URL
+		prompt_message = '就餐用户独享抢红包！'
+		return render_to_response("user_prompt.html", locals())
 	
 #check收到的串串
 @csrf_exempt
@@ -132,6 +141,7 @@ class BonusContent():
 		self.id = id
 		self.name = name
 		self.price = price
+		self.number = id
 		
 
 #发普通红包
@@ -142,7 +152,7 @@ def view_common_bonus(request):
 	title = '普通红包'
 	body_class = 'qubaba_hsbj'
 	static_url = settings.STATIC_URL
-	openid = 'stephen'	
+	openid = 'koovox'	
 	g1 = BonusContent('123','串', '(15元/串)')
 	g2 = BonusContent('234','份', '(5元/份)')
 	g3 = BonusContent('567','瓶', '(6元/瓶)')
@@ -158,7 +168,7 @@ def view_random_bonus(request):
 	title = '手气红包'
 	body_class = 'qubaba_hsbj'
 	static_url = settings.STATIC_URL
-	openid = 'stephen'		
+	openid = 'koovox'		
 	g1 = BonusContent('123','串', '(15元/串)')
 	g2 = BonusContent('234','份', '(5元/份)')
 	g3 = BonusContent('567','瓶', '(6元/瓶)')
@@ -173,7 +183,7 @@ def view_system_bonus(request):
 	pass
 	
 class GetedBonus():
-	def __init__(self, id_bonus, openid, name, picture, message, datetime, content, title=None):
+	def __init__(self, id_bonus=None, openid=None, name=None, picture=None, message=None, datetime=None, content=None, title=None):
 		self.id_bonus = id_bonus
 		self.openid = openid
 		self.name = name
@@ -191,6 +201,7 @@ def view_geted_bonus(request):
 	title = '东启湘厨'
 	body_class = 'qubaba_hsbj'
 	static_url = settings.STATIC_URL
+	
 	bonus_dir1 = {"串串":"3串", "可乐":"2瓶", "甜品":"3个"}
 	bonus_dir2 = {"串串":"6串", "可乐":"4瓶", "甜品":"7个"}
 	bonus_dir3 = {"串串":"10串", "可乐":"2瓶", "甜品":"8个"}
@@ -212,7 +223,19 @@ def view_geted_bonus(request):
 #支付页面
 @csrf_exempt	
 def view_choose_pay(request):
-	return HttpResponse('ok')
+	openid = request.GET.get('openid')
+	print("+++view_choose_pay %s+++\n"%(openid))
+	consumer = Consumer.objects.get(open_id=openid)
+	title = '东启湘厨'
+	body_class = 'qubaba_hsbj'
+	static_url = settings.STATIC_URL	
+	g1 = BonusContent('123','串', '(15元/串)')
+	g2 = BonusContent('234','份', '(5元/份)')
+	g3 = BonusContent('567','瓶', '(6元/瓶)')
+	good_list = {"串串":g1, "甜品":g2, "可乐":g3}	
+	total_money = 105
+	enough_money = False
+	return render_to_response('weixin_pay.html', locals())
 
 #网页ajax请求
 @csrf_exempt
@@ -230,8 +253,8 @@ def view_ajax_request(request):
 	
 	
 	#实现ajax请求处理函数
-	#response = handle_ajax_request(openid, action)
-	response = '{"number":3, "id_record":"12345"}'
+	response = handle_ajax_request(openid, action)
+	#response = '{"number":3, "id_record":"12345"}'
 	return HttpResponse(response)
 
 #微信token认证

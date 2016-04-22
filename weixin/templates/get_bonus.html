@@ -82,11 +82,19 @@
 	{
 		if(xmlhttp.readyState==4 && xmlhttp.status==200)
 		{
-			var html = '恭喜您抢到红包<font class="f_huangse">NUMBER</font>个';
-			var link = '<a href="{{geted_bonus_url}}" target="_blank">查看红包&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{again_get_bonus_url}}">继续抢红包</a></a>';
+			var html_1 = '恭喜您抢到红包<font class="f_huangse">NUMBER</font>个';
+			var html_2 = '<font class="f_huangse">手慢了，红包已抢完</font>';
+			var link_1 = '<a href="{{geted_bonus_url}}">查看红包&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{again_get_bonus_url}}">继续抢红包</a></a>';
+			var link_2 = '<a href="{{again_get_bonus_url}}">继续抢红包</a>';
 			var JSONObject = JSON.parse(xmlhttp.responseText);
-			document.getElementById("rcv_bonus").innerHTML=html.replace(/NUMBER/,JSONObject.number);
-			document.getElementById("link").innerHTML=link.replace(/ID_RECORD/,JSONObject.id_record);
+			if(JSONObject.number == '0'){
+				document.getElementById("rcv_bonus").innerHTML=html_2;
+				document.getElementById("link").innerHTML=link_2.replace(/ID_RECORD/,JSONObject.id_record);					
+			}
+			else{
+				document.getElementById("rcv_bonus").innerHTML=html_1.replace(/NUMBER/,JSONObject.number);
+				document.getElementById("link").innerHTML=link_1.replace(/ID_RECORD/,JSONObject.id_record);			
+			}
 		}
 	}
 	xmlhttp.open("GET", url, true);

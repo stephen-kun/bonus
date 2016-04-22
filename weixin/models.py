@@ -82,6 +82,16 @@ class Ticket(models.Model):
 	def __unicode__(self):
 		return '%s ticket id%d'%(self.consumer.name, self.id_ticket)
 		
+#接收红包记录
+class RecordRcvBonus(models.Model):
+	id_record = models.IntegerField(primary_key=True)				#收红包记录的唯一id
+	bonus_num = models.IntegerField(default=0)						#收到的红包个数
+	record_time = models.DateTimeField(default=timezone.now)		#记录时间
+	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE) #具体红包
+	
+	def __unicode__(self):
+		return '%s RecordRcvBonus %d'%(self.consumer.name, self.id_record)
+		
 #发出的红包
 class SndBonus(models.Model):
 	id_bonus = models.IntegerField(primary_key=True)							#个人红包唯一id
@@ -96,7 +106,6 @@ class SndBonus(models.Model):
 	create_time = models.DateTimeField(default=timezone.now)					#发送时间
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#发送红包者
 
-	
 	def __unicode__(self):
 		return '%s SndBonus %d'%(self.consumer.name, self.id_bonus)
 		
@@ -113,21 +122,11 @@ class RcvBonus(models.Model):
 	snd_bonus = models.ForeignKey(SndBonus, on_delete=models.CASCADE)		#红包的唯一id
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)		#消费者的唯一id
 	table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)		#桌台号
+	record_rcv_bonus = models.ForeignKey(RecordRcvBonus, on_delete=models.CASCADE)	#抢红包记录
 	
 	def __unicode__(self):
 		return '%s RcvBonus %d'%(self.consumer.name, self.id_bonus)	
 		
-#接收红包记录
-class RecordRcvBonus(models.Model):
-	id_record = models.IntegerField(primary_key=True)				#收红包记录的唯一id
-	bonus_num = models.IntegerField(default=0)						#收到的红包个数
-	record_time = models.DateTimeField(default=timezone.now)		#记录时间
-	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE) #具体红包
-	
-	def __unicode__(self):
-		return '%s RecordRcvBonus %d'%(self.consumer.name, self.id_record)
-	
-	
 	
 #红包留言
 class BonusMessage(models.Model):
@@ -138,12 +137,14 @@ class BonusMessage(models.Model):
 
 	def __unicode__(self):
 		return '%s BonusMessage %d'%(self.consumer.name, self.id_message)	
-	
-	
+
+
 #虚拟货币
 class VirtualMoney(models.Model):
-	name = models.CharField(primary_key=True,max_length=40)	#虚拟钱币的名字
-	price = models.FloatField(default=0.0)						#虚拟钱币的面值
+	id = models.IntegerField(primary_key=True)					#编号
+	name = models.CharField(max_length=40, default="串串")		#虚拟钱币的名字
+	price = models.CharField(max_length=20, default="5元/串")	#虚拟钱币的面值
+	unit = models.CharField(max_length=10, default="串")		#单位
 
 	def __unicode__(self):
 		return self.name

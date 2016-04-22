@@ -105,7 +105,7 @@ input.jin {
 	margin:.2em .8em;
 	width:90%;
 	font-size:1.0em;
-	color:#000000;
+	color:#ffffff;
 }
 input.bai {
 	height:2.5em;
@@ -151,6 +151,14 @@ input.nichen {
 	border:0 #666 solid;
 	background:url(../images/qubaba2_03_pt_135X135.png) left top no-repeat;
 }
+input.code {
+	width:5.5em;
+	height:1.8em;
+	border:0 #666 solid;
+	font-weight: normal;
+	text-align: left;
+	font-size:.9em;
+}
 
 .button-fasong {
 	text-align:center;
@@ -171,7 +179,7 @@ input.nichen {
 }
 /*======选择抢串串==开始==*/
 .hongbao {
-	background:#f3f3f4;
+	/*background:#f3f3f4;*/
 	height:2em;
 	padding:0.5em 0 0 .5em;
 }
@@ -693,6 +701,81 @@ input.nichen {
 	font-size:1em;
 	/*===-串串数量-====*/
 }
+/*
+==开始====排行榜====2016.04.22============
+*/
+.title_bj {
+	background-image:url('../images/qubaba1_016plus.png');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-color:#e7e8e9;
+	background-attachment:fixed;
+}
+.title {
+	height:8em;
+	text-align:center;
+}
+.title h4 {
+	padding:0;
+	margin:0 auto;
+	color:#ffffff;
+	text-shadow: 0 0 20px red #CCC;
+	font-weight:normal;
+	font-size:.9em;
+	
+}
+.title h4 img {
+	/*width:1.990em;*/
+	border-radius:2.542em;
+	overflow:hidden;
+	width:2.542em;
+	height:2.542em;
+	margin-right:.1em;
+}
+.title_m {
+	padding:0 0 .3em 0;
+	margin-bottom:.1em;
+}
+.title_m ul li {
+	background: #ffffff;
+	border-bottom:#e7e8e9 1px solid;
+	height:4.3em;
+	padding:.8em 0 0 0;
+}
+.title_m ul li:last-child {
+	border-bottom:#e7e8e9 0px solid;
+}
+.title_m ul li ul.ranking_name li h2 {
+	border-radius:2.072m;
+	width:2.072em;
+	height:2.072em;
+	/*===-头像-====*/
+}
+.title_m ul li ul.ranking_name li h2 img {
+	width:2.572em;
+}
+.title_m ul li h6,.title_m ul li h5 {
+	border:#333 0px solid;
+	color:#9dbd36;
+	font-size:1.5em;
+}
+.title_m ul li h6 {
+	color:#686867;
+}
+.title_m ul li ul.ranking_name li h4 p {
+	color:#a9a4a4;
+}
+.title_m ul li ul.ranking_name li h4.title_mw {
+	padding:.6em 0 0 0;
+	font-size:.9em;
+	height:1.5em;
+	overflow:hidden;
+}
+/*
+======排行榜====2016.04.22===结束=========
+*/
+
+
 /*
 ==开始====收到的红包================
 */
@@ -1480,7 +1563,7 @@ input.jin {
 	margin:.2em .8em;
 	width:90%;
 	font-size:1.0em;
-	color:#000000;
+	color:#ffffff;
 }
 input.bai {
 	height:2.5em;
@@ -1525,6 +1608,14 @@ input.nichen {
 	height:135px;
 	border:0 #666 solid;
 	background:url(../images/qubaba2_03_pt_135X135.png) left top no-repeat;
+}
+input.code {
+	width:5.5em;
+	height:1.8em;
+	border:0 #666 solid;
+	font-weight: normal;
+	text-align: left;
+	font-size:.9em;
 }
 
 .button-fasong {
@@ -2079,6 +2170,80 @@ input.nichen {
 	font-size:1em;
 	/*===-串串数量-====*/
 }
+/*
+==开始====排行榜====2016.04.22============
+*/
+.title_bj {
+	background-image:url('../images/qubaba1_016plus.png');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-color:#e7e8e9;
+	background-attachment:fixed;
+}
+.title {
+	height:8em;
+	text-align:center;
+}
+.title h4 {
+	padding:0;
+	margin:0 auto;
+	color:#ffffff;
+	text-shadow: 0 0 20px red #CCC;
+	font-weight:normal;
+	font-size:.9em;
+	
+}
+.title h4 img {
+	/*width:1.990em;*/
+	border-radius:2.542em;
+	overflow:hidden;
+	width:2.542em;
+	height:2.542em;
+	margin-right:.1em;
+}
+.title_m {
+	padding:0 0 .3em 0;
+	margin-bottom:.1em;
+}
+.title_m ul li {
+	background: #ffffff;
+	border-bottom:#e7e8e9 1px solid;
+	height:4.3em;
+	padding:.8em 0 0 0;
+}
+.title_m ul li:last-child {
+	border-bottom:#e7e8e9 0px solid;
+}
+.title_m ul li ul.ranking_name li h2 {
+	border-radius:2.072m;
+	width:2.072em;
+	height:2.072em;
+	/*===-头像-====*/
+}
+.title_m ul li ul.ranking_name li h2 img {
+	width:2.572em;
+}
+.title_m ul li h6,.title_m ul li h5 {
+	border:#333 0px solid;
+	color:#9dbd36;
+	font-size:1.5em;
+}
+.title_m ul li h6 {
+	color:#686867;
+}
+.title_m ul li ul.ranking_name li h4 p {
+	color:#a9a4a4;
+}
+.title_m ul li ul.ranking_name li h4.title_mw {
+	padding:.6em 0 0 0;
+	font-size:.9em;
+	height:1.5em;
+	overflow:hidden;
+}
+/*
+======排行榜====2016.04.22===结束=========
+*/
+
 
 /*
 ==开始====收到的红包================
@@ -2862,7 +3027,7 @@ input.jin {
 	margin:.2em .8em;
 	width:90%;
 	font-size:1.0em;
-	color:#000000;
+	color:#ffffff;
 }
 input.bai {
 	height:2.5em;
@@ -2908,7 +3073,14 @@ input.nichen {
 	border:0 #666 solid;
 	background:url(../images/qubaba2_03_pt_100X100.png) left top no-repeat;
 }
-
+input.code {
+	width:5.5em;
+	height:1.8em;
+	border:0 #666 solid;
+	font-weight: normal;
+	text-align: left;
+	font-size:.9em;
+}
 
 .button-fasong {
 	text-align:center;
@@ -3459,6 +3631,81 @@ input.nichen {
 /*
 ==结束====排行榜==
 */
+/*
+==开始====排行榜====2016.04.22============
+*/
+.title_bj {
+	background-image:url('../images/qubaba1_016plus.png');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-color:#e7e8e9;
+	background-attachment:fixed;
+}
+.title {
+	height:8em;
+	text-align:center;
+}
+.title h4 {
+	padding:0;
+	margin:0 auto;
+	color:#ffffff;
+	text-shadow: 0 0 20px red #CCC;
+	font-weight:normal;
+	font-size:.9em;
+	
+}
+.title h4 img {
+	/*width:1.990em;*/
+	border-radius:.771em;
+	overflow:hidden;
+	width:1.542em;
+	height:1.542em;
+	margin-right:.1em;
+}
+.title_m {
+	padding:0 0 .3em 0;
+	margin-bottom:.1em;
+}
+.title_m ul li {
+	background: #ffffff;
+	border-bottom:#e7e8e9 1px solid;
+	height:3.3em;
+	padding:.8em 0 0 0;
+}
+.title_m ul li:last-child {
+	border-bottom:#e7e8e9 0px solid;
+}
+.title_m ul li ul.ranking_name li h2 {
+	border-radius:1.972em;
+	width:1.572em;
+	height:1.572em;
+	/*===-头像-====*/
+}
+.title_m ul li ul.ranking_name li h2 img {
+	width:1.772em;
+}
+.title_m ul li h6,.title_m ul li h5 {
+	border:#333 0px solid;
+	color:#9dbd36;
+	font-size:1.2em;
+}
+.title_m ul li h6 {
+	
+	color:#686867;
+}
+.title_m ul li ul.ranking_name li h4 p {
+	color:#a9a4a4;
+}
+.title_m ul li ul.ranking_name li h4.title_mw {
+	padding:.4em 0 0 0;
+	font-size:.9em;
+	height:1.5em;
+	overflow:hidden;
+}
+/*
+======排行榜====2016.04.22===结束=========
+*/
+
 
 /*
 ==开始====收到的红包================
@@ -4185,6 +4432,8 @@ input.nichen {
 	color:#5d6519;
 }
 /*=========用户提示=====结束=========*/
+
+
 }
 
 @media screen and (min-width:320px) and (max-width:410px) {
@@ -4282,7 +4531,7 @@ input.jin {
 	margin:.2em .8em;
 	width:90%;
 	font-size:1.0em;
-	color:#000000;
+	color:#ffffff;
 }
 input.bai {
 	height:2.5em;
@@ -4327,7 +4576,18 @@ input.nichen {
 	height:70px;
 	border:0 #666 solid;
 	background:url(../images/qubaba2_03_pt_70X70.png) left top no-repeat;
+	margin:0;
+	padding:0;
 }
+input.code {
+	width:5.5em;
+	height:1.8em;
+	border:0 #666 solid;
+	font-weight: normal;
+	text-align: left;
+	font-size:.9em;
+}
+
 
 
 .button-fasong {
@@ -4828,7 +5088,7 @@ input.nichen {
 .ranking ul li ul.ranking_name li h2 {
 	padding:0;
 	margin:0 .2em 0 .2em;
-	border-radius:0.636em;
+	border-radius:1.272em;
 	overflow:hidden;
 	width:1.272em;
 	height:1.272em;
@@ -4891,6 +5151,80 @@ input.nichen {
 	font-weight:normal;
 	/*===-串串数量-====*/
 }
+/*
+==开始====排行榜====2016.04.22============
+*/
+.title_bj {
+	background-image:url('../images/qubaba1_016plus.png');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-color:#e7e8e9;
+	background-attachment:fixed;
+}
+.title {
+	height:8em;
+	text-align:center;
+}
+.title h4 {
+	padding:0;
+	margin:0 auto;
+	color:#ffffff;
+	text-shadow: 0 0 20px red #CCC;
+	font-weight:normal;
+	font-size:.9em;
+	
+}
+.title h4 img {
+	/*width:1.990em;*/
+	border-radius:.771em;
+	overflow:hidden;
+	width:1.542em;
+	height:1.542em;
+	margin-right:.1em;
+}
+.title_m {
+	padding:0 0 .3em 0;
+	margin-bottom:.1em;
+}
+.title_m ul li {
+	background: #ffffff;
+	border-bottom:#e7e8e9 1px solid;
+	height:3.3em;
+	padding:.8em 0 0 0;
+}
+.title_m ul li:last-child {
+	border-bottom:#e7e8e9 0px solid;
+}
+.title_m ul li ul.ranking_name li h2 {
+	border-radius:1.972em;
+	width:1.572em;
+	height:1.572em;
+	/*===-头像-====*/
+}
+.title_m ul li ul.ranking_name li h2 img {
+	width:1.772em;
+}
+.title_m ul li h6,.title_m ul li h5 {
+	border:#333 0px solid;
+	color:#9dbd36;
+	font-size:1.2em;
+}
+.title_m ul li h6 {
+	
+	color:#686867;
+}
+.title_m ul li ul.ranking_name li h4 p {
+	color:#a9a4a4;
+}
+.title_m ul li ul.ranking_name li h4.title_mw {
+	padding:.4em 0 0 0;
+	font-size:.9em;
+	height:1.5em;
+	overflow:hidden;
+}
+/*
+======排行榜====2016.04.22===结束=========
+*/
 
 /*
 ==开始====收到的红包================
