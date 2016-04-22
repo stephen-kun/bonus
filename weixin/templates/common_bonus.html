@@ -4,7 +4,7 @@
 <form action="{{choose_pay_url}}" method="get">  
 <section>
   	<div class="box-duixiang">
-    	<h4><span class="rfloat"><input type="number" name="桌台" class="lvse">号桌</span>发送对象
+    	<h4><span class="rfloat"><input type="number" name="table" class="lvse">号桌</span>发送对象
         <img src="{{static_url}}images/qubaba2_01.png" width="40">
         </h4>
     </div>
@@ -12,13 +12,13 @@
 		<ul>
 		{% for key, value in good_list.items %}
 			<li>
-            	<h4><span class="rfloat"><input type="number" name='{{value.name}}' class="kongbai">{{value.name}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
+            	<h4><span class="rfloat"><input type="number" name='{{value.id}}' class="kongbai">{{value.name}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
             </li>
 		{% endfor %}
 		</ul>
 	</div>
     <div class="box-duixiang liuyanbj">
-    	<h4><span class="rfloat"><input type="text" class="liuyan" name="留言" value="恭喜发财，大吉大利！"></span>留言</h4>
+    	<h4><span class="rfloat"><input type="text" class="liuyan" name="message" value="恭喜发财，大吉大利！"></span>留言</h4>
     </div>	
 </section>
 

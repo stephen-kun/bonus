@@ -128,7 +128,8 @@ def view_self_snd_bonus(request):
 	
 
 class BonusContent():
-	def __init__(self, name, price):
+	def __init__(self, id,name, price):
+		self.id = id
 		self.name = name
 		self.price = price
 		
@@ -142,9 +143,9 @@ def view_common_bonus(request):
 	body_class = 'qubaba_hsbj'
 	static_url = settings.STATIC_URL
 	openid = 'stephen'	
-	g1 = BonusContent('串', '(15元/串)')
-	g2 = BonusContent('份', '(5元/份)')
-	g3 = BonusContent('瓶', '(6元/瓶)')
+	g1 = BonusContent('123','串', '(15元/串)')
+	g2 = BonusContent('234','份', '(5元/份)')
+	g3 = BonusContent('567','瓶', '(6元/瓶)')
 	good_list = {"串串":g1, "甜品":g2, "可乐":g3}
 	choose_pay_url = CHOOSE_PAY_URL.replace("OPENID", openid)
 	return render_to_response('common_bonus.html', locals())
@@ -158,9 +159,9 @@ def view_random_bonus(request):
 	body_class = 'qubaba_hsbj'
 	static_url = settings.STATIC_URL
 	openid = 'stephen'		
-	g1 = BonusContent('串', '(15元/串)')
-	g2 = BonusContent('份', '(5元/份)')
-	g3 = BonusContent('瓶', '(6元/瓶)')
+	g1 = BonusContent('123','串', '(15元/串)')
+	g2 = BonusContent('234','份', '(5元/份)')
+	g3 = BonusContent('567','瓶', '(6元/瓶)')
 	good_list = {"串串":g1, "甜品":g2, "可乐":g3}
 	choose_pay_url = CHOOSE_PAY_URL.replace("OPENID", openid)
 	return render_to_response('random_bonus.html', locals())
