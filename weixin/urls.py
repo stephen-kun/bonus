@@ -12,5 +12,7 @@ urlpatterns = [
 	url(r'^view_random_bonus',views_design.view_random_bonus, name='view_random_bonus'),	
 	url(r'^view_self_rcv_bonus',views_design.view_self_rcv_bonus, name='view_self_rcv_bonus'),		
 	url(r'^view_self_snd_bonus',views_design.view_self_snd_bonus, name='view_self_snd_bonus'),	
+	url(r'^view_self_bonus_list',views_design.view_self_bonus_list, name='view_self_bonus_list'),		
 	url(r'^view_choose_pay',views_design.view_choose_pay, name='view_choose_pay'),		
+	url(r'^view_redirect_settle_account',views_design.view_redirect_settle_account, name='view_redirect_settle_account'),		
 ]

@@ -15,6 +15,7 @@ RANDOM_BONUS = "手气红包"
 SYS_BONUS	= "系统红包"	
 
 AJAX_GET_BONUS = 'ajax_get_bonus'
+AJAX_CREATE_TICKET = 'ajax_create_ticket'
 
 '''
 global null_dining_table
@@ -215,8 +216,11 @@ def action_set_system_bonus(request):
 	pass
 	
 #ajax请求处理函数
-def handle_ajax_request(openid, action):
+def handle_ajax_request(openid, action, data=None):
 	if action == AJAX_GET_BONUS:
 		return action_get_bonus(openid)
-	pass
+	if action == AJAX_CREATE_TICKET:
+		response = dict(status=1, part1=1234, part2=2345, part3=4567)
+		return json.dumps(response)
+	return 'ok'
 	

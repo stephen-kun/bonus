@@ -1,4 +1,4 @@
-{% extends "_bonus_base.html" %}
+﻿{% extends "_bonus_base.html" %}
 
 {% block content %}
 
@@ -18,6 +18,102 @@
     </div>	
 </section>
 
+<section>
 
+	<div class="box-food qbbaise">
+		<ul>
+			<li>
+				<h4><span class="rfloat"><font class="qbred">{{table_total}}￥</font></span>抢到的串串</h4>
+			</li>
+			<li>
+				<h4><span class="rfloat"><font class="qbred"><label>
+					<input type="radio" id="person_wallet" value="0" onclick="setSelectUserNo(this)" onchange="changeRadio(this)">
+					</label></font></span>我的钱包</h4>
+			</li>
+			<li>
+				<h4>验证码：<input type="number" id="auth_code" class="code" placeholder="输入验证码"></h4>
+			</li>
+		</ul>
+	</div>	
+	<div class="queding">
+		<input type="button" id="create_ticket"  class="jin" data-reveal-id="myModal" value="生成券" onclick="action_create_ticket('{{consumer.open_id}}', '{{ajax_request_url}}')">
+	</div>		
+
+</section>
+
+<div id="myModal" class="reveal-modal">
+	<h2>消费券码</h2>
+	<h3 id="ticket_num"></h3>
+	<a class="close-reveal-modal">X</a> 
+</div>
+
+<script>
+function setSelectUserNo(radioObj){  
+	  
+	var radioCheck= $(radioObj).val();  
+	if("1"==radioCheck){  
+		$(radioObj).attr("checked",false);  
+		$(radioObj).val("0");  
+		  
+	}else{   
+		$(radioObj).val("1");  
+		  
+	}  
+}    
+
+var flag = 1;
+function action_create_ticket(openid, url){
+	var auth_code ;
+	auth_code = document.getElementById("auth_code").value;
+	if(auth_code){
+		if(flag){
+			var person_wallet, action;
+			var xmlhttp;
+			person_wallet = document.getElementById("person_wallet").value;
+			auth_code = document.getElementById("auth_code").value;
+			action = 'ajax_create_ticket';
+			data = '{"openid":"OPENID", "action":"ACTION", "person_wallet":"PERSON_WALLET", "auth_code":"AUTH_CODE"}';
+			data = data.replace(/OPENID/, openid).replace(/ACTION/, action).replace(/PERSON_WALLET/, person_wallet).replace(/AUTH_CODE/, auth_code);
+
+			if (window.XMLHttpRequest)
+			  {// code for IE7+, Firefox, Chrome, Opera, Safari
+			  xmlhttp=new XMLHttpRequest();
+			  }
+			else
+			  {// code for IE6, IE5
+			  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			  }
+			  
+			xmlhttp.onreadystatechange=function()
+			{
+				if(xmlhttp.readyState==4 && xmlhttp.status==200)
+				{
+					var JSONObject = JSON.parse(xmlhttp.responseText);
+					var html = '<p>PART1</p><p>PART2</p><p>PART3</p>';
+					if(JSONObject.status)
+					{
+						var a=document.getElementById("create_ticket");					
+						a.style.backgroundColor="#bdbec0";
+						a.value = '查看券';			
+						var ticket_num = document.getElementById("ticket_num");
+						ticket_num.innerHTML = html.replace(/PART1/,JSONObject.part1).replace(/PART2/,JSONObject.part2).replace(/PART3/,JSONObject.part3);
+						flag = 0;					
+					}
+					else
+					{
+						alert("验证码有误，请重新输入！");
+					}
+
+				}
+			}
+			xmlhttp.open("POST", url, true);
+			xmlhttp.send(data);	
+		}	
+	}
+	else{
+		alert("请输入验证码！");
+	}
+}
+</script>
 
 {% endblock %}

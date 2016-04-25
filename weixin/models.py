@@ -37,6 +37,7 @@ class Consumer(models.Model):
 	phone_num = models.CharField(max_length=20, null=True, blank=True)		#电话			
 	address = models.CharField(max_length=30, null=True, blank=True)			#地址
 	picture = models.URLField(max_length=200, null=True, blank=True)			#头像地址
+	bonus_range = models.IntegerField(default=0)					#排行榜名次
 	snd_bonus_num = models.IntegerField(default=0)					#发红包总数
 	rcv_bonus_num = models.IntegerField(default=0)					#收红包总数
 	snd_bonus_value = models.IntegerField(default=0)				#发红包金额

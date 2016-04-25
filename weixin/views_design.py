@@ -18,7 +18,7 @@ CREATE_COMMON_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_common_bonus/?openi
 CREATE_RANDOM_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_random_bonus/?openid=OPENID'
 SELF_RCV_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_self_rcv_bonus/?openid=OPENID'
 SELF_SND_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_self_snd_bonus/?openid=OPENID'
-SELF_BONUS_LIST_URL = 'http://127.0.0.1:8000/weixin/view_bonus_list/?openid=OPENID'
+SELF_BONUS_LIST_URL = 'http://127.0.0.1:8000/weixin/view_self_bonus_list/?openid=OPENID'
 CHOOSE_PAY_URL = 'http://127.0.0.1:8000/weixin/view_choose_pay/?openid=OPENID'
 
 AJAX_GET_BONUS = 'ajax_get_bonus'
@@ -43,8 +43,14 @@ def view_settle_account(request):
 #结算界面认证
 def view_redirect_settle_account(request):
 	#获取openid
-	#刷新页面中openid	
-	pass
+	title = '东启湘厨'
+	body_class = 'qubaba_hsbj'
+	static_url = settings.STATIC_URL	
+	openid = "koovox"
+	consumer = Consumer.objects.get(open_id=openid)
+	table_total = 100
+	ajax_request_url = "http://127.0.0.1:8000/weixin/view_ajax_request"
+	return render_to_response('close_an_account.html', locals())
 
 #发红包界面
 @csrf_exempt
@@ -87,7 +93,7 @@ def view_again_rcv_bonus(request):
 @csrf_exempt
 def view_redirect_bonus_snd(request):
 	#获取openid
-	switch = False
+	switch = True
 	if switch:
 		title = '选择红包类型'
 		body_class = 'red_cen'
@@ -134,6 +140,19 @@ def view_self_snd_bonus(request):
 	consumer = Consumer.objects.get(open_id=openid)
 	rcv_bonus = SndBonus.objects.filter(consumer=consumer).order_by("create_time").reverse()
 	return render_to_response('self_snd_bonus.html', locals())
+	
+#check串串排行榜
+@csrf_exempt
+def view_self_bonus_list(request):
+	openid = request.GET.get('openid')
+	print("========view_self_bonus_list :%s=========\n"%(openid))	
+	title = '收到的串串'
+	article_class = 'issue-bj stanson'
+	static_url = settings.STATIC_URL
+	oneself = Consumer.objects.get(open_id=openid)
+	consumer_list = Consumer.objects.all().order_by("bonus_range").reverse()	
+	top_consumer = consumer_list[0]
+	return render_to_response('self_bonus_list.html', locals())
 	
 
 class BonusContent():
@@ -219,6 +238,8 @@ def view_geted_bonus(request):
 	common_bonus.append(common)
 	common_bonus_url = CREATE_COMMON_BONUS_URL.replace('OPENID', id_record)
 	return render_to_response('geted_bonus.html', locals())
+	
+
 
 #支付页面
 @csrf_exempt	
@@ -243,18 +264,20 @@ def view_ajax_request(request):
 	if request.method == 'GET':
 		openid = request.GET.get('openid')
 		action = request.GET.get('action')
+		data = None
 		print('***view_ajax_request id:%s action:%s****\n'%(openid, action))
 	else:
 		print('***view_ajax_request body:%s ****\n'%(request.body))
-		
 		data = json.loads(request.body)
+		openid = data['openid']
+		action = data['action']
 		for key, value in data.items():
 			print('%s ==> %s'%(key, value))
-	
+		
 	
 	#实现ajax请求处理函数
-	response = handle_ajax_request(openid, action)
-	#response = '{"number":3, "id_record":"12345"}'
+	response = handle_ajax_request(openid, action, data)
+
 	return HttpResponse(response)
 
 #微信token认证

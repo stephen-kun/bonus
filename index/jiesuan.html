@@ -47,7 +47,7 @@
             </li>
             <li>
             	<h4><span class="rfloat"><font class="qbred"><label>
-            	    <input type="radio" name="qiang" value="0" id="RadioGroup1_0">
+            	    <input type="radio" name="#var.checked" value="0" onclick="setSelectUserNo(this);" onchange="changeRadio(this)">
             	    </label></font></span>我的钱包</h4>
             </li>
             <li>
@@ -56,12 +56,40 @@
         </ul>
     </div>
     <div class="queding">
-        <input type="button" class="jin" data-reveal-id="myModal" value="生成券">
-    	<!--<a href="javascript:void(0);" data-reveal-id="myModal">
-点击弹出-模拟帐户申请</a>-->
+        <h4 >
+			<input type="button" class="jin" data-reveal-id="myModal" id="button" value="生成券" onclick="button1()">
+		</h4>
     </div>
     </form>
   </section>
+  <script>
+  	function setSelectUserNo(radioObj){  
+          
+        var radioCheck= $(radioObj).val();  
+        if("1"==radioCheck){  
+            $(radioObj).attr("checked",false);  
+            $(radioObj).val("0");  
+              
+        }else{   
+            $(radioObj).val("1");  
+              
+        }  
+    }    
+  </script>
+  <script type="text/javascript">
+function button1(){
+ var a=document.getElementById("button")
+ var b=a.style.backgroundColor;
+ if(b==""){
+  a.style.backgroundColor="#bdbec0";
+  a.value = '查看券';
+  //c.style.display="block";
+ }else{
+  a.style.backgroundColor="#bdbec0";
+  //c.style.display="none";
+ }
+}
+</script>
 <div id="myModal" class="reveal-modal">
 	<h2>趣八八</h2>
 	<p>165</p><p>505</p><p>1650</p>
