@@ -1,0 +1,106 @@
+﻿{% extends "_bonus_base.html" %}
+
+{% block content %}
+<section>
+	<div class="qiang">
+		
+		<div class="button-qhb">
+			
+			<section class="cd-section">
+				<div class="blades">
+					<div class="blade3"></div>
+				</div>
+				<div class="main">
+					<div class="item1">
+						<div class="kodai">
+							<img src="{{static_url}}images/qubaba1_03.png" class="full" onClick="toshare()" />
+							<img src="{{static_url}}images/qubaba1_03_zhse.png" class="empty" />
+						</div>
+						<div class="clipped-box">
+				
+						</div>
+					</div>
+				</div>
+			</section> 	
+			<div class="tch-share">
+			  <h3 class="tch-share-title" id="rcv_bonus"></h3>
+			  <ul class="tch-share-sns">
+				<li id="link"></li>
+			  </ul>
+			  
+			</div>	
+			
+			<link href="{{static_url}}css/animator.css" rel="stylesheet" />			
+			<style type="text/css">
+				.blades{animation: spin 100s linear infinite;}
+			</style>			
+		</div>
+	</div>
+
+	<h1 id="url" hidden>{{ajax_request_url}}</h1>
+	<h2 id="id_bonus"></h2>
+
+	<script src="{{static_url}}js/jquery-1.8.2.min.js"></script>
+	<script src="{{static_url}}js/javascript.js"></script>
+	<script type="text/javascript">
+	function toshare(){
+		$(".tch-share").addClass("tch-modal-active");	
+		if($(".tchsharebg").length>0){
+			$(".tchsharebg").addClass("tchsharebg-active");
+		}else{
+			$("body").append('<div class="tchsharebg"></div>');
+			$(".tchsharebg").addClass("tchsharebg-active");
+		}
+		$(".tchsharebg-active,.tchshare_btn").click(function(){
+			$(".tch-share").removeClass("tch-modal-active");	
+			setTimeout(function(){
+				$(".tchsharebg-active").removeClass("tchsharebg-active");	
+				$(".tchsharebg").remove();	
+			},300);
+		})
+		
+		// 向后台服务器发起抢红包请求
+		var x = document.getElementById("url");
+		url = x.innerHTML.replace(/ACTION/, 'ajax_get_bonus');
+		get_bonus(url);		
+	}	
+		
+	function get_bonus(url)
+	{
+	// 携带openid 发起get请求
+	var xmlhttp;
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	  
+	xmlhttp.onreadystatechange=function()
+	{
+		if(xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			var html_1 = '恭喜您抢到红包<font class="f_huangse">NUMBER</font>个';
+			var html_2 = '<font class="f_huangse">手慢了，红包已抢完</font>';
+			var link_1 = '<a href="{{geted_bonus_url}}">查看红包&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{again_get_bonus_url}}">继续抢红包</a></a>';
+			var link_2 = '<a href="{{again_get_bonus_url}}">继续抢红包</a>';
+			var JSONObject = JSON.parse(xmlhttp.responseText);
+			if(JSONObject.number == '0'){
+				document.getElementById("rcv_bonus").innerHTML=html_2;
+				document.getElementById("link").innerHTML=link_2.replace(/ID_RECORD/,JSONObject.id_record);					
+			}
+			else{
+				document.getElementById("rcv_bonus").innerHTML=html_1.replace(/NUMBER/,JSONObject.number);
+				document.getElementById("link").innerHTML=link_1.replace(/ID_RECORD/,JSONObject.id_record);			
+			}
+		}
+	}
+	xmlhttp.open("GET", url, true);
+	xmlhttp.send();
+	}	
+		
+	</script>
+</section>
+{% endblock %}

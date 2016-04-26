@@ -1,0 +1,51 @@
+﻿{% extends "_bonus_base.html" %}
+
+{% block content %}
+
+<section>
+  	<div class="issue-top">
+    	<h4>{{consumer.name}}</h4>
+        <div class="Angel">
+        	<div class="blades">
+                <div class="Angel-baby"></div>
+            </div>
+            <h2><img src="{{consumer.picture}}"></h2>
+        </div>
+        
+        <h5><img src="{{static_url}}images/qubaba5_01_01.png"></h5>
+        <h3>{{consumer.rcv_bonus_num}}<span>串</span></h3>
+        <style type="text/css">
+			.blades{animation: spin 100s linear infinite;}
+		</style>
+    </div>	
+</section>
+
+<section>
+	<div class="accept">
+		<h4>
+			<img src="{{static_url}}images/5_zan.png" align="absmiddle">
+			手气最佳
+		</h4>
+	</div>
+</section>
+
+<section>
+ 	<div class="issue-list">
+		<ul>
+		{% for bonus in rcv_bonus %}
+            <li class="shdbai">
+            	<h3>{{bonus.table.index_table}}</h3>
+				{% if bonus.is_best %}
+				<h3><span class="rfloat"><img src="{{static_url}}images/5_zan.png" align="absmiddle"></span></h3>
+				{% endif %}
+                <h4>{{bonus.datetime|date:"F-j-Y"}}</h4>
+                <h5>{{bonus.number}}串</h5>
+            </li>		
+		{% empty %}
+			<li>您还未抢到串串，赶紧去抢串串吧</li>
+		{% endfor %}
+		</ul>
+	</div>
+</section>
+
+{% endblock %}

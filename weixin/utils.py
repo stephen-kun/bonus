@@ -3,41 +3,36 @@
 # Create your utils here.
 import random, string
 from django.core.exceptions import ObjectDoesNotExist 
-from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,PersonRecharge,SystemRecharge,VirtualMoney, WalletMoney
-from .models import Dining,Ticket, PersonBonus, SystemBonus, RcvBonus, BonusMessage, SystemMoney, PersonMoney,SndBonus,Recharge
+from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
+from .models import Dining,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
 
+import json
 import pytz
 from django.utils import timezone
 
-global null_person_bonus
-global null_system_bonus
+COMMON_BONUS = "普通红包"	
+RANDOM_BONUS = "手气红包"	
+SYS_BONUS	= "系统红包"	
+
+AJAX_GET_BONUS = 'ajax_get_bonus'
+AJAX_CREATE_TICKET = 'ajax_create_ticket'
+
+'''
 global null_dining_table
 global null_consumer
 global admin_consumer
-global null_person_recharge
-global null_system_recharge
 global null_recharge
 global null_ticket
 global null_rcv_bonus
 global null_snd_bonus
 
-
-COMMON_BONUS = 0	#普通红包
-RANDOM_BONUS = 1	#手气红包
-SYS_BONUS	= 2		#系统红包
-
-null_person_bonus = 1
-null_system_bonus = 1
 null_dining_table = 1
 null_consumer = 1
 admin_consumer = 1
-null_person_recharge = 1
-null_system_recharge = 1
 null_ticket = 1
 null_rcv_bonus = 1
 null_snd_bonus = 1
 null_recharge = 1 
-
 
 table = DiningTable.objects.get_or_create(index_table='0')
 null_dining_table=table[0]
@@ -48,29 +43,29 @@ null_consumer=consumer[0]
 consumer = Consumer.objects.get_or_create(open_id='3000000000', name='admin', on_table=null_dining_table)
 admin_consumer=consumer[0]
 
-person_recharge = PersonRecharge.objects.get_or_create(id_recharge=2000000000, recharge_person=null_consumer)
-null_person_recharge=person_recharge[0]
-
-system_recharge = SystemRecharge.objects.get_or_create(id_recharge=2000000000)
-null_system_recharge=system_recharge[0]
-
 recharge = Recharge.objects.get_or_create(id_recharge=2000000000, recharge_person=null_consumer)
 null_recharge=system_recharge[0]
 
 ticket = Ticket.objects.get_or_create(id_ticket=2000000000, consumer=null_consumer)
 null_ticket=ticket[0]
 
-person_bonus = PersonBonus.objects.get_or_create(id_bonus=2000000000, consumer=null_consumer)
-null_person_bonus=person_bonus[0]
-
-system_bonus = SystemBonus.objects.get_or_create(id_bonus=2000000000)
-null_system_bonus=system_bonus[0]
-
 snd_bonus = SndBonus.objects.get_or_create(id_bonus=2000000000, consumer=null_consumer, is_exhausted=True)
 null_snd_bonus=snd_bonus[0]
 
 rcv_bonus = RcvBonus.objects.get_or_create(id_bonus=2000000000, snd_bonus=null_snd_bonus, consumer=null_consumer, table=null_dining_table)
 null_rcv_bonus=rcv_bonus[0]
+'''
+
+class GetedBonus():
+	def __init__(self, rcv_bonus):
+		self.id_bonus = rcv_bonus.id_bonus
+		self.openid = rcv_bonus.consumer.open_id
+		self.name = rcv_bonus.consumer.name
+		self.picture = rcv_bonus.consumer.picture
+		self.message = rcv_bonus.snd_bonus.to_message
+		self.datetime = rcv_bonus.datetime
+		self.title = rcv_bonus.snd_bonus.title
+		self.content = json.loads(rcv_bonus.content)
 
 
 #检测用户是否在就餐状态
@@ -115,6 +110,45 @@ def action_create_ticket(request):
 	#更新PersonMoney表中ticket字段
 	pass
 	
+#生成红包内容字符串
+def bonus_content_str(bonus, type='rcv'):
+	'''
+	type : snd 表示发送的红包，rcv 表示接收的红包
+	'''
+	if type == 'snd':
+		wallet_money = WalletMoney.objects.filter(snd_bonus=bonus)
+	elif type == 'rcv':
+		wallet_money = WalletMoney.objects.filter(rcv_bonus=bonus)
+	virtual_money = VirtualMoney.objects.all()
+	l_name = []
+	l_unit = []
+	for money in virtual_money:
+		l_name.append(money.name)
+		l_unit.append(money.unit)
+	content_dir = dict(zip(l_name, l_unit))
+	temp_dir = content_dir.copy()
+	for x in wallet_money:
+		temp_dir[x.money.name] += "*"
+	for key, value in temp_dir.iteritems():
+		v = value.count("*")
+		content_dir[key] = '{0}{1}'.format(v, content_dir[key]) 
+	return json.dumps(content_dir)
+
+#展现抢到的红包
+def display_get_bonus(id_record, bonus_type):
+	''' 
+	bonus_type: 普通红包， 手气红包， 系统红包
+	'''
+	bonus_list = []	
+	try:
+		record_rcv_bonus = RecordRcvBonus.objects.get(id_record=id_record)
+		rcv_bonus = RcvBonus.objects.filter(bonus_type=bonus_type, record_rcv_bonus=record_rcv_bonus)
+		for bonus in rcv_bonus:
+			geted_bonus = GetedBonus(rcv_bonus=bonus)
+			bonus_list.append(geted_bonus)	
+	except ObjectDoesNotExist:
+		pass
+	return bonus_list
 	
 #抢红包事件
 def action_get_bonus(openid):
@@ -122,14 +156,17 @@ def action_get_bonus(openid):
 	bonus_num = 0	#统计抢到的红包个数
 	consumer = Consumer.objects.get(open_id=openid)
 	snd_bonus = SndBonus.objects.filter(is_exhausted=False)
+	primary_key = create_primary_key()		
 	if len(snd_bonus):
+		# 创建一条抢红包记录
+		record_rcv_bonus = RecordRcvBonus.objects.create(id_record=primary_key, consumer=consumer)
 		for bonus in snd_bonus:
 			rcv_bonus = RcvBonus.objects.filter(consumer=consumer,snd_bonus=bonus)
 			if len(rcv_bonus) == 0:
 				if (bonus.bonus_type == COMMON_BONUS) and (bonus.to_table != consumer.on_table.index_table):
 					continue
 				key = create_primary_key()	
-				new_rcv_bonus = RcvBonus.objects.create(id_bonus=key, snd_bonus=bonus, consumer=consumer, table=consumer.on_table)													
+				new_rcv_bonus = RcvBonus.objects.create(id_bonus=key, snd_bonus=bonus, consumer=consumer, table=consumer.on_table, record_rcv_bonus=record_rcv_bonus)													
 				money = WalletMoney.objects.filter(bonus=bonus, is_receive=False)
 
 				print('===money:%d  remain:%d==\n'%(len(money), bonus.bonus_remain))
@@ -144,34 +181,17 @@ def action_get_bonus(openid):
 					money[i].is_receive = True
 					money[i].consumer = consumer
 					money[i].save()	
-				'''
-				if bonus.bonus_type == SYS_BONUS:
-					sys_money = SystemMoney.objects.filter(bonus=bonus)
-					if bonus.bonus_remain == 1:
-						get_num = len(sys_money)
-					else:
-						get_num = random.randint(1, len(sys_money))			
-					for i in range(0, get_num):
-						sys_money[i].rcv_bonus=new_rcv_bonus
-						sys_money[i].is_receive=True
-						sys_money[i].save()
-				else :
-					person_money = PersonMoney.objects.filter(bonus=bonus)
-					if bonus.bonus_remain == 1:
-						get_num = len(person_money)
-					else:
-						get_num = random.randint(1, len(person_money))
-					for i in range(0, get_num):
-						person_money[i].rcv_bonus=new_rcv_bonus
-						person_money[i].is_receive=True
-						person_money[i].save()
-				'''
 				bonus_num +=1
 				bonus.bonus_remain -= 1
 				if bonus.bonus_remain == 0:
 					bonus.is_exhausted = True
 				bonus.save()
-	return str(bonus_num)
+				new_rcv_bonus.content = bonus_content_str(bonus=new_rcv_bonus)
+				new_rcv_bonus.save()
+		record_rcv_bonus.bonus_num = bonus_num
+		record_rcv_bonus.save()
+	response = dict(number=bonus_num, id_record=primary_key)
+	return json.dumps(response)
 	
 #发普通红包事件
 def action_set_common_bonus(request):
@@ -194,4 +214,13 @@ def action_set_system_bonus(request):
 	#如果有足够的虚拟钱币，则在SystemBonus表中创建一条记录，否则提示今日系统红包已派完。
 	#更新SystemMoney表中bonus字段值
 	pass
+	
+#ajax请求处理函数
+def handle_ajax_request(openid, action, data=None):
+	if action == AJAX_GET_BONUS:
+		return action_get_bonus(openid)
+	if action == AJAX_CREATE_TICKET:
+		response = dict(status=1, part1=1234, part2=2345, part3=4567)
+		return json.dumps(response)
+	return 'ok'
 	
