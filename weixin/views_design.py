@@ -11,15 +11,15 @@ from .models import Dining,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, Rec
 
 from .utils import handle_ajax_request
 
-AJAX_REQUEST_URL = 'http://127.0.0.1:8000/weixin/view_ajax_request/?openid=OPENID&action=ACTION'
-GETED_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_geted_bonus/?id_record=ID_RECORD'
-AGAIN_GET_BONUS_URL ='http://127.0.0.1:8000/weixin/view_again_rcv_bonus/?openid=OPENID'
-CREATE_COMMON_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_common_bonus/?openid=OPENID'
-CREATE_RANDOM_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_random_bonus/?openid=OPENID'
-SELF_RCV_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_self_rcv_bonus/?openid=OPENID'
-SELF_SND_BONUS_URL = 'http://127.0.0.1:8000/weixin/view_self_snd_bonus/?openid=OPENID'
-SELF_BONUS_LIST_URL = 'http://127.0.0.1:8000/weixin/view_self_bonus_list/?openid=OPENID'
-CHOOSE_PAY_URL = 'http://127.0.0.1:8000/weixin/view_choose_pay/?openid=OPENID'
+AJAX_REQUEST_URL = 'http://120.76.122.53/weixin/view_ajax_request/?openid=OPENID&action=ACTION'
+GETED_BONUS_URL = 'http://120.76.122.53/weixin/view_geted_bonus/?id_record=ID_RECORD'
+AGAIN_GET_BONUS_URL ='http://120.76.122.53/weixin/view_again_rcv_bonus/?openid=OPENID'
+CREATE_COMMON_BONUS_URL = 'http://120.76.122.53/weixin/view_common_bonus/?openid=OPENID'
+CREATE_RANDOM_BONUS_URL = 'http://120.76.122.53/weixin/view_random_bonus/?openid=OPENID'
+SELF_RCV_BONUS_URL = 'http://120.76.122.53/weixin/view_self_rcv_bonus/?openid=OPENID'
+SELF_SND_BONUS_URL = 'http://120.76.122.53/weixin/view_self_snd_bonus/?openid=OPENID'
+SELF_BONUS_LIST_URL = 'http://120.76.122.53/weixin/view_self_bonus_list/?openid=OPENID'
+CHOOSE_PAY_URL = 'http://120.76.122.53/weixin/view_choose_pay/?openid=OPENID'
 
 AJAX_GET_BONUS = 'ajax_get_bonus'
 
@@ -65,7 +65,7 @@ def view_redirect_settle_account(request):
 	openid = "koovox"
 	consumer = Consumer.objects.get(open_id=openid)
 	table_total = 100
-	ajax_request_url = "http://127.0.0.1:8000/weixin/view_ajax_request"
+	ajax_request_url = "http://120.76.122.53/weixin/view_ajax_request"
 	return render_to_response('close_an_account.html', locals())
 
 #发红包界面

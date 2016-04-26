@@ -25,6 +25,7 @@ class DiningTable(models.Model):
 	status = models.BooleanField(default=False)			#桌台状态
 	seats = models.IntegerField(default=0)					#桌台入座人数
 	is_private = models.BooleanField(default=False)		#是否是包厢
+	total_money = models.FloatField(default=0.0)			#该桌抢到的红包总额
 
 	def __unicode__(self):
 		return "table %s"%(self.index_table)
@@ -42,10 +43,11 @@ class Consumer(models.Model):
 	rcv_bonus_num = models.IntegerField(default=0)					#收红包总数
 	snd_bonus_value = models.IntegerField(default=0)				#发红包金额
 	own_bonus_value = models.IntegerField(default=0)				#可用红包金额
-	own_bonus_detail = models.CharField(max_length=30, null=True, blank=True)				#可用红包明细
+	own_bonus_detail = models.CharField(max_length=100, null=True, blank=True)				#可用红包明细
 	own_ticket_value = models.IntegerField(default=0)				#可用礼券金额
-	create_time = models.DateTimeField(default=timezone.now)							#首次关注时间
+	create_time = models.DateTimeField(default=timezone.now)		#首次关注时间
 	subscribe = models.BooleanField(default=True)					#是否关注
+	dining_time = models.DateTimeField(default=timezone.now)		#就餐时间
 	on_table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)	#就餐桌台
 	
 	def __unicode__(self):
@@ -53,9 +55,9 @@ class Consumer(models.Model):
 		
 #就餐记录表		
 class Dining(models.Model):
-	id_table = models.CharField(max_length=3, null=True, blank=True)		#桌号
-	begin_time = models.DateTimeField(default=timezone.now) 	#开始就餐时间
-	over_time = models.DateTimeField(null=True, blank=True)		#结束就餐时间
+	id_table = models.CharField(max_length=3, null=True, blank=True)	#桌号
+	begin_time = models.DateTimeField(default=timezone.now) 			#开始就餐时间
+	over_time = models.DateTimeField(null=True, blank=True)			#结束就餐时间
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#关联消费者
 	
 	def __unicode__(self):

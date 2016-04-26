@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import Dining,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
 
+import urllib2
 import json
 import pytz
 from django.utils import timezone
@@ -56,7 +57,7 @@ rcv_bonus = RcvBonus.objects.get_or_create(id_bonus=2000000000, snd_bonus=null_s
 null_rcv_bonus=rcv_bonus[0]
 '''
 
-class GetedBonus():
+class _GetedBonus():
 	def __init__(self, rcv_bonus):
 		self.id_bonus = rcv_bonus.id_bonus
 		self.openid = rcv_bonus.consumer.open_id
@@ -66,6 +67,15 @@ class GetedBonus():
 		self.datetime = rcv_bonus.datetime
 		self.title = rcv_bonus.snd_bonus.title
 		self.content = json.loads(rcv_bonus.content)
+		
+#获取用户openid
+def get_user_openid(request, access_token_url):
+	code = request.GET.get(u'code')
+	url = access_token_url.replace('CODE', code)
+	response = urllib2.urlopen(url)
+	content = response.read()
+	access_token = json.loads(content)	
+	return access_token['openid']	
 
 
 #检测用户是否在就餐状态
@@ -110,15 +120,37 @@ def action_create_ticket(request):
 	#更新PersonMoney表中ticket字段
 	pass
 	
+#创建红包内容的字典
+def create_bonus_dir():
+	virtual_money = VirtualMoney.objects.all()
+	l_name = []
+	l_money = []
+	for money in virtual_money:
+		l_name.append(money.name)
+		l_money.append(money)
+	return dict(zip(l_name, l_money))
+	
+#我的钱包内容字符串
+def decode_bonus_detail(consumer):
+	bonus_detail = consumer.own_bonus_detail
+	return json.loads(bonus_detail)
+	
+#获取指定桌号抢到的红包总金额
+def get_total_money(table, datetime):
+	rcv_bonus = RcvBonus.objects.exclude(datetime__gt=datetime, table=table)
+	return 100
+
 #生成红包内容字符串
-def bonus_content_str(bonus, type='rcv'):
+def bonus_content_str(bonus, type='rcv', consumer=None, is_valid=True):
 	'''
-	type : snd 表示发送的红包，rcv 表示接收的红包
+	type : snd 表示发送的红包，rcv 表示接收的红包, own 表示拥有的红包
 	'''
 	if type == 'snd':
 		wallet_money = WalletMoney.objects.filter(snd_bonus=bonus)
 	elif type == 'rcv':
 		wallet_money = WalletMoney.objects.filter(rcv_bonus=bonus)
+	elif type == 'own':
+		wallet_money = WalletMoney.objects.filter(consumer=consumer, is_valid=is_valid)
 	virtual_money = VirtualMoney.objects.all()
 	l_name = []
 	l_unit = []
