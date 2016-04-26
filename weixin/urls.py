@@ -15,4 +15,6 @@ urlpatterns = [
 	url(r'^view_self_bonus_list',views_design.view_self_bonus_list, name='view_self_bonus_list'),		
 	url(r'^view_choose_pay',views_design.view_choose_pay, name='view_choose_pay'),		
 	url(r'^view_redirect_settle_account',views_design.view_redirect_settle_account, name='view_redirect_settle_account'),		
+	url(r'^view_redirect_user_account',views_design.view_redirect_user_account, name='view_redirect_user_account'),		
+
 ]

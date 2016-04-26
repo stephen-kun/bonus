@@ -6,23 +6,92 @@
  * http://www.opensource.org/licenses/mit-license.php
 */
 
+var flag = 1;
+function setSelectUserNo(radioObj){  
+	  
+	var radioCheck= $(radioObj).val();  
+	if("1"==radioCheck){  
+		$(radioObj).attr("checked",false);  
+		$(radioObj).val("0");  
+		  
+	}else{   
+		$(radioObj).val("1");  
+		  
+	}  
+}    
+
+function action_create_ticket(openid, url){
+	var auth_code ;
+	auth_code = document.getElementById("auth_code").value;
+	if(auth_code){
+		if(flag){
+			var person_wallet, action;
+			var xmlhttp;
+			person_wallet = document.getElementById("person_wallet").value;
+			auth_code = document.getElementById("auth_code").value;
+			action = 'ajax_create_ticket';
+			data = '{"openid":"OPENID", "action":"ACTION", "person_wallet":"PERSON_WALLET", "auth_code":"AUTH_CODE"}';
+			data = data.replace(/OPENID/, openid).replace(/ACTION/, action).replace(/PERSON_WALLET/, person_wallet).replace(/AUTH_CODE/, auth_code);
+
+			if (window.XMLHttpRequest)
+			  {// code for IE7+, Firefox, Chrome, Opera, Safari
+			  xmlhttp=new XMLHttpRequest();
+			  }
+			else
+			  {// code for IE6, IE5
+			  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			  }
+			  
+			xmlhttp.onreadystatechange=function()
+			{
+				if(xmlhttp.readyState==4 && xmlhttp.status==200)
+				{
+					var JSONObject = JSON.parse(xmlhttp.responseText);
+					var html = '<p>PART1</p><p>PART2</p><p>PART3</p>';
+					if(JSONObject.status)
+					{
+						var a=document.getElementById("create_ticket");					
+						a.style.backgroundColor="#bdbec0";
+						a.value = '查看券';			
+						var ticket_num = document.getElementById("ticket_num");
+						ticket_num.innerHTML = html.replace(/PART1/,JSONObject.part1).replace(/PART2/,JSONObject.part2).replace(/PART3/,JSONObject.part3);
+						flag = 0;	
+
+						var modalLocation = $("#create_ticket").attr('data-reveal-id');
+						$('#'+modalLocation).reveal($(this).data());			
+					
+					}
+					else
+					{
+						alert("验证码有误，请重新输入！");
+					}
+
+				}
+			}
+			xmlhttp.open("POST", url, true);
+			xmlhttp.send(data);	
+		}
+		else
+		{
+			$('input[data-reveal-id]').live('click', function(e) {
+				e.preventDefault();
+				var modalLocation = $(this).attr('data-reveal-id');
+				$('#'+modalLocation).reveal($(this).data());			
+
+			});			
+		}	
+	}
+	else{
+		alert("请输入验证码！");
+	}
+}
+
 
 (function($) {
 
 /*---------------------------
  Defaults for Reveal
 ----------------------------*/
-	 
-/*---------------------------
- Listener for data-reveal-id attributes
-----------------------------*/
-
-	$('input[data-reveal-id]').live('click', function(e) {
-		e.preventDefault();
-		var modalLocation = $(this).attr('data-reveal-id');
-		$('#'+modalLocation).reveal($(this).data());
-	});
-
 /*---------------------------
  Extend and Execute
 ----------------------------*/

@@ -26,15 +26,31 @@ AJAX_GET_BONUS = 'ajax_get_bonus'
 
 # Create your views here.
 
+class BonusContent():
+	def __init__(self, id,name, price):
+		self.id = id
+		self.name = name
+		self.price = price
+		self.number = id
+
 #我的钱包界面
-def view_my_wallet(request):
+def view_user_account(request):
 	pass
 	
 #我的钱包界面认证
-def view_redirect_my_wallet(request):
+def view_redirect_user_account(request):
 	#获取openid
 	#根据openid查询Consumer表中own_bonus_value，own_bonus_detail，own_ticket_value，刷新页面信息		
-	pass 
+	openid = 'koovox'
+	title = '我'
+	body_class = 'qubaba_hsbj'
+	static_url = settings.STATIC_URL	
+	consumer = Consumer.objects.get(open_id=openid)
+	g1 = BonusContent('123','串', '(15元/串)')
+	g2 = BonusContent('234','份', '(5元/份)')
+	g3 = BonusContent('567','瓶', '(6元/瓶)')
+	good_list = {"串串":g1, "甜品":g2, "可乐":g3}
+	return render_to_response('user_account.html', locals())
 	
 #结算界面
 def view_settle_account(request):	
@@ -43,7 +59,7 @@ def view_settle_account(request):
 #结算界面认证
 def view_redirect_settle_account(request):
 	#获取openid
-	title = '东启湘厨'
+	title = '结算'
 	body_class = 'qubaba_hsbj'
 	static_url = settings.STATIC_URL	
 	openid = "koovox"
@@ -154,15 +170,6 @@ def view_self_bonus_list(request):
 	top_consumer = consumer_list[0]
 	return render_to_response('self_bonus_list.html', locals())
 	
-
-class BonusContent():
-	def __init__(self, id,name, price):
-		self.id = id
-		self.name = name
-		self.price = price
-		self.number = id
-		
-
 #发普通红包
 def view_common_bonus(request):
 	#从request中解析出openid
