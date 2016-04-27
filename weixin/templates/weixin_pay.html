@@ -1,0 +1,55 @@
+﻿{% extends "_bonus_base.html" %}
+
+{% block content %}
+
+<section>
+  	<div class="issue-top">
+    	
+        <div class="Angel">
+        	<div class="blades">
+                <div class="Angel-baby"></div>
+            </div>
+            <h2><img src="{{consumer.picture}}"></h2>
+        </div>
+        <h3>{{consumer.name}}</h3>
+        <style type="text/css">
+			.blades{animation: spin 100s linear infinite;}
+		</style>
+    </div>	
+</section>
+
+<section>
+    <div class="box-food qbbaise">
+    	<ul>
+			{% for key, value in good_list.items %}
+        	<li>
+            	<h4><span class="rfloat"><font class="qbred">{{value.number}}</font>{{value.name}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
+            </li>
+			{% endfor %}
+            <li>
+            	<h4><span class="rfloat"><font class="qbred">{{total_money}}</font>元</span>消费总额</h4>
+            </li>
+        </ul>
+    </div>
+	
+    <div class="queding">
+        <input type="button" class="green" value="微信支付" onclick="weixin_pay('{{total_money}}')">
+		{% if enough_money %}
+        <input type="button" class="bule" value="钱包支付" onclick="wallet_pay()">
+		{% endif %}
+    </div>
+	
+</section>
+
+<script>
+function weixin_pay(money){
+
+}
+
+function wallet_pay(){
+
+}
+</script>
+
+
+{% endblock %}
