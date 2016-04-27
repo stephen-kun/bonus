@@ -1,0 +1,50 @@
+﻿{% extends "_bonus_base.html" %}
+
+{% block content %}
+
+<section>
+    <div class="wo">
+        <h2><img src="{{consumer.picture}}"></h2>
+        <h4>{{consumer.name}}<br>
+		{% if consumer.on_table.status %}
+        <p>{{consumer.on_table.index_table}}号桌就餐</p>
+		{% else %}
+		<p>未就餐</p>
+		{% endif %}
+        </h4>
+    </div>
+</section>
+
+<section>
+    <div class="box-food qbbaise">
+    	<ul>
+        	<li>
+            	<h4><span class="rfloat"><font class="qbred">{{consumer.own_bonus_value}}￥</font></span><img src="{{static_url}}images/qiangbao2.png" align="absmiddle"><a>钱包</a></h4>
+            </li>	
+			{% for key, value in good_list.items %}
+        	<li>
+            	<h4><span class="rfloat"><font class="qbred">{{value.number}}</font>{{value.name}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
+            </li>			
+			{% endfor %}
+		</ul>
+	</div>
+	
+    <div class="box-food qbbaise">
+    	<ul>
+            <li>
+            	<h4><img src="{{static_url}}images/admin/admin_03.png" align="absmiddle"><a href="{{user_ticket_url}}">卡券</a></h4>
+            </li>
+        </ul>
+    </div>
+
+    <div class="box-food qbbaise">
+    	<ul>
+        	<li>
+            	<h4><img src="{{static_url}}images/shezhi.png" align="absmiddle"><a href="{{user_info_url}}">个人信息</a></h4>
+            </li>
+        </ul>
+    </div>	
+	
+</section>
+
+{% endblock %}

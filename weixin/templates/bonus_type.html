@@ -1,0 +1,48 @@
+{% extends "_bonus_base.html" %}
+
+{% block header%}
+<header class="hongbao">
+	<h4><span class="rfloat">我的串串</span></h4>
+	<link href="{{static_url}}css/component.css" rel="stylesheet" type="text/css" />
+	
+	<div id="dl-menu" class="dl-menuwrapper">
+		<button id="dl-menu-button">我的串串</button>
+		<ul class="dl-menu">
+			<li><a href="{{self_rcv_bonus_url}}">收到的串串</a></li>
+			<li><a href="{{self_snd_bonus_url}}">发出的串串</a></li>
+			<li><a href="{{self_bonus_list_url}}">串串排行榜</a></li>
+		</ul>
+	</div>
+</header>	
+<script type="text/javascript" src="{{static_url}}js/jquery.js"></script>
+<script type="text/javascript" src="{{static_url}}js/modernizr.custom.js"></script>
+<script type="text/javascript" src="{{static_url}}js/jquery.dlmenu.js"></script>
+<script type="text/javascript">	
+	$(function(){
+		$( '#dl-menu' ).dlmenu();
+	});		
+</script>
+
+{% endblock %}
+
+{% block content %}
+<div class="q-box">
+	<div class="f-box">
+		<div class="blades">
+			<div class="bladep-xzpu"></div>
+		</div>
+		<h4><a href="{{create_common_bonus_url}}" target="_parent"><img src="{{static_url}}images/qubaba4_03.png"></a></h4>
+	</div>
+	<div class="f-box f-box-two">
+		<div class="blades">
+			<div class="bladep-xzpu bladep-xzsq"></div>
+		</div>
+		<h4><a href="{{create_random_bonus_url}}" target="_parent"><img src="{{static_url}}images/qubaba4_04.png"></a></h4>
+	</div>
+</div>
+
+<style type="text/css">
+	.blades{animation: spin 100s linear infinite;}
+</style>
+
+{% endblock %}
