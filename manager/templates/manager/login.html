@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<!doctype html>
+<head>
+<meta charset="utf-8">
+<title>东启湘厨后台管理首页</title>
+<link href="/static/css/common.css" rel="stylesheet" type="text/css">
+<link href="/static/css/admin/admin.css" rel="stylesheet" type="text/css">
+<meta name="keywords" content="东启湘厨">
+<meta name="description" content="东启湘厨">
+<script type="text/javascript" src="/static/js/menu.js"></script>
+<script type="text/javascript" src="/static/js/jquery-1.2.6.js"></script>
+<script type="text/javascript" src="/static/js/jquery.funkyUI.js"></script>
+</head>
+
+<body>
+<div class="admin_dl_box">
+    <div class="admin_dl_a">
+        <div class="dl_box">
+            <p>请先登录查看！</p>
+		<form method="post" action="{% url 'login' %}">
+		{% csrf_token %}
+		<table>
+		<tr>
+		    <td class="admin_dl_y">{{ form.username.label_tag }}</td>
+		    <td class="admin_dl_y">{{ form.username }}</td>
+		</tr>
+		<tr>
+		    <td class="admin_dl_y">{{ form.password.label_tag }}</td>
+		    <td>{{ form.password }}</td>
+		</tr>
+		<tr>
+            <td class="admin_dl_y"></td>
+			<td align="center"> 
+                <input type="submit" class="admin_ru" value="login" />
+			    <input type="hidden" class="admin_fan" name="next" value="{{ next }}" /> 
+            </td>
+		</tr>
+		</table>
+		</form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

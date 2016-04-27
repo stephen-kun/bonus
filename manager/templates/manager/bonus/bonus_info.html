@@ -1,0 +1,28 @@
+<!doctype html>
+{% extends 'base.html' %}
+{% block left_frame %}
+<div class="left-frame">
+    <div class="left-f-title">红包统计</div>
+    <div class="left-f-content">
+        <ul id="menu">
+            <li><span class="menu-list"><img src="/static/images/admin/tit_hongbao.png" align="absmiddle">红包</span>
+            <ul class="menu-undis">
+                <li><span class="menu-l-s"><a href="{% url 'send_bonus_statistic' %}" target="mainFrame">发出的红包</a></span></li>
+                <li><span class="menu-l-s"><a href="{% url 'send_bonus_statistic' %}" target="mainFrame">接收的红包</a></span></li>
+                <li><span class="menu-l-s"><a href="{% url 'send_bonus_statistic' %}" target="mainFrame">接收的红包</a></span></li>
+            </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block right_frame %}
+<div class="right-frame">
+    <div class="right-f-title">
+        <b>当前位置：</b><a href="index.html" target="mainFrame">管理首页</a> > 发出的红包
+    </div>
+    <iframe id="mainFrame" name="mainFrame" src="{% url 'send_bonus_statistic' %}"  frameborder="0" ></iframe>
+</div>
+{% endblock %}

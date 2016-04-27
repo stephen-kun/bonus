@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+{% include 'header.html' %}
+<body>
+<link href="/static/css/admin/showBo.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/static/js/showBo.js"></script>
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="award_box_title">新增管理员</div>
+            <div class="award_box_content">
+                <div class="modify_password">
+                	<ul>
+                    	<li>
+                        	<h4>用户名</h4>
+                            <span><input type="text" id="username" class="admin_pass"></span>
+                        </li>
+                        <li>
+                        	<h4>密码</h4>
+                            <span><input type="password" id="password" class="admin_pass"></span>
+                        </li>
+                        <li>
+                        	<h4>确认密码</h4>
+                            <span><input type="password" id="password2" class="admin_pass"></span>
+                        </li>
+                        <li>
+                        	<h4>&nbsp;</h4>
+                            <span>
+                                <input type="button" id="save" class="admin_save" value="保存">
+                                <input type="button" id="reset" class="admin_ret" value="重置" >
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+    </section>    
+</article>
+<script>
+ $("#save").click(function(){
+    var username = $("#username").val();
+    var password = $("#password").val();
+    var password2 = $("#password2").val();
+    if( username!='' && password!='' && password2!='' && password==password2)
+    {
+        $.post("/manager/account/action", {"action":"register", "username": username, "password": password },function(data){
+            if(data.state==0)
+                Showbo.Msg.alert("成功:" + data.message);
+            else
+                Showbo.Msg.alert("失败:" + data.message);
+        }, "json");
+    }
+    else{
+        Showbo.Msg.alert("输入出错")
+    }
+
+    
+});
+</script>
+
+</body>
+</html>

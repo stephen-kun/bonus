@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'weixin.apps.WeixinConfig',
+    'manager.apps.ManagerConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -118,7 +119,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-import os 
+import os
 SITE_ROOT = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..')
 STATIC_ROOT = os.path.join(SITE_ROOT, 'static')
 STATIC_URL = '/weixin/static/'
