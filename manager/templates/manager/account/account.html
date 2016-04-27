@@ -22,22 +22,18 @@
             </ul>
             </li>
 
+            {% if is_admin %}
             <li><span class="menu-list"><img src="/static/images/admin/tit_hongbao.png" align="absmiddle">红包</span>
             <ul class="menu-undis">
-                <li><span class="menu-l-s"><a href="{% url 'create_bonus' %}" target="mainFrame">创建红包</a></span></li>
-                {% if is_admin %}
                 <li><span class="menu-l-s"><a href="{% url 'set_bonus_limit' %}" target="mainFrame">红包额度</a></span></li>
-                {% endif %}
             </ul>
             </li>
             <li><span class="menu-list"><img src="/static/images/admin/admin_03.png" align="absmiddle">礼券额度</span>
             <ul class="menu-undis">
-                <li><span class="menu-l-s"><a href="{% url 'create_coupon' %}" target="mainFrame">创建礼券</a></span></li>
-                {% if is_admin %}
                 <li><span class="menu-l-s"><a href="{% url 'set_coupon_limit' %}" target="mainFrame">礼券额度</a></span></li>
-                {% endif %}
             </ul>
             </li>
+            {% endif %}
         </ul>
     </div>
 </div>
@@ -51,7 +47,7 @@
     {% if is_admin %}
     <iframe id="mainFrame" name="mainFrame" src="{% url 'account_manage' %}"  frameborder="0" ></iframe>
     {% else %}
-    <iframe id="mainFrame" name="mainFrame" src="{% url 'create_bonus' %}"  frameborder="0" ></iframe>
+    <iframe id="mainFrame" name="mainFrame" src="{% url 'change_password' %}"  frameborder="0" ></iframe>
     {% endif %}
 </div>
 {% endblock %}

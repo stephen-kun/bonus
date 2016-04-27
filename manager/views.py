@@ -108,13 +108,7 @@ def change_password(request):
     current_user = request.user
     return render_to_response("manager/account/change_password.html")
 
-def delete_account(request):
-    current_user = request.user
-    return render_to_response("manager/account/delete.html")
 
-def create_coupon(request):
-    current_user = request.user
-    return render_to_response("manager/account/create_coupon.html")
 
 def set_coupon_limit(reqeust):
     current_user = request.user
@@ -139,3 +133,26 @@ def dining_list(request):
     current_user = request.user
     return render_to_response("manager/dining/dining_list.html")
 
+#店内基本信息
+def basic(request):
+    return render_to_response("manager/basic/index.html")
+
+def delete_account(request):
+    current_user = request.user
+    return render_to_response("manager/basic/delete.html")
+
+def create_coupon(request):
+    current_user = request.user
+    return render_to_response("manager/basic/create_coupon.html")
+
+def goods_info(reqeust):
+    return render_to_response("manager/basic/goods_info.html")
+
+def good_item_edit(request):
+    return render_to_response("manager/basic/add_edit_good.html")
+
+def tables_info(request):
+    return render_to_response("manager/basic/tables_info.html")
+
+def table_item_edit(request):
+    return render_to_response("manager/basic/add_edit_table.html")
