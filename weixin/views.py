@@ -268,7 +268,7 @@ def view_choose_pay(request):
 	return render_to_response('weixin_pay.html', locals())
     
 @csrf_exempt
-def token(request):
+def view_wechat_token(request):
 	if request.method == 'GET':
 		# 检验合法性
 		# 从 request 中提取基本信息 (signature, timestamp, nonce, xml)

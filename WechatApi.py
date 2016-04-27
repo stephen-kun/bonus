@@ -29,7 +29,7 @@ qrcode = {
     "action_name": "QR_LIMIT_SCENE", 
     "action_info": {
         "scene": {
-            "scene_id": 2
+            "scene_id": 3
         }
     }
 }
@@ -43,7 +43,7 @@ menu = {
                 {
                     'type': 'view',
                     'name': '发红包',
-                    'url': 'http://120.76.122.53/weixin/snd_bonus'
+                    'url': 'http://120.76.122.53/weixin/view_snd_bonus'
                 },
                 {
                     'type': 'view',
@@ -53,9 +53,9 @@ menu = {
             ]
         },        
         {
-            'type': 'click',
+            'type': 'view',
             'name': '结算',
-            'key': 'V1001_TODAY_MUSIC'
+            'url': 'http://120.76.122.53/weixin/view_settle_account'
         },
         {
             'name': '更多',
@@ -63,7 +63,7 @@ menu = {
                 {
                     'type': 'view',
                     'name': '我',
-                    'url': 'http://www.soso.com/'
+                    'url': 'http://120.76.122.53/weixin/view_user_account'
                 },
                 {
                     'type': 'view',
@@ -97,7 +97,7 @@ def get_user_info(access_token):
 	return user_info
 
 if __name__ == '__main__':
-    #create_qrcode(qrcode, 'table2.jpg')
+    create_qrcode(qrcode, 'table3.jpg')
     create_menu(menu)
     #get_user_info(wechat.access_token)
     
