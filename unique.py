@@ -20,4 +20,4 @@ def create_primary_key(key='1', length=9):
 
 if __name__ == '__main__':
     for x in range(20):
-        print(create_primary_key())
+        print(random_digit(12))

@@ -7,18 +7,26 @@ from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
 
-from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,PersonRecharge,SystemRecharge,VirtualMoney
-from .models import Dining,Ticket, PersonBonus, SystemBonus, RcvBonus, BonusMessage, SystemMoney, PersonMoney
+from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
+from .models import Dining,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
+
 from django.core.exceptions import ObjectDoesNotExist 
 import pytz
 from django.utils import timezone
 import re
+
+import urllib
+import urllib2
+import urlparse
+import json
 
 TOKEN = 'token'
 APPID = 'wxc32d7686c0827f2a'
 APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
 ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=CODE&grant_type=authorization_code'%(APPID,APPSECRET)
 OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_base&state=1#wechat_redirect"%(APPID)
+USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN"
+
 
 global wechat
 
@@ -30,6 +38,23 @@ conf = WechatConf(
 )
 
 wechat = WechatBasic(conf = conf)
+
+
+class UserInfo():
+	def __init__(self, url):
+		self.url = url
+		response = urllib2.urlopen(self.url)
+		user_info = response.read().decode('utf-8')
+		self.user_info = json.loads(user_info)
+		
+	def get_name(self):
+		return self.user_info['nickname']
+		
+	def get_sex(self):
+		return self.user_info['sex']
+		
+	def get_headimgurl(self):
+		return self.user_info['headimgurl']
 
 class PostResponse():
     def __init__(self, request):
@@ -61,8 +86,14 @@ class PostResponse():
                 consumer.subscribe = True
                 consumer.on_table = table
         except ObjectDoesNotExist:
-            # 通过网页授权获取用户信息
-            consumer = Consumer.objects.create(open_id=self.source, on_table=table)
+            # 获取用户信息
+            url = USER_INFO_URL.replace('ACCESS_TOKEN', wechat.access_token)
+            url = url.replace('OPENID', self.source)
+            user_info = UserInfo(url)
+            name = user_info.get_name()
+            sex = user_info.get_sex()
+            headimgurl = user_info.get_headimgurl()
+            consumer = Consumer.objects.create(open_id=self.source, on_table=table, name=name, sex=sex, picture=headimgurl)
             consumer.create_time = curr_time
         consumer.save()
         # 在Dining表中创建一条记录

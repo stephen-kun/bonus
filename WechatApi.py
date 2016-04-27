@@ -1,11 +1,4 @@
-﻿# -*- coding: utf-8 -*-
-'''
-import sys
-
-reload(sys)
-sys.setdefaultencoding('utf8')
-'''
-
+# -*- coding: utf-8 -*-
 from wechat_sdk import WechatConf
 from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
@@ -15,7 +8,6 @@ import urllib
 import urllib2
 import urlparse
 import json
-
 
 TOKEN = 'token'
 APPID = 'wxc32d7686c0827f2a'
@@ -37,7 +29,7 @@ qrcode = {
     "action_name": "QR_LIMIT_SCENE", 
     "action_info": {
         "scene": {
-            "scene_id": 2
+            "scene_id": 3
         }
     }
 }
@@ -51,27 +43,27 @@ menu = {
                 {
                     'type': 'view',
                     'name': '发红包',
-                    'url': 'http://120.76.122.53/weixin/snd_bonus'
+                    'url': 'http://120.76.122.53/weixin/view_snd_bonus'
                 },
                 {
                     'type': 'view',
                     'name': '抢红包',
-                    'url': 'http://120.76.122.53/weixin/rcv_bonus'
+                    'url': 'http://120.76.122.53/weixin/view_rcv_bonus'
                 }
             ]
         },        
         {
-            'type': 'click',
+            'type': 'view',
             'name': '结算',
-            'key': 'V1001_TODAY_MUSIC'
+            'url': 'http://120.76.122.53/weixin/view_settle_account'
         },
         {
             'name': '更多',
             'sub_button': [
                 {
                     'type': 'view',
-                    'name': '我的钱包',
-                    'url': 'http://www.soso.com/'
+                    'name': '我',
+                    'url': 'http://120.76.122.53/weixin/view_user_account'
                 },
                 {
                     'type': 'view',
@@ -97,40 +89,15 @@ def create_qrcode(qrcode, filename):
 def create_menu(menu):
     wechat.create_menu(menu)
     print('create menu suc!\n')
-	
-class UserInfo():
-	def __init__(self, url):
-		self.url = url
-		response = urllib2.urlopen(self.url)
-		user_info = response.read().decode('utf-8')
-		self.user_info = json.loads(user_info)
-		
-	def get_name(self):
-		return self.user_info['nickname']
-		
-	def get_sex(self):
-		return self.user_info['sex']
-		
-	def get_headimgurl(self):
-		return self.user_info['headimgurl']
-
-	    
 
 def get_user_info(access_token):
 	url = USER_INFO_URL.replace('ACCESS_TOKEN', access_token)
 	response = urllib2.urlopen(url)
-	user_info = response.read()
-	print(user_info)
+	user_info = response.read().decode('utf-8')
 	return user_info
 
 if __name__ == '__main__':
-    #create_qrcode(qrcode, 'table2.jpg')
-    #create_menu(menu)
-    #user_info = get_user_info(wechat.access_token)
-	
-	url = USER_INFO_URL.replace('ACCESS_TOKEN', wechat.access_token)
-	user_info = UserInfo(url)
-	print(user_info.get_name())
-	print(user_info.get_sex())
-	print(user_info.get_headimgurl())
+    create_qrcode(qrcode, 'table3.jpg')
+    create_menu(menu)
+    #get_user_info(wechat.access_token)
     

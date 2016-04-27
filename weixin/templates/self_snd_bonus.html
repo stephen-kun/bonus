@@ -1,0 +1,40 @@
+﻿{% extends "_bonus_base.html" %}
+
+{% block content %}
+
+<section>
+  	<div class="issue-top">
+    	<h4>{{consumer.name}}</h4>
+        <div class="Angel">
+        	<div class="blades">
+                <div class="Angel-baby stansonimgbj"></div>
+            </div>
+            <h2><img src="{{consumer.picture}}"></h2>
+        </div>
+        
+        <h5 class="stansonimg"><img src="{{static_url}}images/qubaba5_03_01.png"></h5>
+        <h3>{{consumer.snd_bonus_num}}<span>串</span></h3>
+        <style type="text/css">
+			.blades{animation: spin 100s linear infinite;}
+		</style>
+    </div>	
+</section>
+
+
+<section>
+ 	<div class="issue-list">
+		<ul>
+		{% for bonus in rcv_bonus %}
+            <li class="shdbai">
+            	<h3>{{bonus.bonus_type}}</h3>
+                <h4>{{bonus.create_time|date:"F-j-Y"}}</h4>
+                <h5>{{bonus.number}}串</h5>
+            </li>		
+		{% empty %}
+			<li>您还未发过串串，赶紧去发串串吧</li>
+		{% endfor %}
+		</ul>
+	</div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+﻿{% extends "_bonus_base.html" %}
+
+{% block content %}
+
+<section>
+  	<div class="issue-top">
+    	
+        <div class="Angel">
+        	<div class="blades">
+                <div class="Angel-baby"></div>
+            </div>
+            <h2><img src="{{consumer.picture}}"></h2>
+        </div>
+        <h3>{{consumer.name}}</h3>
+        <style type="text/css">
+			.blades{animation: spin 100s linear infinite;}
+		</style>
+    </div>	
+</section>
+
+<section>
+
+	<div class="box-food qbbaise">
+		<ul>
+			<li>
+				<h4><span class="rfloat"><font class="qbred">{{total_money}}￥</font></span>抢到的串串</h4>
+			</li>
+			<li>
+				<h4><span class="rfloat"><font class="qbred"><label>
+					<input type="radio" id="person_wallet" value="0" onclick="setSelectUserNo(this)" onchange="changeRadio(this)">
+					</label></font></span>我的钱包</h4>
+			</li>
+			<li>
+				<h4>验证码：<input type="number" id="auth_code" class="code" placeholder="输入验证码"></h4>
+			</li>
+		</ul>
+	</div>	
+	<div class="queding">
+		<input type="button" id="create_ticket"  class="jin" data-reveal-id="myModal" value="生成券" onclick="action_create_ticket('{{consumer.open_id}}', '{{ajax_request_url}}')">
+	</div>		
+
+</section>
+
+<div id="myModal" class="reveal-modal">
+	<h2>消费券码</h2>
+	<h3 id="ticket_num"></h3>
+	<a class="close-reveal-modal">X</a> 
+</div>
+
+{% endblock %}

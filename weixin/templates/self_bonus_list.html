@@ -1,0 +1,49 @@
+﻿{% extends "_bonus_base.html" %}
+
+{% block content %}
+
+<section>
+  	<div class="title">
+    	<h4><img src="{{top_consumer.picture}}" align="absmiddle">{{top_consumer.name}}占您的榜首</h4>    
+    </div>
+	
+    <div class="ranking title_m">
+    	<ul>
+        	<li>
+            	<h6>&nbsp;</h6>
+                	<ul class="ranking_name">
+                    	<li>
+                        	<h2><img src="{{oneself.picture}}" align="absmiddle"></h2>
+                            <h4>
+                                <span>{{oneself.name}}</span>
+                                <p>第{{oneself.bonus_range}}名</p>
+                            </h4>
+                        </li>
+                    </ul>
+                <h5>{{oneself.rcv_bonus_num}}串</h5>
+            </li>
+  		</ul>
+    </div>
+
+    <div class="ranking title_m">
+    	<ul>
+		{% for  consumer in consumer_list %}
+        	<li>
+            	<h6>{{consumer.bonus_range}}</h6>
+                	<ul class="ranking_name">
+                    	<li>
+                        	<h2><img src="{{consumer.picture}}" align="absmiddle"></h2>
+                            <h4 class="title_mw">
+                                <span>{{consumer.name}}</span>
+                            </h4>
+                        </li>
+                    </ul>
+                <h5>{{consumer.rcv_bonus_num}}串</h5>
+            </li>		
+		{% endfor %}
+		</ul>
+	</div>
+	
+</section>
+
+{% endblock %}
