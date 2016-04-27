@@ -178,6 +178,48 @@ def view_random_bonus(request):
 	good_list = create_bonus_dir()
 	choose_pay_url = CHOOSE_PAY_URL.replace("OPENID", openid)
 	return render_to_response('random_bonus.html', locals())
+	
+#check收到的串串
+@csrf_exempt
+def view_self_rcv_bonus(request):
+	#获取openid
+	openid = request.GET.get('openid')
+	print("========view_self_rcv_bonus :%s=========\n"%(openid))	
+	title = '收到的串串'
+	article_class = 'issue-bj'
+	static_url = settings.STATIC_URL
+	picture = 'http://wx.qlogo.cn/mmopen/9T7GtDDMnzaBB0ILSKYVrq1esXAVR4VKtiaYwhxOaFb7VJpgtsrsngBZRiavDsVvMibOnSxfDsZ4zGgbN6NlxB4CTIshrGAOvQD/0'
+	table = DiningTable.objects.get(index_table='1')
+	consumer_tuple = Consumer.objects.get_or_create(open_id=openid, name="stephen", picture=picture, on_table=table)
+	consumer = consumer_tuple[0]
+	rcv_bonus = RcvBonus.objects.filter(consumer=consumer).order_by("datetime").reverse()
+	return render_to_response('self_rcv_bonus.html', locals())
+
+#check发出的串串
+@csrf_exempt
+def view_self_snd_bonus(request):
+	#获取openid
+	openid = request.GET.get('openid')
+	print("========view_self_rcv_bonus :%s=========\n"%(openid))	
+	title = '收到的串串'
+	article_class = 'issue-bj stanson'
+	static_url = settings.STATIC_URL
+	consumer = Consumer.objects.get(open_id=openid)
+	rcv_bonus = SndBonus.objects.filter(consumer=consumer).order_by("create_time").reverse()
+	return render_to_response('self_snd_bonus.html', locals())
+	
+#check串串排行榜
+@csrf_exempt
+def view_self_bonus_list(request):
+	openid = request.GET.get('openid')
+	print("========view_self_bonus_list :%s=========\n"%(openid))	
+	title = '收到的串串'
+	article_class = 'issue-bj stanson'
+	static_url = settings.STATIC_URL
+	oneself = Consumer.objects.get(open_id=openid)
+	consumer_list = Consumer.objects.all().order_by("bonus_range").reverse()	
+	top_consumer = consumer_list[0]
+	return render_to_response('self_bonus_list.html', locals())
 		
 #网页ajax请求
 @csrf_exempt
@@ -209,24 +251,21 @@ def view_geted_bonus(request):
 	body_class = 'qubaba_hsbj'
 	static_url = settings.STATIC_URL
 	
-	bonus_dir1 = {"串串":"3串", "可乐":"2瓶", "甜品":"3个"}
-	bonus_dir2 = {"串串":"6串", "可乐":"4瓶", "甜品":"7个"}
-	bonus_dir3 = {"串串":"10串", "可乐":"2瓶", "甜品":"8个"}
-	picture1 = 'http://wx.qlogo.cn/mmopen/9T7GtDDMnzaBB0ILSKYVrq1esXAVR4VKtiaYwhxOaFb7VJpgtsrsngBZRiavDsVvMibOnSxfDsZ4zGgbN6NlxB4CTIshrGAOvQD/0'
-	picture2 = ' http://wx.qlogo.cn/mmopen/ZMdxSDafpxR1pC2gQK7tKP7L2fM35ic9dOSG2eAe1icQ3cKoHA34cbWqhHHlv6fKNzFGmiaACiaqSUvQ30jLlxO9R8GQELocGjkib/0'
-	curr_time = timezone.now
-	random = GetedBonus(id_bonus='1234', openid="2345", name="stephen", picture=picture1, message="恭喜发财", datetime=curr_time, content=bonus_dir1)
-	system = GetedBonus(id_bonus='1454', openid="6345", name="hero", picture=picture2, message="生日快乐", datetime=curr_time, content=bonus_dir2, title=title)
-	common = GetedBonus(id_bonus='1904', openid="6225", name="stephen", picture=picture1, message="对面的女孩开过来", datetime=curr_time, content=bonus_dir3)
-	random_bonus = []
-	common_bonus = []
-	system_bonus = []
-	random_bonus.append(random)
-	system_bonus.append(system)
-	common_bonus.append(common)
 	common_bonus_url = CREATE_COMMON_BONUS_URL.replace('OPENID', id_record)
 	return render_to_response('geted_bonus.html', locals())
 
+#支付页面
+@csrf_exempt	
+def view_choose_pay(request):
+	openid = request.GET.get('openid')
+	print("+++view_choose_pay %s+++\n"%(openid))
+	consumer = Consumer.objects.get(open_id=openid)
+	title = '东启湘厨'
+	body_class = 'qubaba_hsbj'
+	static_url = settings.STATIC_URL	
+	total_money = 105
+	enough_money = False
+	return render_to_response('weixin_pay.html', locals())
     
 @csrf_exempt
 def token(request):
