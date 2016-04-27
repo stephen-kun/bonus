@@ -1,0 +1,25 @@
+<!doctype html>
+{% extends 'base.html' %}
+
+{% block left_frame %}
+    	<div class="left-frame">
+        	<div class="left-f-title">基本设置</div>
+            <div class="left-f-content">
+            	<ul id="menu">
+                    <li><span class="menu-list"><img src="/static/images/admin/admin_09.png" align="absmiddle"><a href="{% url 'tables_info' %}" target="mainFrame">桌</a></span></li>
+                    <li><span class="menu-list"><img src="/static/images/admin/admin_01.png" align="absmiddle"><a href="{% url 'goods_info' %}" target="mainFrame">物品</a></span></li>
+                    <li><span class="menu-list"><img src="/static/images/admin/tit_hongbao.png" align="absmiddle"><a href="{% url 'create_bonus' %}" target="mainFrame">创建串串</a></span></li>
+                    <li><span class="menu-list"><img src="/static/images/admin/admin_03.png" align="absmiddle"><a href="{% url 'create_coupon' %}" target="mainFrame">创建礼券</a></span></li>
+                </ul>
+            </div>
+        </div>
+{% endblock %}
+        
+{% block right_frame %}
+        <div class="right-frame">
+          <div class="right-f-title">
+            <b>当前位置：</b><a href="index.html" target="mainFrame">管理首页</a> > 管理员设置
+          </div>
+          <iframe id="mainFrame" name="mainFrame" src="{% url 'tables_info'%}"  frameborder="0" ></iframe>
+        </div>
+{% endblock %}
