@@ -4,6 +4,10 @@ from . import views
 
 urlpatterns = [
 	url(r'^view_wechat_token',views.view_wechat_token, name='view_wechat_token'),
+	url(r'^view_snd_bonus',views.view_snd_bonus, name='view_snd_bonus'),
+	url(r'^view_rcv_bonus',views.view_rcv_bonus, name='view_rcv_bonus'),
+	url(r'^view_settle_account',views.view_settle_account, name='view_settle_account'),
+	url(r'^view_user_account',views.view_user_account, name='view_user_account'),	
 	url(r'^view_redirect_bonus_rcv',views.view_redirect_bonus_rcv, name='view_redirect_bonus_rcv'),
 	url(r'^view_geted_bonus',views.view_geted_bonus, name='view_geted_bonus'),
 	url(r'^view_again_rcv_bonus',views.view_again_rcv_bonus, name='view_again_rcv_bonus'),
@@ -17,5 +21,4 @@ urlpatterns = [
 	url(r'^view_choose_pay',views.view_choose_pay, name='view_choose_pay'),		
 	url(r'^view_redirect_settle_account',views.view_redirect_settle_account, name='view_redirect_settle_account'),		
 	url(r'^view_redirect_user_account',views.view_redirect_user_account, name='view_redirect_user_account'),		
-
 ]
