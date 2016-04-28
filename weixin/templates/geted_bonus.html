@@ -63,7 +63,7 @@
 	<div class="box-dongqi">
 		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="toshare('{{bonus.openid}}', '{{bonus.id_bonus}}')">留言</span></h6>
 		<h6>{{bonus.datetime|date:"F-j-Y"}}</h6>
-        <h2 id="refuse_bonus"><input type="button" id="button" class="red" value="婉拒" onClick="refuse_bonus('{{bonus.id_bonus}}')"></h2>
+        <h2 id="h{{bonus.id_bonus}}"><input type="button" id="button" class="red" value="婉拒" onClick="refuse_bonus('{{bonus.id_bonus}}', '{{ajax_request_url}}')"></h2>
         <span class="wj"><a href="{{common_bonus_url}}" target="_blank">回赠</a></span>	
 	</div>	
 {% endfor %}
@@ -75,7 +75,7 @@
 			<input type="text" class="blankiny" name="openid" id="openid">
 			<input type="text" class="blankiny" name="id_bonus" id="id_bonus">
 			<input type="text" class="blankiny" name="show_message" id="show_message">
-			<input type="button" class="send_out" value="发送" onClick="send_message()">
+			<input type="button" class="send_out" value="发送" onClick="send_message('{{ajax_request_url}}')">
 		  </h3>
 		</div>	
 	</section>
@@ -83,23 +83,10 @@
 	<script type="text/javascript" src="{{static_url}}js/jquery.js"></script>
 	<script>
 	
-	function button_change(){
-	 var a=document.getElementById("button")
-	 var b=a.style.backgroundColor;
-	 if(b==""){
-	  a.style.backgroundColor="#bdbec0";
-	  c.style.display="block";
-	 }else{
-	  a.style.backgroundColor="#bdbec0";
-	  c.style.display="none";
-	 }
-	}	
-
-	function refuse_bonus(id_bonus){
-		var url = 'http://127.0.0.1:8000/weixin/view_ajax_request';
+	function refuse_bonus(id_bonus, url){
 		var xmlhttp;
 
-		data = '{"id_bonus":"ID_BONUS"}';
+		data = '{"id_bonus":"ID_BONUS", "action":"ajax_bonus_refuse"}';
 		data = data.replace(/ID_BONUS/, id_bonus);
 
 		if (window.XMLHttpRequest)
@@ -115,7 +102,9 @@
 		{
 			if(xmlhttp.readyState==4 && xmlhttp.status==200)
 			{
-				button_change()
+				var html = '<input type="button" id="button" class="gray" value="婉拒">';
+				var id = "hID_BONUS".replace(/ID_BONUS/, id_bonus);
+				document.getElementById(id).innerHTML = html;
 			}
 		}
 		xmlhttp.open("POST", url, true);
@@ -123,15 +112,14 @@
 		
 	}
 
-	function send_message(){
-		var url = 'http://127.0.0.1:8000/weixin/view_ajax_request';
+	function send_message(url){
 		var openid, id_bonus, message, data;
 		var xmlhttp;
 		openid = document.getElementById("openid").value;
 		id_bonus = document.getElementById('id_bonus').value;
 		message = document.getElementById("message").value;
 
-		data = '{"openid":"OPENID","id_bonus":"ID_BONUS","message":"MESSAGE"}';
+		data = '{"openid":"OPENID","id_bonus":"ID_BONUS","message":"MESSAGE", "action":"ajax_bonus_message"}';
 		data = data.replace(/OPENID/, openid).replace(/ID_BONUS/, id_bonus).replace(/MESSAGE/, message);
 
 		if (window.XMLHttpRequest)

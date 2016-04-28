@@ -24,9 +24,15 @@
 <section>
  	<div class="issue-list">
 		<ul>
-		{% for bonus in rcv_bonus %}
+		{% for bonus in snd_bonus_list %}
             <li class="shdbai">
-            	<h3>{{bonus.bonus_type}}</h3>
+				<a href="{{bonus_detail_url}}/?id_bonus={{bonus.id_bonus}}" target="_parent">	
+				{% ifequal bonus.bonus_type 0 %}
+            	<h3>普通红包</h3>
+				{% endifequal %}
+				{% ifequal bonus.bonus_type 1 %}
+            	<h3>手气红包</h3>
+				{% endifequal %}				
                 <h4>{{bonus.create_time|date:"F-j-Y"}}</h4>
                 <h5>{{bonus.number}}串</h5>
             </li>		

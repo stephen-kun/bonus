@@ -7,7 +7,7 @@ from django.conf import settings
 import django.utils.timezone as timezone
 import json
 from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
-from .models import Dining,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
+from .models import DiningSession,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
 
 from .utils import handle_ajax_request
 
@@ -27,11 +27,11 @@ AJAX_GET_BONUS = 'ajax_get_bonus'
 # Create your views here.
 
 class BonusContent():
-	def __init__(self, id,name, price):
-		self.id = id
+	def __init__(self, name, price, unit, number):
+		self.unit = unit
 		self.name = name
 		self.price = price
-		self.number = id
+		self.number = number
 
 #我的钱包界面
 def view_user_account(request):
@@ -218,6 +218,7 @@ class GetedBonus():
 		self.datetime = datetime
 		self.content = content
 		self.title = title
+
 		
 #抢到的红包界面
 @csrf_exempt

@@ -12,7 +12,7 @@
 		<ul>
 		{% for key, value in good_list.items %}
 			<li>
-            	<h4><span class="rfloat"><input type="number" name='{{value.id}}' class="kongbai">{{value.name}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
+            	<h4><span class="rfloat"><input type="number" name='{{value.id}}' class="kongbai">{{value.unit}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
             </li>
 		{% endfor %}
 		</ul>
@@ -28,6 +28,7 @@
 			<div class="blade3 bladep-pt"></div>
 		</div>
 		<input hidden name="openid" value="{{openid}}">
+		<input hidden name="bonus_type" type="number" value=0>			
         <h4 class="ptf"><input type="submit" class="subf" value=""></h4>
     </div>
 </section>
