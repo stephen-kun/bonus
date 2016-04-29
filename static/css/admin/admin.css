@@ -366,10 +366,10 @@ _width:expression(document.body.offsetWidth - 168 + 'px');
 
 /*=============修改密码===开始========*/
 .modify_password {
-	padding:2em 0;
+	padding:0em 0 1em 0;
 }
 .modify_password ul li {
-	padding:1.5em 0;
+	padding:1.3em 0;
 }
 .modify_password ul li h4 {
 	padding:0 .56em 0 0;
@@ -379,6 +379,7 @@ _width:expression(document.body.offsetWidth - 168 + 'px');
 	width:45%;
 	float:left;
 	text-align:right;
+	font-size:.9em
 }
 .modify_password ul li span {
 	display:block;
@@ -592,7 +593,34 @@ background: -o-linear-gradient(top, #ddf8aa, #b0d067);  /*Opera 11.10+*/}
 
 /*=============后台用户信息===结束========*/
 
-
+/*=============红包详细===结束========*/
+.bonus_list ul li {
+	height:2em;
+}
+.bonus_list ul li h4 {
+	width:43%;
+	float:left;
+	color:#0e83d7;
+	font-weight:normal;
+	text-align:right;
+	font-size:.9em;
+}
+.bonus_list ul li h5 {
+	width:50%;
+	float:left;
+	color:#333131;
+	font-weight:normal;
+	font-size:.8em;
+}
+.bonus_list ul li span {
+	width:50%;
+	float:left;
+	color:#333131;
+	font-weight:normal;
+	font-size:.8em;
+	padding:.1em 0 0 0;
+}
+/*=============红包详细===结束========*/
 
 
 

@@ -7,38 +7,67 @@
 <article>
     <section>
     	<div class="right_award_box">
+            {% ifequal action 'add' %}
+            <div class="award_box_title">增加</div>
+            {% else %}
         	<div class="award_box_title">修改</div>
+            {% endifequal %}
             <div class="award_box_content">
                 <div class="modify_password">
-                	<form action="add_iten.html" method="get">
                 	<ul>
                     	<li>
                         	<h4>名称</h4>
-                            <span><input type="text" class="admin_pass" value="串串"></span>
+                            <input type="hidden" id="action" class="admin_pass" value="{{ action }}">
+                            <input type="hidden" id="good_id" class="admin_pass" value="{{ good.id }}">
+                            <span><input type="text" id="name" class="admin_pass" value="{{ good.name }}"></span>
                         </li>
                         <li>
                         	<h4>价格</h4>
-                            <span><input type="text" class="admin_pass" value="15"></span>
+                            <span><input type="text" id="price" class="admin_pass" value="{{ good.price }}"></span>
                         </li>
-                       
+                       <li>
+                        	<h4>单位</h4>
+                            <span><input type="text" id="unit" class="admin_pass" value="{{ good.unit }}"></span>
+                        </li>
+
                         <li>
                         	<h4>&nbsp;</h4>
                             <span>
-                                <input type="submit" class="admin_save" value="提交">
-                                
+                                <input type="submit" id="save" class="admin_save" value="提交">
                             </span>
                         </li>
-                        
                     </ul>
-                    </form>
                     <div class="clear"></div>
                 </div>
             </div>
         </div>
     </section>    
-    
-    
 </article>
+
+<script>
+ $("#save").click(function(){
+    var action = $("#action").val();
+    var id = $("#good_id").val();
+    var name = $("#name").val();
+    var price = $("#price").val();
+    var unit = $("#unit").val();
+
+    if( name!="" && (/^\d+(\.\d+)?$/).test(price) && unit!="")
+    {
+    $.post("{% url 'good_action' %}", {'action':action, "good_id":id, "good_name":name, "good_price": price, "good_unit":unit  },function(data){
+        if(data.state==0){
+                Showbo.Msg.alert("成功:" + data.message);
+                    window.location.href="{% url 'goods_info' %}";
+                }else{
+                    Showbo.Msg.alert("失败:" + data.message);
+                }
+                }, "json");
+    }
+    else{
+        Showbo.Msg.alert("输入出错")
+    }
+});
+</script>
 
 </body>
 </html>
