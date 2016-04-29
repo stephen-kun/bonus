@@ -150,7 +150,7 @@ class PostResponse():
 		#判断是否已就坐
 		consumer = Consumer.objects.get(open_id=self.source)
 		if consumer.session and consumer.on_table.index_table != index_table:
-			return wechat.response_text(content =  u'请您先结算%s号桌所抢红包，再扫描该桌'%(index_table))
+			return wechat.response_text(content =  u'请您先结算%s号桌所抢红包，再扫描该桌'%(consumer.on_table.index_table))
 		elif consumer.session and consumer.on_table.index_table == index_table:
 			return ''
 		#更新或创建就餐会话

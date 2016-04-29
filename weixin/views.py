@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.http.response import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect
+from django.core.exceptions import ObjectDoesNotExist 
 from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import get_template 
 from django.shortcuts import render_to_response
@@ -74,7 +75,7 @@ def view_redirect_settle_account(request):
 		title = '结算'
 		body_class = 'qubaba_hsbj'	
 		consumer = Consumer.objects.get(open_id=openid)
-		total_money = consumer.on_table.total_money
+		total_money = consumer.session.total_money
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		return render_to_response('close_an_account.html', locals())		
 	else:
@@ -219,12 +220,17 @@ def view_self_bonus_list(request):
 	article_class = 'issue-bj stanson'
 	static_url = settings.STATIC_URL
 	try:
+		bonus_range = 1
+		consumer_list = Consumer.objects.all().order_by("rcv_bonus_num").reverse()
+		for consumer in consumer_list:
+			consumer.bonus_range = bonus_range
+			bonus_range += 1
+			consumer.save()
 		oneself = Consumer.objects.get(open_id=openid)
-		consumer_list = Consumer.objects.all().order_by("bonus_range").reverse()	
 		top_consumer = consumer_list[0]
 		return render_to_response('self_bonus_list.html', locals())
-	except DoesNotExist:
-		return HttpResponse("Invalid param!")
+	except ObjectDoesNotExist:
+		return HttpResponseBadRequest("Invalid param!")
 		
 #网页ajax请求
 @csrf_exempt

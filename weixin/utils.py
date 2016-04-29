@@ -21,7 +21,7 @@ AJAX_WEIXIN_PAY = 'ajax_weixin_pay'
 AJAX_BONUS_REFUSE = 'ajax_bonus_refuse'
 AJAX_BONUS_MESSAGE = 'ajax_bonus_message'
 
-LIST_KEY_ID	= '121424324'
+LIST_KEY_ID	= '1111111111'
 
 class _GetedBonus():
 	def __init__(self, rcv_bonus):
@@ -216,7 +216,9 @@ def action_get_bonus(openid):
 	#返回抢到的红包个数
 	bonus_num = 0	#统计抢到的红包个数
 	number = 0		#统计串串个数
+	total_money = 0 #统计抢到的红包总额
 	consumer = Consumer.objects.get(open_id=openid)
+	session = consumer.session							#就餐会话
 	snd_bonus_list = SndBonus.objects.filter(is_exhausted=False)
 	primary_key = create_primary_key()		
 	if len(snd_bonus_list):
@@ -245,6 +247,7 @@ def action_get_bonus(openid):
 					money_list[i].is_receive = True
 					money_list[i].consumer = consumer
 					money_list[i].save()	
+					total_money += money_list[i].money.value
 				bonus_num +=1
 				bonus.bonus_remain -= 1
 				if bonus.bonus_remain == 0:
@@ -253,6 +256,13 @@ def action_get_bonus(openid):
 				new_rcv_bonus.number = number
 				new_rcv_bonus.bonus_type = bonus.bonus_type
 				new_rcv_bonus.content = bonus_content_str(bonus=new_rcv_bonus)
+				
+				#添加就餐会话信息
+				new_rcv_bonus.session = session
+				session.total_money += total_money
+				session.total_bonus += number
+				session.save()
+				
 				new_rcv_bonus.save()
 				consumer.rcv_bonus_num += number
 				consumer.save()
@@ -264,12 +274,12 @@ def action_get_bonus(openid):
 #生成虚拟货币
 def create_vitural_money(consumer, snd_bonus, recharge, money, number):
 	print("***create_vitural_money %s**"%(number))
-	init_models()
-	null_ticket = Ticket.objects.get(id_ticket=2000000000)
-	null_snd_bonus = SndBonus.objects.get(id_bonus=2000000000)
-	null_rcv_bonus = RcvBonus.objects.get(id_bonus=2000000000)
+	#init_models()
+	#null_ticket = Ticket.objects.get(id_ticket=2000000000)
+	#null_snd_bonus = SndBonus.objects.get(id_bonus=2000000000)
+	#null_rcv_bonus = RcvBonus.objects.get(id_bonus=2000000000)
 	for x in range(int(number)):
-		wallet_money = WalletMoney.objects.create(id_money=create_primary_key(), consumer=consumer, ticket=null_ticket, recharge=recharge, bonus=snd_bonus, rcv_bonus=null_rcv_bonus, money=money)
+		wallet_money = WalletMoney.objects.create(id_money=create_primary_key(), consumer=consumer, recharge=recharge, bonus=snd_bonus, money=money)
 		wallet_money.save()
 	
 #发普通红包事件
@@ -311,12 +321,13 @@ def action_set_common_bonus(consumer, data_dir):
 			l_good.append(bc)
 			total_money += bc.number*money_dir[key].value
 			#生成虚拟货币
-			create_vitural_money(consumer, snd_bonus,recharge, money_dir[key], value)
+			create_vitural_money(consumer, snd_bonus, recharge, money_dir[key], value)
 			if key == LIST_KEY_ID:
 				snd_bonus.number = bc.number
-				snd_bonus.save()
 				consumer.snd_bonus_num += bc.number
 				consumer.save()
+	snd_bonus.session = consumer.session
+	snd_bonus.save()
 	good_dir = dict(zip(l_name, l_good))
 	return dict(good_list=good_dir, total_money=total_money, enough_money=False, id_recharge=recharge.id_recharge)
 	 
@@ -362,9 +373,10 @@ def action_set_random_bonus(consumer, data_dir):
 			create_vitural_money(consumer, snd_bonus,recharge, money_dir[key], value)
 			if key == LIST_KEY_ID:
 				snd_bonus.number = bc.number
-				snd_bonus.save()
 				consumer.snd_bonus_num += bc.number
-				consumer.save()				
+				consumer.save()		
+	snd_bonus.session = consumer.session
+	snd_bonus.save()
 	good_dir = dict(zip(l_name, l_good))
 	return dict(good_list=good_dir, total_money=total_money, enough_money=False, id_recharge=recharge.id_recharge)
 
