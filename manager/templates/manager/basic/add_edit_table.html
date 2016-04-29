@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+{% include 'header.html' %}
+
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="award_box_title">编辑桌号</div>
+            <div class="award_box_content">
+                <div class="modify_password">
+                	<form action="add_edit_tale.html" method="get">
+                	<ul>
+                    	<li>
+                        	<h4>桌号</h4>
+                            <span><input type="text" class="admin_pass" value="15"></span>
+                        </li>
+                        <li>
+                        	<h4>人数</h4>
+                            <span><input type="text" class="admin_pass"  value="4"></span>
+                        </li>
+                       <li>
+                        	<h4>是否包间</h4>
+                            <span>
+                            	<label>
+            	    <input type="radio" name="man" value="是" id="RadioGroup1_0">
+            	    是</label>
+            	  <label>
+            	    <input type="radio" name="man" value="否" id="RadioGroup1_1">
+            	    否</label>
+                            </span>
+                        </li>
+                        <li>
+                        	<h4>状态</h4>
+                            <span>
+                            	<label>
+            	    <input type="radio" name="man" value="就餐" id="RadioGroup1_0">
+            	    就餐</label>
+            	  <label>
+            	    <input type="radio" name="man" value="未就餐" id="RadioGroup1_1">
+            	    未就餐</label>
+                            </span>
+                        </li>
+                        <li>
+                        	<h4>&nbsp;</h4>
+                            <span>
+                                <input type="submit" class="admin_save" value="提交">
+                                
+                            </span>
+                        </li>
+                        
+                    </ul>
+                    </form>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+    </section>    
+    
+    
+</article>
+
+</body>
+</html>

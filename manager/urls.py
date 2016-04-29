@@ -26,5 +26,14 @@ urlpatterns = [
     url(r'^account/create_coupon/$', views.create_coupon, name='create_coupon'),
     url(r'^account/set_coupon_limit/$', views.set_coupon_limit, name='set_coupon_limit'),
 
+    url(r'^basic/$', views.basic, name='basic'),
+    url(r'^basic/tables_info/$', views.tables_info, name='tables_info'),
+    url(r'^basic/tables_info/add_and_edit$', views.table_item_edit, name='table_item_edit'),
+    url(r'^basic/goods_info/$', views.goods_info, name='goods_info'),
+    url(r'^basic/goods_info/add_and_edit$', views.good_item_edit, name='good_item_edit'),
+    url(r'^basic/create_bonus/$', views.create_bonus, name='create_account'),
+    url(r'^basic/create_coupon/$', views.create_coupon, name='create_coupon'),
+
+
     url(r'.*', views.index, name='index'),
 ]

@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+{% include "header.html" %}
+
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+            <div class="award_box_title"><span class="rfloat"><img src="/static/images/admin/admin_08.png" align="absmiddle"><a href="{% url 'good_item_edit' %}" class="color_a" target="mainFrame">添加</a></span>趣八八串串列表</div>
+            <div class="award_box_content">
+                <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
+                  <tr>
+                    <th align="left" width="50%">名称</th>
+                    <th align="left" width="15%">价格（元）</th>
+                    <th colspan="2">操作</th>
+                  </tr>
+                  <tr>
+                    <td align="left" class="color_a">串串</td>
+                    <td align="left" class="color_a">05</td>
+                    <td width="10%"><img src="/static/images/admin/edit.png" align="absmiddle"><a href="{% url 'good_item_edit' %}" class="color_a" target="mainFrame">编辑</a></td>
+                    <td width="10%"><img src="/static/images/admin/admin_05.png" align="absmiddle"><a href="#" onclick="delete_item()" class="color_c">删除</a></td>
+                  </tr>
+              </table>
+                
+                
+            </div>
+        </div>
+    </section>
+<script language="JavaScript">
+var TbRow = document.getElementById("tab-color");
+if (TbRow != null)
+{
+for (var i=0;i<TbRow.rows.length ;i++ )
+{
+if (TbRow.rows[i].rowIndex%2==1)
+{
+TbRow.rows[i].style.backgroundColor="#ffffff";
+}
+else
+{
+TbRow.rows[i].style.backgroundColor="#f7f7f4";
+}
+}
+}
+
+function delete_item(){
+    Showbo.Msg.confirm("确认删除？", function(val){
+            if(val=="yes"){
+                Showbo.Msg.alert("成功:"+"删除成功!");
+            }
+    });
+};
+
+</script>    
+    
+    
+</article>
+
+</body>
+</html>
