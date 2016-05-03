@@ -122,11 +122,14 @@ def get_bonus_type_str(bonus_type):
 	
 
 #红包留言
-def action_bonus_message(request):
-	#从request中解析出openid,rcv_bonus_id,message
-	#在BonusMessage表中创建一条记录
-	#修改RcvBonus表中is_message==True
-	pass
+def action_bonus_message(data):
+	id_bonus = data["id_bonus"]
+	message = data["message"]
+	rcv_bonus = RcvBonus.objects.get(id_bonus=id_bonus)
+	rcv_bonus.message = message
+	rcv_bonus.is_message = True
+	rcv_bonus.save()
+	return ""
 	
 #红包婉拒
 def action_bonus_refuse(request):
@@ -408,7 +411,7 @@ def handle_ajax_request(action, data):
 	elif action == AJAX_WEIXIN_PAY:
 		return action_weixin_pay(data)
 	elif action == AJAX_BONUS_MESSAGE:
-		pass
+		return action_bonus_message(data)
 	elif action == AJAX_BONUS_REFUSE:
 		pass
 	return 'ok'
