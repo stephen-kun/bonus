@@ -165,9 +165,9 @@ class WalletMoney(models.Model):
     consumer = models.ForeignKey(Consumer,null=True, on_delete=models.CASCADE)		#钱包拥有着
     bonus = models.ForeignKey(SndBonus, on_delete=models.CASCADE)		#红包唯一id
     is_send = models.BooleanField(default=False)							#是否已发做红包
-    ticket = models.ForeignKey(Ticket, null=True, on_delete=models.CASCADE)			#消费券唯一id
-    recharge = models.ForeignKey(Recharge,null=True, on_delete=models.CASCADE)	#充值记录id
-    rcv_bonus = models.ForeignKey(RcvBonus, null=True, on_delete=models.CASCADE)		#抢到的红包唯一id
+    ticket = models.ForeignKey(Ticket, blank=True, null=True, on_delete=models.CASCADE)			#消费券唯一id
+    recharge = models.ForeignKey(Recharge,null=True, blank=True, on_delete=models.CASCADE)	#充值记录id
+    rcv_bonus = models.ForeignKey(RcvBonus, null=True, blank=True, on_delete=models.CASCADE)		#抢到的红包唯一id
     is_receive = models.BooleanField(default=False)						#是否已接收红包
     money = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
 

@@ -10,12 +10,14 @@ urlpatterns = [
     url(r'^logout/$', views.logout, name='logout'),
 
     url(r'^bonus_info/$', views.bonus_info, name='bonus_info'),
-    url(r'^bonus_info/send_bonus/$', views.send_bonus_statistic, name="send_bonus_statistic"),
-    url(r'^bonus_info/recv_bonus/$', views.send_bonus_statistic, name="send_bonus_statistic"),
+    url(r'^bonus_info/send_bonus/$', views.send_bonus_list, name="send_bonus_list"),
+    url(r'^bonus_info/recv_bonus/$', views.recv_bonus_list, name="recv_bonus_list"),
+    url(r'^bonus_info/flying_bonus/$', views.flying_bonus_list, name="flying_bonus_list"),
     url(r'^bonus/create_bonus/$', views.create_bonus, name='create_bonus'),
-    url(r'^bonus/sys_bonus_statistic/$', views.sys_bonus_statistic, name='sys_bonus_statistic'),
+    url(r'^bonus/sys_bonus_list/$', views.sys_bonus_list, name='sys_bonus_list'),
     url(r'^bonus/create_bonus_action/$', views.create_bonus_action, name='create_bonus_action'),
     url(r'^bonus/bonus_detail/$', views.bonus_detail, name='bonus_detail'),
+    url(r'^bonus/bonus_rank_list/$', views.bonus_rank_list, name='bonus_rank_list'),
 
     url(r'^dining/$', views.dining, name='dining'),
     url(r'^dining/dining_list/$', views.dining_list, name='dining_list'),

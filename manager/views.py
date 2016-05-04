@@ -14,7 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import json
 from django.contrib.auth import authenticate
 
-from  weixin.models import DiningTable,VirtualMoney, SndBonus,WalletMoney
+from  weixin.models import DiningTable,VirtualMoney, SndBonus, RcvBonus, WalletMoney, Consumer
 from weixin import utils
 
 def gen_id():
@@ -31,18 +31,107 @@ def logout(request):
     return HttpResponseRedirect("/manager/account/")
 
 # 红包统计信息
-
 @login_required(login_url='/manager/login/')
 def bonus_info(request):
+    current_user = request.user
+    if(current_user.username == "admin"):
+        print('admin')
+        is_admin = True
+    else:
+        is_admin = False
     return render_to_response("manager/bonus/bonus_info.html")
 
-def send_bonus_statistic(request):
+def send_bonus_list(request):
     bonus_list=SndBonus.objects.filter(consumer__isnull=False)
-    return render_to_response("manager/bonus/bonus_statistic.html", {'title':'发出的红包', 'bonus_list':bonus_list})
+    return render_to_response("manager/bonus/bonus_list.html", {'title':'发出的红包', 'bonus_list':bonus_list})
 
-def recv_bonus_statistic(request):
-    bonus_list=RcvBonus.objects.filter(consumer__isnull=False)
-    return render_to_response("manager/bonus/bonus_statistic.html")
+def recv_bonus_list(request):
+    bonus_list=RcvBonus.objects.all()
+    return render_to_response("manager/bonus/recv_bonus_list.html", {'bonus_list':bonus_list})
+
+def flying_bonus_list(request):
+    bonus_list=SndBonus.objects.filter(is_exhausted=False)
+    return render_to_response("manager/bonus/flying_bonus_list.html", {'bonus_list':bonus_list})
+
+def create_bonus(request):
+    current_user = request.user
+    good_list = VirtualMoney.objects.all()
+    return render_to_response("manager/bonus/create_bonus.html", {'good_list':good_list})
+
+@csrf_exempt
+def create_bonus_action(request):
+    title=request.POST.get("title")
+    message=request.POST.get("message")
+    counter = int(request.POST.get("counter"))
+    good_list = VirtualMoney.objects.all()
+
+    total_money=0
+    total_counter=0
+    for good in good_list:
+        good_counter = int(request.POST.get(good.name) )
+        total_counter = total_counter + good_counter
+        total_money =  total_money + good_counter*good.price
+
+    if(total_counter<counter):
+        return _response_json(1, u"确认物品数量总和大于红包数!")
+
+    if(total_money==0):
+        return _response_json(1, u"红包没有内容!")
+    elif(limitBonus(total_money)):
+        return _response_json(1, u"红包超额了!")
+    else:
+        bonus=SndBonus.objects.create(id_bonus=gen_id(), bonus_type=2, to_message=message, title=title, bonus_num=counter, bonus_remain=counter)
+        bonus.save()
+        for good in good_list:
+            good_counter = int(request.POST.get(good.name) )
+            for i in range(good_counter):
+                w = WalletMoney.objects.create(id_money=gen_id(), bonus=bonus, money=good)
+                w.save()
+        return _response_json(0, u"红包发送成功!")
+
+
+def bonus_detail(request):
+    bonus_type = request.GET.get('type')
+    id = request.GET.get('bonus_id')
+    good_list = VirtualMoney.objects.all()
+    content=""
+    remain_content=""
+    if(bonus_type=='system' or bonus_type=='send' ):
+        try:
+            bonus=SndBonus.objects.get(id_bonus=id)
+            for good in good_list:
+                wm_list = WalletMoney.objects.filter(bonus=bonus, money=good)
+                counter=0
+                remain_counter=0
+                for w in wm_list:
+                    counter += 1
+                    if not w.is_receive:
+                        remain_counter += 1
+
+                if(counter>0):
+                    content=content+("%d%s%s,"%(counter,good.unit, good.name))
+
+                if(remain_counter>0):
+                    remain_content=remain_content+("%d%s%s,"%(remain_counter, good.unit, good.name))
+
+            return render_to_response("manager/bonus/bonus_detail.html", { 'bonus':bonus, 'content':content, 'remain_content':remain_content})
+
+        except ObjectDoesNotExist:
+            return render_to_response("manager/bonus/bonus_detail.html")
+
+    elif(bonus_type=='recv'):
+        bonus=Rcvonus.objects.get(id_bonus=id)
+        return render_to_response("manager/bonus/bonus_detail.html", { 'bonus':bonus, 'content':content, 'remain_content':remain_content})
+    else:
+        return render_to_response("manager/bonus/bonus_detail.html")
+
+#判断发送的红包是否超额
+def limitBonus(total):
+    return False
+
+def sys_bonus_list(request):
+    bonus_list=SndBonus.objects.filter(bonus_type=2)
+    return render_to_response("manager/bonus/sys_bonus_list.html",{"bonus_list":bonus_list} )
 
 
 # 管理者信息
@@ -56,6 +145,11 @@ def account(request):
         is_admin = False
 
     return render_to_response("manager/account/account.html",{'current_user':current_user, 'is_admin':is_admin})
+
+def bonus_rank_list(request):
+    consumer_list = Consumer.objects.all().order_by("bonus_range").reverse()
+    return render_to_response('manager/bonus/bonus_rank_list.html', {'consumer_list':consumer_list} )
+
 
 def account_manage(request):
     user_list = User.objects.exclude(username="admin")
@@ -118,96 +212,14 @@ def change_password(request):
     return render_to_response("manager/account/change_password.html", {'current_user': current_user})
 
 
-
 def set_coupon_limit(request):
     current_user = request.user
     return render_to_response("manager/account/set_coupon_limit.html")
-
-def create_bonus(request):
-    current_user = request.user
-    good_list = VirtualMoney.objects.all()
-    return render_to_response("manager/bonus/create_bonus.html", {'good_list':good_list})
-
-def sys_bonus_statistic(request):
-    bonus_list=SndBonus.objects.filter(bonus_type=2)
-    return render_to_response("manager/bonus/sys_bonus_statistic.html",{"bonus_list":bonus_list} )
-
-def bonus_detail(request):
-    bonus_type = request.GET.get('type')
-    id = request.GET.get('bonus_id')
-    good_list = VirtualMoney.objects.all()
-    content=""
-    remain_content=""
-    if(bonus_type=='system'):
-        try:
-            bonus=SndBonus.objects.get(id_bonus=id)
-            for good in good_list:
-                wm_list = WalletMoney.objects.filter(bonus=bonus, money=good)
-                counter=0
-                remain_counter=0
-                for w in wm_list:
-                    counter += 1
-                    if not w.is_receive:
-                        remain_counter += 1
-
-                if(counter>0):
-                    content=content+("%d%s%s,"%(counter,good.unit, good.name))
-
-                if(remain_counter>0):
-                    remain_content=remain_content+("%d%s%s,"%(remain_counter, good.unit, good.name))
-
-            return render_to_response("manager/bonus/bonus_detail.html", { 'bonus':bonus, 'content':content, 'remain_content':remain_content})
-
-        except ObjectDoesNotExist:
-            return render_to_response("manager/bonus/bonus_detail.html")
-
-    elif(bonus_type=='send'):
-        bonus=SndBonus.objects.get(id_bonus=id)
-        return render_to_response("manager/bonus/bonus_detail.html", { 'bonus':bonus, 'content':content, 'remain_content':remain_content})
-
-    else:
-        return render_to_response("manager/bonus/bonus_detail.html")
-
-#判断发送的红包是否超额
-def limitBonus(total):
-    return False
-
-@csrf_exempt
-def create_bonus_action(request):
-    title=request.POST.get("title")
-    message=request.POST.get("message")
-    counter = int(request.POST.get("counter"))
-    good_list = VirtualMoney.objects.all()
-
-    total_money=0
-    total_counter=0
-    for good in good_list:
-        good_counter = int(request.POST.get(good.name) )
-        total_counter = total_counter + good_counter
-        total_money =  total_money + good_counter*good.price
-
-    if(total_counter<counter):
-        return _response_json(1, u"确认物品数量总和大于红包数!")
-
-    if(total_money==0):
-        return _response_json(1, u"红包没有内容!")
-    elif(limitBonus(total_money)):
-        return _response_json(1, u"红包超额了!")
-    else:
-        bonus=SndBonus.objects.create(id_bonus=gen_id(), bonus_type=2, to_message=message, title=title, bonus_num=counter, bonus_remain=counter)
-        bonus.save()
-        for good in good_list:
-            good_counter = int(request.POST.get(good.name) )
-            for i in range(good_counter):
-                w = WalletMoney.objects.create(id_money=gen_id(), bonus=bonus, money=good)
-                w.save()
-        return _response_json(0, u"红包发送成功!")
 
 
 def set_bonus_limit(request):
     current_user = request.user
     return render_to_response("manager/account/set_bonus_limit.html")
-
 
 #就餐信息
 @login_required(login_url='/manager/login/')

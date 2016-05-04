@@ -18,12 +18,12 @@
 
                   {% for bonus in bonus_list %}
                   <tr>
-                    <td class="color_a">bonus.consumer.name</td>
-                    <td class="color_b">bonus.bonus_num</td>
+                      <td class="color_a">{{ bonus.consumer.name }}</td>
+                      <td class="color_b">{{ bonus.bonus_num }}</td>
                     <td class="color_b">普通红包</td>
-                    <td class="color_b">bonus.to_table</td>
+                    <td class="color_b">{{ bonus.to_table }}</td>
                     <td><img src="/static/images/admin/edit.png" align="absmiddle">
-                        <a href="{% url 'bonus_detail' %}?bonus_id={{ bonus.id_bonus }}" class="color_a" target="mainFrame">查看详情</a>
+                        <a href="{% url 'bonus_detail' %}?type=send&bonus_id={{ bonus.id_bonus }}" class="color_a" target="mainFrame">查看详情</a>
                     </td>
                   </tr>
                   {% endfor %}
