@@ -33,7 +33,7 @@
     </div>
 	
     <div class="queding">
-        <input type="button" class="green" value="微信支付" onclick="weixin_pay('{{total_money}}')">
+        <input type="button" class="green" value="微信支付" onclick="weixin_pay('{{consumer.open_id}}', '{{total_money}}', '{{id_recharge}}')">
 		{% if enough_money %}
         <input type="button" class="bule" value="钱包支付" onclick="wallet_pay()">
 		{% endif %}
@@ -42,12 +42,34 @@
 </section>
 
 <script>
-function weixin_pay(money){
-
+function weixin_pay(openid, money, id_recharge){
+	var xmlhttp;
+	var url = 'http://120.76.122.53/weixin/view_ajax_request';
+	if (window.XMLHttpRequest)
+	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	  }
+	else
+	  {// code for IE6, IE5
+	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	  
+	var data_str = '{"money":"MONEY", "openid":"OPENID", "action":"ACTION", "id_recharge":"ID_RECHARGE"}';
+	var data = data_str.replace(/MONEY/, money).replace(/OPENID/, openid).replace(/ACTION/, 'ajax_weixin_pay').replace(/ID_RECHARGE/, id_recharge);
+	
+	xmlhttp.onreadystatechange=function()
+	{
+		if(xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			alert(xmlhttp.responseText);
+		}
+	}
+	xmlhttp.open("POST", url, true);
+	xmlhttp.send(data);	
 }
 
 function wallet_pay(){
-
+	alert('支付成功')
 }
 </script>
 

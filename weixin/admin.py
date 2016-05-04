@@ -2,7 +2,7 @@ from django.contrib import admin
 
 
 from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
-from .models import Dining,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
+from .models import DiningSession,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
 
 class MoneyInline(admin.TabularInline):
 	model = WalletMoney
@@ -42,7 +42,7 @@ admin.site.register(BonusCountMonth)
 admin.site.register(DiningTable)
 #admin.site.register(Consumer)
 #admin.site.register(Recharge)
-admin.site.register(Dining)
+admin.site.register(DiningSession)
 #admin.site.register(Ticket)
 #admin.site.register(RcvBonus)
 admin.site.register(BonusMessage)
