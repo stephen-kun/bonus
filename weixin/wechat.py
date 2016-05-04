@@ -8,7 +8,7 @@ from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
 
 from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
-from .models import DiningSession,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
+from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
 from .utils import create_primary_key
 

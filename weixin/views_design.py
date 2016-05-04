@@ -8,7 +8,7 @@ import django.utils.timezone as timezone
 import json
 from .wechat import PostResponse, wechat, TOKEN, APPID, APPSECRET
 from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
-from .models import DiningSession,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
+from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
 from .utils import  action_get_bonus, is_consumer_dining, handle_ajax_request, get_user_openid, decode_bonus_detail,create_bonus_dir
 from .utils import check_geted_bonus, decode_choose_pay, get_bonus_type_str

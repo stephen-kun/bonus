@@ -23,7 +23,7 @@
             </li>	
 			{% for key, value in good_list.items %}
         	<li>
-            	<h4><span class="rfloat"><font class="qbred">{{value.number}}</font>{{value.name}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
+            	<h4><span class="rfloat"><font class="qbred">{{value.number}}</font>{{value.name}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
             </li>			
 			{% endfor %}
 		</ul>

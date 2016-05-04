@@ -4,7 +4,7 @@
 import random, string
 from django.core.exceptions import ObjectDoesNotExist 
 from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
-from .models import DiningSession,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
+from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
 import urllib2
 import json
@@ -273,7 +273,7 @@ def action_get_bonus(openid):
 				if (bonus.bonus_type == COMMON_BONUS) and (bonus.to_table != consumer.on_table.index_table):
 					continue
 				new_rcv_bonus = RcvBonus.objects.create(id_bonus=create_primary_key(), snd_bonus=bonus, consumer=consumer, table=consumer.on_table, record_rcv_bonus=record_rcv_bonus)													
-				money_list = WalletMoney.objects.filter(bonus=bonus, is_receive=False)
+				money_list = WalletMoney.objects.filter(snd_bonus=bonus, is_receive=False)
 
 				print('===money:%d  remain:%d==\n'%(len(money_list), bonus.bonus_remain))
 				get_num = 0
@@ -290,7 +290,7 @@ def action_get_bonus(openid):
 					money_list[i].is_receive = True
 					money_list[i].consumer = consumer
 					money_list[i].save()	
-					total_money += money_list[i].money.value
+					total_money += money_list[i].money.price
 				bonus_num +=1
 				bonus.bonus_remain -= 1
 				if bonus.bonus_remain == 0:
@@ -322,7 +322,7 @@ def create_vitural_money(consumer, snd_bonus, recharge, money, number):
 	#null_snd_bonus = SndBonus.objects.get(id_bonus=2000000000)
 	#null_rcv_bonus = RcvBonus.objects.get(id_bonus=2000000000)
 	for x in range(int(number)):
-		wallet_money = WalletMoney.objects.create(id_money=create_primary_key(), consumer=consumer, recharge=recharge, bonus=snd_bonus, money=money)
+		wallet_money = WalletMoney.objects.create(id_money=create_primary_key(), consumer=consumer, recharge=recharge, snd_bonus=snd_bonus, money=money)
 		wallet_money.save()
 	
 #发普通红包事件
@@ -362,7 +362,7 @@ def action_set_common_bonus(consumer, data_dir):
 			bc.number = int(value)
 			l_name.append(bc.name)
 			l_good.append(bc)
-			total_money += bc.number*money_dir[key].value
+			total_money += bc.number*money_dir[key].price
 			#生成虚拟货币
 			create_vitural_money(consumer, snd_bonus, recharge, money_dir[key], value)
 			if key == LIST_KEY_ID:
@@ -411,7 +411,7 @@ def action_set_random_bonus(consumer, data_dir):
 			bc.number = int(value)
 			l_name.append(bc.name)
 			l_good.append(bc)
-			total_money += bc.number*money_dir[key].value
+			total_money += bc.number*money_dir[key].price
 			#生成虚拟货币
 			create_vitural_money(consumer, snd_bonus,recharge, money_dir[key], value)
 			if key == LIST_KEY_ID:
