@@ -9,29 +9,32 @@ import django.utils.timezone as timezone
 import json
 from .wechat import PostResponse, wechat, TOKEN, APPID, APPSECRET
 from .utils import  action_get_bonus, is_consumer_dining, handle_ajax_request, get_user_openid, decode_bonus_detail,create_bonus_dir
-from .utils import check_geted_bonus, decode_choose_pay, get_bonus_type_str
+from .utils import check_geted_bonus, decode_choose_pay, get_bonus_type_str, get_record_openid
 from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
 
 
-REDIRECT_SA_URL = 'http://120.76.122.53/weixin/view_redirect_settle_account'
-REDIRECT_UA_URL = 'http://120.76.122.53/weixin/view_redirect_user_account'
-REDIRECT_BS_URL = 'http://120.76.122.53/weixin/view_redirect_bonus_snd'
-REDIRECT_BR_URL = 'http://120.76.122.53/weixin/view_redirect_bonus_rcv'
+ADDRESS_IP = '127.0.0.0.1'
+#ADDRESS_IP = '120.76.122.53'
+
+REDIRECT_SA_URL = 'http://%s/weixin/view_redirect_settle_account'%(ADDRESS_IP)
+REDIRECT_UA_URL = 'http://%s/weixin/view_redirect_user_account'%(ADDRESS_IP)
+REDIRECT_BS_URL = 'http://%s/weixin/view_redirect_bonus_snd'%(ADDRESS_IP)
+REDIRECT_BR_URL = 'http://%s/weixin/view_redirect_bonus_rcv'%(ADDRESS_IP)
 ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=CODE&grant_type=authorization_code'%(APPID,APPSECRET)
 OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_base&state=1#wechat_redirect"%(APPID)
-AJAX_REQUEST_GET_URL = 'http://120.76.122.53/weixin/view_ajax_request/?openid=OPENID&action=ACTION'
-AJAX_REQUEST_POST_URL = 'http://120.76.122.53/weixin/view_ajax_request'
-GETED_BONUS_URL = 'http://120.76.122.53/weixin/view_geted_bonus/?id_record=ID_RECORD'
-AGAIN_GET_BONUS_URL ='http://120.76.122.53/weixin/view_again_rcv_bonus/?openid=OPENID'
-CREATE_COMMON_BONUS_URL = 'http://120.76.122.53/weixin/view_common_bonus/?openid=OPENID'
-CREATE_RANDOM_BONUS_URL = 'http://120.76.122.53/weixin/view_random_bonus/?openid=OPENID'
-SELF_RCV_BONUS_URL = 'http://120.76.122.53/weixin/view_self_rcv_bonus/?openid=OPENID'
-SELF_SND_BONUS_URL = 'http://120.76.122.53/weixin/view_self_snd_bonus/?openid=OPENID'
-SELF_BONUS_LIST_URL = 'http://120.76.122.53/weixin/view_self_bonus_list/?openid=OPENID'
-CHOOSE_PAY_URL = 'http://120.76.122.53/weixin/view_choose_pay/?openid=OPENID'
-SEND_MESSAGE_URL = 'http://120.76.122.53/weixin/view_choose_pay'
-BONUS_REFUSE_URL = 'http://120.76.122.53/weixin/view_choose_pay'
+AJAX_REQUEST_GET_URL = 'http://%s/weixin/view_ajax_request/?openid=OPENID&action=ACTION'%(ADDRESS_IP)
+AJAX_REQUEST_POST_URL = 'http://%s/weixin/view_ajax_request'%(ADDRESS_IP)
+GETED_BONUS_URL = 'http://%s/weixin/view_geted_bonus/?id_record=ID_RECORD'%(ADDRESS_IP)
+AGAIN_GET_BONUS_URL ='http://%s/weixin/view_again_rcv_bonus/?openid=OPENID'%(ADDRESS_IP)
+CREATE_COMMON_BONUS_URL = 'http://%s/weixin/view_common_bonus/?openid=OPENID'%(ADDRESS_IP)
+CREATE_RANDOM_BONUS_URL = 'http://%s/weixin/view_random_bonus/?openid=OPENID'%(ADDRESS_IP)
+SELF_RCV_BONUS_URL = 'http://%s/weixin/view_self_rcv_bonus/?openid=OPENID'%(ADDRESS_IP)
+SELF_SND_BONUS_URL = 'http://%s/weixin/view_self_snd_bonus/?openid=OPENID'%(ADDRESS_IP)
+SELF_BONUS_LIST_URL = 'http://%s/weixin/view_self_bonus_list/?openid=OPENID'%(ADDRESS_IP)
+CHOOSE_PAY_URL = 'http://%s/weixin/view_choose_pay/?openid=OPENID'%(ADDRESS_IP)
+SEND_MESSAGE_URL = 'http://%s/weixin/view_choose_pay'%(ADDRESS_IP)
+BONUS_REFUSE_URL = 'http://%s/weixin/view_choose_pay'%(ADDRESS_IP)
 
 
 
@@ -261,10 +264,11 @@ def view_geted_bonus(request):
 	body_class = 'qubaba_hsbj'
 	static_url = settings.STATIC_URL
 	bonus_dir = check_geted_bonus(id_record)
+	openid = get_record_openid(id_record)
 	random_bonus = bonus_dir['random_bonus']
 	common_bonus = bonus_dir['common_bonus']
 	system_bonus = bonus_dir['system_bonus']	
-	common_bonus_url = CREATE_COMMON_BONUS_URL.replace('OPENID', id_record)
+	common_bonus_url = CREATE_COMMON_BONUS_URL.replace('OPENID', openid)
 	ajax_request_url = AJAX_REQUEST_POST_URL
 	return render_to_response('geted_bonus.html', locals())
 

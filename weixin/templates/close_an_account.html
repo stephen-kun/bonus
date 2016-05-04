@@ -31,12 +31,15 @@
 					</label></font></span>我的钱包</h4>
 			</li>
 			<li>
+				<h4>券面值：<input type="number" id="ticket_value" class="code" placeholder="设置消费券面值"></h4>			
+			</li>
+			<li>
 				<h4>验证码：<input type="number" id="auth_code" class="code" placeholder="输入验证码"></h4>
 			</li>
 		</ul>
 	</div>	
 	<div class="queding">
-		<input type="button" id="create_ticket"  class="jin" data-reveal-id="myModal" value="生成券" onclick="action_create_ticket('{{consumer.open_id}}', '{{ajax_request_url}}')">
+		<input type="button" id="create_ticket"  class="jin" data-reveal-id="myModal" value="生成券" onclick="action_create_ticket('{{consumer.open_id}}', '{{total_money}}','{{ajax_request_url}}')">
 	</div>		
 
 </section>
@@ -46,5 +49,7 @@
 	<h3 id="ticket_num"></h3>
 	<a class="close-reveal-modal">X</a> 
 </div>
+
+<script src="{{static_url}}js/close_an_account.js"></script>
 
 {% endblock %}
