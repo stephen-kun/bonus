@@ -2,18 +2,20 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=2.0">
-<!--<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
---><title>结算</title>
+<!--<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=2.0">-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<!--<meta name="x5-fullscreen" content="true">-->
+<title>结算</title>
 <link href="css/main.css" rel="stylesheet" type="text/css">
 <link href="css/common.css" rel="stylesheet" type="text/css">
 <meta name="keywords" content="东启湘厨">
 <meta name="description" content="东启湘厨">
 <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
 <script type="text/javascript" src="js/jquery.popup.js"></script>
+
 </head>
 
-<body class="qubaba_hsbj">
+<body class="qubaba_hsbj bottom_40">
 
 
 <article>
@@ -56,9 +58,9 @@
         </ul>
     </div>
     <div class="queding">
-        <h4 >
-			<input type="button" class="jin" data-reveal-id="myModal" id="button" value="生成券" onclick="button1()">
-		</h4>
+        <input type="button" class="jin" data-reveal-id="myModal" id="button" value="生成券" onclick="button1()">
+    	<!--<a href="javascript:void(0);" data-reveal-id="myModal">
+点击弹出-模拟帐户申请</a>-->
     </div>
     </form>
   </section>
@@ -82,19 +84,48 @@ function button1(){
  var b=a.style.backgroundColor;
  if(b==""){
   a.style.backgroundColor="#bdbec0";
-  a.value = '查看券';
-  //c.style.display="block";
+  c.style.display="block";
  }else{
   a.style.backgroundColor="#bdbec0";
-  //c.style.display="none";
+  c.style.display="none";
  }
 }
 </script>
 <div id="myModal" class="reveal-modal">
-	<h2>趣八八</h2>
+	<h2>趣八八优惠券码</h2>
 	<p>165</p><p>505</p><p>1650</p>
-	<a class="close-reveal-modal">X</a> </div>
+	<a class="close-reveal-modal">X</a>
+</div>
+
 </article>
 
+<div class="btn3 clearfix">
+    <div class="menu">
+        <div class="bt-name"><a href="xuanzefachuanchuan.html">发红包</a></div>
+    </div><!--menu-->
+    <div class="menu">
+        <div class="bt-name"><a href="qiangchuanchuan.html">抢红包</a></div>
+    </div><!--menu-->
+    
+    <div class="menu">
+        <div class="bt-name"><a href="#">论坛</a></div>
+    </div><!--menu-->
+    <div class="menu" >
+     <div class="bt-name">我</div>
+    <div class="sanjiao"></div>
+    <div  class="new-sub">
+        <ul>
+            <li><a href="wodexinxi.html" >我的信息</a></li>
+            <!--<li><a href="wodeliquan.html" >我的礼券</a></li>-->
+            <li><a href="paihangbang_xin.html" >排行榜</a></li>
+            <li><a href="fachudechuanchuan-stanson.html" >发出红包</a></li>
+            <li><a href="shoudaodechuanchuan.html" >收到红包</a></li>
+        </ul>
+        <div class="tiggle"></div>
+        <div class="innertiggle"></div>
+    </div>
+    </div><!--menu-->
+</div><!--btn3-->
+<script type="text/javascript" src="js/bottom-menu.js"></script>
 </body>
 </html>

@@ -9,7 +9,7 @@
 	position: absolute;
 	top:0;
 	right:0;
-	padding-top: 46px;
+	padding-top: 35px;
 	z-index: 999;
 	-webkit-perspective: 1000px;
 	-moz-perspective: 1000px;
@@ -33,15 +33,16 @@
 	position: absolute;
 	top:0;
 	right:0;
-	cursor: pointer;
+	cursor: crosshair;
 	outline: none;
-	background:none;
+	background:none;	
 }
 
 .dl-menuwrapper button:hover ,
 .dl-menuwrapper button.dl-active {
 	/*background: url(../images/header-bg.png) repeat-x bottom left;*/
 	background: none;
+	text-decoration: none;
 }
 
 .dl-menuwrapper ul {

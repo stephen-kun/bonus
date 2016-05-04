@@ -64,7 +64,7 @@ input.gray {
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#a49e9e;
-	margin:0em .8em .5em .8em;
+	margin:1.5em .8em .5em .8em;
 	width:90%;
 	font-size:1em;
 	color:#ffffff;
@@ -97,6 +97,7 @@ input.red {
 	font-size:1em;
 	color:#ffffff;
 }
+
 input.jin {
 	height:2.5em;
 	border-radius:10px;
@@ -138,12 +139,22 @@ input.bule {
 	color:#ffffff;
 }
 input.nichen {
-	width:8em;
+	width:70%;
 	height:1em;
-	border:0 #666 solid;
+	border:0px #b6d554 solid;
+	border-bottom:1px #8bd554 solid;
 	font-weight: normal;
-	text-align:right;
+	text-align:left;
 	font-size:.9em;
+}
+input.baocun {
+	background:#8bd554;
+	border:0px #b6d554 solid;
+	font-size:.8em;
+	color:#ffffff;
+	padding:.3em .5em;
+	border-radius:6px;
+	margin-left:.3em;
 }
 .subf {
 	width:135px;
@@ -152,7 +163,7 @@ input.nichen {
 	background:url(../images/qubaba2_03_pt_135X135.png) left top no-repeat;
 }
 input.code {
-	width:5.5em;
+	width:50%;
 	height:1.8em;
 	border:0 #666 solid;
 	font-weight: normal;
@@ -196,6 +207,7 @@ input.code {
 .hongbao h4 span {
 	font-size:.775em;
 	padding:.2em .2em 0 0;
+	color:#ffffff;
 }
 .hongbao h4.fae920 {
 	color:#fae920;
@@ -925,6 +937,11 @@ input.code {
 .stansonimgbj {
 	background:url(../images/qubaba5_04.png) center top no-repeat;
 }
+.issue-top h5.stansonimg {
+	color:#CCC;
+	font-size:1.5em;
+	font-weight:normal;
+}
 .issue-top h5.stansonimg img {
 	width:645px;
 }
@@ -947,6 +964,8 @@ input.code {
 }
 .chch-list ul li.xxbaise {
 	background:#ffffff;
+	border-bottom:#e2e2e2 1px solid;
+	padding:.8em .2em;
 }
 .chch-list ul li h2 {
 	border-radius:1.521em;
@@ -984,7 +1003,7 @@ input.code {
 	height:auto;
 }
 .chch-list ul li h3 p a {
-	color:#ffffff;
+	color:#a0a0a0;
 }
 .chch-list ul li h3 p a.chch_ly {
 	display:none;
@@ -992,7 +1011,7 @@ input.code {
 .chch-list ul li h5 {
 	float:right;
 	width:6em;
-	margin:.8em 0 0 0;
+	margin:1em 0 0 0;
 	font-size:1.4em;
 	font-weight:normal;
 	border-left:1px solid #a5a99d;
@@ -1434,6 +1453,45 @@ input.code {
 	padding:.2em 0 0 0;
 	color:#949492;
 }
+.wo_xinxi {
+	background:#ffffff;
+}
+.wo_xinxi ul li {
+	padding:.6em .8em .6em .8em;
+	border-bottom:1px solid #e2e2e2;
+}
+.wo_xinxi ul li h4 {
+	font-weight:normal;
+	padding:.2em 0;
+	font-size:1em;
+}
+.wo_xinxi ul li h4 span {
+	color:#b8b8b7;
+	font-size:.8em;
+}
+.wo_xinxi li:last-child {
+	border-bottom:0;
+}
+.wo_xinxi_mt {
+	margin-top:.8em;
+}
+.wo_xinxi_edit {
+	text-align:center;
+}
+.wo_xinxi_edit p {
+	width:90%;
+	text-align:left;
+	margin:0 auto;
+	color:#b8b8b7;
+	font-size:.8em;
+	margin-bottom:.8em;
+	padding:.2em 0;
+}
+.wo_xinxi_edit span {
+	width:65%;
+	text-align:left;
+	padding:0 0 0 .8em;
+}
 /*=========我的界面=====开始=========*/
 /*=========我的信息=====开始=========*/
 .box-food ul li.us {
@@ -1522,7 +1580,7 @@ input.gray {
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#a49e9e;
-	margin:0em .8em .5em .8em;
+	margin:1.5em .8em .5em .8em;
 	width:90%;
 	font-size:1em;
 	color:#ffffff;
@@ -1550,7 +1608,7 @@ input.red {
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#d74f43;
-	margin:1.8em .8em .8em .8em;
+	margin:1.5em .8em .8em .8em;
 	width:90%;
 	font-size:1em;
 	color:#ffffff;
@@ -1596,12 +1654,22 @@ input.bule {
 	color:#ffffff;
 }
 input.nichen {
-	width:8em;
+	width:70%;
 	height:1em;
-	border:0 #666 solid;
+	border:0px #b6d554 solid;
+	border-bottom:1px #8bd554 solid;
 	font-weight: normal;
-	text-align:right;
+	text-align:left;
 	font-size:.9em;
+}
+input.baocun {
+	background:#8bd554;
+	border:0px #b6d554 solid;
+	font-size:.8em;
+	color:#ffffff;
+	padding:.3em .5em;
+	border-radius:6px;
+	margin-left:.3em;
 }
 .subf {
 	width:135px;
@@ -1610,7 +1678,7 @@ input.nichen {
 	background:url(../images/qubaba2_03_pt_135X135.png) left top no-repeat;
 }
 input.code {
-	width:5.5em;
+	width:50%;
 	height:1.8em;
 	border:0 #666 solid;
 	font-weight: normal;
@@ -2393,6 +2461,11 @@ input.code {
 .stansonimgbj {
 	background:url(../images/qubaba5_04.png) center top no-repeat;
 }
+.issue-top h5.stansonimg {
+	color:#CCC;
+	font-size:1.5em;
+	font-weight:normal;
+}
 .issue-top h5.stansonimg img {
 	width:645px;
 }
@@ -2415,6 +2488,8 @@ input.code {
 }
 .chch-list ul li.xxbaise {
 	background:#ffffff;
+	border-bottom:#e2e2e2 1px solid;
+	padding:.8em .2em;
 }
 .chch-list ul li h2 {
 	border-radius:1.521em;
@@ -2452,7 +2527,7 @@ input.code {
 	height:auto;
 }
 .chch-list ul li h3 p a {
-	color:#ffffff;
+	color:#a0a0a0;
 }
 .chch-list ul li h3 p a.chch_ly {
 	display:none;
@@ -2460,7 +2535,7 @@ input.code {
 .chch-list ul li h5 {
 	float:right;
 	width:6em;
-	margin:.8em 0 0 0;
+	margin:.9em 0 0 0;
 	font-size:1.4em;
 	font-weight:normal;
 	border-left:1px solid #a5a99d;
@@ -2899,6 +2974,45 @@ input.code {
 	padding:.2em 0 0 0;
 	color:#949492;
 }
+.wo_xinxi {
+	background:#ffffff;
+}
+.wo_xinxi ul li {
+	padding:.6em .8em .6em .8em;
+	border-bottom:1px solid #e2e2e2;
+}
+.wo_xinxi ul li h4 {
+	font-weight:normal;
+	padding:.2em 0;
+	font-size:1em;
+}
+.wo_xinxi ul li h4 span {
+	color:#b8b8b7;
+	font-size:.8em;
+}
+.wo_xinxi li:last-child {
+	border-bottom:0;
+}
+.wo_xinxi_mt {
+	margin-top:.8em;
+}
+.wo_xinxi_edit {
+	text-align:center;
+}
+.wo_xinxi_edit p {
+	width:90%;
+	text-align:left;
+	margin:0 auto;
+	color:#b8b8b7;
+	font-size:.8em;
+	margin-bottom:.8em;
+	padding:.2em 0;
+}
+.wo_xinxi_edit span {
+	width:65%;
+	text-align:left;
+	padding:0 0 0 .8em;
+}
 /*=========我的界面=====开始=========*/
 /*=========我的信息=====开始=========*/
 .box-food ul li.us {
@@ -2986,7 +3100,7 @@ input.gray {
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#a49e9e;
-	margin:0em .8em .5em .8em;
+	margin:1.5em .8em .5em .8em;
 	width:90%;
 	font-size:1em;
 	color:#ffffff;
@@ -3060,12 +3174,22 @@ input.bule {
 	color:#ffffff;
 }
 input.nichen {
-	width:8em;
+	width:70%;
 	height:1em;
-	border:0 #666 solid;
+	border:0px #b6d554 solid;
+	border-bottom:1px #8bd554 solid;
 	font-weight: normal;
-	text-align:right;
+	text-align:left;
 	font-size:.9em;
+}
+input.baocun {
+	background:#8bd554;
+	border:0px #b6d554 solid;
+	font-size:.8em;
+	color:#ffffff;
+	padding:.3em .5em;
+	border-radius:6px;
+	margin-left:.3em;
 }
 .subf {
 	width:100px;
@@ -3074,7 +3198,7 @@ input.nichen {
 	background:url(../images/qubaba2_03_pt_100X100.png) left top no-repeat;
 }
 input.code {
-	width:5.5em;
+	width:70%;
 	height:1.8em;
 	border:0 #666 solid;
 	font-weight: normal;
@@ -3853,6 +3977,9 @@ input.code {
 .stansonimgbj {
 	background:url(../images/qubaba5_04215.png) center top no-repeat;
 }
+.issue-top h5.stansonimg {
+	color:#CCC;
+}
 .issue-top h5.stansonimg img {
 	width:339px;
 	margin-top:.8em;
@@ -3876,6 +4003,8 @@ input.code {
 }
 .chch-list ul li.xxbaise {
 	background:#ffffff;
+	border-bottom:#e2e2e2 1px solid;
+	padding:.8em .2em;
 }
 .chch-list ul li h2 {
 	border-radius:0.771em;
@@ -3913,7 +4042,7 @@ input.code {
 	height:auto;
 }
 .chch-list ul li h3 p a {
-	color:#ffffff;
+	color:#a0a0a0;
 }
 .chch-list ul li h3 p a.chch_ly {
 	display:none;
@@ -3921,7 +4050,7 @@ input.code {
 .chch-list ul li h5 {
 	float:right;
 	width:90px;
-	margin:.5em 0 0 0;
+	margin:.8em 0 0 0;
 	font-size:.85em;
 	font-weight:normal;
 	border-left:1px solid #a5a99d;
@@ -4396,6 +4525,47 @@ input.code {
 	padding:.4em 0 0 0;
 	color:#949492;
 }
+
+.wo_xinxi {
+	background:#ffffff;
+}
+.wo_xinxi ul li {
+	padding:.6em .8em .6em .8em;
+	border-bottom:1px solid #e2e2e2;
+}
+.wo_xinxi ul li h4 {
+	font-weight:normal;
+	padding:.2em 0;
+	font-size:1em;
+}
+.wo_xinxi ul li h4 span {
+	color:#b8b8b7;
+	font-size:.8em;
+}
+.wo_xinxi li:last-child {
+	border-bottom:0;
+}
+.wo_xinxi_mt {
+	margin-top:.8em;
+}
+.wo_xinxi_edit {
+	text-align:center;
+}
+.wo_xinxi_edit p {
+	width:90%;
+	text-align:left;
+	margin:0 auto;
+	color:#b8b8b7;
+	font-size:.8em;
+	margin-bottom:.8em;
+	padding:.2em 0;
+}
+.wo_xinxi_edit span {
+	width:65%;
+	text-align:left;
+	padding:0 0 0 .8em;
+}
+
 /*=========我的界面=====开始=========*/
 /*=========我的信息=====开始=========*/
 .box-food ul li.us {
@@ -4484,7 +4654,7 @@ input.gray {
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#a49e9e;
-	margin:0em .8em .5em .8em;
+	margin:1.5em .8em .5em .8em;
 	width:90%;
 	font-size:1em;
 	color:#ffffff;
@@ -4564,12 +4734,22 @@ input.bule {
 	color:#ffffff;
 }
 input.nichen {
-	width:8em;
+	width:70%;
 	height:1em;
-	border:0 #666 solid;
+	border:0px #b6d554 solid;
+	border-bottom:1px #8bd554 solid;
 	font-weight: normal;
-	text-align:right;
+	text-align:left;
 	font-size:.9em;
+}
+input.baocun {
+	background:#8bd554;
+	border:0px #b6d554 solid;
+	font-size:.8em;
+	color:#ffffff;
+	padding:.3em .5em;
+	border-radius:6px;
+	margin-left:.3em;
 }
 .subf {
 	width:70px;
@@ -4580,7 +4760,7 @@ input.nichen {
 	padding:0;
 }
 input.code {
-	width:5.5em;
+	width:70%;
 	height:1.8em;
 	border:0 #666 solid;
 	font-weight: normal;
@@ -5382,6 +5562,9 @@ input.code {
 .stansonimgbj {
 	background:url(../images/qubaba5_04170.png) center top no-repeat;
 }
+.issue-top h5.stansonimg {
+	color:#CCC;
+}
 .issue-top h5.stansonimg img {
 	width:245px;
 }
@@ -5404,6 +5587,8 @@ input.code {
 }
 .chch-list ul li.xxbaise {
 	background:#ffffff;
+	border-bottom:#e2e2e2 1px solid;
+	padding:.8em .2em;
 }
 .chch-list ul li h2 {
 	border-radius:0.771em;
@@ -5441,7 +5626,7 @@ input.code {
 	height:auto;
 }
 .chch-list ul li h3 p a {
-	color:#ffffff;
+	color:#a0a0a0;
 }
 .chch-list ul li h3 p a.chch_ly {
 	display:none;
@@ -5449,7 +5634,7 @@ input.code {
 .chch-list ul li h5 {
 	float:right;
 	width:70px;
-	margin:.5em 0 0 0;
+	margin:.8em 0 0 0;
 	font-size:.85em;
 	font-weight:normal;
 	border-left:1px solid #a5a99d;
@@ -5875,15 +6060,16 @@ input.code {
 .wo {
 	background:#ffffff;
 	height:3em;
-	margin-bottom:1em;
+	border-bottom:1px solid #e2e2e2;
 	margin-top:1em;
 	padding:.5em .8em;
+	
 }
 .wo h2 {
 	width:2em;
 	height:2em;
 	overflow:hidden;
-	float:left;
+	float:right;
 	padding:0;
 	margin:0;
 }
@@ -5892,9 +6078,9 @@ input.code {
 }
 .wo h4 {
 	float:left;
-	padding:0 0 0 .8em;
+	padding:.8em 0 0 0em;
 	margin:0;
-	font-size:1em;
+	font-size:.9em;
 	font-weight:normal;
 }
 .wo h4 p {
@@ -5919,6 +6105,45 @@ input.code {
 	font-size:.7em;
 	padding:.4em 0 0 0;
 	color:#949492;
+}
+.wo_xinxi {
+	background:#ffffff;
+}
+.wo_xinxi ul li {
+	padding:.6em .8em .6em .8em;
+	border-bottom:1px solid #e2e2e2;
+}
+.wo_xinxi ul li h4 {
+	font-weight:normal;
+	padding:.2em 0;
+	font-size:1em;
+}
+.wo_xinxi ul li h4 span {
+	color:#b8b8b7;
+	font-size:.8em;
+}
+.wo_xinxi li:last-child {
+	border-bottom:0;
+}
+.wo_xinxi_mt {
+	margin-top:.8em;
+}
+.wo_xinxi_edit {
+	text-align:center;
+}
+.wo_xinxi_edit p {
+	width:90%;
+	text-align:left;
+	margin:0 auto;
+	color:#b8b8b7;
+	font-size:.8em;
+	margin-bottom:.8em;
+	padding:.2em 0;
+}
+.wo_xinxi_edit span {
+	width:65%;
+	text-align:left;
+	padding:0 0 0 .8em;
 }
 /*=========我的界面=====开始=========*/
 
@@ -6109,7 +6334,7 @@ input.gray {
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#a49e9e;
-	margin:0em .8em .5em .8em;
+	margin:1.5em .8em .5em .8em;
 	width:90%;
 	font-size:1em;
 	color:#ffffff;
@@ -6178,6 +6403,8 @@ input.bule {
 	font-size:1em;
 	color:#ffffff;
 }
+
+
 
 .button-fasong {
 	text-align:center;
