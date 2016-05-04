@@ -63,8 +63,8 @@ class Consumer(models.Model):
 	own_ticket_value = models.IntegerField(default=0)				#可用礼券金额
 	create_time = models.DateTimeField(default=timezone.now)		#首次关注时间
 	subscribe = models.BooleanField(default=True)					#是否关注
-	on_table = models.ForeignKey(DiningTable, null=True, on_delete=models.CASCADE)	#就餐桌台
-	session = models.ForeignKey(DiningSession, null=True, on_delete=models.CASCADE)	#就餐会话
+	on_table = models.ForeignKey(DiningTable, null=True, blank=True, on_delete=models.CASCADE)	#就餐桌台
+	session = models.ForeignKey(DiningSession, null=True, blank=True, on_delete=models.CASCADE)	#就餐会话
 	
 	def __unicode__(self):
 		return self.name

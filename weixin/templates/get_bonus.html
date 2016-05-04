@@ -1,13 +1,5 @@
 ﻿{% extends "_bonus_base.html" %}
 
-{% block script %}
-<script src="{{static_url}}js/prefixfree.min.js"></script>
-<script src="{{static_url}}js/jquery-1.8.2.min.js"></script>
-<script src="{{static_url}}js/bottom-menu.js"></script>
-<script src="{{static_url}}js/bonus_animation.js"></script>
-<script src="{{static_url}}js/get_bonus.js"></script>
-{% endblock %}
-
 {% block content %}
 <section>
 	<div class="qiang">
@@ -21,7 +13,7 @@
 				<div class="main">
 					<div class="item1">
 						<div class="kodai">
-							<img src="{{static_url}}images/qubaba1_03.png" class="full" onclick="click_get_bonus('{{ajax_request_url}}')" />
+							<img src="{{static_url}}images/qubaba1_03.png" class="full" onclick="click_get_bonus('{{ajax_request_url}}', '{{openid}}')" />
 							<img src="{{static_url}}images/qubaba1_03_zhse.png" class="empty" />
 						</div>
 						<div class="clipped-box">
@@ -34,8 +26,8 @@
 			<div class="tch-share" id="bonus_result">
 			  <h3 class="tch-share-title" id="rcv_bonus"></h3>
 			  <ul class="tch-share-sns">
-				<li id="link1"><a href="{{geted_bonus_url}}">查看红包&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{again_get_bonus_url}}">继续抢红包</a></a></li>
-				<li id="link2"><a href="{{again_get_bonus_url}}">继续抢红包</a></li>
+				<li id="link1"><a href="{{geted_bonus_url}}">查看红包&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{get_bonus_url}}">继续抢红包</a></a></li>
+				<li id="link2"><a href="{{get_bonus_url}}">继续抢红包</a></li>
 			  </ul>
 			</div>	
 			
@@ -47,6 +39,10 @@
 	</div>
 	<h2 id="id_bonus"></h2>
 </section>
+
+<script src="{{static_url}}js/bonus_animation.js"></script>
+<script src="{{static_url}}js/get_bonus.js"></script>
+
 {% endblock %}
 
 {% block menu %}

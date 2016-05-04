@@ -14,7 +14,7 @@ from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMo
 from .models import DiningSession,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
 
 
-ADDRESS_IP = '127.0.0.0.1'
+ADDRESS_IP = '127.0.0.1:8000'
 #ADDRESS_IP = '120.76.122.53'
 
 REDIRECT_SA_URL = 'http://%s/weixin/view_redirect_settle_account'%(ADDRESS_IP)
@@ -23,16 +23,15 @@ REDIRECT_BS_URL = 'http://%s/weixin/view_redirect_bonus_snd'%(ADDRESS_IP)
 REDIRECT_BR_URL = 'http://%s/weixin/view_redirect_bonus_rcv'%(ADDRESS_IP)
 ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=CODE&grant_type=authorization_code'%(APPID,APPSECRET)
 OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_base&state=1#wechat_redirect"%(APPID)
-AJAX_REQUEST_GET_URL = 'http://%s/weixin/view_ajax_request/?openid=OPENID&action=ACTION'%(ADDRESS_IP)
 AJAX_REQUEST_POST_URL = 'http://%s/weixin/view_ajax_request'%(ADDRESS_IP)
-GETED_BONUS_URL = 'http://%s/weixin/view_geted_bonus/?id_record=ID_RECORD'%(ADDRESS_IP)
-AGAIN_GET_BONUS_URL ='http://%s/weixin/view_again_rcv_bonus/?openid=OPENID'%(ADDRESS_IP)
-CREATE_COMMON_BONUS_URL = 'http://%s/weixin/view_common_bonus/?openid=OPENID'%(ADDRESS_IP)
-CREATE_RANDOM_BONUS_URL = 'http://%s/weixin/view_random_bonus/?openid=OPENID'%(ADDRESS_IP)
-SELF_RCV_BONUS_URL = 'http://%s/weixin/view_self_rcv_bonus/?openid=OPENID'%(ADDRESS_IP)
-SELF_SND_BONUS_URL = 'http://%s/weixin/view_self_snd_bonus/?openid=OPENID'%(ADDRESS_IP)
-SELF_BONUS_LIST_URL = 'http://%s/weixin/view_self_bonus_list/?openid=OPENID'%(ADDRESS_IP)
-CHOOSE_PAY_URL = 'http://%s/weixin/view_choose_pay/?openid=OPENID'%(ADDRESS_IP)
+GETED_BONUS_URL = 'http://%s/weixin/view_geted_bonus'%(ADDRESS_IP)
+GET_BONUS_URL ='http://%s/weixin/view_rcv_bonus'%(ADDRESS_IP)
+CREATE_COMMON_BONUS_URL = 'http://%s/weixin/view_common_bonus'%(ADDRESS_IP)
+CREATE_RANDOM_BONUS_URL = 'http://%s/weixin/view_random_bonus'%(ADDRESS_IP)
+SELF_RCV_BONUS_URL = 'http://%s/weixin/view_self_rcv_bonus'%(ADDRESS_IP)
+SELF_SND_BONUS_URL = 'http://%s/weixin/view_self_snd_bonus'%(ADDRESS_IP)
+SELF_BONUS_LIST_URL = 'http://%s/weixin/view_self_bonus_list'%(ADDRESS_IP)
+CHOOSE_PAY_URL = 'http://%s/weixin/view_choose_pay'%(ADDRESS_IP)
 SEND_MESSAGE_URL = 'http://%s/weixin/view_choose_pay'%(ADDRESS_IP)
 BONUS_REFUSE_URL = 'http://%s/weixin/view_choose_pay'%(ADDRESS_IP)
 
@@ -40,19 +39,65 @@ BONUS_REFUSE_URL = 'http://%s/weixin/view_choose_pay'%(ADDRESS_IP)
 
 # Create your views here.
 
+def display_rcv_bonus_views(openid):
+	#检测用户是否在用餐状态
+	if is_consumer_dining(openid):
+		title = '抢红包'
+		body_class = 'red_q'
+		static_url = settings.STATIC_URL
+		ajax_request_url = AJAX_REQUEST_POST_URL
+		geted_bonus_url = GETED_BONUS_URL
+		openid = openid
+		get_bonus_url = GET_BONUS_URL
+		return render_to_response('get_bonus.html', locals())
+	else:
+		title = '提示'
+		article_class = 'issue-bj stanson'
+		static_url = settings.STATIC_URL
+		prompt_message = '就餐用户独享抢红包！'
+		return render_to_response("user_prompt.html", locals())	
+		
+def display_snd_bonus_views(openid):
+	if is_consumer_dining(openid):	
+		title = '选择红包类型'
+		body_class = 'red_cen'
+		static_url = settings.STATIC_URL
+		self_rcv_bonus_url = SELF_RCV_BONUS_URL
+		self_snd_bonus_url = SELF_SND_BONUS_URL
+		self_bonus_list_url = SELF_BONUS_LIST_URL
+		create_common_bonus_url = CREATE_COMMON_BONUS_URL
+		create_random_bonus_url = CREATE_RANDOM_BONUS_URL
+		return render_to_response('bonus_type.html', locals())
+	else:
+		title = '提示'
+		article_class = 'issue-bj stanson'
+		static_url = settings.STATIC_URL
+		prompt_message = '就餐用户独享抢红包！'
+		return render_to_response("user_prompt.html", locals())			
+
 #发红包界面	
 @csrf_exempt
 def view_snd_bonus(request):
 	print('---**view_snd_bonus**---\n')
-	url = OAUTH_URL.replace('REDIRECT_URL', REDIRECT_BS_URL)
-	return HttpResponseRedirect(url)	
+	if 'openid' in request.session:
+		openid = request.session['openid']
+		return display_snd_bonus_views(openid)
+	else:
+		url = OAUTH_URL.replace('REDIRECT_URL', REDIRECT_BS_URL)
+		return HttpResponseRedirect(url)	
+	
 	
 #抢红包界面
 @csrf_exempt
 def view_rcv_bonus(request):
 	print('---**view_rcv_bonus**---\n')
-	url = OAUTH_URL.replace('REDIRECT_URL', REDIRECT_BR_URL)
-	return HttpResponseRedirect(url)
+	#request.session['openid'] = 'koovox'
+	if 'openid' in request.session:
+		openid = request.session['openid']
+		return display_rcv_bonus_views(openid)
+	else:	
+		url = OAUTH_URL.replace('REDIRECT_URL', REDIRECT_BR_URL)
+		return HttpResponseRedirect(url)
 	
 #结算界面
 @csrf_exempt
@@ -106,36 +151,10 @@ def view_redirect_user_account(request):
 def view_redirect_bonus_snd(request): 
 	print('---view_redirect_bonus_snd---\n')
 	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	print('======openid:%s\n' %(openid))
-	if is_consumer_dining(openid):	
-		title = '选择红包类型'
-		body_class = 'red_cen'
-		static_url = settings.STATIC_URL
-		self_rcv_bonus_url = SELF_RCV_BONUS_URL.replace('OPENID', openid)
-		self_snd_bonus_url = SELF_SND_BONUS_URL.replace('OPENID', openid)
-		self_bonus_list_url = SELF_BONUS_LIST_URL.replace('OPENID', openid)
-		create_common_bonus_url = CREATE_COMMON_BONUS_URL.replace('OPENID', openid)
-		create_random_bonus_url = CREATE_RANDOM_BONUS_URL.replace('OPENID', openid)
-		return render_to_response('bonus_type.html', locals())
-	else:
-		title = '提示'
-		article_class = 'issue-bj stanson'
-		static_url = settings.STATIC_URL
-		prompt_message = '就餐用户独享抢红包！'
-		return render_to_response("user_prompt.html", locals())		
+	request.session['openid'] = openid
+	return display_snd_bonus_views(openid)
 	
-#继续抢红包界面
-@csrf_exempt
-def view_again_rcv_bonus(request):
-	openid = request.GET.get('openid')
-	print('**view_again_rcv_bonus:%s***'%(openid))
-	title = '东启湘厨'
-	body_class = 'red_q'
-	static_url = settings.STATIC_URL
-	ajax_request_url = AJAX_REQUEST_GET_URL.replace('OPENID', openid)
-	geted_bonus_url = GETED_BONUS_URL
-	again_get_bonus_url = AGAIN_GET_BONUS_URL.replace('OPENID', openid)
-	return render_to_response('get_bonus.html', locals())
+	
 	
 #抢红包界面认证
 @csrf_exempt
@@ -144,21 +163,8 @@ def view_redirect_bonus_rcv(request):
 	#刷新页面中openid
 	print('---view_redirect_bonus_rcv---\n')
 	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	#检测用户是否在用餐状态
-	if is_consumer_dining(openid):
-		title = '抢红包'
-		body_class = 'red_q'
-		static_url = settings.STATIC_URL
-		ajax_request_url = AJAX_REQUEST_GET_URL.replace('OPENID', openid)
-		geted_bonus_url = GETED_BONUS_URL
-		again_get_bonus_url = AGAIN_GET_BONUS_URL.replace('OPENID', openid)
-		return render_to_response('get_bonus.html', locals())
-	else:
-		title = '提示'
-		article_class = 'issue-bj stanson'
-		static_url = settings.STATIC_URL
-		prompt_message = '就餐用户独享抢红包！'
-		return render_to_response("user_prompt.html", locals())	
+	request.session['openid'] = openid
+	return display_rcv_bonus_views(openid)
 		
 #发普通红包
 @csrf_exempt
@@ -237,21 +243,16 @@ def view_self_bonus_list(request):
 		
 #网页ajax请求
 @csrf_exempt
-def view_ajax_request(request):
-	if request.method == 'GET':
-		openid = request.GET.get('openid')
-		action = request.GET.get('action')
-		data = request.GET
-		print('***view_ajax_request id:%s action:%s****\n'%(openid, action))
-	else:
-		print('***view_ajax_request body:%s ****\n'%(request.body))
-		data = json.loads(request.body)
-		action = data['action']
-		for key, value in data.items():
-			print('%s ==> %s'%(key, value))
+def view_ajax_request(request):	
+	print('***view_ajax_request body: ****\n')
+	data = json.loads(request.body)
+	session = request.session
+	action = data['action']
+	for key, value in data.items():
+		print('%s ==> %s'%(key, value))
 		
 	#实现ajax请求处理函数
-	response = handle_ajax_request(action, data)
+	response = handle_ajax_request(action, data, session)
 
 	return HttpResponse(response)
 	

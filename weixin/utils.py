@@ -87,7 +87,10 @@ def get_user_openid(request, access_token_url):
 
 #检测用户是否在就餐状态
 def is_consumer_dining(openid):
-	consumer = Consumer.objects.get(open_id=openid)
+	try:
+		consumer = Consumer.objects.get(open_id=openid)
+	except ObjectDoesNotExist:
+		return False
 	return consumer.on_table.status
 	
 	
@@ -439,7 +442,7 @@ def decode_choose_pay(consumer, data_dir):
 	return result
 	
 #ajax请求处理函数
-def handle_ajax_request(action, data):
+def handle_ajax_request(action, data, session):
 	if isinstance(data, (dict,)):	
 		if action == AJAX_GET_BONUS:
 			return action_get_bonus(data['openid'])

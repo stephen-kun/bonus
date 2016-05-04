@@ -22,7 +22,6 @@ REDIRECT_BS_URL = 'http://%s/weixin/view_redirect_bonus_snd'%(ADDRESS_IP)
 REDIRECT_BR_URL = 'http://%s/weixin/view_redirect_bonus_rcv'%(ADDRESS_IP)
 ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=CODE&grant_type=authorization_code'%(APPID,APPSECRET)
 OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_base&state=1#wechat_redirect"%(APPID)
-AJAX_REQUEST_GET_URL = 'http://%s/weixin/view_ajax_request/?openid=OPENID&action=ACTION'%(ADDRESS_IP)
 AJAX_REQUEST_POST_URL = 'http://%s/weixin/view_ajax_request'%(ADDRESS_IP)
 GETED_BONUS_URL = 'http://%s/weixin/view_geted_bonus/?id_record=ID_RECORD'%(ADDRESS_IP)
 AGAIN_GET_BONUS_URL ='http://%s/weixin/view_again_rcv_bonus/?openid=OPENID'%(ADDRESS_IP)
@@ -101,7 +100,7 @@ def view_redirect_bonus_rcv(request):
 	openid = 'koovox'
 	ajax_request_url = AJAX_REQUEST_GET_URL.replace('OPENID', openid)
 	geted_bonus_url = GETED_BONUS_URL
-	again_get_bonus_url = AGAIN_GET_BONUS_URL.replace('OPENID', openid)
+	get_bonus_url = GET_BONUS_URL
 	return render_to_response('get_bonus.html', locals())
 
 #继续抢红包界面
@@ -286,20 +285,16 @@ def view_choose_pay(request):
 #网页ajax请求
 @csrf_exempt
 def view_ajax_request(request):
-	if request.method == 'GET':
-		action = request.GET.get('action')
-		data = None
-		print('***view_ajax_request id:%s action:%s****\n'%(openid, action))
-	else:
-		print('***view_ajax_request body:%s ****\n'%(request.body))
-		data = json.loads(request.body)
-		action = data['action']
-		for key, value in data.items():
-			print('%s ==> %s'%(key, value))
+	print('***view_ajax_request body: ****\n')
+	data = json.loads(request.body)
+	action = data['action']
+	session = request.session
+	for key, value in data.items():
+		print('%s ==> %s'%(key, value))
 		
 	
 	#实现ajax请求处理函数
-	response = handle_ajax_request(openid, action, data)
+	response = handle_ajax_request(action, data, session)
 
 	return HttpResponse(response)
 

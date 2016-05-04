@@ -10,8 +10,8 @@
 <link href="{{static_url}}css/common.css" rel="stylesheet" type="text/css">
 <meta name="keywords" content="东启湘厨">
 <meta name="description" content="东启湘厨">
-{% block script %}
-{% endblock %}
+<script src="{{static_url}}js/prefixfree.min.js"></script>
+<script src="{{static_url}}js/jquery-1.8.2.min.js"></script>
 </head>
 
 <body class='{{body_class}}'>
@@ -25,10 +25,8 @@
 	{% endblock %}	
 	</article>
 	
-	<div class="btn3 clearfix">
 	{% block menu %}
 	{% endblock %}
-	</div>
-	
+
 </body>
 </html>

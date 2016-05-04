@@ -1,5 +1,5 @@
 
-function click_get_bonus(url){
+function click_get_bonus(url, openid){
 	$(".tch-share").addClass("tch-modal-active");	
 	if($(".tchsharebg").length>0){
 		$(".tchsharebg").addClass("tchsharebg-active");
@@ -13,12 +13,12 @@ function click_get_bonus(url){
 			$(".tchsharebg-active").removeClass("tchsharebg-active");	
 			$(".tchsharebg").remove();	
 		},300);
-	})
+	});
 	
 	// ajax 请求
-	var data = '{"action":"ACTION", "timestamp":"TIMESTAMP"}';
+	var data = '{"action":"ACTION", "openid":"OPENID", "timestamp":"TIMESTAMP"}';
 	var curr_time = new Date();
-	data = data.replace(/ACTION/, 'ajax_get_bonus').replace(/TIMESTAMP/, curr_time);
+	data = data.replace(/ACTION/, 'ajax_get_bonus').replace(/OPENID/,openid).replace(/TIMESTAMP/, curr_time);
 	ajax_get_bonus(url, data);		
 }	
 	
@@ -35,7 +35,7 @@ function ajax_get_bonus(url, data)
 			if(JSONObject.status == '0')
 			{
 				if(JSONObject.number == '0'){
-					$("#rcv_bonus").html("<font class="f_huangse">手慢了，红包已抢完</font>");
+					$("#rcv_bonus").html('<font class="f_huangse">手慢了，红包已抢完</font>');
 					$("#link1").hide();
 				}
 				else{
