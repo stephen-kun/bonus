@@ -124,7 +124,6 @@ class RcvBonus(models.Model):
 	id_bonus = models.IntegerField(primary_key=True)						#收到的红包唯一id
 	bonus_type = models.IntegerField(default=0)							#红包类型：0:普通红包/1:手气红包/2:系统红包
 	is_message = models.BooleanField(default=False)						#是否已留言
-	message = models.CharField(max_length=40, null=True, blank=True)		#留言内容
 	is_refuse = models.BooleanField(default=False)							#是否已拒绝
 	content = models.CharField(max_length=100, null=True, blank=True)		#红包内容
 	datetime = models.DateTimeField(default=timezone.now)					#接收时间

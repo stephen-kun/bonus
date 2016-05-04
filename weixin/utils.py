@@ -21,7 +21,6 @@ AJAX_WEIXIN_PAY = 'ajax_weixin_pay'
 AJAX_BONUS_REFUSE = 'ajax_bonus_refuse'
 AJAX_BONUS_MESSAGE = 'ajax_bonus_message'
 
-AUTH_CODE = '888888'
 LIST_KEY_ID	= '1111111111'
 
 class _GetedBonus():
@@ -60,20 +59,6 @@ def init_models():
 	null_snd_bonus=snd_bonus[0]
 	rcv_bonus = RcvBonus.objects.get_or_create(id_bonus=2000000000, snd_bonus=null_snd_bonus, consumer=null_consumer, table=null_dining_table, record_rcv_bonus=null_record_rcv_bonus)
 	null_rcv_bonus=rcv_bonus[0]	
-	
-def get_record_openid(id_record):
-	record_rcv_bonus = RecordRcvBonus.objects.get(id_record=id_record)
-	return record_rcv_bonus.consumer.open_id
-	
-#ajax请求参数检测
-def check_ajax_params(src_keys, dest_dict):
-	for key in src_keys:
-		if dest_dict.has_key(key):
-			pass
-		else:
-			return False
-	return True
-
 		
 #获取用户openid
 def get_user_openid(request, access_token_url):
@@ -137,14 +122,11 @@ def get_bonus_type_str(bonus_type):
 	
 
 #红包留言
-def action_bonus_message(data):
-	id_bonus = data["id_bonus"]
-	message = data["message"]
-	rcv_bonus = RcvBonus.objects.get(id_bonus=id_bonus)
-	rcv_bonus.message = message
-	rcv_bonus.is_message = True
-	rcv_bonus.save()
-	return ""
+def action_bonus_message(request):
+	#从request中解析出openid,rcv_bonus_id,message
+	#在BonusMessage表中创建一条记录
+	#修改RcvBonus表中is_message==True
+	pass
 	
 #红包婉拒
 def action_bonus_refuse(request):
@@ -164,35 +146,13 @@ def action_weixin_pay(data):
 	return 'pay suc!'
 	
 #创建消费券事件
-def action_create_ticket(data):
+def action_create_ticket(request):
 	#从request中解析出openid
 	#在Ticket表中创建一条新的记录
 	#更新SystemMoney表中ticket字段
 	#更新PersonMoney表中ticket字段
-	src_keys = ['openid', 'person_wallet', 'total_money','ticket_value', 'auth_code']
-	if check_ajax_params(src_keys, data):
-		openid = data['openid']
-		person_wallet = data['person_wallet']
-		total_money = data['total_money']
-		ticket_value = data['ticket_value']
-		auth_code = data['auth_code']
-		if auth_code != AUTH_CODE:
-			return dict(status=2, error_message="验证码错误，请重新输入！")
-		#生成一条消费券记录
-		new_ticket = Ticket.objects.create(id_ticket=create_primary_key(), ticket_value=float(ticket_value), valid_time=timezone.now)
-		consumer = Consumer.objects.get(open_id=openid)
-		new_ticket.consumer = consumer
-		new_ticket.save()
-		#判断是否有结余
-		if float(total_money) <= float(ticket_value):
-			pass
-		else:
-			pass
-		
-		return dict(status=0, part1=1234, part2=2345, part3=4567)
-	else:
-		return dict(status=1, error_message="参数错误")
-		
+	pass
+	
 #创建红包内容的字典
 def create_bonus_dir():
 	virtual_money = VirtualMoney.objects.all()
@@ -440,18 +400,16 @@ def decode_choose_pay(consumer, data_dir):
 	
 #ajax请求处理函数
 def handle_ajax_request(action, data):
-	if isinstance(data, (dict,)):	
-		if action == AJAX_GET_BONUS:
-			return action_get_bonus(data['openid'])
-		elif action == AJAX_CREATE_TICKET:
-			response = action_create_ticket(data)
-			return json.dumps(response)
-		elif action == AJAX_WEIXIN_PAY:
-			return action_weixin_pay(data)
-		elif action == AJAX_BONUS_MESSAGE:
-			return action_bonus_message(data)
-		elif action == AJAX_BONUS_REFUSE:
-			return action_bonus_refuse(data)
-	else:
-		return "faild"
+	if action == AJAX_GET_BONUS:
+		return action_get_bonus(data['openid'])
+	elif action == AJAX_CREATE_TICKET:
+		response = dict(status=1, part1=1234, part2=2345, part3=4567)
+		return json.dumps(response)
+	elif action == AJAX_WEIXIN_PAY:
+		return action_weixin_pay(data)
+	elif action == AJAX_BONUS_MESSAGE:
+		pass
+	elif action == AJAX_BONUS_REFUSE:
+		pass
+	return 'ok'
 	
