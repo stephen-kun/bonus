@@ -1,37 +1,37 @@
 from django.contrib import admin
-from django.conf import settings
+
 
 from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
-from .models import Dining,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
+from .models import DiningSession,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
 
 class MoneyInline(admin.TabularInline):
 	model = WalletMoney
 	extra = 1
-
+	
 class RcvBonusInline(admin.TabularInline):
 	model = RcvBonus
 	extra = 1
 
 class SndBonusInline(admin.TabularInline):
 	model = SndBonus
-	extra = 1
-
+	extra = 1	
+	
 class RechargeWalletMoney(admin.ModelAdmin):
 	inlines = [MoneyInline]
 
 class SndBonusWalletMoney(admin.ModelAdmin):
 	inlines = [MoneyInline]
-
+	
 class RcvBonusWalletMoney(admin.ModelAdmin):
 	inlines = [MoneyInline]
-
+	
 class TicketWalletMoney(admin.ModelAdmin):
 	inlines = [MoneyInline]
-
+	
 class ConumerBonus(admin.ModelAdmin):
 	inlines = [RcvBonusInline, SndBonusInline]
-
-admin.site.register(Consumer, ConumerBonus)
+	
+admin.site.register(Consumer, ConumerBonus)	
 admin.site.register(Recharge, RechargeWalletMoney)
 admin.site.register(SndBonus, SndBonusWalletMoney)
 admin.site.register(RcvBonus, RcvBonusWalletMoney)
@@ -42,7 +42,7 @@ admin.site.register(BonusCountMonth)
 admin.site.register(DiningTable)
 #admin.site.register(Consumer)
 #admin.site.register(Recharge)
-admin.site.register(Dining)
+admin.site.register(DiningSession)
 #admin.site.register(Ticket)
 #admin.site.register(RcvBonus)
 admin.site.register(BonusMessage)

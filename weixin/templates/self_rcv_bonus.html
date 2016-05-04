@@ -32,9 +32,10 @@
 <section>
  	<div class="issue-list">
 		<ul>
-		{% for bonus in rcv_bonus %}
+		{% for bonus in rcv_bonus_list %}
             <li class="shdbai">
-            	<h3>{{bonus.table.index_table}}</h3>
+				<a href="{{bonus_detail_url}}/?id_bonus={{bonus.id_bonus}}" target="_parent">
+            	<h3>{{bonus.table.index_table}}号桌</h3>
 				{% if bonus.is_best %}
 				<h3><span class="rfloat"><img src="{{static_url}}images/5_zan.png" align="absmiddle"></span></h3>
 				{% endif %}
