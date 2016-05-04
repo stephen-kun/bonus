@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from . import views
+from . import views_design as views
 
 urlpatterns = [
 	url(r'^view_wechat_token',views.view_wechat_token, name='view_wechat_token'),

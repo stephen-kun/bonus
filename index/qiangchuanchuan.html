@@ -10,9 +10,11 @@
 <meta name="keywords" content="东启湘厨">
 <meta name="description" content="东启湘厨">
 <script src="js/prefixfree.min.js"></script>
+<script src="js/jquery-1.8.2.min.js"></script>
+<script src="js/javascript.js"></script><!--掉红包-->
 </head>
 
-<body class="red_q">
+<body class="red_q bottom_40">
 
 
 
@@ -40,8 +42,7 @@
                     </div>
                 </div>
             </section> 
-<script src="js/jquery-1.8.2.min.js"></script><!--掉红包-->
-<script src="js/javascript.js"></script><!--掉红包-->
+			
 <script type="text/javascript">
 	function toshare(){
 		$(".tch-share").addClass("tch-modal-active");	
@@ -57,11 +58,16 @@
 				$(".tchsharebg-active").removeClass("tchsharebg-active");	
 				$(".tchsharebg").remove();	
 			},300);
-		})
+		});
+		
+		$("#bonus_result").slideUp("slow");
 	}	
+	
+	
 </script>
+
 <!--抢到的串串开始-->
-<div class="tch-share">
+<div class="tch-share" id="bonus_result">
   <h3 class="tch-share-title">恭喜您！抢到<font class="f_huangse">155</font>串串！</h3>
   <ul class="tch-share-sns">
     <li><a href="#" target="_blank">查看串串</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="history.go(0)">继续抢串串</a></li>
@@ -84,5 +90,42 @@
   
 </article>
 
+<div class="btn3 clearfix">
+    <div class="menu" >
+        <div class="bt-name">红包</div>
+        <div class="sanjiao"></div>
+        <div  class="new-sub">
+            <ul>
+                <li><a href="qiangchuanchuan.html">抢红包</a></li>
+                <li><a href="xuanzefachuanchuan.html" >发红包</a></li>
+            </ul>
+            <div class="tiggle"></div>
+            <div class="innertiggle"></div>
+        </div>
+    </div><!--menu-->
+    <div class="menu">
+        <div class="bt-name"><a href="jiesuan.html">结算</a></div>
+    </div><!--menu-->
+    <div class="menu">
+        <div class="bt-name"><a href="#">论坛</a></div>
+    </div><!--menu-->
+    <div class="menu" >
+        <div class="bt-name">我</div>
+        <div class="sanjiao"></div>
+        <div  class="new-sub">
+            <ul>
+                <li><a href="wo.html" >我</a></li>
+                <li><a href="wodexinxi.html" >个人信息</a></li>
+                <li><a href="wodeliquan.html" >我的礼券</a></li>
+                <li><a href="paihangbang_xin.html" >排行榜</a></li>
+                <li><a href="fachudechuanchuan-stanson.html" >发出红包</a></li>
+                <li><a href="shoudaodechuanchuan.html" >收到红包</a></li>
+            </ul>
+            <div class="tiggle"></div>
+            <div class="innertiggle"></div>
+        </div>
+    </div><!--menu-->
+</div><!--btn3-->
+<script type="text/javascript" src="js/bottom-menu.js"></script>
 </body>
 </html>
