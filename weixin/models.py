@@ -59,7 +59,7 @@ class Consumer(models.Model):
 	rcv_bonus_num = models.IntegerField(default=0)					#收红包总数
 	snd_bonus_value = models.IntegerField(default=0)				#发红包金额
 	own_bonus_value = models.IntegerField(default=0)				#可用红包金额
-	own_bonus_detail = models.CharField(max_length=100, default="123456")				#可用红包明细
+	own_bonus_detail = models.CharField(max_length=100, null=True, blank=True)	#可用红包明细
 	own_ticket_value = models.IntegerField(default=0)				#可用礼券金额
 	create_time = models.DateTimeField(default=timezone.now)		#首次关注时间
 	subscribe = models.BooleanField(default=True)					#是否关注
@@ -110,8 +110,10 @@ class SndBonus(models.Model):
 	title = models.CharField(max_length=40, null=True, blank=True)			#冠名
 	bonus_num = models.IntegerField(default=0)				#红包个数
 	number = models.IntegerField(default=0)				#串串个数
+	total_money = models.FloatField(default=0)			#总金额
 	bonus_remain = models.IntegerField(default=0)			#剩余红包个数
 	is_exhausted = models.BooleanField(default=False)		#红包已耗尽
+	is_valid = models.BooleanField(default=True)			#红包已失效
 	create_time = models.DateTimeField(default=timezone.now)					#发送时间
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#发送红包者
 	session = models.ForeignKey(DiningSession, on_delete=models.CASCADE)	#就餐会话

@@ -8,15 +8,17 @@ from django.conf import settings
 import django.utils.timezone as timezone
 import json
 from .wechat import PostResponse, wechat, TOKEN, APPID, APPSECRET
-from .utils import  action_get_bonus, is_consumer_dining, handle_ajax_request, get_user_openid, decode_bonus_detail,create_bonus_dir
-from .utils import check_geted_bonus, decode_choose_pay, get_bonus_type_str, get_record_openid
+from .utils import  action_get_bonus, is_consumer_dining, handle_ajax_request, get_user_openid, decode_bonus_detail,create_bonus_dict
+from .utils import check_geted_bonus, decode_choose_pay, get_bonus_type_str, get_record_openid, is_enough_pay
 from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
 
-ADDRESS_IP = '127.0.0.1:8000'
-#ADDRESS_IP = '120.76.122.53'
+#ADDRESS_IP = '127.0.0.1:8000'
+ADDRESS_IP = '120.76.122.53'
 
+REDIRECT_RB_URL = 'http://%s/weixin/view_redirect_random_bonus'%(ADDRESS_IP)
+REDIRECT_CB_URL = 'http://%s/weixin/view_redirect_common_bonus'%(ADDRESS_IP)
 REDIRECT_SA_URL = 'http://%s/weixin/view_redirect_settle_account'%(ADDRESS_IP)
 REDIRECT_UA_URL = 'http://%s/weixin/view_redirect_user_account'%(ADDRESS_IP)
 REDIRECT_BS_URL = 'http://%s/weixin/view_redirect_bonus_snd'%(ADDRESS_IP)
@@ -26,6 +28,7 @@ OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redire
 AJAX_REQUEST_POST_URL = 'http://%s/weixin/view_ajax_request'%(ADDRESS_IP)
 GETED_BONUS_URL = 'http://%s/weixin/view_geted_bonus'%(ADDRESS_IP)
 GET_BONUS_URL ='http://%s/weixin/view_rcv_bonus'%(ADDRESS_IP)
+SND_BONUS_URL ='http://%s/weixin/view_snd_bonus'%(ADDRESS_IP)
 CREATE_COMMON_BONUS_URL = 'http://%s/weixin/view_common_bonus'%(ADDRESS_IP)
 CREATE_RANDOM_BONUS_URL = 'http://%s/weixin/view_random_bonus'%(ADDRESS_IP)
 SELF_RCV_BONUS_URL = 'http://%s/weixin/view_self_rcv_bonus'%(ADDRESS_IP)
@@ -34,15 +37,32 @@ SELF_BONUS_LIST_URL = 'http://%s/weixin/view_self_bonus_list'%(ADDRESS_IP)
 CHOOSE_PAY_URL = 'http://%s/weixin/view_choose_pay'%(ADDRESS_IP)
 SEND_MESSAGE_URL = 'http://%s/weixin/view_choose_pay'%(ADDRESS_IP)
 BONUS_REFUSE_URL = 'http://%s/weixin/view_choose_pay'%(ADDRESS_IP)
+USER_ACCOUNT_URL = 'http://%s/weixin/view_user_account'%(ADDRESS_IP)
+USER_INFO_URL = 'http://%s/weixin/view_user_info'%(ADDRESS_IP)
+USER_TICKET_URL = 'http://%s/weixin/view_user_ticket'%(ADDRESS_IP)
+SETTLE_ACCOUNTS_URL = 'http://%s/weixin/view_settle_account'%(ADDRESS_IP)
 
 
 
+class _MenuUrl():
+	get_bonus_url = GET_BONUS_URL
+	snd_bonus_url = SND_BONUS_URL
+	settle_accounts_url = SETTLE_ACCOUNTS_URL
+	forum_url = ''
+	user_account_url = USER_ACCOUNT_URL
+	user_info_url = USER_INFO_URL
+	user_ticket_url = USER_TICKET_URL
+	self_bonus_list_url = SELF_BONUS_LIST_URL
+	self_snd_bonus_url = SELF_SND_BONUS_URL
+	self_rcv_bonus_url = SELF_RCV_BONUS_URL
+	
+	
 # Create your views here.
 
 def check_session_openid(request, redirect_uri, redirect_func):
 	if 'openid' in request.session:
 		openid = request.session['openid']
-		return redirect_func(openid)
+		return redirect_func(openid, request)
 	else:
 		url = OAUTH_URL.replace('REDIRECT_URL', redirect_uri)
 		return HttpResponseRedirect(url)
@@ -54,7 +74,7 @@ def display_prompt_views(message):
 	prompt_message = message
 	return render_to_response("user_prompt.html", locals())		
 
-def display_rcv_bonus_views(openid):
+def display_rcv_bonus_views(openid, request):
 	#检测用户是否在用餐状态
 	if is_consumer_dining(openid):
 		title = '抢红包'
@@ -64,12 +84,13 @@ def display_rcv_bonus_views(openid):
 		geted_bonus_url = GETED_BONUS_URL
 		openid = openid
 		get_bonus_url = GET_BONUS_URL
+		menu = _MenuUrl()
 		return render_to_response('get_bonus.html', locals())
 	else:
 		prompt_message = '就餐用户独享抢红包！'
 		return display_prompt_views(prompt_message)
 		
-def display_snd_bonus_views(openid):
+def display_snd_bonus_views(openid, request):
 	if is_consumer_dining(openid):	
 		title = '选择红包类型'
 		body_class = 'red_cen'
@@ -79,12 +100,13 @@ def display_snd_bonus_views(openid):
 		self_bonus_list_url = SELF_BONUS_LIST_URL
 		create_common_bonus_url = CREATE_COMMON_BONUS_URL
 		create_random_bonus_url = CREATE_RANDOM_BONUS_URL
+		menu = _MenuUrl()		
 		return render_to_response('bonus_type.html', locals())
 	else:
 		prompt_message = '就餐用户独享抢红包！'
 		return display_prompt_views(prompt_message)	
 
-def display_settle_account_views(openid):	
+def display_settle_account_views(openid, request):	
 	if is_consumer_dining(openid):		
 		title = '结算'
 		static_url = settings.STATIC_URL
@@ -97,15 +119,25 @@ def display_settle_account_views(openid):
 		prompt_message = '就餐用户独享抢红包！'
 		return display_prompt_views(prompt_message)		
 
-def display_user_account_views(openid):
+def display_user_account_views(openid, request):
 	title = '我'
 	body_class = 'qubaba_hsbj'
 	static_url = settings.STATIC_URL	
 	consumer = Consumer.objects.get(open_id=openid)
 	good_list = decode_bonus_detail(consumer)
-	user_ticket_url = ''
-	user_info_url = ''
+	user_ticket_url = USER_TICKET_URL
+	user_info_url = USER_INFO_URL
 	return render_to_response('user_account.html', locals())	
+	
+#个人信息
+@csrf_exempt
+def view_user_info(request):
+	pass
+
+#个人礼券
+@csrf_exempt
+def view_user_ticket(request):
+	pass
 
 #发红包界面	
 @csrf_exempt
@@ -137,7 +169,7 @@ def view_redirect_settle_account(request):
 	print('---view_redirect_settle_account---\n')
 	openid = get_user_openid(request, ACCESS_TOKEN_URL)
 	request.session['openid'] = openid
-	return display_settle_account_views(openid)		
+	return display_settle_account_views(openid, request)		
 	
 #我的个人界面认证
 @csrf_exempt
@@ -145,7 +177,7 @@ def view_redirect_user_account(request):
 	print('---view_redirect_user_account---\n')
 	openid = get_user_openid(request, ACCESS_TOKEN_URL)
 	request.session['openid'] = openid
-	return display_user_account_views(openid)
+	return display_user_account_views(openid, request)
 
 
 #发红包界面认证	
@@ -154,44 +186,60 @@ def view_redirect_bonus_snd(request):
 	print('---view_redirect_bonus_snd---\n')
 	openid = get_user_openid(request, ACCESS_TOKEN_URL)
 	request.session['openid'] = openid
-	return display_snd_bonus_views(openid)
+	return display_snd_bonus_views(openid, request)
 	
 	
 #抢红包界面认证
 @csrf_exempt
 def view_redirect_bonus_rcv(request):
-	#获取openid
 	#刷新页面中openid
 	print('---view_redirect_bonus_rcv---\n')
 	openid = get_user_openid(request, ACCESS_TOKEN_URL)
 	request.session['openid'] = openid
-	return display_rcv_bonus_views(openid)
+	return display_rcv_bonus_views(openid, request)
+	
+def display_common_bonus_views(open_id, request):
+	title = '普通红包'
+	body_class = 'qubaba_hsbj'
+	static_url = settings.STATIC_URL
+	good_list = create_bonus_dict(request)
+	choose_pay_url = CHOOSE_PAY_URL
+	openid = open_id
+	return render_to_response('common_bonus.html', locals())	
+	
+@csrf_exempt
+def view_redirect_common_bonus(request):
+	openid = get_user_openid(request, ACCESS_TOKEN_URL)
+	request.session['openid'] = openid
+	return display_common_bonus_views(openid, request)
 		
 #发普通红包
 @csrf_exempt
 def view_common_bonus(request):
 	#从request中解析出openid
-	openid = request.GET.get('openid')
-	print("========view_common_bonus :%s=========\n"%(openid))
-	title = '普通红包'
+	print("========view_common_bonus =========\n")
+	return check_session_openid(request, REDIRECT_CB_URL, display_common_bonus_views)
+	
+def display_random_bonus_views(open_id, request):
+	title = '手气红包'
 	body_class = 'qubaba_hsbj'
-	static_url = settings.STATIC_URL
-	good_list = create_bonus_dir()
-	choose_pay_url = CHOOSE_PAY_URL.replace("OPENID", openid)
-	return render_to_response('common_bonus.html', locals())
+	static_url = settings.STATIC_URL	
+	good_list = create_bonus_dict(request)
+	choose_pay_url = CHOOSE_PAY_URL
+	openid = open_id
+	return render_to_response('random_bonus.html', locals())	
+
+@csrf_exempt
+def view_redirect_random_bonus(request):
+	openid = get_user_openid(request, ACCESS_TOKEN_URL)
+	request.session['openid'] = openid
+	return display_random_bonus_views(openid, request)	
 	
 #发手气红包
 @csrf_exempt
 def view_random_bonus(request):
-	#从request中解析出openid
-	openid = request.GET.get('openid')
-	print("========view_random_bonus :%s=========\n"%(openid))
-	title = '手气红包'
-	body_class = 'qubaba_hsbj'
-	static_url = settings.STATIC_URL	
-	good_list = create_bonus_dir()
-	choose_pay_url = CHOOSE_PAY_URL.replace("OPENID", openid)
-	return render_to_response('random_bonus.html', locals())
+	print("========view_random_bonus =========\n")
+	return check_session_openid(request, REDIRECT_RB_URL, display_random_bonus_views)
 	
 #check收到的串串
 @csrf_exempt
@@ -260,35 +308,40 @@ def view_ajax_request(request):
 #抢到的红包界面
 @csrf_exempt
 def view_geted_bonus(request):
-	id_record = request.GET.get('id_record')
-	print("===view_geted_bonus:%s===\n"%(id_record))
-	title = '抢到的红包'
-	body_class = 'qubaba_hsbj'
-	static_url = settings.STATIC_URL
-	bonus_dir = check_geted_bonus(id_record)
-	openid = get_record_openid(id_record)
-	random_bonus = bonus_dir['random_bonus']
-	common_bonus = bonus_dir['common_bonus']
-	system_bonus = bonus_dir['system_bonus']	
-	common_bonus_url = CREATE_COMMON_BONUS_URL.replace('OPENID', openid)
-	ajax_request_url = AJAX_REQUEST_POST_URL
-	return render_to_response('geted_bonus.html', locals())
+	if "id_record" in request.session:
+		id_record = request.session['id_record']
+		print("===view_geted_bonus:%s===\n"%(id_record))
+		title = '抢到的红包'
+		body_class = 'qubaba_hsbj'
+		static_url = settings.STATIC_URL
+		bonus_dir = check_geted_bonus(id_record)
+		openid = get_record_openid(id_record)
+		random_bonus = bonus_dir['random_bonus']
+		common_bonus = bonus_dir['common_bonus']
+		system_bonus = bonus_dir['system_bonus']	
+		common_bonus_url = CREATE_COMMON_BONUS_URL
+		ajax_request_url = AJAX_REQUEST_POST_URL
+		del request.session['id_record']
+		return render_to_response('geted_bonus.html', locals())
+	else:
+		return check_session_openid(request, REDIRECT_BR_URL, display_rcv_bonus_views)
 
 #支付页面
 @csrf_exempt	
 def view_choose_pay(request):
-	openid = request.GET.get('openid')
-	bonus_type = request.GET.get('bonus_type')
-	print("+++view_choose_pay %s %s+++\n"%(openid, bonus_type))
+	print("+++view_choose_pay +++\n")
+	openid = request.GET.get('openid')	
+	if 'openid' in request.session == False:
+		request.session['openid'] = openid
 	consumer = Consumer.objects.get(open_id=openid)
 	title = '支付'
 	body_class = 'qubaba_hsbj'
 	static_url = settings.STATIC_URL
-	result_dir = decode_choose_pay(consumer, request.GET)
+	result_dir = decode_choose_pay(request, request.GET)
 	good_list = result_dir['good_list']
 	total_money = result_dir['total_money']
-	enough_money = result_dir['enough_money']
-	id_recharge = result_dir['id_recharge']
+	enough_money = is_enough_pay(consumer, request.GET)
+	ajax_request_url = AJAX_REQUEST_POST_URL
 	return render_to_response('weixin_pay.html', locals())
     
 @csrf_exempt

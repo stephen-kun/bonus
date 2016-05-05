@@ -23,7 +23,7 @@
     	<ul>
 			{% for key, value in good_list.items %}
         	<li>
-            	<h4><span class="rfloat"><font class="qbred">{{value.number}}</font>{{value.name}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
+            	<h4><span class="rfloat"><font class="qbred">{{value.number}}</font>{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
             </li>
 			{% endfor %}
             <li>
@@ -33,45 +33,14 @@
     </div>
 	
     <div class="queding">
-        <input type="button" class="green" value="微信支付" onclick="weixin_pay('{{consumer.open_id}}', '{{total_money}}', '{{id_recharge}}')">
+        <input type="button" class="green" value="微信支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '0')">
 		{% if enough_money %}
-        <input type="button" class="bule" value="钱包支付" onclick="wallet_pay()">
+        <input type="button" class="bule" value="钱包支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '1')">
 		{% endif %}
     </div>
 	
 </section>
 
-<script>
-function weixin_pay(openid, money, id_recharge){
-	var xmlhttp;
-	var url = 'http://120.76.122.53/weixin/view_ajax_request';
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-	  xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-	  
-	var data_str = '{"money":"MONEY", "openid":"OPENID", "action":"ACTION", "id_recharge":"ID_RECHARGE"}';
-	var data = data_str.replace(/MONEY/, money).replace(/OPENID/, openid).replace(/ACTION/, 'ajax_weixin_pay').replace(/ID_RECHARGE/, id_recharge);
-	
-	xmlhttp.onreadystatechange=function()
-	{
-		if(xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			alert(xmlhttp.responseText);
-		}
-	}
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);	
-}
-
-function wallet_pay(){
-	alert('支付成功')
-}
-</script>
-
+<script type="text/javascript" src="{{static_url}}js/weixin_pay.js"></script>
 
 {% endblock %}

@@ -16,9 +16,18 @@ function refuse_bonus(id_bonus, url){
 	{
 		if(xmlhttp.readyState==4 && xmlhttp.status==200)
 		{
-			var html = '<input type="button" id="button" class="gray" value="Íñ¾Ü">';
-			var id = "hID_BONUS".replace(/ID_BONUS/, id_bonus);
-			document.getElementById(id).innerHTML = html;
+			var result = JSON.parse(xmlhttp.responseText);
+			if(result.status == '0')
+			{
+				var html = '<input type="button" id="button" class="gray" value="Íñ¾Ü">';
+				var id = "hID_BONUS".replace(/ID_BONUS/, id_bonus);
+				document.getElementById(id).innerHTML = html;				
+			}
+			else
+			{
+				alert(result.error_msg)
+			}
+
 		}
 	}
 	xmlhttp.open("POST", url, true);
@@ -29,12 +38,11 @@ function refuse_bonus(id_bonus, url){
 function send_message(url){
 	var openid, id_bonus, message, data;
 	var xmlhttp;
-	openid = document.getElementById("openid").value;
 	id_bonus = document.getElementById('id_bonus').value;
 	message = document.getElementById("message").value;
 
-	data = '{"openid":"OPENID","id_bonus":"ID_BONUS","message":"MESSAGE", "action":"ajax_bonus_message"}';
-	data = data.replace(/OPENID/, openid).replace(/ID_BONUS/, id_bonus).replace(/MESSAGE/, message);
+	data = '{"id_bonus":"ID_BONUS","message":"MESSAGE", "action":"ajax_bonus_message"}';
+	data = data.replace(/ID_BONUS/, id_bonus).replace(/MESSAGE/, message);
 
 	if (window.XMLHttpRequest)
 	  {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -73,7 +81,6 @@ function message(openid, id_bonus){
 		},300);
 	})
 	
-	document.getElementById("openid").value=openid;
 	document.getElementById("id_bonus").value=id_bonus;		
 	document.getElementById("show_message").value=id_bonus;
 }

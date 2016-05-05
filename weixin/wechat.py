@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 # wechat.py
 # Create your wechat here.
 from django.http.response import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect
@@ -120,12 +120,15 @@ class PostResponse():
 		# 查询Consumer，如果有记录则修改subscribe；如果没有记录，则先从微信获取用户信息，然后新建一条记录
 		consumer = user_subscribe(self.source)	
 		# 获取桌对象
-		index_table = re.findall(r'\d+',self.message.key)[0]	
-		table = DiningTable.objects.get(index_table=index_table)	
-		#更新或创建就餐会话
-		session = update_or_create_session(table, consumer)	
-		# 返回选座信息    
-		return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))
+		index_table = re.findall(r'\d+',self.message.key)[0]
+		try:
+			table = DiningTable.objects.get(index_table=index_table)	
+			#更新或创建就餐会话
+			session = update_or_create_session(table, consumer)	
+			# 返回选座信息    
+			return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))
+		except ObjectDoesNotExist:
+			return wechat.response_text(content = u'该桌台不存在')
 		
 	#取消关注
 	def _unsubscribe(self):
@@ -148,17 +151,19 @@ class PostResponse():
 		# 获取桌号
 		index_table = self.message.key
 		#判断是否已就坐
-		consumer = Consumer.objects.get(open_id=self.source)
-		if consumer.session and consumer.on_table.index_table != index_table:
-			return wechat.response_text(content =  u'请您先结算%s号桌所抢红包，再扫描该桌'%(consumer.on_table.index_table))
-		elif consumer.session and consumer.on_table.index_table == index_table:
-			return ''
-		#更新或创建就餐会话
-		table = DiningTable.objects.get(index_table=index_table)  		
-		consumer = Consumer.objects.get(open_id=self.source)
-		session = update_or_create_session(table, consumer)	
-		# 返回选座信息
-		return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))
+		try:
+			table = DiningTable.objects.get(index_table=index_table)  
+			consumer = Consumer.objects.get(open_id=self.source)
+			if consumer.session and consumer.on_table.index_table != index_table:
+				return wechat.response_text(content =  u'请您先结算%s号桌所抢红包，再扫描该桌'%(consumer.on_table.index_table))
+			elif consumer.session and consumer.on_table.index_table == index_table:
+				return ''
+			#更新或创建就餐会话		
+			session = update_or_create_session(table, consumer)	
+			# 返回选座信息
+			return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))
+		except ObjectDoesNotExist:
+			return wechat.response_text(content = u'该桌台不存在')
 		
 		
 	#菜单跳转事件

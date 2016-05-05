@@ -1,4 +1,4 @@
-from django.conf.urls import url
+﻿from django.conf.urls import url
 
 #from . import views_design as views
 from . import views

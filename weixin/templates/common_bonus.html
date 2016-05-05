@@ -10,11 +10,11 @@
     </div>
     <div class="box-food">
 		<ul>
-		{% for key, value in good_list.items %}
-			<li>
-            	<h4><span class="rfloat"><input type="number" name='{{value.id}}' class="kongbai">{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
+		{% for key, value in good_list.items %}		
+        	<li>
+            	<h4><span class="rfloat"><input type="number" name="{{value.name}}" class="kongbai">{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
             </li>
-		{% endfor %}
+		{% endfor %} 
 		</ul>
 	</div>
     <div class="box-duixiang liuyanbj">
@@ -39,4 +39,8 @@
 </style>
 
 
+{% endblock %}
+
+{% block menu %}
+{% include '_menu.html' %}
 {% endblock %}
