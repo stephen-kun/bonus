@@ -33,9 +33,9 @@
     </div>
 	
     <div class="queding">
-        <input type="button" class="green" value="微信支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '0')">
+        <h2 id='weixin' ><input type="button" class="green" value="微信支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '0')"></h2>
 		{% if enough_money %}
-        <input type="button" class="bule" value="钱包支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '1')">
+        <h2 id='wallet'><input type="button" class="bule" value="钱包支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '1')"></h2>
 		{% endif %}
     </div>
 	
@@ -43,4 +43,8 @@
 
 <script type="text/javascript" src="{{static_url}}js/weixin_pay.js"></script>
 
+{% endblock %}
+
+{% block menu %}
+{% include '_menu.html' %}
 {% endblock %}

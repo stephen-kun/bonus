@@ -108,9 +108,10 @@ class SndBonus(models.Model):
 	to_table = models.CharField(max_length=3,null=True, blank=True)			#收红包的桌台
 	to_message = models.CharField(max_length=140, null=True, blank=True)		#赠言
 	title = models.CharField(max_length=40, null=True, blank=True)			#冠名
+	content = models.CharField(max_length=100, null=True, blank=True)			#红包内容
 	bonus_num = models.IntegerField(default=0)				#红包个数
 	number = models.IntegerField(default=0)				#串串个数
-	total_money = models.FloatField(default=0)			#总金额
+	total_money = models.FloatField(default=0)				#总金额
 	bonus_remain = models.IntegerField(default=0)			#剩余红包个数
 	is_exhausted = models.BooleanField(default=False)		#红包已耗尽
 	is_valid = models.BooleanField(default=True)			#红包已失效
@@ -127,19 +128,22 @@ class RcvBonus(models.Model):
 	bonus_type = models.IntegerField(default=0)							#红包类型：0:普通红包/1:手气红包/2:系统红包
 	is_message = models.BooleanField(default=False)						#是否已留言
 	message = models.CharField(max_length=40, null=True, blank=True)		#留言内容
+	is_receive = models.BooleanField(default=False)						#是否已被领取
 	is_refuse = models.BooleanField(default=False)							#是否已拒绝
 	content = models.CharField(max_length=100, null=True, blank=True)		#红包内容
 	datetime = models.DateTimeField(default=timezone.now)					#接收时间
 	number = models.IntegerField(default=0)								#串串个数
 	is_best = models.BooleanField(default=False)							#是否手气最佳
 	snd_bonus = models.ForeignKey(SndBonus, on_delete=models.CASCADE)		#红包的唯一id
-	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)		#消费者的唯一id
-	table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)		#桌台号
-	record_rcv_bonus = models.ForeignKey(RecordRcvBonus, on_delete=models.CASCADE)	#抢红包记录
-	session = models.ForeignKey(DiningSession, on_delete=models.CASCADE)	#就餐会话	
+	consumer = models.ForeignKey(Consumer, null=True, blank=True, on_delete=models.CASCADE)		#消费者的唯一id
+	record_rcv_bonus = models.ForeignKey(RecordRcvBonus, null=True, blank=True, on_delete=models.CASCADE)	#抢红包记录
+	session = models.ForeignKey(DiningSession, null=True, blank=True, on_delete=models.CASCADE)	#就餐会话	
 	
 	def __unicode__(self):
-		return '%s RcvBonus %d'%(self.consumer.name, self.id_bonus)	
+		if self.consumer:
+			return '%s RcvBonus %d'%(self.consumer.name, self.id_bonus)
+		else:
+			return '未领取 RcvBonus %d'%(self.id_bonus)
 
 #虚拟货币
 class VirtualMoney(models.Model):

@@ -1333,7 +1333,17 @@ input.code {
 	transition: transform 1.4s ease-in;
 }
 /*=====弹出层======样式2016.04.08===结束=======*/
-.tch-share { border-radius: 0; bottom:-2em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 3s /*infinite*/;animation-delay:.5s;/*Safari and Chrome*/-webkit-animation:mymove 3s /*infinite*/;-webkit-animation-delay:.5s; width: 100%; z-index: 10; }
+.popup{ 
+	height:auto;
+	position:absolute;
+	z-index:0;
+	left:0;
+	bottom:.8em;
+	display:none;
+	width:100%;
+}
+.tch-share { border-radius: 0; bottom:.8em; left: 0; /*position: fixed;*/ text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 3s /*infinite*/;animation-delay:.5s;/*Safari and Chrome*/-webkit-animation:mymove 3s /*infinite*/;-webkit-animation-delay:.5s; width: 100%; z-index:0; }
+
 .tch-modal-active { transform: translateY(0px);  -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0) }
 .tch-modal-out { z-index: 888; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%) }
 
@@ -2855,7 +2865,16 @@ input.code {
 	transition: transform 1.2s ease-in;
 }
 /*=====弹出层======样式2016.04.08===结束=======*/
-.tch-share { border-radius: 0; bottom:-1.8em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 2s /*infinite*/;animation-delay:.5s;/*Safari and Chrome*/-webkit-animation:mymove 2s /*infinite*/;-webkit-animation-delay:.5s;  width: 100%; z-index: 10; }
+.popup{ 
+	height:auto;
+	position:absolute;
+	z-index:0;
+	left:0;
+	bottom:.4em;
+	display:none;
+	width:100%;
+}
+.tch-share { border-radius: 0; bottom:.4em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 2s /*infinite*/;animation-delay:.5s;/*Safari and Chrome*/-webkit-animation:mymove 2s /*infinite*/;-webkit-animation-delay:.5s;  width: 100%; z-index:0; }
 .tch-modal-active { transform: translateY(0px);  -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0) }
 .tch-modal-out { z-index: 888; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%) }
 
@@ -4398,7 +4417,16 @@ input.code {
 	transition: transform 1.2s ease-in;
 }
 /*=====弹出层======样式2016.04.08===结束=======*/
-.tch-share { border-radius: 0; bottom:-1.2em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 3s /*infinite*/;animation-delay:1s;/*Safari and Chrome*/-webkit-animation:mymove 3s /*infinite*/;-webkit-animation-delay:1s; width: 100%; z-index: 10;  }
+.popup{ 
+	height:auto;
+	position:absolute;
+	z-index:0;
+	left:0;
+	bottom:.85em;
+	display:none;
+	width:100%;
+}
+.tch-share { border-radius: 0; bottom:.85em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 3s /*infinite*/;animation-delay:1s;/*Safari and Chrome*/-webkit-animation:mymove 3s /*infinite*/;-webkit-animation-delay:1s; width: 100%; z-index:0;  }
 .tch-modal-active { transform: translateY(0px);  -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0) }
 .tch-modal-out { z-index: 888; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%) }
 
@@ -5974,7 +6002,16 @@ input.code {
 	transition: transform 1.2s ease-in;
 }
 /*=====弹出层======样式2016.04.08===结束=======*/
-.tch-share { border-radius: 0; bottom:-1.2em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 3s /*infinite*/;animation-delay:1s;/*Safari and Chrome*/-webkit-animation:mymove 3s /*infinite*/;-webkit-animation-delay:1s; width: 100%; z-index: 10; }
+.popup{ 
+	height:auto;
+	position:absolute;
+	z-index:0;
+	left:0;
+	bottom:.85em;
+	display:none;
+	width:100%;
+}
+.tch-share { border-radius: 0; bottom:.85em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 3s /*infinite*/;animation-delay:1s;/*Safari and Chrome*/-webkit-animation:mymove 3s /*infinite*/;-webkit-animation-delay:1s; width: 100%; z-index:0; }
 .tch-modal-active { transform: translateY(0px);  -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0) }
 .tch-modal-out { z-index: 888; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%) }
 

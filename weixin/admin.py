@@ -20,7 +20,7 @@ class RechargeWalletMoney(admin.ModelAdmin):
 	inlines = [MoneyInline]
 
 class SndBonusWalletMoney(admin.ModelAdmin):
-	inlines = [MoneyInline]
+	inlines = [RcvBonusInline, MoneyInline]
 	
 class RcvBonusWalletMoney(admin.ModelAdmin):
 	inlines = [MoneyInline]

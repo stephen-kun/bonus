@@ -23,21 +23,19 @@
 				</div>
 			</section> 	
 			
-			<div class="tch-share" id="bonus_result">
-			  <h3 class="tch-share-title" id="rcv_bonus"></h3>
-			  <ul class="tch-share-sns">
-				<li id="link1"><a href="{{geted_bonus_url}}">查看红包&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{get_bonus_url}}">继续抢红包</a></a></li>
-				<li id="link2"><a href="{{get_bonus_url}}">继续抢红包</a></li>
-			  </ul>
+			<div class="popup" id="popup">
+				<h3 class="tch-share-title" id="rcv_bonus"></h3>
+				<ul class="tch-share-sns">
+					<li id="link1"><a href="{{geted_bonus_url}}">查看红包&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{get_bonus_url}}">继续抢红包</a></a></li>
+					<li id="link2"><a href="{{get_bonus_url}}">继续抢红包</a></li>
+				</ul>
 			</div>	
-			
-			<link href="{{static_url}}css/animator.css" rel="stylesheet" />			
+				
 			<style type="text/css">
 				.blades{animation: spin 100s linear infinite;}
 			</style>			
 		</div>
 	</div>
-	<h2 id="id_bonus"></h2>
 </section>
 
 <script src="{{static_url}}js/bonus_animation.js"></script>

@@ -169,10 +169,55 @@ def action_bonus_refuse(request):
 	#根据rcv_bonus_id在表PersonMoney中找到婉拒的id_money。
 	#在PersonRecharge表中创建一条记录
 	pass
+		
+#随机分配红包算法
+def get_random_bonus(money_num, bonus_num):
+	l_money = []
+	while bonus_num:
+		if bonus_num == 1:
+			l_money.append(money_num)
+			return l_money
+		
+		money_min = 1
+		money_max = int(money_num/bonus_num*2)
+		rand = random.random()
+		money = int(money_max*rand)
+		if money < money_min:
+			money = money_min
+		l_money.append(money)
+		bonus_num -= 1
+		money_num -= money
+	return l_money
+	
+#将红包分拆
+def snd_bonus_random_rcv_bonus(snd_bonus, number_list):
+	number_list.sort(reverse=True)
+	is_best = True
+	for number in number_list: 
+		rcv_bonus = RcvBonus.objects.create(id_bonus=create_primary_key(), snd_bonus=snd_bonus)
+		money_list = WalletMoney.objects.filter(snd_bonus=snd_bonus, is_receive=False)[0:number]
+		number = 0
+		for money in money_list:
+			money.rcv_bonus = rcv_bonus
+			money.is_receive = True 
+			if money.money.name == LIST_KEY_ID:
+				number += 1
+			money.save()
+		rcv_bonus.number = number
+		if is_best and (rcv_bonus.bonus_type == RANDOM_BONUS):
+			rcv_bonus.is_best = True
+			is_best = False
+		rcv_bonus.content = bonus_content_str(bonus=rcv_bonus, type='rcv')
+		rcv_bonus.save()	
 
 #微信支付
 def action_weixin_pay(data, session):
 	if data["method"] == WEIXIN_PAY:
+		#防止重复支付
+		bonus = snd_bonus_from_session(session)
+		if bonus is None:
+			return "have pay!"
+			
 		#创建一条充值记录
 		recharge = Recharge.objects.create(id_recharge=create_primary_key())
 		recharge.recharge_value = float(data['money'])
@@ -183,31 +228,38 @@ def action_weixin_pay(data, session):
 		
 		#创建一条发红包记录
 		new_snd_bonus = SndBonus.objects.create(id_bonus=create_primary_key(), consumer=consumer, session=consumer.session)
-		bonus = snd_bonus_from_session(session)
 		new_snd_bonus.to_message = bonus.message
 		new_snd_bonus.to_table = bonus.table
 		new_snd_bonus.bonus_type = int(bonus.bonus_type)
 		new_snd_bonus.number = bonus.number
 		new_snd_bonus.total_money = bonus.money
 		if new_snd_bonus.bonus_type == COMMON_BONUS:
-			new_snd_bonus.bonus_num = consumer.session.person_num
+			new_snd_bonus.bonus_num = 1
 		else:
 			new_snd_bonus.bonus_num = int(bonus.bonus_num)
 		new_snd_bonus.bonus_remain = new_snd_bonus.bonus_num
 
 		
 		#生成虚拟货币
+		is_send = True
+		money_num = 0
 		money_list = VirtualMoney.objects.all()
 		for money in money_list:
 			content = bonus.content[money.name]
 			content = json.loads(content)
 			number = content['number']
-			create_vitural_money(consumer, new_snd_bonus, recharge, money, number)
+			money_num += int(number)
+			create_vitural_money(consumer, new_snd_bonus, recharge, money, number, is_send)
 		recharge.save()
+		new_snd_bonus.content = bonus_content_str(bonus=new_snd_bonus, type='snd')
 		new_snd_bonus.save()		
+		
 		#随机分配红包	
+		number_list = get_random_bonus(int(money_num), int(new_snd_bonus.bonus_num))
+		snd_bonus_random_rcv_bonus(new_snd_bonus, number_list)	
 	else:
 		pass
+	del session['snd_bonus']
 	return 'pay suc!'
 	
 #创建消费券事件
@@ -343,6 +395,11 @@ def action_get_bonus(openid):
 	bonus_num = 0	#统计抢到的红包个数
 	number = 0		#统计串串个数
 	total_money = 0 #统计抢到的红包总额
+	
+	response = dict(status=0, number=1)
+	print("==  action_get_bonus =")
+	return json.dumps(response)
+	
 	consumer = Consumer.objects.get(open_id=openid)
 	session = consumer.session							#就餐会话
 	snd_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True)
@@ -355,7 +412,7 @@ def action_get_bonus(openid):
 			if len(rcv_bonus_list) == 0:
 				if (bonus.bonus_type == COMMON_BONUS) and (bonus.to_table != consumer.on_table.index_table):
 					continue
-				new_rcv_bonus = RcvBonus.objects.create(id_bonus=create_primary_key(), snd_bonus=bonus, consumer=consumer, table=consumer.on_table, record_rcv_bonus=record_rcv_bonus)													
+				new_rcv_bonus = RcvBonus.objects.create(id_bonus=create_primary_key(), snd_bonus=bonus, consumer=consumer, record_rcv_bonus=record_rcv_bonus)													
 				money_list = WalletMoney.objects.filter(snd_bonus=bonus, is_receive=False)
 
 				print('===money:%d  remain:%d==\n'%(len(money_list), bonus.bonus_remain))
@@ -394,14 +451,15 @@ def action_get_bonus(openid):
 				consumer.save()
 		record_rcv_bonus.bonus_num = bonus_num
 		record_rcv_bonus.save()
-	response = dict(number=bonus_num, id_record=primary_key)
+	response = dict(status=0, number=bonus_num, id_record=primary_key)
 	return json.dumps(response)
 	
 #生成虚拟货币
-def create_vitural_money(consumer, snd_bonus, recharge, money, number):
+def create_vitural_money(consumer, snd_bonus, recharge, money, number, is_send):
 	print("***create_vitural_money %s**"%(number))
 	for x in range(int(number)):
 		wallet_money = WalletMoney.objects.create(id_money=create_primary_key(), consumer=consumer, recharge=recharge, snd_bonus=snd_bonus, money=money)
+		wallet_money.is_send = is_send
 		wallet_money.save()
 	
 #发普通红包事件
@@ -512,24 +570,27 @@ def snd_bonus_to_session(request, bonus):
 #从session中解析出发红包内容
 def snd_bonus_from_session(session):
 	bonus = _Bonus()
-	snd_bonus = session['snd_bonus']
-	snd_bonus = json.loads(snd_bonus)
-	for key, value in snd_bonus.items():
-		if key == 'table':
-			bonus.table = value
-		elif key == 'message':
-			bonus.message = value
-		elif key == 'money':
-			bonus.money = value
-		elif key == 'bonus_num':
-			bonus.bonus_num = value
-		elif key == "number":
-			bonus.number = value
-		elif key == 'content':
-			bonus.content = value
-		elif key == 'bonus_type':
-			bonus.bonus_type = value
-	return bonus
+	if 'snd_bonus' in session:
+		snd_bonus = session['snd_bonus']
+		snd_bonus = json.loads(snd_bonus)
+		for key, value in snd_bonus.items():
+			if key == 'table':
+				bonus.table = value
+			elif key == 'message':
+				bonus.message = value
+			elif key == 'money':
+				bonus.money = value
+			elif key == 'bonus_num':
+				bonus.bonus_num = value
+			elif key == "number":
+				bonus.number = value
+			elif key == 'content':
+				bonus.content = value
+			elif key == 'bonus_type':
+				bonus.bonus_type = value
+		return bonus
+	else:
+		return None
 	
 	
 	

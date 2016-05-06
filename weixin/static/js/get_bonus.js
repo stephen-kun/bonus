@@ -1,29 +1,28 @@
 
-function click_get_bonus(url, openid){
-	$(".tch-share").addClass("tch-modal-active");	
-	if($(".tchsharebg").length>0){
-		$(".tchsharebg").addClass("tchsharebg-active");
-	}else{
-		$("body").append('<div class="tchsharebg"></div>');
-		$(".tchsharebg").addClass("tchsharebg-active");
-	}
-	$(".tchsharebg-active,.tchshare_btn").click(function(){
-		$(".tch-share").removeClass("tch-modal-active");	
-		setTimeout(function(){
-			$(".tchsharebg-active").removeClass("tchsharebg-active");	
-			$(".tchsharebg").remove();	
-		},300);
-	});
+//窗口效果
+//点击class为tc 显示
+$(".tc").click(function(){
+	$("#popup").fadeIn(1500);//查找ID为popup的DIV fadeIn()显示弹出时间
+	tc_center();
+});
+
+//窗口水平居中
+$(window).resize(function(){
+	tc_center();
+});
+
+function tc_center(){
+	var _top=($(window).height()-$(".popup").height())/2;
+	var _left=($(window).width()-$(".popup").width())/2;
 	
+	$(".popup").css({bottom:_bottom,left:_left});
+}	
+
+function click_get_bonus(url, openid){
 	// ajax 请求
 	var data = '{"action":"ACTION", "openid":"OPENID", "timestamp":"TIMESTAMP"}';
 	var curr_time = new Date();
 	data = data.replace(/ACTION/, 'ajax_get_bonus').replace(/OPENID/,openid).replace(/TIMESTAMP/, curr_time);
-	ajax_get_bonus(url, data);		
-}	
-	
-function ajax_get_bonus(url, data)
-{
 	
 	var xmlhttp=new XMLHttpRequest();
 	  
@@ -51,7 +50,7 @@ function ajax_get_bonus(url, data)
 			}
 			
 			// 控制结果样式弹出
-			
+			tc_center();
 		}
 	};
 	
