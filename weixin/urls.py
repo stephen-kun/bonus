@@ -1,5 +1,6 @@
-from django.conf.urls import url
+﻿from django.conf.urls import url
 
+#from . import views_design as views
 from . import views
 
 urlpatterns = [
@@ -10,7 +11,6 @@ urlpatterns = [
 	url(r'^view_user_account',views.view_user_account, name='view_user_account'),	
 	url(r'^view_redirect_bonus_rcv',views.view_redirect_bonus_rcv, name='view_redirect_bonus_rcv'),
 	url(r'^view_geted_bonus',views.view_geted_bonus, name='view_geted_bonus'),
-	url(r'^view_again_rcv_bonus',views.view_again_rcv_bonus, name='view_again_rcv_bonus'),
 	url(r'^view_ajax_request',views.view_ajax_request, name='view_ajax_request'),
 	url(r'^view_redirect_bonus_snd',views.view_redirect_bonus_snd, name='view_redirect_bonus_snd'),
 	url(r'^view_common_bonus',views.view_common_bonus, name='view_common_bonus'),

@@ -1,7 +1,11 @@
-﻿{% extends "_bonus_base.html" %}
+﻿<!-- 用户提示信息 -->
+{% extends "_bonus_base.html" %}
+
+{% block body %}
+<body class="bottom_40">
 
 {% block content %}
-
+<article class="issue-bj stanson">
 <section>
   <div class="tip-box">
   	<div class="tip">
@@ -9,5 +13,14 @@
     </div>
   </div>
 </section>
+</article>
+{% endblock %}
+
+{% block menu %}
+{% include '_menu.html' %}
+{% endblock %}
+
+</body>
 
 {% endblock %}
+

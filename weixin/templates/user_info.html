@@ -1,17 +1,44 @@
-﻿{% extends "_bonus_base.html" %}
+﻿<!-- 我的信息 -->
+{% extends "_bonus_base.html" %}
+
+{% block body %}
+<body class="qubaba_hsbj bottom_40">
 
 {% block content %}
+<article>
 
-<section>
-
+  <section>
   	<div class="wo">
+    	<a href="#" target="_parent">
+        <h4>东启湘厨Angelababy</h4>
         <h2><img src="images/angelababy.png"></h2>
-        <h4>Angelababy<br>
-        <p>恭候您就餐！</p>
-        <span>欢迎您进入2号桌</span>
-        </h4>
+        </a>
     </div>
-	
-</section>
+  </section>
+  <section>
+  	<div class="wo_xinxi">
+    	<ul>
+        	<li><a href="#" target="_blank"><h4><span class="rfloat">桂</span>昵称</h4></a></li>
+            <li><a href="#" target="_blank"><h4><span class="rfloat">男</span>性别</h4></a></li>
+        </ul>
+    </div>
+    
+    <div class="wo_xinxi wo_xinxi_mt">
+    	<ul>
+        	<li><a href="#" target="_blank"><h4><span class="rfloat">15077886015</span>电话</h4></a></li>
+            <li><a href="#" target="_blank"><h4><span class="rfloat">深圳宝安区</span>我的地址</h4></a></li>
+            <li><a href="#" target="_blank"><h4><span class="rfloat">bqing@126.com</span>Email</h4></a></li>
+        </ul>
+    </div>
+  </section>
+  
+</article>
+{% endblock %}
+
+{% block menu %}
+{% include '_menu.html' %}
+{% endblock %}
+
+</body>
 
 {% endblock %}

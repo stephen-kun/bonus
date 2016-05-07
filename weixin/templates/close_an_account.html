@@ -1,7 +1,11 @@
-﻿{% extends "_bonus_base.html" %}
+﻿<!-- 结算 -->
+{% extends "_bonus_base.html" %}
+
+{% block body %}
+<body class="qubaba_hsbj bottom_40">
 
 {% block content %}
-
+<article>
 <section>
   	<div class="issue-top">
     	
@@ -26,9 +30,13 @@
 				<h4><span class="rfloat"><font class="qbred">{{total_money}}￥</font></span>抢到的串串</h4>
 			</li>
 			<li>
-				<h4><span class="rfloat"><font class="qbred"><label>
-					<input type="radio" id="person_wallet" value="0" onclick="setSelectUserNo(this)" onchange="changeRadio(this)">
+				<h4><span class="rfloat"><font class="qbred">{{wallet_money}}</font>￥</span>
+					<span class="rfloat"><font class="qbred"><label>
+					<input type="radio" id="user_wallet" value="0" onclick="setSelectUserNo(this)" onchange="changeRadio(this)">
 					</label></font></span>我的钱包</h4>
+			</li>
+			<li>
+				<h4>券面值：<input type="number" id="ticket_value" class="code" placeholder="设置消费券面值"></h4>			
 			</li>
 			<li>
 				<h4>验证码：<input type="number" id="auth_code" class="code" placeholder="输入验证码"></h4>
@@ -36,15 +44,26 @@
 		</ul>
 	</div>	
 	<div class="queding">
-		<input type="button" id="create_ticket"  class="jin" data-reveal-id="myModal" value="生成券" onclick="action_create_ticket('{{consumer.open_id}}', '{{ajax_request_url}}')">
+		<input type="button" id="create_ticket"  class="jin" data-reveal-id="myModal" value="生成券" onclick="action_create_ticket('{{consumer.open_id}}', '{{total_money}}','{{ajax_request_url}}')">
 	</div>		
 
 </section>
 
 <div id="myModal" class="reveal-modal">
 	<h2>消费券码</h2>
-	<h3 id="ticket_num"></h3>
+	<h3 id="ticket_code"></h3>
+	<h4 id="value"></h4>
 	<a class="close-reveal-modal">X</a> 
 </div>
 
+<script src="{{static_url}}js/close_an_account.js"></script>
+
+</article>
+{% endblock %}
+
+{% block menu %}
+{% include '_menu.html' %}
+{% endblock %}
+
+</body>
 {% endblock %}

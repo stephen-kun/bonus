@@ -1,6 +1,12 @@
+<!-- 选择红包类型 -->
 {% extends "_bonus_base.html" %}
 
+{% block body %}
+
+<body class="red_cen bottom_40">
+
 {% block header%}
+<hgroup>
 <header class="hongbao">
 	<h4><span class="rfloat">我的串串</span></h4>
 	<link href="{{static_url}}css/component.css" rel="stylesheet" type="text/css" />
@@ -22,10 +28,12 @@
 		$( '#dl-menu' ).dlmenu();
 	});		
 </script>
-
+</hgroup>
 {% endblock %}
 
 {% block content %}
+<article>
+<section>
 <div class="q-box">
 	<div class="f-box">
 		<div class="blades">
@@ -44,5 +52,14 @@
 <style type="text/css">
 	.blades{animation: spin 100s linear infinite;}
 </style>
+</section>
+</article>
 
+{% endblock %}
+
+{% block menu %}
+{% include '_menu.html' %}
+{% endblock %}
+
+</body>
 {% endblock %}
