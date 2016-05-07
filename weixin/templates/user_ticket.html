@@ -1,1 +1,57 @@
-﻿
+﻿<!-- 我的礼券 -->
+{% extends "_bonus_base.html" %}
+
+{% block body %}
+<body class="qubaba_hsbj bottom_40">
+
+{% block content %}
+<article>
+
+  <section>
+  	<div class="issue-top">
+    	<h4>Angelababy</h4>
+        <div class="Angel">
+        	<div class="blades">
+                <div class="Angel-baby"></div>
+            </div>
+            <h2><img src="images/angelababy.png"></h2>
+        </div>
+        
+        <!--<h5>可抵扣</h5>-->
+        <h3>1,508<span>张</span></h3>
+        <style type="text/css">
+			.blades{animation: spin 100s linear infinite;}
+		</style>
+    </div>
+  </section>
+  <section>
+  	<div class="box-duixiang">
+    	<h4><span class="rfloat"><font class="qbhui"></font></span>我的卡券</h4>
+    </div>
+    <div class="box-food qbbaise">
+    	<ul>
+        	<li class="">
+            	<h4><span class="rfloat font8">有效期<font class="qbred">2016.08.05</font></span>1个串串优惠券</h4>
+            </li>
+            <li>
+            	<h4><span class="rfloat font8">有效期<font class="qbred">2016.08.05</font></span>1个甜品</h4>
+            </li>
+            <li>
+            	<h4><span class="rfloat font8">有效期<font class="qbred">2016.08.05</font></span>1个饮品</h4>
+            </li>
+        </ul>
+    </div>
+  </section>
+  
+</article>
+
+{% endblock %}
+
+{% block menu %}
+{% include '_menu.html' %}
+{% endblock %}
+
+</body>
+
+{% endblock %}
+

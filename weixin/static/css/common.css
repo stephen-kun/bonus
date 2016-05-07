@@ -363,7 +363,7 @@ input {
 }
 .btn3{
 	position:fixed;
-  z-index:3;
+  z-index:900;
   bottom:0px;
   border-top:1px solid #b3b3b3;
   background:#e6e6e6;
@@ -388,8 +388,8 @@ input {
 }
 .new-sub{
 	position:absolute;
-	bottom:60px;
-	z-index:10;
+	bottom:50px;
+	z-index:901;
 	width:100%;
 	padding: 0px 5px;
 	background: #fff;
@@ -450,7 +450,7 @@ input {
 	border-top:10px solid #EEEEEE;
 	border-left:10px solid transparent;
 	border-right:10px solid transparent;
-	z-index:10;
+	z-index:901;
 }
 .new-sub .innertiggle{
 	width:0px;
@@ -462,16 +462,59 @@ input {
 	border-top:9px solid white;
 	border-left:9px solid transparent;
 	border-right:9px solid transparent;
-	z-index:11;
+	z-index:902;
 }
 /*=========底部导航====结束=新增2016.05.=====*/
 
 /*--弹窗样式-新2016.05.5-*/
-
 #gray{width:100%;height:100%;background:rgba(0,0,0,0.3);position:fixed;top:0px;display:none;z-index:99;}
-
-
-
-
-
 /*--弹窗样式-新2016.05.5-、、结束、、、*/
+
+/*=========排行榜点击加载更多====开始=新增2016.05.06=====*/
+.hide{
+	display: none;
+}
+.load .more{
+	padding:.8em;
+	text-align: center;
+	letter-spacing:.2em;
+}
+.load ul.list {
+	background:url(../images/Alpha.png);
+}
+.more p{
+	padding:.5em .6em;
+	color:#666666;
+	margin:0 auto;
+	background:#e6e5e3;
+	text-align:center;
+	border-radius:10px;
+}
+.load .more a{
+	display: block;
+	padding:.5em .6em;
+	color:#fff;
+	margin:0 auto;
+	background:#b6d554;
+	text-align:center;
+	border-radius:10px;
+}
+.load .more a:hover{
+	text-decoration: none;
+	FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#b6d554,endColorStr=#a2c33b);
+	background: -ms-linear-gradient(top, #b6d554, #a2c33b); /* IE 10 */
+	background:-moz-linear-gradient(top, #b6d554, #a2c33b);/*火狐*/ 
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%,from(#b6d554), to(#a2c33b));/*谷歌*/ 
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#b6d554), to(#a2c33b));      /* Safari 4-5, Chrome 1-9*/
+	background: -webkit-linear-gradient(top, #b6d554, #a2c33b);   /*Safari5.1 Chrome 10+*/
+	background: -o-linear-gradient(top, #b6d554, #a2c33b);  /*Opera 11.10+*/
+	color: #ffffff;
+}
+/*=========排行榜点击加载更多====结束=新增2016.05.06=====*/
+
+
+
+
+
+
+

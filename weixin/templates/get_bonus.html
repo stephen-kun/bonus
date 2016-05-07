@@ -1,11 +1,13 @@
-﻿{% extends "_bonus_base.html" %}
+<!-- 抢红包 -->
+{% extends "_bonus_base.html" %}
 
+{% block body %}
+<body class="red_q bottom_40">
 {% block content %}
+<article>
 <section>
-	<div class="qiang">
-		
+	<div class="qiang" id="Heightauto">	
 		<div class="button-qhb">
-			
 			<section class="cd-section">
 				<div class="blades">
 					<div class="blade3"></div>
@@ -26,8 +28,8 @@
 			<div class="popup" id="popup">
 				<h3 class="tch-share-title" id="rcv_bonus"></h3>
 				<ul class="tch-share-sns">
-					<li id="link1"><a href="{{geted_bonus_url}}">查看红包&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{get_bonus_url}}">继续抢红包</a></a></li>
-					<li id="link2"><a href="{{get_bonus_url}}">继续抢红包</a></li>
+					<li id="link1"><a href="{{geted_bonus_url}}" target="_blank">查看红包</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="" target="_blank">继续抢红包</a></a></li>
+					<li id="link2"><a href="" target="_blank">继续抢红包</a></li>
 				</ul>
 			</div>	
 				
@@ -40,9 +42,13 @@
 
 <script src="{{static_url}}js/bonus_animation.js"></script>
 <script src="{{static_url}}js/get_bonus.js"></script>
-
+<script src="{{static_url}}js/Heightauto.js" type="text/javascript"></script><!--页面高自由高度-->
+</article>
 {% endblock %}
 
 {% block menu %}
 {% include '_menu.html' %}
+{% endblock %}
+
+</body>
 {% endblock %}

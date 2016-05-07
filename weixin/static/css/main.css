@@ -193,10 +193,12 @@ input.code {
 	/*background:#f3f3f4;*/
 	height:2em;
 	padding:0.5em 0 0 .5em;
+	position: absolute;
+	width:98%;
 }
 .hongbao h4 {
 	font-size:1.175em;
-	color:#6e7072;
+	color:#ffffff;
 	font-weight:normal;
 	float:left;
 	padding:0 0 0 0;
@@ -234,7 +236,7 @@ input.code {
 	background-repeat: no-repeat;
 	background-size:cover;
 	background-color:#b11313;
-	height:1280px;
+	/*height:1280px;*/
 	/*height:expression(document.body.offsetHeight + 99 + 'px');*/
 }
 .f-box {
@@ -285,7 +287,8 @@ input.code {
 	background-size:cover;
 	background-color:#f8292f;
 	background:url('../images/qubaba1_01qita.png') center -2em no-repeat;
-	height:685px;
+	/*height:685px;*/
+	overflow:hidden;
 }
 .qiang h4 {
 	font-size:1.575em;
@@ -747,7 +750,9 @@ input.code {
 .title_m {
 	padding:0 0 .3em 0;
 	margin-bottom:.1em;
+	
 }
+
 .title_m ul li {
 	background: #ffffff;
 	border-bottom:#e7e8e9 1px solid;
@@ -1265,12 +1270,15 @@ input.code {
 }
 /*=====消费清单=====结束====*/
 /*=====抢红包效果==开始=======*/
+
 .cd-section {
   padding: 2em 0 0 0;
   text-align: center;
   position:relative;
   margin: 0 auto 0 auto;
   width:737px;
+  overflow:hidden;
+  height:1024px;
 }
 .blade3 {
   padding: 0em;
@@ -1715,13 +1723,15 @@ input.code {
 }
 /*======选择抢串串==开始==*/
 .hongbao {
-	background:#f3f3f4;
+	/*background:#f3f3f4;*/
 	height:2em;
 	padding:0.5em 0 0 .5em;
+	position: absolute;
+	width:98%;
 }
 .hongbao h4 {
 	font-size:1.175em;
-	color:#6e7072;
+	color:#ffffff;
 	font-weight:normal;
 	float:left;
 	padding:0 0 0 0;
@@ -1757,8 +1767,8 @@ input.code {
 	background-image:url('../images/qubabaxuanze_01.png');
 	background-repeat: no-repeat;
 	background-size:cover;
-	background-color:#b11313;
-	height:1024px;
+	/*background-color:#b11313;*/
+	/*height:1024px;*/
 	/*height:expression(document.body.offsetHeight + 99 + 'px');*/
 }
 .f-box {
@@ -3245,13 +3255,15 @@ input.code {
 
 /*======选择抢串串==开始==*/
 .hongbao {
-	background:#f3f3f4;
+	/*background:#f3f3f4;*/
 	height:2em;
 	padding:0.5em 0 0 .5em;
+	position: absolute;
+	width:98%;
 }
 .hongbao h4 {
 	font-size:1.175em;
-	color:#6e7072;
+	color:#ffffff;
 	font-weight:normal;
 	float:left;
 	padding:0 0 0 0;
@@ -3288,7 +3300,7 @@ input.code {
 	background-repeat: no-repeat;
 	background-size:cover;
 	background-color:#b11313;
-	height:685px;
+	/*height:685px;*/
 	/*height:expression(document.body.offsetHeight + 99 + 'px');*/
 }
 .f-box {
@@ -4917,8 +4929,9 @@ input.code {
 	background-size:100% 100%;
 	background-color:#f8292f;
 	background:url('../images/qubaba1_015s.png') center -2em no-repeat;
-	height:568px;
-	max-height:667px;
+	/*height:568px;
+	max-height:667px;*/
+	overflow:hidden;
 }
 .qiang h4 {
 	font-size:1.575em;
@@ -6054,6 +6067,7 @@ input.code {
 	height: auto;}
 .tch-share-sns a {
 	color: #555;
+	padding:.5em 0;
 	/*display: block;*/
 	text-decoration:none;}
 
@@ -6227,7 +6241,7 @@ input.code {
 	height:640px;
 }
 .q-box {
-	height:590px;
+	/*height:590px;*/
 }
 .cd-section {
   margin:0em auto 0 auto;
@@ -6236,7 +6250,8 @@ input.code {
 	background-size:100% 100%;
 	background-color:#f8292f;
 	background:url('../images/qubaba1_01s5.png') center -2em no-repeat;
-	height:640px;
+	/*height:640px;*/
+	overflow:hidden;
 }
 }
 @media screen and (min-width:375px) and (max-width:677px) {
@@ -6252,7 +6267,8 @@ input.code {
 }
 .qiang {
 	background:url('../images/qubaba1_016.png') center -2em no-repeat;
-	height:667px;
+	/*height:667px;*/
+	overflow:hidden;
 }
 }
 @media screen and (min-width:411px) and (max-width:731px) {
@@ -6265,7 +6281,8 @@ input.code {
 }
 .qiang {
 	background:url('../images/qubaba1_016plus.png') center -2em no-repeat;
-	height:736px;
+	/*height:736px;*/
+	overflow:hidden;
 }
 }
 @media screen and (min-width:414px) and (max-width:773px) {
@@ -6281,7 +6298,8 @@ input.code {
 }
 .qiang {
 	background:url('../images/qubaba1_016plus.png') center top no-repeat;
-	height:736px;
+	/*height:736px;*/
+	overflow:hidden;
 }
 }
 @media screen and (min-width:435px) and (max-width:773px) {
@@ -6299,7 +6317,8 @@ input.code {
 }
 .qiang {
 	background:url('../images/qubaba1_016p.png') center -2em no-repeat;
-	height:773px;
+	/*height:773px;*/
+	overflow:hidden;
 }
 }
 @media screen and (min-width:768px) and (max-width:1024px) {
@@ -6316,7 +6335,8 @@ input.code {
 }
 .qiang {
 	background:url('../images/qubaba1_01ipad.png') center -2em no-repeat;
-	height:1024px;
+	/*height:1024px;*/
+	overflow:hidden;
 }
 }
 @media screen and (min-width:1028px) and (max-width:1920px) {
@@ -6329,8 +6349,9 @@ input.code {
   margin:0em auto 0 auto;
 }
 .qiang {
-	background:url('../images/qubaba1_01qita.png') center -2em no-repeat;
-	height:900px;
+	background:url('../images/qubaba1_01qita.png') center 0em no-repeat;
+	/*height:900px;*/
+	overflow:hidden;
 }
 }
 
@@ -6462,14 +6483,16 @@ input.bule {
 }
 .hongbao {
 	
-	background:#d74f43;
+	/*background:#d74f43;*/
 	height:1.8em;
 	/*-webkit-height:3.5em;*/
 	padding:0.5em 0 0 0.5em;
+	position: absolute;
+	width:98%;
 }
 .hongbao h4 {
 	font-size:.975em;
-	color:#f5cd88;
+	color:#ffffff;
 	font-weight:normal;
 	float:left;
 	padding:0 0 0 .5em;
@@ -6523,10 +6546,11 @@ input.bule {
 
 .qiang {
 	/*position:relative;*/
-	height:568px;
+	/*height:568px;*/
 	background-image:url('../images/qubaba1_015s.png');
 background-repeat:no-repeat;
 background-size:cover;
+overflow:hidden;
 }
 .qiang h4 {
 	font-size:1.275em;

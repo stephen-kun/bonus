@@ -103,9 +103,12 @@ def get_user_openid(request, access_token_url):
 def is_consumer_dining(openid):
 	try:
 		consumer = Consumer.objects.get(open_id=openid)
+		if consumer.on_table:
+			return consumer.on_table.status
+		else:
+			return False
 	except ObjectDoesNotExist:
 		return False
-	return consumer.on_table.status
 	
 	
 #主键生成方法
@@ -194,6 +197,7 @@ def snd_bonus_random_rcv_bonus(snd_bonus, number_list):
 	number_list.sort(reverse=True)
 	is_best = True
 	for number in number_list: 
+		total_money = 0
 		rcv_bonus = RcvBonus.objects.create(id_bonus=create_primary_key(), snd_bonus=snd_bonus)
 		money_list = WalletMoney.objects.filter(snd_bonus=snd_bonus, is_receive=False)[0:number]
 		number = 0
@@ -203,8 +207,11 @@ def snd_bonus_random_rcv_bonus(snd_bonus, number_list):
 			if money.money.name == LIST_KEY_ID:
 				number += 1
 			money.save()
+			total_money += money.money.price
+		rcv_bonus.bonus_type = snd_bonus.bonus_type
 		rcv_bonus.number = number
-		if is_best and (rcv_bonus.bonus_type == RANDOM_BONUS):
+		rcv_bonus.total_money = total_money
+		if is_best and (rcv_bonus.bonus_type != COMMON_BONUS):
 			rcv_bonus.is_best = True
 			is_best = False
 		rcv_bonus.content = bonus_content_str(bonus=rcv_bonus, type='rcv')
@@ -233,13 +240,9 @@ def action_weixin_pay(data, session):
 		new_snd_bonus.bonus_type = int(bonus.bonus_type)
 		new_snd_bonus.number = bonus.number
 		new_snd_bonus.total_money = bonus.money
-		if new_snd_bonus.bonus_type == COMMON_BONUS:
-			new_snd_bonus.bonus_num = 1
-		else:
-			new_snd_bonus.bonus_num = int(bonus.bonus_num)
+		new_snd_bonus.bonus_num = int(bonus.bonus_num)
 		new_snd_bonus.bonus_remain = new_snd_bonus.bonus_num
 
-		
 		#生成虚拟货币
 		is_send = True
 		money_num = 0
@@ -262,33 +265,121 @@ def action_weixin_pay(data, session):
 	del session['snd_bonus']
 	return 'pay suc!'
 	
+#更新用户钱包余额
+def update_wallet_money(consumer):
+	money_list = WalletMoney.objects.filter(consumer=consumer, is_used=False, is_valid=True, is_send=False)
+	sum_money = float(0)
+	for money in money_list:
+		price = money.money.price
+		sum_money += price
+	
+	consumer.own_bonus_value = sum_money
+	consumer.save()
+	
+#结算操作
+def close_an_account(consumer, ticket, ticket_value):
+	sum = float(0) 			#统计金额
+	is_remain = False			#是否结余
+	#查找就餐会话中抢到的所有红包
+	rcv_bonus_list = RcvBonus.objects.filter(session=consumer.session)
+	for bonus in rcv_bonus_list:
+		money_list = WalletMoney.objects.filter(rcv_bonus=bonus, is_used=False, is_valid=True)
+		for money in money_list:
+			if is_remain:
+				money.consumer = consumer
+				money.ticket = None
+				money.is_send = False
+				money.is_receive = False
+				money.snd_bonus = None
+				money.rcv_bonus = None
+				money.save()
+			else:
+				price = money.money.price
+				sum += price				
+				if sum > ticket_value:
+					sum -= price
+					is_remain = True
+					money.consumer = consumer
+					money.ticket = None
+					money.is_send = False
+					money.is_receive = False
+					money.snd_bonus = None
+					money.rcv_bonus = None					
+					money.save()
+				else:
+					money.ticket = ticket
+					money.consumer = consumer
+					money.save()
+	
+	#使用钱包余额
+	if is_remain == False:
+		wallet_list = WalletMoney.objects.filter(consumer=consumer, is_used=False, is_valid=True, ticket=None)
+		for money in wallet_list:
+			price = money.money.price
+			sum += price	
+			if sum > ticket_value:
+				sum -= price
+				break
+			else:
+				money.ticket = ticket
+				money.save()	
+	return sum
+	
+	
 #创建消费券事件
 def action_create_ticket(data):
-	#从request中解析出openid
-	#在Ticket表中创建一条新的记录
-	#更新SystemMoney表中ticket字段
-	#更新PersonMoney表中ticket字段
-	src_keys = ['openid', 'person_wallet', 'total_money','ticket_value', 'auth_code']
+	src_keys = ['openid', 'user_wallet', 'total_money','ticket_value', 'auth_code']
 	if check_ajax_params(src_keys, data):
 		openid = data['openid']
-		person_wallet = data['person_wallet']
-		total_money = data['total_money']
-		ticket_value = data['ticket_value']
+		consumer = Consumer.objects.get(open_id=openid)		
+		ticket_value = float(data['ticket_value'])
 		auth_code = data['auth_code']
 		if auth_code != AUTH_CODE:
 			return dict(status=2, error_message="验证码错误，请重新输入！")
+	
 		#生成一条消费券记录
-		new_ticket = Ticket.objects.create(id_ticket=create_primary_key(), ticket_value=float(ticket_value), valid_time=timezone.now)
-		consumer = Consumer.objects.get(open_id=openid)
+		new_ticket = Ticket.objects.create(id_ticket=create_primary_key(), valid_time=timezone.now())
 		new_ticket.consumer = consumer
-		new_ticket.save()
-		#判断是否有结余
-		if float(total_money) <= float(ticket_value):
-			pass
-		else:
-			pass
+
+		#结算操作
+		ticket_value = close_an_account(consumer, new_ticket, ticket_value)
+		new_ticket.ticket_value = ticket_value
+		new_ticket.save
 		
-		return dict(status=0, part1=1234, part2=2345, part3=4567)
+		#失效该就餐会话发出的红包，将未抢红包返回客户账号
+		snd_bonus_list = SndBonus.objects.filter(session=consumer.session, is_exhausted=False)
+		for snd_bonus in snd_bonus_list:
+			snd_bonus.is_valid = False
+			snd_bonus.save()
+			rcv_bonus_list = RcvBonus.objects.filter(snd_bonus=snd_bonus, is_receive=False)
+			for rcv_bonus in rcv_bonus_list:
+				money_list = WalletMoney.objects.filter(rcv_bonus=rcv_bonus)
+				for money in money_list:
+					money.snd_bonus = None
+					money.rcv_bonus = None
+					money.is_send = False
+					money.is_receive = False
+					money.save()
+			
+		#关闭就餐会话，释放桌台
+		consumer.session.over_time = timezone.now()
+		consumer.session.save()
+		consumer.on_table.status = False
+		consumer.on_table.save()			
+		consumer_list = Consumer.objects.filter(session=consumer.session)
+		for user in consumer_list:
+			print("++++++++++++请会话以及桌台+++++++++++++++++")
+			user.on_table = None
+			user.session = None
+			user.save()
+		
+		new_consumer = Consumer.objects.get(open_id=openid)	
+		#更新用户钱包余额
+		update_wallet_money(new_consumer)
+		
+		#返回消费券码以及券值
+		id_ticket = str(new_ticket.id_ticket)
+		return dict(status=0, ticket_value=ticket_value, part1=id_ticket[0:3], part2=id_ticket[3:6], part3=id_ticket[6:10])
 	else:
 		return dict(status=1, error_message="参数错误")
 		
@@ -389,177 +480,91 @@ def display_get_bonus(id_record, bonus_type):
 		pass
 	return bonus_list
 	
-#抢红包事件
-def action_get_bonus(openid):
-	#返回抢到的红包个数
-	bonus_num = 0	#统计抢到的红包个数
-	number = 0		#统计串串个数
-	total_money = 0 #统计抢到的红包总额
-	
-	response = dict(status=0, number=1)
-	print("==  action_get_bonus =")
-	return json.dumps(response)
-	
-	consumer = Consumer.objects.get(open_id=openid)
-	session = consumer.session							#就餐会话
-	snd_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True)
-	primary_key = create_primary_key()		
-	if len(snd_bonus_list):
-		# 创建一条抢红包记录
-		record_rcv_bonus = RecordRcvBonus.objects.create(id_record=primary_key, consumer=consumer)
-		for bonus in snd_bonus_list:
-			rcv_bonus_list = RcvBonus.objects.filter(consumer=consumer,snd_bonus=bonus)
-			if len(rcv_bonus_list) == 0:
-				if (bonus.bonus_type == COMMON_BONUS) and (bonus.to_table != consumer.on_table.index_table):
-					continue
-				new_rcv_bonus = RcvBonus.objects.create(id_bonus=create_primary_key(), snd_bonus=bonus, consumer=consumer, record_rcv_bonus=record_rcv_bonus)													
-				money_list = WalletMoney.objects.filter(snd_bonus=bonus, is_receive=False)
-
-				print('===money:%d  remain:%d==\n'%(len(money_list), bonus.bonus_remain))
-				get_num = 0
+#抢红包
+def get_bonus(consumer, session, record_rcv_bonus, bonus_list, param_tuple):
+	bonus_num = param_tuple[0]
+	total_money = param_tuple[1]
+	total_number = param_tuple[2]
+	if len(bonus_list):
+		for bonus in bonus_list:
+			#判断该红包是否能抢
+			get_bonus = RcvBonus.objects.filter(snd_bonus=bonus, consumer=consumer)
+			if len(get_bonus):
+				continue
+			remain_bonus = RcvBonus.objects.filter(snd_bonus=bonus).exclude(is_receive=True)
+			length = len(remain_bonus)
+			if length:
+				rand = random.randint(0, (length-1))
+				bonus_num += 1
+				total_money += remain_bonus[rand].total_money
+				total_number += remain_bonus[rand].number
+				remain_bonus[rand].consumer = consumer
+				remain_bonus[rand].datetime = timezone.now()
+				remain_bonus[rand].session = session
+				remain_bonus[rand].record_rcv_bonus = record_rcv_bonus
+				remain_bonus[rand].is_receive = True
+				remain_bonus[rand].save()
 				if bonus.bonus_remain == 1:
-					get_num = len(money_list)
-				else:
-					num = len(money_list) - bonus.bonus_remain + 1
-					get_num = random.randint(1, num)	
-				print('****get_num:%d***\n'%(get_num))
-				for i in range(0, get_num):
-					if money_list[i].money.name == LIST_KEY_ID:
-						number += 1	#统计抢到的串串个数
-					money_list[i].rcv_bonus = new_rcv_bonus
-					money_list[i].is_receive = True
-					money_list[i].consumer = consumer
-					money_list[i].save()	
-					total_money += money_list[i].money.price
-				bonus_num +=1
-				bonus.bonus_remain -= 1
-				if bonus.bonus_remain == 0:
+					bonus.bonus_remain = 0
 					bonus.is_exhausted = True
-				bonus.save()
-				new_rcv_bonus.number = number
-				new_rcv_bonus.bonus_type = bonus.bonus_type
-				new_rcv_bonus.content = bonus_content_str(bonus=new_rcv_bonus)
+				else:
+					bonus.bonus_remain -= 1
+				bonus.save()	 
+	return [bonus_num, total_money, total_number]
+	
+#抢红包事件
+def action_get_bonus(openid, session):
+
+	#返回抢到的红包个数
+	bonus_num = 0			#统计抢到的红包个数
+	total_number = 0		#统计串串个数
+	total_money = 0 		#统计抢到的红包总额
+	
+	consumer = Consumer.objects.get(open_id=openid)				
+	
+	#准备一条抢红包记录
+	record_rcv_bonus = RecordRcvBonus(id_record=create_primary_key(), consumer=consumer)
+	
+	#过滤能够抢的各类红包
+	common_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True, bonus_type=COMMON_BONUS).exclude(consumer=consumer)
+	random_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True, bonus_type=RANDOM_BONUS)
+	system_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True, bonus_type=SYS_BONUS)	
+	
+	#分配红包
+	param_list = [bonus_num, total_money, total_number]
+	param_list = get_bonus(consumer, consumer.session, record_rcv_bonus,common_bonus_list, param_list)
+	param_list = get_bonus(consumer, consumer.session, record_rcv_bonus,random_bonus_list, param_list)
+	param_list = get_bonus(consumer, consumer.session, record_rcv_bonus,system_bonus_list, param_list)	
+	bonus_num = param_list[0]
+	total_money = param_list[1]
+	total_number = param_list[2]
+	
+	if bonus_num:
+		#更新session信息
+		consumer.session.total_bonus += bonus_num
+		consumer.session.total_money += total_money
+		consumer.session.total_number += total_number
+		consumer.session.save()
 				
-				#添加就餐会话信息
-				new_rcv_bonus.session = session
-				session.total_money += total_money
-				session.total_bonus += number
-				session.save()
-				
-				new_rcv_bonus.save()
-				consumer.rcv_bonus_num += number
-				consumer.save()
+		#更新抢红包记录
 		record_rcv_bonus.bonus_num = bonus_num
 		record_rcv_bonus.save()
-	response = dict(status=0, number=bonus_num, id_record=primary_key)
+		
+		#存储django session
+		session['id_record'] = record_rcv_bonus.id_record
+			
+	response = dict(status=0, number=bonus_num)
 	return json.dumps(response)
 	
 #生成虚拟货币
 def create_vitural_money(consumer, snd_bonus, recharge, money, number, is_send):
 	print("***create_vitural_money %s**"%(number))
 	for x in range(int(number)):
-		wallet_money = WalletMoney.objects.create(id_money=create_primary_key(), consumer=consumer, recharge=recharge, snd_bonus=snd_bonus, money=money)
+		wallet_money = WalletMoney(id_money=create_primary_key(), consumer=consumer, recharge=recharge, snd_bonus=snd_bonus, money=money)
 		wallet_money.is_send = is_send
+		wallet_money.is_valid = True
+		wallet_money.is_used = False
 		wallet_money.save()
-	
-#发普通红包事件
-def action_set_common_bonus(consumer, data_dir):
-	#在PersonBonus表中创建一条记录
-	#查询Consumer表中own_bonus_detail字段，判断是否需要微信支付
-	#如果需要微信支付，计算出需要支付的金额，然后调用微信支付
-	print('***action_set_common_bonus******\n')
-	id_bonus = create_primary_key()
-	index_table = data_dir['table']
-	dining_table = DiningTable.objects.get(index_table=index_table)
-	snd_bonus = SndBonus.objects.create(id_bonus=id_bonus, consumer=consumer)
-	snd_bonus.bonus_type = data_dir['bonus_type']
-	snd_bonus.to_table = index_table
-	snd_bonus.to_message = data_dir['message']
-	snd_bonus.bonus_num = dining_table.seats
-	snd_bonus.bonus_remain = dining_table.seats
-	
-	vitural_money_list = VirtualMoney.objects.all()
-	l_id = []
-	l_money = []
-	for money in vitural_money_list:
-		l_id.append(money.id)
-		l_money.append(money)
-	money_dir = dict(zip(l_id, l_money))
-	
-	recharge = Recharge.objects.create(id_recharge=create_primary_key(), recharge_person=consumer)
-	total_money = 0
-	l_name = []
-	l_good = []
-	for key, value in data_dir.items():
-		if key in money_dir:
-			bc = _BonusContent()
-			bc.name = money_dir[key].name
-			bc.price = money_dir[key].price
-			bc.unit = money_dir[key].unit
-			bc.number = int(value)
-			l_name.append(bc.name)
-			l_good.append(bc)
-			total_money += bc.number*money_dir[key].price
-			#生成虚拟货币
-			create_vitural_money(consumer, snd_bonus, recharge, money_dir[key], value)
-			if key == LIST_KEY_ID:
-				snd_bonus.number = bc.number
-				consumer.snd_bonus_num += bc.number
-				consumer.save()
-	snd_bonus.session = consumer.session
-	snd_bonus.save()
-	good_dir = dict(zip(l_name, l_good))
-	return dict(good_list=good_dir, total_money=total_money, enough_money=False, id_recharge=recharge.id_recharge)
-	 
-
-#发手气红包事件
-def action_set_random_bonus(consumer, data_dir):
-	#在PersonBonus表中创建一条记录
-	#查询Consumer表中own_bonus_detail字段，判断是否需要微信支付
-	#如果需要微信支付，计算出需要支付的金额，然后调用微信支付	
-	print('***action_set_random_bonus******\n')	
-	id_bonus = create_primary_key()
-	index_table = data_dir['table']
-	dining_table = DiningTable.objects.get(index_table=index_table)
-	snd_bonus = SndBonus.objects.create(id_bonus=id_bonus, consumer=consumer)
-	snd_bonus.bonus_type = data_dir['bonus_type']
-	snd_bonus.to_table = index_table
-	snd_bonus.to_message = data_dir['message']
-	snd_bonus.bonus_num = data_dir['bonus_num']
-	snd_bonus.bonus_remain = data_dir['bonus_num']
-	vitural_money_list = VirtualMoney.objects.all()
-	l_id = []
-	l_money = []
-	for money in vitural_money_list:
-		l_id.append(money.id)
-		l_money.append(money)
-	money_dir = dict(zip(l_id, l_money))
-	
-	recharge = Recharge.objects.create(id_recharge=create_primary_key(), recharge_person=consumer)
-	total_money = 0
-	l_name = []
-	l_good = []
-	for key, value in data_dir.items():
-		if key in money_dir:
-			bc = _BonusContent()
-			bc.name = money_dir[key].name
-			bc.price = money_dir[key].price
-			bc.unit = money_dir[key].unit
-			bc.number = int(value)
-			l_name.append(bc.name)
-			l_good.append(bc)
-			total_money += bc.number*money_dir[key].price
-			#生成虚拟货币
-			create_vitural_money(consumer, snd_bonus,recharge, money_dir[key], value)
-			if key == LIST_KEY_ID:
-				snd_bonus.number = bc.number
-				consumer.snd_bonus_num += bc.number
-				consumer.save()		
-	snd_bonus.session = consumer.session
-	snd_bonus.save()
-	good_dir = dict(zip(l_name, l_good))
-	return dict(good_list=good_dir, total_money=total_money, enough_money=False, id_recharge=recharge.id_recharge)
-
 	
 #将发红包内容存入session
 def snd_bonus_to_session(request, bonus):
@@ -632,7 +637,7 @@ def decode_choose_pay(request, data_dir):
 def handle_ajax_request(action, data, session):
 	if isinstance(data, (dict,)):	
 		if action == AJAX_GET_BONUS:
-			return action_get_bonus(data['openid'])
+			return action_get_bonus(data['openid'], session)
 		elif action == AJAX_CREATE_TICKET:
 			response = action_create_ticket(data)
 			return json.dumps(response)

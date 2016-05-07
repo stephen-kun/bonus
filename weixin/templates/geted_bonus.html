@@ -1,6 +1,11 @@
-﻿{% extends "_bonus_base.html" %}
+﻿<!-- 查看抢到的红包 -->
+{% extends "_bonus_base.html" %}
+
+{% block body %}
+<body class="qubaba_hsbj bottom_40">
 
 {% block content %}
+<article>
 <section>
 {% for bonus in system_bonus %}
     <div class="head">
@@ -82,9 +87,13 @@
 	<script type="text/javascript" src="{{static_url}}js/jquery.js"></script>
 	<script type="text/javascript" src="{{static_url}}js/geted_bonus.js"></script>
 </section>
+</article>
 
 {% endblock %}
 
 {% block menu %}
 {% include '_menu.html' %}
+{% endblock %}
+
+</body>
 {% endblock %}

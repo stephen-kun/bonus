@@ -14,19 +14,19 @@
 <script src="{{static_url}}js/jquery-1.8.2.min.js"></script>
 </head>
 
-<body class='{{body_class}}'>
-	<hgroup>
-	{% block header %}
-	{% endblock %}	
-	</hgroup>
+{% block body %}
 
-	<article class='{{article_class}}'>
-	{% block content %}
-	{% endblock %}	
-	</article>
-	
-	{% block menu %}
-	{% endblock %}
+{% block header %}
+{% endblock %}	
 
-</body>
+
+{% block content %}
+{% endblock %}	
+
+
+{% block menu %}
+{% endblock %}
+
+{% endblock %}
+
 </html>

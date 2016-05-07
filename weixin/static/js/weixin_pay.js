@@ -1,4 +1,4 @@
-
+ï»¿
 function consumer_pay(url, openid, money, method){
 	var xmlhttp;
 	if (window.XMLHttpRequest)
@@ -17,8 +17,8 @@ function consumer_pay(url, openid, money, method){
 	{
 		if(xmlhttp.readyState==4 && xmlhttp.status==200)
 		{
-			// ÊµÏÖÌø×ª
-			$("#weixin").html('<input type="button" class="blue" value="Î¢ÐÅÖ§¸¶" >');
+			// å®žçŽ°è·³è½¬
+			$("#weixin").html('<input type="button" class="blue" value="å¾®ä¿¡æ”¯ä»˜" >');
 		}
 	}
 	xmlhttp.open("POST", url, true);

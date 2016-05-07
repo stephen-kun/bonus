@@ -77,7 +77,7 @@ def user_subscribe(openid):
 		name = user_info.get_name()
 		sex = user_info.get_sex()
 		headimgurl = user_info.get_headimgurl()
-		consumer = Consumer.objects.create(open_id=openid, name=name, sex=sex, picture=headimgurl)	
+		consumer = Consumer(open_id=openid, name=name, sex=sex, picture=headimgurl)	
 		consumer.subscribe = True
 	consumer.save()
 	return consumer
@@ -85,20 +85,19 @@ def user_subscribe(openid):
 #更新或创建就餐会话
 def update_or_create_session(table, consumer):
 	session = None
-	if table.status:
-		#更新会话
-		consumer_list = Consumer.objects.filter(on_table=table)
+	consumer_list = Consumer.objects.filter(on_table=table)
+	if len(consumer_list):
 		session = consumer_list[0].session
 	else:
 		#创建会话
 		session = DiningSession.objects.create(id_session=create_primary_key(), table=table)
-		table.status = True
-		table.save()
 	consumer.on_table = table
 	consumer.session = session
 	consumer.save()
 	session.person_num += 1
 	session.save()
+	table.status = True
+	table.save()
 	return session
 	
 class PostResponse():
@@ -150,20 +149,21 @@ class PostResponse():
 	def _scan(self):
 		# 获取桌号
 		index_table = self.message.key
+		table = DiningTable.objects.get_or_create(index_table=index_table)  		
 		#判断是否已就坐
 		try:
-			table = DiningTable.objects.get(index_table=index_table)  
 			consumer = Consumer.objects.get(open_id=self.source)
-			if consumer.session and consumer.on_table.index_table != index_table:
-				return wechat.response_text(content =  u'请您先结算%s号桌所抢红包，再扫描该桌'%(consumer.on_table.index_table))
-			elif consumer.session and consumer.on_table.index_table == index_table:
-				return ''
-			#更新或创建就餐会话		
-			session = update_or_create_session(table, consumer)	
-			# 返回选座信息
-			return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))
 		except ObjectDoesNotExist:
-			return wechat.response_text(content = u'该桌台不存在')
+			consumer = user_subscribe(self.source)	
+		if consumer.session and consumer.on_table.index_table != index_table:
+			return wechat.response_text(content =  u'请您先结算%s号桌所抢红包，再扫描该桌'%(consumer.on_table.index_table))
+		elif consumer.session and consumer.on_table.index_table == index_table:
+			return ''
+		#更新或创建就餐会话		
+		session = update_or_create_session(table[0], consumer)	
+		# 返回选座信息
+		return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))			
+
 		
 		
 	#菜单跳转事件

@@ -1,7 +1,11 @@
-﻿{% extends "_bonus_base.html" %}
+﻿<!-- 支付 -->
+{% extends "_bonus_base.html" %}
+
+{% block body %}
+<body class="bottom_40">
 
 {% block content %}
-
+<article>
 <section>
   	<div class="issue-top">
     	
@@ -42,9 +46,11 @@
 </section>
 
 <script type="text/javascript" src="{{static_url}}js/weixin_pay.js"></script>
-
+</article>
 {% endblock %}
 
 {% block menu %}
 {% include '_menu.html' %}
+{% endblock %}
+</body>
 {% endblock %}

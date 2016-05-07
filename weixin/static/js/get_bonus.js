@@ -1,12 +1,5 @@
-
-//´°¿ÚĞ§¹û
-//µã»÷classÎªtc ÏÔÊ¾
-$(".tc").click(function(){
-	$("#popup").fadeIn(1500);//²éÕÒIDÎªpopupµÄDIV fadeIn()ÏÔÊ¾µ¯³öÊ±¼ä
-	tc_center();
-});
-
-//´°¿ÚË®Æ½¾ÓÖĞ
+ï»¿
+//çª—å£æ°´å¹³å±…ä¸­
 $(window).resize(function(){
 	tc_center();
 });
@@ -19,7 +12,7 @@ function tc_center(){
 }	
 
 function click_get_bonus(url, openid){
-	// ajax ÇëÇó
+	// ajax è¯·æ±‚
 	var data = '{"action":"ACTION", "openid":"OPENID", "timestamp":"TIMESTAMP"}';
 	var curr_time = new Date();
 	data = data.replace(/ACTION/, 'ajax_get_bonus').replace(/OPENID/,openid).replace(/TIMESTAMP/, curr_time);
@@ -34,11 +27,11 @@ function click_get_bonus(url, openid){
 			if(JSONObject.status == '0')
 			{
 				if(JSONObject.number == '0'){
-					$("#rcv_bonus").html('<font class="f_huangse">ÊÖÂıÁË£¬ºì°üÒÑÇÀÍê</font>');
+					$("#rcv_bonus").html('<font class="f_huangse">æ‰‹æ…¢äº†ï¼Œçº¢åŒ…å·²æŠ¢å®Œ</font>');
 					$("#link1").hide();
 				}
 				else{
-					var html = '¹§Ï²Äú£¡ÇÀµ½<font class="f_huangse">NUMBER</font>´®´®£¡';
+					var html = 'æ­å–œæ‚¨ï¼æŠ¢åˆ°<font class="f_huangse">NUMBER</font>çº¢åŒ…ï¼';
 					html = html.replace(/NUMBER/, JSONObject.number);
 					$("#rcv_bonus").html(html);
 					$("#link2").hide();
@@ -49,7 +42,8 @@ function click_get_bonus(url, openid){
 				alert(JSONObject.error_msg);
 			}
 			
-			// ¿ØÖÆ½á¹ûÑùÊ½µ¯³ö
+			// æ§åˆ¶ç»“æœæ ·å¼å¼¹å‡º
+			$("#popup").fadeIn(1500);//æŸ¥æ‰¾IDä¸ºpopupçš„DIV fadeIn()æ˜¾ç¤ºå¼¹å‡ºæ—¶é—´
 			tc_center();
 		}
 	};

@@ -1,7 +1,11 @@
-﻿{% extends "_bonus_base.html" %}
+﻿<!-- 收到的红包 -->
+{% extends "_bonus_base.html" %}
+
+{% block body %}
+<body class="bottom_40">
 
 {% block content %}
-
+<article class="issue-bj">
 <section>
   	<div class="issue-top">
     	<h4>{{consumer.name}}</h4>
@@ -35,7 +39,7 @@
 		{% for bonus in rcv_bonus_list %}
             <li class="shdbai">
 				<a href="{{bonus_detail_url}}/?id_bonus={{bonus.id_bonus}}" target="_parent">
-            	<h3>{{bonus.table.index_table}}号桌</h3>
+            	<h3>{{bonus.session.table.index_table}}号桌</h3>
 				{% if bonus.is_best %}
 				<h3><span class="rfloat"><img src="{{static_url}}images/5_zan.png" align="absmiddle"></span></h3>
 				{% endif %}
@@ -48,5 +52,14 @@
 		</ul>
 	</div>
 </section>
+</article>
 
 {% endblock %}
+
+{% block menu %}
+{% include '_menu.html' %}
+{% endblock %}
+
+</body>
+{% endblock %}
+
