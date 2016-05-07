@@ -1,0 +1,51 @@
+<html>
+{% include "header.html" %}
+
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="award_box_title">收到的红包</div>
+            <div class="award_box_content">
+                <div class="ranking title_m">
+                    <ul>
+                        {% for  consumer in consumer_list %}
+                        <li>
+                        <h6>{{consumer.bonus_range}}</h6>
+                        <ul class="ranking_name">
+                            <li>
+                            <h2><img src="{{consumer.picture}}" align="absmiddle"></h2>
+                            <h4 class="title_mw">
+                                <span>{{consumer.name}}</span>
+                            </h4>
+                            </li>
+                        </ul>
+                        <h5>{{consumer.rcv_bonus_num}}串</h5>
+                        </li>		
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+<script language="JavaScript">
+var TbRow = document.getElementById("tab-color");
+if (TbRow != null)
+{
+for (var i=0;i<TbRow.rows.length ;i++ )
+{
+if (TbRow.rows[i].rowIndex%2==1)
+{
+TbRow.rows[i].style.backgroundColor="#ffffff";
+}
+else
+{
+TbRow.rows[i].style.backgroundColor="#f7f7f4";
+}
+}
+}
+</script>    
+</article>
+</body>
+
+</html>

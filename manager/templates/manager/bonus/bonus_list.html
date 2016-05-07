@@ -1,0 +1,55 @@
+<html>
+{% include "header.html" %}
+
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="award_box_title">发出的红包</div>
+            <div class="award_box_content">
+                <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
+                  <tr>
+                    <th width="20%">发送者</th>
+                    <th width="20%">数量</th>
+                    <th width="20%">类型</th>
+                    <th width="20%">目标</th>
+                    <th width="20%">操作</th>
+                  </tr>
+
+                  {% for bonus in bonus_list %}
+                  <tr>
+                      <td class="color_a">{{ bonus.consumer.name }}</td>
+                      <td class="color_b">{{ bonus.bonus_num }}</td>
+                    <td class="color_b">普通红包</td>
+                    <td class="color_b">{{ bonus.to_table }}</td>
+                    <td><img src="/static/images/admin/edit.png" align="absmiddle">
+                        <a href="{% url 'bonus_detail' %}?type=send&bonus_id={{ bonus.id_bonus }}" class="color_a" target="mainFrame">查看详情</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+
+                </table>
+            </div>
+        </div>
+    </section>
+<script language="JavaScript">
+var TbRow = document.getElementById("tab-color");
+if (TbRow != null)
+{
+for (var i=0;i<TbRow.rows.length ;i++ )
+{
+if (TbRow.rows[i].rowIndex%2==1)
+{
+TbRow.rows[i].style.backgroundColor="#ffffff";
+}
+else
+{
+TbRow.rows[i].style.backgroundColor="#f7f7f4";
+}
+}
+}
+</script>    
+</article>
+</body>
+
+</html>

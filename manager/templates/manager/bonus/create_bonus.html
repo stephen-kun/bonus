@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+{% include "header.html" %}
+
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="award_box_title">创建红包</div>
+            <div class="award_box_content">
+                <div class="modify_password">
+                	<ul>
+                        <li>
+                        	<h4>冠名</h4>
+                            <span><input type="text" id="title" class="admin_pass" value="红包"></span>
+                        </li>
+                        <li>
+                        	<h4>留言</h4>
+                            <span><input type="text" id="message" class="admin_pass"></span>
+                        </li>
+
+                        <li>
+                        	<h4>有效期(小时)</h4>
+                            <span>
+                                <span><input type="text" id="valid_time" class="admin_pass" value=24></span>
+                            </span>
+                        </li>
+                        <li>
+                        	<h4>个数</h4>
+                            <span><input type="text" id="counter" class="admin_pass" value=1></span>
+                        </li>
+                        {% for good in good_list %}
+                        <li>
+                        <h4>{{ good.name }}({{ good.price }}元/{{ good.unit }})</h4>
+                        <span><input id="{{ good.name }}" type="text" class="admin_pass" value=0></span>
+                        </li>
+                        {% endfor %}
+                        <li>
+                        	<h4>&nbsp;</h4>
+                            <span>
+                                <input type="button" id="send" class="admin_save" value="发送">
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+    </section>    
+</article>
+<script>
+ $("#send").click(function(){
+    var title = $("#title").val();
+    var message = $("#message").val();
+    var valid_time = $("#valid_time").val();
+    var counter = $("#counter").val();
+
+    {% for good in good_list %}
+    if( $("#{{ good.name }}").val() == "" ){
+            Showbo.Msg.alert("输入出错");
+            return;
+    }
+    {% endfor %}
+
+    if( (/(^[1-9]\d*$)/.test(valid_time) ) &&(/(^[1-9]\d*$)/.test(counter) ))
+    {
+    $.post("{% url 'create_bonus_action' %}", {"title":title, "message":message, "valid_time": valid_time, "counter":counter 
+        {% for good in good_list %}
+       ,"{{ good.name }}":$("#{{ good.name }}").val()
+        {% endfor %}
+        },function(data){
+        if(data.state==0){
+                Showbo.Msg.alert("成功:" + data.message);
+                    //window.location.reload();
+                }else{
+                    Showbo.Msg.alert("失败:" + data.message);
+                }
+                }, "json");
+    }
+    else{
+        Showbo.Msg.alert("输入出错")
+    }
+});
+</script>
+
+
+</body>
+</html>

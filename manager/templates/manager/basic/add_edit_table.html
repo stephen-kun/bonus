@@ -5,60 +5,95 @@
 <body>
 <article>
     <section>
-    	<div class="right_award_box">
-        	<div class="award_box_title">编辑桌号</div>
+        <div class="right_award_box">
+            {% ifequal action 'add' %}
+            <div class="award_box_title">增加桌号</div>
+            {% else %}
+            <div class="award_box_title">编辑桌号</div>
+            {% endifequal %}
             <div class="award_box_content">
                 <div class="modify_password">
-                	<form action="add_edit_tale.html" method="get">
-                	<ul>
-                    	<li>
-                        	<h4>桌号</h4>
-                            <span><input type="text" class="admin_pass" value="15"></span>
-                        </li>
-                        <li>
-                        	<h4>人数</h4>
-                            <span><input type="text" class="admin_pass"  value="4"></span>
-                        </li>
-                       <li>
-                        	<h4>是否包间</h4>
+                        <ul>
+                            <li>
+                            <h4>桌号</h4>
+                            <input type="hidden" id="action" class="admin_pass" value="{{ action }}">
+                            <span><input id="table_num"  type="text" class="admin_pass" value="{{ table.index_table }}" ></span>
+                            </li>
+                            <li>
+                            <h4>人数</h4>
+                            <span><input type="text" id="capacity" class="admin_pass" value="{{ table.seats }}" ></span>
+                            </li>
+                            <li>
+                            <h4>是否包间</h4>
                             <span>
-                            	<label>
-            	    <input type="radio" name="man" value="是" id="RadioGroup1_0">
-            	    是</label>
-            	  <label>
-            	    <input type="radio" name="man" value="否" id="RadioGroup1_1">
-            	    否</label>
+                                {% if table.is_private %}
+                                <label>
+                                    <input type="radio" name="is_vip" value="否" id="RadioGroup1_0"  >
+                                    否
+                                </label>
+                                <label>
+                                    <input type="radio" name="is_vip" value="是" id="RadioGroup1_1"  checked>
+                                    是
+                                </label>
+                                {% else %}
+                                <label>
+                                    <input type="radio" name="is_vip" value="否" id="RadioGroup1_0"  checked>
+                                    否
+                                </label>
+                                <label>
+                                    <input type="radio" name="is_vip" value="是" id="RadioGroup1_1" >
+                                    是
+                                </label>
+                                {% endif %}
                             </span>
-                        </li>
-                        <li>
-                        	<h4>状态</h4>
+                            </li>
+                            <li>
+                            <h4>&nbsp;</h4>
                             <span>
-                            	<label>
-            	    <input type="radio" name="man" value="就餐" id="RadioGroup1_0">
-            	    就餐</label>
-            	  <label>
-            	    <input type="radio" name="man" value="未就餐" id="RadioGroup1_1">
-            	    未就餐</label>
+                                <input type="button" id="save" class="admin_save" value="提交">
                             </span>
-                        </li>
-                        <li>
-                        	<h4>&nbsp;</h4>
-                            <span>
-                                <input type="submit" class="admin_save" value="提交">
-                                
-                            </span>
-                        </li>
-                        
-                    </ul>
-                    </form>
+                            </li>
+
+                        </ul>
                     <div class="clear"></div>
                 </div>
             </div>
         </div>
     </section>    
-    
-    
 </article>
+
+<script>
+ $("#save").click(function(){
+    var action = $("#action").val();
+    var table_num = $("#table_num").val();
+    var capacity = $("#capacity").val();
+    var password2 = $("#password2").val();
+
+    var is_vip=0
+    var Obj = document.getElementsByName("is_vip"); 
+    for(i=0;i<Obj.length;i++)
+    {
+        if(Obj[i].checked)
+            is_vip = i;
+    }
+
+    if( table_num!="" && (/(^[1-9]\d*$)/.test(capacity) ))
+    {
+    $.post("{% url 'table_action' %}", {'action': action, "table_num":table_num, "capacity": capacity, "is_vip": is_vip },function(data){
+        if(data.state==0){
+                Showbo.Msg.alert("成功:" + data.message);
+                    parent.mainFrame.window.location.reload()
+                    window.location.href="{% url 'tables_info' %}";
+                }else{
+                    Showbo.Msg.alert("失败:" + data.message);
+                }
+                }, "json");
+    }
+    else{
+        Showbo.Msg.alert("输入出错")
+    }
+});
+</script>
 
 </body>
 </html>
