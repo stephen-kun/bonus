@@ -2,7 +2,7 @@
 {% extends "_bonus_base.html" %}
 
 {% block body %}
-<body class="bottom_40">
+<body class="qubaba_hsbj bottom_40">
 
 {% block content %}
 <article>
@@ -37,9 +37,9 @@
     </div>
 	
     <div class="queding">
-        <h2 id='weixin' ><input type="button" class="green" value="微信支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '0')"></h2>
+        <span id='weixin' ><input type="button" class="green" value="微信支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '0')"></span>
 		{% if enough_money %}
-        <h2 id='wallet'><input type="button" class="bule" value="钱包支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '1')"></h2>
+        <span id='wallet'><input type="button" class="bule" value="钱包支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '1')"></span>
 		{% endif %}
     </div>
 	

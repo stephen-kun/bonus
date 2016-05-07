@@ -806,7 +806,7 @@ input.code {
 	overflow:hidden;
 	width:768px;
 	height:auto;
-	padding:2em 0 1em 0;
+	padding:1em 0 1em 0;
 	margin:0 auto;
 }
 .issue-top h4 {
@@ -842,7 +842,7 @@ input.code {
 	border:#ffffff 1px solid;
 }
 .Angel h2 img {
-	width:12.272em;
+	width:7.272em;
 }
 .issue-top h5 {
 	padding:0 .5em;
@@ -2346,7 +2346,7 @@ input.code {
 	overflow:hidden;
 	width:768px;
 	height:auto;
-	padding:2em 0 1em 0;
+	padding:1em 0 1em 0;
 	margin:0 auto;
 }
 .issue-top h4 {
@@ -2381,7 +2381,7 @@ input.code {
 	text-align:center;
 }
 .Angel h2 img {
-	width:10.272em;
+	width:7.272em;
 }
 .issue-top h5 {
 	padding:0 .5em;
@@ -3875,7 +3875,7 @@ input.code {
 	overflow:hidden;
 	width:414px;
 	height:auto;
-	padding:2em 0 1em 0;
+	padding:1em 0 1em 0;
 	margin:0 auto;
 }
 .issue-top h4 {
@@ -3909,6 +3909,9 @@ input.code {
 	top:-6.05em;
 	text-align:center;
 	border:#ffffff 1px solid;
+}
+.Angel h2 img {
+	width:4.872em;
 }
 .issue-top h5 {
 	padding:0 .5em;
@@ -4528,7 +4531,7 @@ input.code {
 	width:2em;
 	height:2em;
 	overflow:hidden;
-	float:left;
+	float:right;
 	padding:0;
 	margin:0;
 }
@@ -4734,7 +4737,7 @@ input.red:focus:visited {
 		background:#bdbec0;
 	}*/
 input.jin {
-	height:2.5em;
+	height:2.2em;
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#dcbc83;
@@ -4997,10 +5000,10 @@ input.code {
 	}
 .box-food {
 	background:#d1d2d4;
-	margin:1em .5em 1em .5em;
+	margin:.8em .5em 1em .5em;
 }
 .box-food ul li {
-	padding:.8em;
+	padding:.7em;
 	border-bottom:#e7e7e4 1px solid;
 	margin:0;
 }
@@ -5035,7 +5038,7 @@ input.code {
 /*======新我的钱包====开始==20160413=======*/
 .qbbaise {
 	background:#ffffff;
-	margin-top:0;
+	
 }
 .qbhui {
 	color:#fbfbfb;
@@ -5099,7 +5102,7 @@ input.code {
 	padding:0 .8em;
 }
 .qubaba_hsbj {
-	background:url(../images/qubaba2_04.png) center top no-repeat #e7e8e9;
+	background:url(../images/qubaba2_04.png) center -2em no-repeat #e7e8e9;
 }
 /*
 ==对象==
@@ -5460,7 +5463,7 @@ input.code {
 	overflow:hidden;
 	width:320px;
 	height:auto;
-	padding:1em 0 .5em 0;
+	padding:.5em 0 .5em 0;
 	margin:0 auto;
 }
 .issue-top h4 {
@@ -5472,7 +5475,7 @@ input.code {
 }
 .Angel {
 	position:relative;
-	height:10em;
+	height:8.5em;
 	margin:0 auto;
 }
 .Angel-baby {
@@ -5494,6 +5497,9 @@ input.code {
 	margin:0 auto;position:relative;
 	text-align:center;
 	border:#ffffff 1px solid;
+}
+.Angel h2 img {
+	width:3.942em;
 }
 .issue-top h5 {
 	padding:0 .5em;
@@ -5964,7 +5970,7 @@ input.code {
 	top:-8.9em;
 }
 .item1 {
-	height:16em;
+	height:10em;
 	position: relative;
 	padding: 0;
 	text-align: center;
@@ -6020,26 +6026,27 @@ input.code {
 	position:absolute;
 	z-index:0;
 	left:0;
-	bottom:.85em;
+	bottom:.95em;
 	display:none;
 	width:100%;
+	border-radius:4em 4em 0em 0em;
+	background:#b6d554;
+	height:4em;
 }
 .tch-share { border-radius: 0; bottom:.85em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 3s /*infinite*/;animation-delay:1s;/*Safari and Chrome*/-webkit-animation:mymove 3s /*infinite*/;-webkit-animation-delay:1s; width: 100%; z-index:0; }
 .tch-modal-active { transform: translateY(0px);  -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0) }
 .tch-modal-out { z-index: 888; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%) }
 
 .tch-share-title {
-	background:#b6d554;
 	color: #ffffff;
 	font-weight: normal;
 	margin:0 auto;
-	padding:.5em 0 0 0;
+	padding:.2em 0 0 0;
 	text-align: center;
-	font-size:.975em;
-	border-radius:4em 4em 0em 0em;
-	height:3em;
+	font-size:.875em;
+	height:1.2em;
 	width: auto;
-	line-height:1.5em;
+	line-height:1.2em;
 }
 .tch-share-title::after {
 	content: "";
@@ -6047,48 +6054,29 @@ input.code {
 	height: 0;
 	margin-top: 10px;
 	width: 100%;
-	z-index: 10;
 }
 
-.tch-share-footer { margin: 2px; }
-.tch-share-footer .tchshare_btn { color: #555;  display: block; width: 100%; bottom:0; background-color: #e6e6e6; border: 1px solid #e6e6e6; border-radius: 0; cursor: pointer;  font-size: 16px; font-weight: 400; line-height: 1.2; padding: 0.625em 0; text-align: center; transition: background-color 300ms ease-out 0s, border-color 300ms ease-out 0s; vertical-align: middle; white-space: nowrap;font-family:"微软雅黑";  }
-
 .tch-share-sns {
-	/*background:url(../images/chankan.png) left top no-repeat;*/
-	height:auto;
+	height:1.5em;
 	zoom:1;
 	margin:0 auto;
 	text-align:center;
+	top:.2em;
+	display: block;
 	position:relative;
-	top:-1.4em; line-height:1.2em;
-	display: block;}
+	z-index:12;
+}
 .tch-share-sns li {
 	display: block;
-	height: auto;}
+	height: auto;
+}
 .tch-share-sns a {
-	color: #555;
-	padding:.5em 0;
-	/*display: block;*/
-	text-decoration:none;}
-
-.tchsharebg { 
-	/*background-color: rgba(0, 0, 0, 0.9);*/
-	background-image:url(../images/qubaba1_015s.png); 
-	bottom: 0;
-	height: 100%;
-	left: 0;
-	opacity:0.5;
-	filter:"alpha(opacity=50)";
-	-ms-filter:"alpha(opacity=50)";
-	-webkit-filter:"alpha(opacity=50)"; /* 旧版IE */
-	position: fixed;
-	right: 0; top: 0;
-	width: 100%;
-	z-index: 1;
-	display:none;}
-.tchsharebg-active {
-	opacity: 1;
-	display: none; }/*=====抢红包效果=======按钮==结束=======*/
+	color:#666666;
+}
+.tch-share-sns a:hover {
+	color:#ffffff;
+}
+/*=====抢红包效果=======按钮==结束=======*/
 			
 /*=====抢红包效果==结束始=======*/
 
@@ -6266,7 +6254,7 @@ input.code {
   margin:0em auto 0 auto;
 }
 .qiang {
-	background:url('../images/qubaba1_016.png') center -2em no-repeat;
+	background:url('../images/qubaba1_016.png') center -1em no-repeat;
 	/*height:667px;*/
 	overflow:hidden;
 }
@@ -6297,7 +6285,7 @@ input.code {
   margin:0 auto 0 auto;
 }
 .qiang {
-	background:url('../images/qubaba1_016plus.png') center top no-repeat;
+	background:url('../images/qubaba1_016plus.png') center -1em no-repeat;
 	/*height:736px;*/
 	overflow:hidden;
 }
