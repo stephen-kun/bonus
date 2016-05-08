@@ -7,18 +7,7 @@
 */
 
 var flag = 1;
-function setSelectUserNo(radioObj){  
-	  
-	var radioCheck= $(radioObj).val();  
-	if("1"==radioCheck){  
-		$(radioObj).attr("checked",false);  
-		$(radioObj).val("0");  
-		  
-	}else{   
-		$(radioObj).val("1");  
-		  
-	}  
-}    
+   
 
 function action_create_ticket(openid, total_money, url){
 	var auth_code ;

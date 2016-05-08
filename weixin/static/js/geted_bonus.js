@@ -65,7 +65,7 @@ function send_message(url){
 	xmlhttp.send(data);	
 }
 	
-function message(openid, id_bonus){
+function message(id_bonus){
 	$(".am-share").addClass("am-modal-active");	
 	if($(".send_out").length>0){
 		$(".send_out").addClass("sharebg-active");

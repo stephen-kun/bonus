@@ -16,9 +16,9 @@
 	</div>
     <div class="box-food qbbaise headmarg">
 		<ul>
-			{% for key, value in bonus.content.items %}
+			{% for value in bonus.content %}
 			<li>
-				<h4><span class="rfloat">{{value}}</span>{{key}}</h4>	
+				<h4><span class="rfloat">{{value.number}} {{value.unit}}</span>{{value.name}}</h4>	
 			</li>
 			{% endfor %}
 		</ul>
@@ -37,15 +37,15 @@
 	</div>
     <div class="box-food qbbaise headmarg">
 		<ul>
-			{% for key, value in bonus.content.items %}
+			{% for value in bonus.content%}
 			<li>
-				<h4><span class="rfloat">{{value}}</span>{{key}}</h4>	
+				<h4><span class="rfloat">{{value.number}} {{value.unit}}</span>{{value.name}}</h4>	
 			</li>
 			{% endfor %}
 		</ul>
 	</div>	
 	<div class="box-dongqi">
-		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="message('{{bonus.openid}}', '{{bonus.id_bonus}}')">留言</span></h6>
+		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="message('{{bonus.id_bonus}}')">留言</span></h6>
 		<h6>{{bonus.datetime|date:"F-j-Y"}}</h6>
 	</div>
 {% endfor %}
@@ -58,15 +58,15 @@
 	</div>
     <div class="box-food qbbaise headmarg">
 		<ul>
-			{% for key, value in bonus.content.items %}
+			{% for value in bonus.content %}
 			<li>
-				<h4><span class="rfloat">{{value}}</span>{{key}}</h4>	
+				<h4><span class="rfloat">{{value.number}} {{value.unit}}</span>{{value.name}}</h4>	
 			</li>
 			{% endfor %}
 		</ul>
 	</div>	
 	<div class="box-dongqi">
-		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="message('{{bonus.openid}}', '{{bonus.id_bonus}}')">留言</span></h6>
+		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="message('{{bonus.id_bonus}}')">留言</span></h6>
 		<h6>{{bonus.datetime|date:"F-j-Y"}}</h6>
         <h2 id="h{{bonus.id_bonus}}"><input type="button" id="refuse" class="red" value="婉拒" onClick="refuse_bonus('{{bonus.id_bonus}}', '{{ajax_request_url}}')"></h2>
         <span class="wj"><a href="{{common_bonus_url}}" target="_blank">回赠</a></span>	

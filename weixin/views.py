@@ -17,12 +17,19 @@ from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvB
 #ADDRESS_IP = '127.0.0.1:8000'
 ADDRESS_IP = '120.76.122.53'
 
+REDIRECT_SSB_URL = 'http://%s/weixin/view_redirect_self_snd_bonus'%(ADDRESS_IP)
+REDIRECT_SRB_URL = 'http://%s/weixin/view_redirect_self_rcv_bonus'%(ADDRESS_IP)
+REDIRECT_SBL_URL = 'http://%s/weixin/view_redirect_self_bonus_list'%(ADDRESS_IP)
 REDIRECT_RB_URL = 'http://%s/weixin/view_redirect_random_bonus'%(ADDRESS_IP)
 REDIRECT_CB_URL = 'http://%s/weixin/view_redirect_common_bonus'%(ADDRESS_IP)
 REDIRECT_SA_URL = 'http://%s/weixin/view_redirect_settle_account'%(ADDRESS_IP)
 REDIRECT_UA_URL = 'http://%s/weixin/view_redirect_user_account'%(ADDRESS_IP)
 REDIRECT_BS_URL = 'http://%s/weixin/view_redirect_bonus_snd'%(ADDRESS_IP)
 REDIRECT_BR_URL = 'http://%s/weixin/view_redirect_bonus_rcv'%(ADDRESS_IP)
+REDIRECT_UT_URL = 'http://%s/weixin/view_redirect_user_ticket'%(ADDRESS_IP)
+REDIRECT_UI_URL = 'http://%s/weixin/view_redirect_user_info'%(ADDRESS_IP)
+REDIRECT_BD_URL = 'http://%s/weixin/view_redirect_bonus_detail'%(ADDRESS_IP)
+
 ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=CODE&grant_type=authorization_code'%(APPID,APPSECRET)
 OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_base&state=1#wechat_redirect"%(APPID)
 AJAX_REQUEST_POST_URL = 'http://%s/weixin/view_ajax_request'%(ADDRESS_IP)
@@ -60,7 +67,7 @@ class _MenuUrl():
 # Create your views here.
 
 def check_session_openid(request, redirect_uri, redirect_func):
-	#openid = 'oJvvJwrakNQy8hA6CKLD5OcbQMH4'
+	#request.session['openid'] = 'oJvvJwrakNQy8hA6CKLD5OcbQMH4'
 	#return redirect_func(openid, request)
 	if 'openid' in request.session:
 		openid = request.session['openid']
@@ -113,7 +120,7 @@ def display_settle_account_views(openid, request):
 		static_url = settings.STATIC_URL
 		consumer = Consumer.objects.get(open_id=openid)
 		total_money = consumer.session.total_money
-		update_wallet_money(consumer)
+		consumer = update_wallet_money(consumer)
 		wallet_money = consumer.own_bonus_value
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		menu = _MenuUrl()
@@ -122,26 +129,61 @@ def display_settle_account_views(openid, request):
 		prompt_message = '就餐用户独享抢红包！'
 		return display_prompt_views(prompt_message)		
 
-def display_user_account_views(openid, request):
+def display_user_account_views(open_id, request):
 	title = '我'
+	openid = open_id
 	static_url = settings.STATIC_URL	
 	consumer = Consumer.objects.get(open_id=openid)
+	consumer = update_wallet_money(consumer)
 	good_list = decode_bonus_detail(consumer)
 	user_ticket_url = USER_TICKET_URL
 	user_info_url = USER_INFO_URL
 	menu = _MenuUrl()
 	return render_to_response('user_account.html', locals())	
 	
+def display_user_info(open_id, request):
+	title = '个人信息'
+	openid = open_id
+	static_url = settings.STATIC_URL	
+	consumer = Consumer.objects.get(open_id=openid)
+	menu = _MenuUrl()
+	return render_to_response('user_info.html', locals())	
+	
+@csrf_exempt
+def view_redirect_user_info(request):
+	print('---view_redirect_user_info---\n')
+	openid = get_user_openid(request, ACCESS_TOKEN_URL)
+	request.session['openid'] = openid
+	return display_user_info(openid, request)	
+	
 #个人信息
 @csrf_exempt
 def view_user_info(request):
-	pass
+	print('---**view_user_info**---\n')
+	return check_session_openid(request, REDIRECT_UI_URL, display_user_info)	
+	
+def display_user_ticket(open_id, request):
+	title = '我的消费券'
+	openid = open_id
+	static_url = settings.STATIC_URL	
+	consumer = Consumer.objects.get(open_id=openid)
+	ticket_list = Ticket.objects.filter(consumer=consumer)
+	menu = _MenuUrl()
+	return render_to_response('user_ticket.html', locals())	
+	
+@csrf_exempt
+def view_redirect_user_ticket(request):
+	print('---view_redirect_user_ticket---\n')
+	openid = get_user_openid(request, ACCESS_TOKEN_URL)
+	request.session['openid'] = openid
+	return display_user_ticket(openid, request)		
 
 #个人礼券
 @csrf_exempt
 def view_user_ticket(request):
-	pass
-
+	print('---**view_user_ticket**---\n')
+	return check_session_openid(request, REDIRECT_UT_URL, display_user_ticket)	
+	
 #发红包界面	
 @csrf_exempt
 def view_snd_bonus(request):
@@ -243,14 +285,30 @@ def view_random_bonus(request):
 	print("========view_random_bonus =========\n")
 	return check_session_openid(request, REDIRECT_RB_URL, display_random_bonus_views)
 	
+def display_bonus_detail(open_id, request):
+	title = '串串明细'
+	openid = open_id	
+	id_bonus = request.session['id_bonus']
+	static_url = settings.STATIC_URL	
+	snd_bonus = SndBonus.objects.get(id_bonus=id_bonus)
+	rcv_bonus_list = RcvBonus.objects.filter(snd_bonus=snd_bonus, is_receive=True)
+	ajax_request_url = AJAX_REQUEST_POST_URL
+	menu = _MenuUrl()
+	return render_to_response('bonus_detail_info.html', locals())
+	
+@csrf_exempt
+def view_redirect_bonus_detail(request):
+	openid = get_user_openid(request, ACCESS_TOKEN_URL)
+	request.session['openid'] = openid
+	return display_bonus_detail(openid, request)	
+	
 #串串详情
 @csrf_exempt
 def view_bonus_detail(request):
 	print("========view_bonus_detail =========\n")
-	title = '串串明细'
-	openid = request.session['openid']	
-	static_url = settings.STATIC_URL	
-	return render_to_response('bonus_detail_info.html', locals())
+	if 'id_bonus' in request.GET:
+		request.session['id_bonus'] = request.GET.get('id_bonus')
+	return check_session_openid(request, REDIRECT_BD_URL, display_bonus_detail)
 	
 def display_self_rcv_bonus(open_id, request):
 	title = '收到的串串'
@@ -272,29 +330,35 @@ def view_redirect_self_rcv_bonus(request):
 @csrf_exempt
 def view_self_rcv_bonus(request):
 	print("========view_self_rcv_bonus =========\n")	
-	return check_session_openid(request, REDIRECT_RB_URL, display_self_rcv_bonus)
+	return check_session_openid(request, REDIRECT_SRB_URL, display_self_rcv_bonus)
+	
+def display_self_snd_bonus(open_id, request):
+	title = '发出的串串'
+	openid = open_id
+	static_url = settings.STATIC_URL
+	consumer = Consumer.objects.get(open_id=openid)
+	snd_bonus_list = SndBonus.objects.filter(consumer=consumer).order_by("create_time").reverse()
+	bonus_detail_url = BONUS_DETAIL_URL
+	menu = _MenuUrl()	
+	return render_to_response('self_snd_bonus.html', locals())	
+
+@csrf_exempt	
+def view_redirect_self_snd_bonus(request):
+	openid = get_user_openid(request, ACCESS_TOKEN_URL)
+	request.session['openid'] = openid
+	return display_self_snd_bonus(openid, request)		
 
 #check发出的串串
 @csrf_exempt
 def view_self_snd_bonus(request):
 	#获取openid
 	print("========view_self_rcv_bonus =========\n")	
-	title = '发出的串串'
-	openid = request.session['openid']
-	static_url = settings.STATIC_URL
-	consumer = Consumer.objects.get(open_id=openid)
-	snd_bonus_list = SndBonus.objects.filter(consumer=consumer).order_by("create_time").reverse()
-	bonus_detail_url = BONUS_DETAIL_URL
-	menu = _MenuUrl()
-	return render_to_response('self_snd_bonus.html', locals())
-	
-#check串串排行榜
-@csrf_exempt
-def view_self_bonus_list(request):
-	openid = request.session['openid']
-	print("========view_self_bonus_list :%s=========\n"%(openid))	
+	return check_session_openid(request, REDIRECT_SSB_URL, display_self_snd_bonus)
+
+def display_self_bonus_list(open_id, request):
 	title = '串串排行榜'
 	static_url = settings.STATIC_URL
+	openid = open_id
 	try:
 		bonus_range = 1
 		consumer_list = Consumer.objects.all().order_by("rcv_bonus_num").reverse()
@@ -307,7 +371,19 @@ def view_self_bonus_list(request):
 		menu = _MenuUrl()
 		return render_to_response('self_bonus_list.html', locals())
 	except ObjectDoesNotExist:
-		return HttpResponseBadRequest("Invalid param!")
+		return HttpResponseBadRequest("Invalid param!")	
+	
+@csrf_exempt
+def view_redirect_self_bonus_list(request):
+	openid = get_user_openid(request, ACCESS_TOKEN_URL)
+	request.session['openid'] = openid
+	return display_self_bonus_list(openid, request)	
+	
+#check串串排行榜
+@csrf_exempt
+def view_self_bonus_list(request):
+	print("========view_self_bonus_list =========\n")	
+	return check_session_openid(request, REDIRECT_SBL_URL, display_self_bonus_list)
 		
 #网页ajax请求
 @csrf_exempt
@@ -339,7 +415,7 @@ def view_geted_bonus(request):
 		system_bonus = bonus_dir['system_bonus']	
 		common_bonus_url = CREATE_COMMON_BONUS_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
-		del request.session['id_record']
+		#del request.session['id_record']
 		menu = _MenuUrl()
 		return render_to_response('geted_bonus.html', locals())
 	else:

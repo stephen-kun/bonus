@@ -387,6 +387,12 @@ input.code {
 	color:#fbfbfb;
 	padding:0 .5em 0 0;
 }
+.no_card {
+	text-align:center;
+	color:#d77b24;
+	font-size:.9em;
+	/*没有卡券*/
+}
 .qbred {
 	color:#e0660c;
 	padding:0 .5em 0 0;
@@ -545,6 +551,7 @@ input.code {
 	overflow:hidden;
 	border-radius:100px;
 	box-shadow:#CCC 2px 2px 2px;
+	border:1px solid #ffffff;
 }
 .head h2 img {
 	width:200px;
@@ -732,7 +739,7 @@ input.code {
 }
 .title h4 {
 	padding:0;
-	margin:0 auto;
+	margin:.2em auto 0em auto;
 	color:#ffffff;
 	text-shadow: 0 0 20px red #CCC;
 	font-weight:normal;
@@ -746,6 +753,7 @@ input.code {
 	width:2.542em;
 	height:2.542em;
 	margin-right:.1em;
+	border:1px solid #ffffff;
 }
 .title_m {
 	padding:0 0 .3em 0;
@@ -754,10 +762,11 @@ input.code {
 }
 
 .title_m ul li {
-	background: #ffffff;
+	/*background: #ffffff;*/
 	border-bottom:#e7e8e9 1px solid;
 	height:4.3em;
 	padding:.8em 0 0 0;
+	background-color: rgba(255,255,255,0.9);
 }
 .title_m ul li:last-child {
 	border-bottom:#e7e8e9 0px solid;
@@ -769,7 +778,7 @@ input.code {
 	/*===-头像-====*/
 }
 .title_m ul li ul.ranking_name li h2 img {
-	width:2.572em;
+	width:2.072em;
 }
 .title_m ul li h6,.title_m ul li h5 {
 	border:#333 0px solid;
@@ -797,10 +806,11 @@ input.code {
 ==开始====收到的红包================
 */
 .issue-bj {
+	/*background-color:#e7e8e9;*/
 	background-image:url('../images/qubaba5_01.png');
 	background-repeat: no-repeat;
+	background-attachment:fixed;
 	background-size:cover;
-	background-color:#e7e8e9;
 }
 .issue-top {
 	overflow:hidden;
@@ -832,20 +842,20 @@ input.code {
 	overflow:hidden;
 }
 .Angel h2 {
-	border-radius:3.636em;
+	border-radius:7.172em;
 	overflow:hidden;
-	width:7.272em;
-	height:7.272em;
+	width:7.172em;
+	height:7.172em;
 	margin:0 auto;position:relative;
 	top:-9.05em;
 	text-align:center;
 	border:#ffffff 1px solid;
 }
 .Angel h2 img {
-	width:7.272em;
+	width:7.172em;
 }
 .issue-top h5 {
-	padding:0 .5em;
+	padding:.5em .5em 0 .5em;
 	margin:0;
 	text-align:center;
 }
@@ -903,6 +913,7 @@ input.code {
 	margin:0 -150px 0 0;
 	text-align:center;
 	font-size:1em;
+	font-weight:normal;
 }
 .issue-list ul li h5{
 	float:right;
@@ -925,10 +936,11 @@ input.code {
 	border-left:1px solid #a5a99d;
 	padding:0 0 0 .8em;
 	text-align:center;
-	color:#39393b;
+	color:#b0afaf;
 }
 .issue-list ul li.shdbai {
-	background:#ffffff;
+	/*background:#ffffff;*/
+	background-color: rgba(255,255,255,0.8);
 }
 .issue-list ul li:last-child {
 	border-bottom:0;
@@ -943,7 +955,7 @@ input.code {
 	background:url(../images/qubaba5_04.png) center top no-repeat;
 }
 .issue-top h5.stansonimg {
-	color:#CCC;
+	color:#999999;
 	font-size:1.5em;
 	font-weight:normal;
 }
@@ -974,13 +986,14 @@ input.code {
 }
 .chch-list ul li h2 {
 	border-radius:1.521em;
+	border:#ffffff 1px solid;
 	overflow:hidden;
 	width:3.042em;
 	height:3.042em;
 	float:left;
 }
 .chch-list ul li h2 img {
-	width:4.542em;
+	width:3.042em;
 }
 .chch-list ul li h3 {
 	position:relative;
@@ -1008,21 +1021,29 @@ input.code {
 	height:auto;
 }
 .chch-list ul li h3 p a {
-	color:#a0a0a0;
+	color:#419be0;
 }
 .chch-list ul li h3 p a.chch_ly {
 	display:none;
 }
+
 .chch-list ul li h5 {
 	float:right;
-	width:6em;
 	margin:1em 0 0 0;
 	font-size:1.4em;
 	font-weight:normal;
-	border-left:1px solid #a5a99d;
 	padding:0 0 0 0;
-	overflow:hidden;
 	text-align:center;
+}
+.chch-list ul li h5 img {
+	width:22px;
+}
+.chch-list ul li h5 span {
+	border-left:1px solid #a5a99d;
+	display:block;
+	margin:0em 0 0 .5em;
+	width:6em;
+	overflow:hidden;
 }/*====串串详细=====结束=====*/
 
 /*
@@ -1473,6 +1494,7 @@ input.code {
 }
 .wo_xinxi {
 	background:#ffffff;
+	margin:.5em .5em 0 .5em;
 }
 .wo_xinxi ul li {
 	padding:.6em .8em .6em .8em;
@@ -1924,6 +1946,12 @@ input.code {
 	color:#fbfbfb;
 	padding:0 .5em 0 0;
 }
+.no_card {
+	text-align:center;
+	color:#d77b24;
+	font-size:.9em;
+	/*没有卡券*/
+}
 .qbred {
 	color:#e0660c;
 	padding:0 .5em 0 0;
@@ -2085,6 +2113,7 @@ input.code {
 	overflow:hidden;
 	border-radius:100px;
 	box-shadow:#CCC 2px 2px 2px;
+	border:1px solid #ffffff;
 }
 .head h2 img {
 	width:200px;
@@ -2274,7 +2303,7 @@ input.code {
 }
 .title h4 {
 	padding:0;
-	margin:0 auto;
+	margin:.2em auto 0em auto;
 	color:#ffffff;
 	text-shadow: 0 0 20px red #CCC;
 	font-weight:normal;
@@ -2288,16 +2317,18 @@ input.code {
 	width:2.542em;
 	height:2.542em;
 	margin-right:.1em;
+	border:1px solid #ffffff;
 }
 .title_m {
 	padding:0 0 .3em 0;
 	margin-bottom:.1em;
 }
 .title_m ul li {
-	background: #ffffff;
+	/*background: #ffffff;*/
 	border-bottom:#e7e8e9 1px solid;
 	height:4.3em;
 	padding:.8em 0 0 0;
+	background-color: rgba(255,255,255,0.9);
 }
 .title_m ul li:last-child {
 	border-bottom:#e7e8e9 0px solid;
@@ -2309,7 +2340,7 @@ input.code {
 	/*===-头像-====*/
 }
 .title_m ul li ul.ranking_name li h2 img {
-	width:2.572em;
+	width:2.072em;
 }
 .title_m ul li h6,.title_m ul li h5 {
 	border:#333 0px solid;
@@ -2339,8 +2370,9 @@ input.code {
 .issue-bj {
 	background-image:url('../images/qubaba5_01.png');
 	background-repeat: no-repeat;
+	background-attachment:fixed;
 	background-size:cover;
-	background-color:#e7e8e9;
+	/*background-color:#e7e8e9;*/
 }
 .issue-top {
 	overflow:hidden;
@@ -2372,19 +2404,20 @@ input.code {
 	overflow:hidden;
 }
 .Angel h2 {
-	border-radius:3.636em;
+	border-radius:7.172em;
 	overflow:hidden;
-	width:7.272em;
-	height:7.272em;
+	width:7.172em;
+	height:7.172em;
 	margin:0 auto;position:relative;
 	top:-9.05em;
 	text-align:center;
+	border:#ffffff 1px solid;
 }
 .Angel h2 img {
-	width:7.272em;
+	width:7.172em;
 }
 .issue-top h5 {
-	padding:0 .5em;
+	padding:.5em .5em 0 .5em;
 	margin:0;
 	text-align:center;
 }
@@ -2442,6 +2475,7 @@ input.code {
 	margin:0 -150px 0 0;
 	text-align:center;
 	font-size:1em;
+	font-weight:normal;
 }
 .issue-list ul li h5{
 	float:right;
@@ -2456,7 +2490,7 @@ input.code {
 .issue-list ul li h3 img {
 	width:1em;
 }
-.issue-list ul li h4{
+.issue-list ul li a h4{
 	float:left;
 	margin:0 160px 0 160px;
 	font-size:1em;
@@ -2464,10 +2498,11 @@ input.code {
 	border-left:1px solid #a5a99d;
 	padding:0 0 0 .8em;
 	text-align:center;
-	color:#39393b;
+	color:#b0afaf;
 }
 .issue-list ul li.shdbai {
-	background:#ffffff;
+	/*background:#ffffff;*/
+	background-color: rgba(255,255,255,0.8);
 }
 .issue-list ul li:last-child {
 	border-bottom:0;
@@ -2482,7 +2517,7 @@ input.code {
 	background:url(../images/qubaba5_04.png) center top no-repeat;
 }
 .issue-top h5.stansonimg {
-	color:#CCC;
+	color:#999999;
 	font-size:1.5em;
 	font-weight:normal;
 }
@@ -2519,7 +2554,7 @@ input.code {
 	float:left;
 }
 .chch-list ul li h2 img {
-	width:4.542em;
+	width:3.042em;
 }
 .chch-list ul li h3 {
 	position:relative;
@@ -2547,21 +2582,28 @@ input.code {
 	height:auto;
 }
 .chch-list ul li h3 p a {
-	color:#a0a0a0;
+	color:#419be0;
 }
 .chch-list ul li h3 p a.chch_ly {
 	display:none;
 }
 .chch-list ul li h5 {
 	float:right;
-	width:6em;
 	margin:.9em 0 0 0;
 	font-size:1.4em;
 	font-weight:normal;
-	border-left:1px solid #a5a99d;
 	padding:0 0 0 0;
-	overflow:hidden;
 	text-align:center;
+}
+.chch-list ul li h5 img {
+	width:22px;
+}
+.chch-list ul li h5 span {
+	border-left:1px solid #a5a99d;
+	display:block;
+	margin:0em 0 0 .5em;
+	width:6em;
+	overflow:hidden;
 }/*====串串详细=====结束=====*/
 
 /*
@@ -3005,6 +3047,7 @@ input.code {
 }
 .wo_xinxi {
 	background:#ffffff;
+	margin:.5em .5em 0 .5em;
 }
 .wo_xinxi ul li {
 	padding:.6em .8em .6em .8em;
@@ -3500,6 +3543,12 @@ input.code {
 	color:#fbfbfb;
 	padding:0 .5em 0 0;
 }
+.no_card {
+	text-align:center;
+	color:#d77b24;
+	font-size:.9em;
+	/*没有卡券*/
+}
 .qbred {
 	color:#e0660c;
 	padding:0 .5em 0 0;
@@ -3610,6 +3659,7 @@ input.code {
 	overflow:hidden;
 	border-radius:75px;
 	box-shadow:#CCC 2px 2px 2px;
+	border:1px solid #ffffff;
 }
 .head h2 img {
 	width:150px;
@@ -3802,7 +3852,7 @@ input.code {
 }
 .title h4 {
 	padding:0;
-	margin:0 auto;
+	margin:.2em auto 0em auto;
 	color:#ffffff;
 	text-shadow: 0 0 20px red #CCC;
 	font-weight:normal;
@@ -3811,33 +3861,35 @@ input.code {
 }
 .title h4 img {
 	/*width:1.990em;*/
-	border-radius:.771em;
+	border-radius:1.542em;
 	overflow:hidden;
 	width:1.542em;
 	height:1.542em;
 	margin-right:.1em;
+	border:1px solid #ffffff;
 }
 .title_m {
 	padding:0 0 .3em 0;
 	margin-bottom:.1em;
 }
 .title_m ul li {
-	background: #ffffff;
+	/*background: #ffffff;*/
 	border-bottom:#e7e8e9 1px solid;
 	height:3.3em;
 	padding:.8em 0 0 0;
+	background-color: rgba(255,255,255,0.9);
 }
 .title_m ul li:last-child {
 	border-bottom:#e7e8e9 0px solid;
 }
 .title_m ul li ul.ranking_name li h2 {
-	border-radius:1.972em;
+	border-radius:1.572em;
 	width:1.572em;
 	height:1.572em;
 	/*===-头像-====*/
 }
 .title_m ul li ul.ranking_name li h2 img {
-	width:1.772em;
+	width:1.572em;
 }
 .title_m ul li h6,.title_m ul li h5 {
 	border:#333 0px solid;
@@ -3868,8 +3920,9 @@ input.code {
 .issue-bj {
 	background-image:url('../images/qubaba5_01.png');
 	background-repeat: no-repeat;
+	background-attachment:fixed;
 	background-size:cover;
-	background-color:#e7e8e9;
+	/*background-color:#e7e8e9;*/
 }
 .issue-top {
 	overflow:hidden;
@@ -3901,20 +3954,20 @@ input.code {
 	overflow:hidden;
 }
 .Angel h2 {
-	border-radius:2.436em;
+	border-radius:4.772em;
 	overflow:hidden;
-	width:4.872em;
-	height:4.872em;
+	width:4.772em;
+	height:4.772em;
 	margin:0 auto;position:relative;
 	top:-6.05em;
 	text-align:center;
 	border:#ffffff 1px solid;
 }
 .Angel h2 img {
-	width:4.872em;
+	width:4.772em;
 }
 .issue-top h5 {
-	padding:0 .5em;
+	padding:.5em .5em 0 .5em;
 	margin:0;
 	text-align:center;
 }
@@ -3956,10 +4009,10 @@ input.code {
 	margin:0 0 0 0;
 }
 .issue-list ul li {
-	padding:.5em 0em;
+	padding:.9em 0em;
 	border-bottom:#e7e7e4 1px solid;
 	margin:0;
-	height:1.2em;
+	height:1.3em;
 	background:#b6d554;
 	color:#ffffff;
 }
@@ -3972,6 +4025,7 @@ input.code {
 	margin:0 -120px 0 0;
 	text-align:center;
 	font-size:.95em;
+	font-weight:normal;
 }
 .issue-list ul li h5{
 	float:right;
@@ -3994,10 +4048,11 @@ input.code {
 	border-left:1px solid #a5a99d;
 	padding:0 0 0 .5em;
 	text-align:center;
-	color:#39393b;
+	color:#b0afaf;
 }
 .issue-list ul li.shdbai {
-	background:#ffffff;
+	/*background:#ffffff;*/
+	background-color: rgba(255,255,255,0.8);
 }
 .issue-list ul li:last-child {
 	border-bottom:0;
@@ -4012,7 +4067,9 @@ input.code {
 	background:url(../images/qubaba5_04215.png) center top no-repeat;
 }
 .issue-top h5.stansonimg {
-	color:#CCC;
+	color:#999999;
+	font-size:1em;
+	font-weight:normal;
 }
 .issue-top h5.stansonimg img {
 	width:339px;
@@ -4048,7 +4105,7 @@ input.code {
 	float:left;
 }
 .chch-list ul li h2 img {
-	width:2.542em;
+	width:1.542em;
 }
 .chch-list ul li h3 {
 	position:relative;
@@ -4076,21 +4133,28 @@ input.code {
 	height:auto;
 }
 .chch-list ul li h3 p a {
-	color:#a0a0a0;
+	color:#419be0;
 }
 .chch-list ul li h3 p a.chch_ly {
 	display:none;
 }
 .chch-list ul li h5 {
 	float:right;
-	width:90px;
 	margin:.8em 0 0 0;
 	font-size:.85em;
 	font-weight:normal;
-	border-left:1px solid #a5a99d;
 	padding:0 0 0 0;
-	overflow:hidden;
 	text-align:center;
+}
+.chch-list ul li h5 img {
+	width:15px;
+}
+.chch-list ul li h5 span {
+	border-left:1px solid #a5a99d;
+	display:block;
+	margin:0em 0 0 .5em;
+	width:90px;
+	overflow:hidden;
 }/*====串串详细=====结束=====*/
 
 /*
@@ -4571,6 +4635,7 @@ input.code {
 
 .wo_xinxi {
 	background:#ffffff;
+	margin:.5em .5em 0 .5em;
 }
 .wo_xinxi ul li {
 	padding:.6em .8em .6em .8em;
@@ -5038,11 +5103,19 @@ input.code {
 /*======新我的钱包====开始==20160413=======*/
 .qbbaise {
 	background:#ffffff;
-	
+}
+.box-food-mt {
+	margin:.2em .5em .5em .5em;
 }
 .qbhui {
 	color:#fbfbfb;
 	padding:0 .5em 0 0;
+}
+.no_card {
+	text-align:center;
+	color:#d77b24;
+	font-size:.9em;
+	/*没有卡券*/
 }
 .qbred {
 	color:#e0660c;
@@ -5207,6 +5280,7 @@ input.code {
 	overflow:hidden;
 	border-radius:75px;
 	box-shadow:#CCC 2px 2px 2px;
+	border:1px solid #ffffff;
 }
 .head h2 img {
 	width:150px;
@@ -5391,42 +5465,44 @@ input.code {
 }
 .title h4 {
 	padding:0;
-	margin:0 auto;
+	margin:.2em auto 0em auto;
 	color:#ffffff;
 	text-shadow: 0 0 20px red #CCC;
 	font-weight:normal;
 	font-size:.9em;
-	
 }
 .title h4 img {
 	/*width:1.990em;*/
-	border-radius:.771em;
+	border-radius:1.542em;
 	overflow:hidden;
 	width:1.542em;
 	height:1.542em;
 	margin-right:.1em;
+	border:1px solid #ffffff;
+	
 }
 .title_m {
 	padding:0 0 .3em 0;
 	margin-bottom:.1em;
 }
 .title_m ul li {
-	background: #ffffff;
+	/*background: #ffffff;*/
 	border-bottom:#e7e8e9 1px solid;
 	height:3.3em;
 	padding:.8em 0 0 0;
+	background-color: rgba(255,255,255,0.8);
 }
 .title_m ul li:last-child {
 	border-bottom:#e7e8e9 0px solid;
 }
 .title_m ul li ul.ranking_name li h2 {
-	border-radius:1.972em;
+	border-radius:1.572em;
 	width:1.572em;
 	height:1.572em;
 	/*===-头像-====*/
 }
 .title_m ul li ul.ranking_name li h2 img {
-	width:1.772em;
+	width:1.572em;
 }
 .title_m ul li h6,.title_m ul li h5 {
 	border:#333 0px solid;
@@ -5456,8 +5532,10 @@ input.code {
 .issue-bj {
 	background-image:url('../images/qubaba5_015s.png');
 	background-repeat: no-repeat;
-	background-size:100% auto;
-	background-color:#e7e8e9;
+	background-attachment:fixed;
+	background-size:cover;
+	/*background-color:#e7e8e9;*/
+	 
 }
 .issue-top {
 	overflow:hidden;
@@ -5489,20 +5567,20 @@ input.code {
 	overflow:hidden;
 }
 .Angel h2 {
-	border-radius:1.971em;
+	border-radius:3.742em;
 	overflow:hidden;
-	width:3.942em;
-	height:3.942em;
-	top:-4.88em;
+	width:3.742em;
+	height:3.742em;
+	top:-4.78em;
 	margin:0 auto;position:relative;
 	text-align:center;
 	border:#ffffff 1px solid;
 }
 .Angel h2 img {
-	width:3.942em;
+	width:3.742em;
 }
 .issue-top h5 {
-	padding:0 .5em;
+	padding:.5em .5em 0 .5em;
 	margin:0;
 	text-align:center;
 }
@@ -5525,7 +5603,33 @@ input.code {
 	font-size:.5em;
 	color:#39393b;
 }
+/*=====生成券头像修改为130PX==开始===*/
+.Angel-voucher130 {
+	background:url(../images/qubaba5_02130.png) center top no-repeat;
+	width:130px;
+	height:130px;
+}
+.Angel-voucher-img {
+	height:6.5em;
+}
+.Angel-voucher-img h2 {
+	border-radius:2.942em;
+	overflow:hidden;
+	width:2.942em;
+	height:2.942em;
+	top:-3.66em;
+}
+.Angel-voucher-img h2 img {
+	width:2.942em;
+}
+.Angel-voucher-mt {
+	padding-bottom:0;
+}
+/*=====生成券头像修改为130PX==结束===*/
+
 /*=====收到的红包=====开始====*/
+
+
 .accept {
 	color:#39393b;
 	padding:.8em .8em;
@@ -5544,10 +5648,10 @@ input.code {
 	margin:0 0 0 0;
 }
 .issue-list ul li {
-	padding:.5em 0em;
+	padding:.9em 0em;
 	border-bottom:#e7e7e4 1px solid;
 	margin:0;
-	height:1.2em;
+	height:1.3em;
 	background:#b6d554;
 	color:#ffffff;
 }
@@ -5567,6 +5671,7 @@ input.code {
 	margin:0 -100px 0 0;
 	text-align:center;
 	font-size:.85em;
+	font-weight:normal;
 }
 .issue-list ul li h5{
 	float:right;
@@ -5581,7 +5686,7 @@ input.code {
 .issue-list ul li h3 img {
 	width:.9em;
 }
-.issue-list ul li h4{
+.issue-list ul li a h4 {
 	float:left;
 	margin:0 110px 0 110px;
 	font-size:.85em;
@@ -5589,10 +5694,11 @@ input.code {
 	border-left:1px solid #a5a99d;
 	padding:0 0 0 .5em;
 	text-align:center;
-	color:#39393b;
+	color:#b0afaf;
 }
 .issue-list ul li.shdbai {
-	background:#ffffff;
+	/*background:#ffffff;*/
+	background-color: rgba(255,255,255,0.8);
 }
 .issue-list ul li:last-child {
 	border-bottom:0;
@@ -5605,12 +5711,16 @@ input.code {
 */
 .stanson {
 	background-image:url('../images/qubaba5_03.png');
+	background-repeat: no-repeat;
+	background-attachment:fixed;
 }
 .stansonimgbj {
 	background:url(../images/qubaba5_04170.png) center top no-repeat;
 }
 .issue-top h5.stansonimg {
-	color:#CCC;
+	color:#999999;
+	font-size:1em;
+	font-weight:normal;
 }
 .issue-top h5.stansonimg img {
 	width:245px;
@@ -5645,7 +5755,7 @@ input.code {
 	float:left;
 }
 .chch-list ul li h2 img {
-	width:2.542em;
+	width:1.542em;
 }
 .chch-list ul li h3 {
 	position:relative;
@@ -5673,21 +5783,28 @@ input.code {
 	height:auto;
 }
 .chch-list ul li h3 p a {
-	color:#a0a0a0;
+	color:#419be0;
 }
 .chch-list ul li h3 p a.chch_ly {
 	display:none;
 }
 .chch-list ul li h5 {
 	float:right;
-	width:70px;
 	margin:.8em 0 0 0;
 	font-size:.85em;
 	font-weight:normal;
-	border-left:1px solid #a5a99d;
 	padding:0 0 0 0;
-	overflow:hidden;
 	text-align:center;
+}
+.chch-list ul li h5 img {
+	width:13px;
+}
+.chch-list ul li h5 span {
+	border-left:1px solid #a5a99d;
+	display:block;
+	margin:0em 0 0 .5em;
+	width:70px;
+	overflow:hidden;
 }/*====串串详细=====结束=====*/
 /*
 ==结束====stanson================
@@ -6147,6 +6264,7 @@ input.code {
 }
 .wo_xinxi {
 	background:#ffffff;
+	margin:.5em .5em 0 .5em;
 }
 .wo_xinxi ul li {
 	padding:.6em .8em .6em .8em;
@@ -6801,7 +6919,7 @@ overflow:hidden;
 	font-size:.5em;
 }
 .issue-top h5 {
-	padding:0 .5em;
+	padding:.5em .5em 0 .5em;
 	margin:0;
 	text-align:center;
 	font-weight:normal;
@@ -6817,19 +6935,21 @@ overflow:hidden;
 	margin:0 .8em 0 .8em;
 }
 .issue-list ul li {
-	padding:.5em 0em;
+	padding:.9em 0em;
 	border-bottom:#e7e7e4 1px solid;
 	margin:0;
+	height:1.3em;
 }
 .issue-list ul li img {
 	width:.9em;
 	margin-left:.5em;
 }
-.issue-list ul li h4 {
+.issue-list ul li a h4 {
 	padding:0;
 	margin:0;
 	font-size:.85em;
 	font-weight:normal;
+	color:#b0afaf;
 }
 .issue-list ul li h5 {
 	padding:0;

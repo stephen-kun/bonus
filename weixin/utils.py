@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
+import re
 import urllib2
 import json
 import pytz
@@ -39,7 +40,8 @@ class _GetedBonus():
 		self.message = rcv_bonus.snd_bonus.to_message
 		self.datetime = rcv_bonus.datetime
 		self.title = rcv_bonus.snd_bonus.title
-		self.content = json.loads(rcv_bonus.content)
+		l_content = bonus_content_json_to_models(rcv_bonus.content)
+		self.content = l_content
 		
 class _Bonus():
 	def __init__(self, open_id=None, bonus_type=0, content=None, table=None, message=None, money=0, bonus_num=0, number=0):
@@ -53,22 +55,68 @@ class _Bonus():
 		self.number = number		#串串个数
 		
 class _BonusContent():
-	def __init__(self, name=None, price=None, unit=None, number=None):
+	def __init__(self, name=None, price=None, unit=None, number=0):
 		self.name = name	
 		self.price = price
 		self.unit = unit		
-		self.number = number
+		self.number = number	
+
+#VirtualMoney 转换为红包内容
+def virtual_money_to_bonus_content():
+	virtual_money = VirtualMoney.objects.all()
+	l_content = []
+	
+	for money in virtual_money:
+		content = _BonusContent()
+		content.name = money.name
+		content.price = money.price
+		content.unit = money.unit
+		content.number = 0
+		l_content.append(content)
+	
+	return l_content
+		
+		
+#红包内容 models转换为json
+def bonus_content_models_to_json(models_list):
+	l_name = []
+	l_bonus = []
+	l_content = virtual_money_to_bonus_content()
+		
+	for content in l_content:
+		for money in models_list:	
+			if money.money.name == content.name:
+				content.number += 1
+		bonus = dict(name=content.name, price=content.price, unit=content.unit, number=content.number)
+		l_name.append(content.name)
+		l_bonus.append(bonus)
+	
+	return json.dumps(dict(zip(l_name, l_bonus)))
+	
+#红包内容json转换为models
+def bonus_content_json_to_models(json_content):
+	dict_content = json.loads(json_content)
+	l_content = []
+	for value in dict_content.itervalues():
+		content = _BonusContent()
+		content.name = value['name']
+		content.price = value['price']
+		content.unit = value['unit']
+		content.number = value['number']
+		l_content.append(content)
+	return l_content
+	
+	
 		
 #判断用户是否有足够零钱支付红包
 def is_enough_pay(consumer, bonus_content):
 	if consumer.own_bonus_detail:
 		# 后面做数据检测，如有异常，能够自修复
-		content = json.loads(consumer.own_bonus_detail)
-		for key, value in bonus_content.items():
-			if key in content:
-				v1 = int(value)
-				v2 = int(content[key])
-				if v1 > v2:
+		content_list = bonus_content_json_to_models(consumer.own_bonus_detail)
+		for content in content_list:
+			key = content.name
+			if key in bonus_content:
+				if int(bonus_content[key]) > content.number:
 					return False
 		return True
 	else:
@@ -168,9 +216,7 @@ def action_bonus_message(data):
 	
 #红包婉拒
 def action_bonus_refuse(request):
-	#从request中解析出openid,rcv_bonus_id
-	#根据rcv_bonus_id在表PersonMoney中找到婉拒的id_money。
-	#在PersonRecharge表中创建一条记录
+	
 	pass
 		
 #随机分配红包算法
@@ -196,26 +242,30 @@ def get_random_bonus(money_num, bonus_num):
 def snd_bonus_random_rcv_bonus(snd_bonus, number_list):
 	number_list.sort(reverse=True)
 	is_best = True
+	total_number = 0
 	for number in number_list: 
 		total_money = 0
 		rcv_bonus = RcvBonus.objects.create(id_bonus=create_primary_key(), snd_bonus=snd_bonus)
 		money_list = WalletMoney.objects.filter(snd_bonus=snd_bonus, is_receive=False)[0:number]
-		number = 0
+		account = 0	#统计串串个数
 		for money in money_list:
 			money.rcv_bonus = rcv_bonus
 			money.is_receive = True 
 			if money.money.name == LIST_KEY_ID:
-				number += 1
+				account += 1
 			money.save()
 			total_money += money.money.price
 		rcv_bonus.bonus_type = snd_bonus.bonus_type
-		rcv_bonus.number = number
+		rcv_bonus.number = account
 		rcv_bonus.total_money = total_money
 		if is_best and (rcv_bonus.bonus_type != COMMON_BONUS):
 			rcv_bonus.is_best = True
 			is_best = False
-		rcv_bonus.content = bonus_content_str(bonus=rcv_bonus, type='rcv')
-		rcv_bonus.save()	
+		rcv_bonus.content = bonus_content_detail(bonus=rcv_bonus, type='rcv')
+		rcv_bonus.save()
+		total_number += account
+	snd_bonus.consumer.snd_bonus_num += total_number
+	snd_bonus.consumer.save()
 
 #微信支付
 def action_weixin_pay(data, session):
@@ -254,8 +304,10 @@ def action_weixin_pay(data, session):
 			money_num += int(number)
 			create_vitural_money(consumer, new_snd_bonus, recharge, money, number, is_send)
 		recharge.save()
-		new_snd_bonus.content = bonus_content_str(bonus=new_snd_bonus, type='snd')
-		new_snd_bonus.save()		
+		new_snd_bonus.content = bonus.content
+		new_snd_bonus.save()	
+		consumer.own_bonus_detail = bonus_content_detail(consumer=consumer, type='own')
+		consumer.save()
 		
 		#随机分配红包	
 		number_list = get_random_bonus(int(money_num), int(new_snd_bonus.bonus_num))
@@ -275,6 +327,7 @@ def update_wallet_money(consumer):
 	
 	consumer.own_bonus_value = sum_money
 	consumer.save()
+	return consumer
 	
 #结算操作
 def close_an_account(consumer, ticket, ticket_value):
@@ -344,7 +397,7 @@ def action_create_ticket(data):
 		#结算操作
 		ticket_value = close_an_account(consumer, new_ticket, ticket_value)
 		new_ticket.ticket_value = ticket_value
-		new_ticket.save
+		new_ticket.save()
 		
 		#失效该就餐会话发出的红包，将未抢红包返回客户账号
 		snd_bonus_list = SndBonus.objects.filter(session=consumer.session, is_exhausted=False)
@@ -374,7 +427,8 @@ def action_create_ticket(data):
 			user.save()
 		
 		new_consumer = Consumer.objects.get(open_id=openid)	
-		#更新用户钱包余额
+		#更新用户钱包余额及明细
+		new_consumer.own_bonus_detail = bonus_content_detail(consumer=new_consumer, type="own")
 		update_wallet_money(new_consumer)
 		
 		#返回消费券码以及券值
@@ -415,7 +469,7 @@ def create_bonus_dict_to_session(request):
 	for money in virtual_money:
 		l_name.append(money.name)
 		l_money.append(money)
-		content = dict(name=money.name, price=money.price, unit=money.unit)
+		content = dict(name=money.name, price=money.price, unit=money.unit, number=0)
 		content = json.dumps(content)
 		l_content.append(content)
 	request.session['create_bonus'] = dict(zip(l_name, l_content))
@@ -432,37 +486,26 @@ def create_bonus_dict(request):
 #我的钱包内容字符串
 def decode_bonus_detail(consumer):
 	bonus_detail = consumer.own_bonus_detail
+	l_content = []
 	if bonus_detail:
-		return json.loads(bonus_detail)
-	else:
-		return ''
+		l_content = bonus_content_json_to_models(bonus_detail)
+	return l_content
 	
-
 #生成红包内容字符串
-def bonus_content_str(bonus, type='rcv', consumer=None, is_valid=True):
+def bonus_content_detail(bonus=None, consumer=None, type='rcv'):
 	'''
 	type : snd 表示发送的红包，rcv 表示接收的红包, own 表示拥有的红包
 	'''
+	wallet_money = None
 	if type == 'snd':
 		wallet_money = WalletMoney.objects.filter(snd_bonus=bonus)
 	elif type == 'rcv':
 		wallet_money = WalletMoney.objects.filter(rcv_bonus=bonus)
 	elif type == 'own':
-		wallet_money = WalletMoney.objects.filter(consumer=consumer, is_valid=is_valid)
-	virtual_money = VirtualMoney.objects.all()
-	l_name = []
-	l_unit = []
-	for money in virtual_money:
-		l_name.append(money.name)
-		l_unit.append(money.unit)
-	content_dir = dict(zip(l_name, l_unit))
-	temp_dir = content_dir.copy()
-	for x in wallet_money:
-		temp_dir[x.money.name] += "*"
-	for key, value in temp_dir.iteritems():
-		v = value.count("*")
-		content_dir[key] = '{0}{1}'.format(v, content_dir[key]) 
-	return json.dumps(content_dir)
+		wallet_money = WalletMoney.objects.filter(consumer=consumer, is_used=False, is_valid=True, is_send=False)
+	
+	return bonus_content_models_to_json(wallet_money)
+
 
 #展现抢到的红包
 def display_get_bonus(id_record, bonus_type):
@@ -506,9 +549,12 @@ def get_bonus(consumer, session, record_rcv_bonus, bonus_list, param_tuple):
 				remain_bonus[rand].save()
 				if bonus.bonus_remain == 1:
 					bonus.bonus_remain = 0
+					bonus.bonus_exhausted = bonus.bonus_num
 					bonus.is_exhausted = True
+					bonus.is_valid = False
 				else:
 					bonus.bonus_remain -= 1
+					bonus.bonus_exhausted += 1
 				bonus.save()	 
 	return [bonus_num, total_money, total_number]
 	
@@ -545,6 +591,8 @@ def action_get_bonus(openid, session):
 		consumer.session.total_money += total_money
 		consumer.session.total_number += total_number
 		consumer.session.save()
+		consumer.rcv_bonus_num += total_number
+		consumer.save()
 				
 		#更新抢红包记录
 		record_rcv_bonus.bonus_num = bonus_num
@@ -601,11 +649,11 @@ def snd_bonus_from_session(session):
 	
 #解析支付请求
 def decode_choose_pay(request, data_dir):
-	print("****decode_choose_pay  *****")
+	print("**** decode_choose_pay  *****")
 	result = {}
 	total_money = 0
 	number = 0				#统计串串个数
-	create_bonus = create_bonus_session_to_dict(request)
+	create_bonus = create_bonus_dict(request)
 	bonus = _Bonus()
 	for key, value in data_dir.items():
 		if key in create_bonus:
@@ -639,6 +687,9 @@ def handle_ajax_request(action, data, session):
 		if action == AJAX_GET_BONUS:
 			return action_get_bonus(data['openid'], session)
 		elif action == AJAX_CREATE_TICKET:
+			#清django session
+			if 'openid' in session:
+				del session['openid']
 			response = action_create_ticket(data)
 			return json.dumps(response)
 		elif action == AJAX_WEIXIN_PAY:
