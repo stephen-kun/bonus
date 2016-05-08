@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+{% include 'header.html' %}
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="admin_if_bj">
+        	<div class="admin_detailed_tit">
+                <h2><img src="{{ consumer.picture }}" align="absmiddle"></h2>
+                <h4>{{ consumer.name }}</h4>
+            </div>
+            <div class="admin_if">
+                <ul>
+                    <li><h4><font class="font_admin_626261">余额</font><span>
+                            {% for cg in consumer.valid_goods_detail %}
+                            {{ cg.number }}x{{ cg.good.name }}&nbsp
+                            {% endfor %}
+                        </span></h4></li>
+                    <li><h4><font class="font_admin_626261">可用礼券</font><span>{{ consumer.own_ticket_value }}</span>元</h4></li>
+                </ul>
+                <div class="clear"></div>
+            </div>
+            </div>
+        </div>
+    </section>    
+</article>
+
+</body>
+</html>

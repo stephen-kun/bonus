@@ -162,6 +162,10 @@ def bonus_rank_list(request):
     return render_to_response('manager/bonus/bonus_rank_list.html', {'consumer_list':consumer_list} )
 
 
+def sys_account_detail(request):
+    consumer=Consumer.objects.get(open_id='0001')
+    return render_to_response("manager/account/sys_account.html",{'consumer':consumer})
+
 def account_manage(request):
     user_list = User.objects.exclude(username="admin")
     return render_to_response("manager/account/manage_account.html", {'user_list': user_list})
@@ -229,6 +233,13 @@ def action(request):
             for c in range(counter):
                 wallet=WalletMoney.objects.create(id_money=gen_id(), is_valid=True, consumer=admin, recharge=charge, money=good)
                 wallet.save()
+                cgd_set = ConsumerAccountGoods.objects.filter(consumer=admin, good=good, is_valid=True)
+                if(len(cgd_set)<1):
+                    cgd = ConsumerAccountGoods.objects.create(consumer=admin, good=good, is_valid=True, number=1)
+                else:
+                    cgd = ConsumerAccountGoods.objects.get(consumer=admin, good=good, is_valid=True)
+                    cgd.number += 1
+                cgd.save()
 
         return _response_json(0, u"设置成功!")
     else:
@@ -468,7 +479,8 @@ def statistics_index(request):
 
 @login_required(login_url='/manager/login/')
 def daily_statistics(request):
-    return render_to_response("manager/statistics/sys_daily_statistics.html")
+    daily_statistics = get_daily_statistics()
+    return render_to_response("manager/statistics/sys_daily_statistics.html", {'daily_statistics':daily_statistics})
 
 @login_required(login_url='/manager/login/')
 def daily_detail(request):
@@ -482,5 +494,7 @@ def monthly_coupon_statistics(request):
 
 @login_required(login_url='/manager/login/')
 def sys_monthly_statistics(request):
-    return render_to_response("manager/statistics/sys_monthly_statistics.html")
+    daily_statistics_set = get_daily_statistics_set()
+    return render_to_response("manager/statistics/sys_monthly_statistics.html",{'daily_statistics_set': daily_statistics_set})
+
 

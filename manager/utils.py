@@ -113,9 +113,44 @@ def get_daily_detail():
     return daily_detail
 
 def save_daily_statistics():
+    dsr = DailyStatisticsRecord.objects.create()
+    good_set = VirtualMoney.objects.all()
+    dgs_list=[]
+    for good in good_set:
+        dgs_list.append(DailyGoodStatistics.objects.create(good=good, charge_number=0, consume_number=0, daily_statistics=dsr ))
+
     dd=DailyDetail.objects.filter(action=u'充值')
     charge_value=0
     for d in dd:
         charge_value += d.value
+        ddc = DailyDetailContent.objects.filter(daily_detail=d)
+        for dc in ddc:
+            for dgs in dgs_list:
+                if(dgs.good==dc.good):
+                    dgs.charge_number += dc.number
 
-    dd=DailyDetail.objects.filter(action=u'充值')
+    dd=DailyDetail.objects.filter(action=u'消耗')
+    consume_value = 0
+    for d in dd:
+        consume_value += d.value
+        ddc = DailyDetailContent.objects.filter(daily_detail=d)
+        for dc in ddc:
+            for dgs in dgs_list:
+                if(dgs.good==dc.good):
+                    dgs.consume_number += dc.number
+
+    for dgs in dgs_list:
+        dgs.save()
+
+    dsr.charge_value = charge_value
+    dsr.consume_value = consume_value
+    dsr.save()
+
+def get_daily_statistics():
+    daily_statistics = DailyStatisticsRecord.objects.filter(time__day=datetime.date.today().strftime('%d'))
+    return daily_statistics[0] if(len(daily_statistics)>0) else None
+
+def get_daily_statistics_set():
+    #daily_statistics_set = DailyStatisticsRecord.objects.filter(time__day=datetime.date.today().strftime('%m'))
+    daily_statistics_set = DailyStatisticsRecord.objects.all()
+    return daily_statistics_set

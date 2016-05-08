@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^account/set_bonus_limit/$', views.set_bonus_limit, name='set_bonus_limit'),
     url(r'^account/create_coupon/$', views.create_coupon, name='create_coupon'),
     url(r'^account/set_coupon_limit/$', views.set_coupon_limit, name='set_coupon_limit'),
+    url(r'^account/account_detail/$', views.sys_account_detail, name='sys_account'),
 
     url(r'^basic/$', views.basic, name='basic'),
     url(r'^basic/tables_info/$', views.tables_info, name='tables_info'),
@@ -56,6 +57,7 @@ urlpatterns = [
     url(r'^statistics/daily_detail/$', views.daily_detail, name='sys_daily_detail'),
     url(r'^statistics/sys_monthly_statistics/$', views.sys_monthly_statistics, name='sys_monthly_statistics'),
     url(r'^statistics/monthly_coupon_statistics/$', views.monthly_coupon_statistics, name='monthly_coupon_statistics'),
+
 
     url(r'.*', views.index, name='index'),
 ]

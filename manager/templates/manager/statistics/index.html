@@ -5,8 +5,9 @@
     <div class="left-f-title">统计</div>
     <div class="left-f-content">
         <ul id="menu">
-            <li><span class="menu-list"><img src="/static/images/admin/ranking.png" align="absmiddle">系统帐户</span>
+            <li><span class="menu-list"><img src="/static/images/admin/ranking.png" align="absmiddle">管理员帐户</span>
             <ul class="menu-undis">
+                <li><span class="menu-l-s"><a href="{% url 'sys_account' %}" target="mainFrame">帐户</a></span></li>
                 <li><span class="menu-l-s"><a href="{% url 'sys_daily_detail' %}" target="mainFrame">日明细</a></span></li>
                 <li><span class="menu-l-s"><a href="{% url 'sys_daily_statistics' %}" target="mainFrame">日结算</a></span></li>
                 <li><span class="menu-l-s"><a href="{% url 'sys_monthly_statistics' %}" target="mainFrame">月统计</a></span></li>

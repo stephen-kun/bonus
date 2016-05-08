@@ -38,12 +38,27 @@ class DailyStatisticsRecord(models.Model):
         return self.charge_value - self.consume_value
 
     @property
-    def content_set(self):
+    def content(self):
         return self.content_set.all()
 
 class DailyGoodStatistics(models.Model):
     good = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)
-    action=models.IntegerField(default=0)
-    number = models.IntegerField(default=0)
+    charge_number = models.IntegerField(default=0)
+    consume_number = models.IntegerField(default=0)
     daily_statistics = models.ForeignKey(DailyStatisticsRecord, on_delete=models.CASCADE, related_name='content_set')
 
+    @property
+    def charge_value(self):
+        return self.charge_number*self.good.price
+
+    @property
+    def consume_value(self):
+        return self.consume_number*self.good.price
+
+    @property
+    def balance_number(self):
+        return self.charge_number - self.consume_number
+
+    @property
+    def balance_value(self):
+        return self.balance_number*self.good.price

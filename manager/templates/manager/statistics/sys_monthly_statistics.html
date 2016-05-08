@@ -15,13 +15,15 @@
                     <th width="20%">结余(元)</th>
                     <th width="20%">帐户余额(元)</th>
                   </tr>
+                  {% for item in daily_statistics_set %}
                   <tr class="monthly_xls_hfont">
-                    <td class="color_b">2016.05.02</td>
-                    <td class="color_b">205</td>
-                    <td class="color_a">100</td>
-                    <td class="color_a">10</td>
-                    <td class="color_a">105</td>
+                      <td class="color_b">{{ item.time|date:"Y-n-j" }}</td>
+                      <td class="color_b">{{ item.charge_value }}</td>
+                      <td class="color_a">{{ item.consume_value }}</td>
+                      <td class="color_a">{{ item.balance }}</td>
+                      <td class="color_a">{{ item.account }}</td>
                   </tr>
+                  {% endfor %}
                 </table>
             </div>
         </div>

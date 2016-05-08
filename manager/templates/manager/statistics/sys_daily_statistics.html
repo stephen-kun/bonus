@@ -14,16 +14,17 @@
                     <th width="20%">数量</th>
                     <th width="20%" colspn="">金额（元）</th>
                   </tr>
-                  {% for content in total_content_list %}
+                  {% if daily_statistics %}
+                  {% for content in daily_statistics.content %}
                   <tr class="tab-add-xls-c">
-                      <th align="center" rowspan=3 class="color_a">{{ content.name }}</td>
+                      <th align="center" rowspan=3 class="color_a">{{ content.good.name }}</td>
                     <td align="center" class="color_a">充值</td>
-                    <td  align="center" class="color_a">{{ content.charge }}</td>
+                    <td  align="center" class="color_a">{{ content.charge_number }}</td>
                     <td align="center" class="color_a">{{ content.charge_value }}</td>
                   </tr>
                   <tr class="tab-add-xls-c">
                     <td align="center" class="color_a">抵扣</td>
-                    <td  align="center" class="color_a">{{ content.consume }}</td>
+                    <td  align="center" class="color_a">{{ content.consume_number }}</td>
                     <td align="center" class="color_a">{{ content.consume_value }}</td>
                   </tr>
                   <tr class="tab-add-xls-c">
@@ -33,16 +34,16 @@
                   </tr>
                   {% endfor %}
                   <tr class="tab-add-xls-c">
-                      <th align="center" rowspan=2 class="color_a">{{ total_account.name }}</td>
+                      <th align="center" rowspan=2 class="color_a">合计</td>
                     <td align="center" class="color_a">充值</font></td>
-                    <td  align="center" class="color_a">{{ total_account.charge_value }}</font></td>
-                    <td align="center" rowspan=2 class="color_a">{{ total_account.balance }}</font></td>
+                    <td  align="center" class="color_a">{{ daily_statistics.charge_value }}</font></td>
+                    <td align="center" rowspan=2 class="color_a">{{ daily_statistics.balance }}</font></td>
                   </tr>
                   <tr class="tab-add-xls-c">
                     <td align="center" class="color_a">抵扣</font></td>
-                    <td align="center" class="color_a">{{ total_account.consume_value }}</font></td>
+                    <td align="center" class="color_a">{{ daily_statistics.consume_value }}</font></td>
                   </tr>
-
+                {% endif %}
                 </table>
            </div>
     </section>    
