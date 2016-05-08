@@ -5,26 +5,29 @@
 <article>
     <section>
     	<div class="right_award_box">
-        	<div class="award_box_title">收到的红包</div>
+        	<div class="award_box_title">未抢完的红包</div>
             <div class="award_box_content">
                 <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
                   <tr>
                     <th width="20%">发送</th>
-                    <th width="20%">类型</th>
-                    <th width="20%">目标</th>
+                    <th width="15%">时间</th>
+                    <th width="10%">类型</th>
+                    <th width="10%">目标</th>
                     <th width="10%">数量</th>
                     <th width="10%">剩余</th>
-                    <th width="20%">操作</th>
+                    <th width="15%">操作</th>
                   </tr>
 
                   {% for bonus in bonus_list %}
-                  <tr>
+                  <tr class="table_new_h">
 
                       {% if bonus.consumer %}
-                      <td class="color_a">{{ bonus.consumer.name }}</td>
+                      <td class="color_a"><span class="table_new_head"><img src="{{bonus.consumer.picture}}" align="absmiddle"></span>{{ bonus.consumer.name }}</td>
                       {% else %}
                       <td class="color_a">管理员</td>
                       {% endif %}
+
+                      <td class="color_b">{{ bonus.create_time|date:"Y-n-j H:i:s" }}</td>
 
                       {% ifequal bonus.bonus_type 0 %}
                       <td class="color_b">普通红包</td>

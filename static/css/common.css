@@ -287,4 +287,23 @@ input.send_out {
 
 /*=========留言隐藏====结束======*/
 
-
+/*=========表格高度====开始======*/
+.table_new_h {
+	height:3em;
+}
+.table_new_h td span.table_new_head {
+	border-radius:1.572em;
+	width:1.572em;
+	height:1.572em;
+	/*===-头像-====*/
+}
+.table_new_h td span.table_new_head img {
+	border-radius:1.572em;
+	width:1.572em;
+	height:1.572em;
+	margin-right:.3em;
+}
+.table_new_h td span.table_new_head img:hover {
+	border-radius:.272em;
+}
+/*=========表格高度====结束======*/

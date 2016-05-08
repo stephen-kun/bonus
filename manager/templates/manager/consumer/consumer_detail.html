@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+{% include 'header.html' %}
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="admin_if_bj">
+        	<div class="admin_detailed_tit">
+                <h2><img src="{{ consumer.picture }}" align="absmiddle"></h2>
+                <h4>{{ consumer.name }}</h4>
+                {% ifequal consumer.sex '1' %}
+                <h4>男</h4>
+                {% else %}
+                <h4>女</h4>
+                {% endifequal %}
+            </div>
+            <div class="admin_if">
+            	
+                <ul>
+                    {% if consumer.phone_num  %}
+                        <li><h2>{{ consumer.phone_num }}</h2></li>
+                    {% endif %}
+                    {% if consumer.address  %}
+                    <li><h2>{{ consumer.address }}</h2></li>
+                    {% endif %}
+                    <!-- <li><h2>{{ consumer.create_time|date:"Y-n-j H:i:s"  }}</h2></li> -->
+
+                    <li><h4><font class="font_admin_626261">排行榜第</font><span>{{ consumer.bonus_range }}</span>名</h4></li>
+                    <li><h4><font class="font_admin_626261">帐户余额</font><span>{{ consumer.own_bonus_value }}</span>元</h4></li>
+                    <li><h4><font class="font_admin_626261">可用礼券</font><span>{{ consumer.own_ticket_value }}</span>元</h4></li>
+
+                    <li>
+                    <h4><font class="font_admin_626261">抢红包</font><span>{{ consumer.rcv_bonus_num }}</span>次，<a href="{% url 'consumer_bonus_list' %}?open_id={{ consumer.open_id }}&bonus_type=recv">查看详细</a></h4>
+                    </li>
+                    <li>
+                    <h4><font class="font_admin_626261">发红包</font><span>{{ consumer.snd_bonus_num }}</span>次，<a href="{% url 'consumer_bonus_list' %}?open_id={{ consumer.open_id }}&bonus_type=send">查看详细</a></h4>
+                    </li>
+                </ul>
+                <div class="clear"></div>
+            </div>
+            </div>
+        </div>
+    </section>    
+    
+    
+</article>
+
+</body>
+</html>

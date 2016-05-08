@@ -1,0 +1,51 @@
+<html>
+{% include "header.html" %}
+
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="award_box_title">顾客列表</div>
+            <div class="award_box_content">
+                <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
+                  <tr>
+                    <th width="30%">顾客</th>
+                    <th width="30%">最后到店时间</th>
+                    <th width="40%">查看</th>
+                  </tr>
+
+                  {% for consumer in consumer_list %}
+                  <tr class="table_new_h">
+                    <td class="color_a"><span class="table_new_head"><img src="{{ consumer.picture }}" align="absmiddle"></span>{{ consumer.name }}</td>
+                    <td class="color_b">{{ consumer.latest_time|date:"Y-n-j H:i" }}</td>
+                    <td><img src="/static/images/admin/edit.png" align="absmiddle">
+                        <a href="{% url 'consumer_detail' %}?open_id={{ consumer.open_id }}" class="color_a" target="mainFrame">帐号详情</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+
+                </table>
+            </div>
+        </div>
+    </section>
+<script language="JavaScript">
+var TbRow = document.getElementById("tab-color");
+if (TbRow != null)
+{
+for (var i=0;i<TbRow.rows.length ;i++ )
+{
+if (TbRow.rows[i].rowIndex%2==1)
+{
+TbRow.rows[i].style.backgroundColor="#ffffff";
+}
+else
+{
+TbRow.rows[i].style.backgroundColor="#f7f7f4";
+}
+}
+}
+</script>    
+</article>
+</body>
+
+</html>

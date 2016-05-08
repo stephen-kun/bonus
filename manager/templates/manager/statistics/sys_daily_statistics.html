@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+{% include 'header.html' %}
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+        <div class="clearing"><hr>结算</div>
+			<div class="right_award_box clearing_wtop">
+        		<table cellspacing="2" class="clearing_w" cellpadding="0">
+                  <tr class="tab-add-xls">
+                    <th width="20%">系统红包</th>
+                    <th width="20%">出入</th>
+                    <th width="20%">数量</th>
+                    <th width="20%" colspn="">金额（元）</th>
+                  </tr>
+                  {% for content in total_content_list %}
+                  <tr class="tab-add-xls-c">
+                      <th align="center" rowspan=3 class="color_a">{{ content.name }}</td>
+                    <td align="center" class="color_a">充值</td>
+                    <td  align="center" class="color_a">{{ content.charge }}</td>
+                    <td align="center" class="color_a">{{ content.charge_value }}</td>
+                  </tr>
+                  <tr class="tab-add-xls-c">
+                    <td align="center" class="color_a">抵扣</td>
+                    <td  align="center" class="color_a">{{ content.consume }}</td>
+                    <td align="center" class="color_a">{{ content.consume_value }}</td>
+                  </tr>
+                  <tr class="tab-add-xls-c">
+                      <td align="center" class="color_a"><font color='orange'>结余</font></td>
+                    <td  align="center" class="color_a"><font color='orange'>{{ content.balance_number }}</font></td>
+                    <td align="center" class="color_a"><font color='orange'>{{ content.balance_value }}</font></td>
+                  </tr>
+                  {% endfor %}
+                  <tr class="tab-add-xls-c">
+                      <th align="center" rowspan=2 class="color_a">{{ total_account.name }}</td>
+                    <td align="center" class="color_a">充值</font></td>
+                    <td  align="center" class="color_a">{{ total_account.charge_value }}</font></td>
+                    <td align="center" rowspan=2 class="color_a">{{ total_account.balance }}</font></td>
+                  </tr>
+                  <tr class="tab-add-xls-c">
+                    <td align="center" class="color_a">抵扣</font></td>
+                    <td align="center" class="color_a">{{ total_account.consume_value }}</font></td>
+                  </tr>
+
+                </table>
+           </div>
+    </section>    
+    
+    
+</article>
+
+</body>
+</html>

@@ -5,21 +5,20 @@
 <article>
     <section>
     	<div class="right_award_box">
-        	<div class="award_box_title">收到的红包</div>
+        	<div class="award_box_title">抢红包</div>
             <div class="award_box_content">
                 <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
                   <tr>
-                    <th width="20%">接收</th>
-                    <th width="20%">数量</th>
+                    <th width="20%">顾客</th>
                     <th width="20%">类型</th>
-                    <th width="20%">桌号</th>
+                    <th width="20%">红包</th>
+                    <th width="20%">状态</th>
                     <th width="20%">操作</th>
                   </tr>
 
                   {% for bonus in bonus_list %}
-                  <tr>
-                      <td class="color_a">{{ bonus.consumer.name }}</td>
-                      <td class="color_b">{{ bonus.bonus_num }}</td>
+                  <tr class="table_new_h">
+                      <td class="color_a"><span class="table_new_head"><img src="{{bonus.consumer.picture}}" align="absmiddle"></span>{{ bonus.consumer.name }}</td>
                       {% ifequal bonus.bonus_type 0 %}
                       <td class="color_b">普通红包</td>
                       {% else %}
@@ -31,8 +30,12 @@
                       {% endifequal %}
                       {% endifequal %}
                       {% endifequal %}
-                    <td class="color_b"></td>
-                    <td class="color_b">{{ bonus.to_table }}</td>
+                    <td class="color_b">{{ bonus.snd_bonus.consumer.name }}的红包</td>
+                    {% if bonus.is_refuse %}
+                    <td class="color_b">已拒绝</td>
+                    {% else %}
+                    <td class="color_b">已接收</td>
+                    {% endif %}
                     <td><img src="/static/images/admin/edit.png" align="absmiddle">
                         <a href="{% url 'bonus_detail' %}?type=recv&bonus_id={{ bonus.id_bonus }}" class="color_a" target="mainFrame">查看详情</a>
                     </td>

@@ -334,15 +334,16 @@ _width:expression(document.body.offsetWidth - 168 + 'px');
 /*=============翻页===开始========*/
 .award_page {
 	text-align:center;
-	padding:10px 0;
+	padding:15px 0;
+	margin:0 1em 2em 1.8em;
 }
 .award_page a {
 	padding:3px 7px;
 	margin:0 2px;
 	/*border-radius:4px;*/
-	border:1px solid #60a2c1;
+	border:1px solid #b2b1af;
 	font:.825em STHeiti,"Microsoft YaHei",Arial,SimSun,"微软雅黑";
-	color:#60a2c1;
+	color:#b2b1af;
 }
 .award_page span {
 	padding:3px 10px;
@@ -356,7 +357,7 @@ _width:expression(document.body.offsetWidth - 168 + 'px');
 .award_page a:hover {
 	text-decoration:none;
 	/*border-radius:4px;*/
-	border:1px solid #e00a22;
+	border:1px solid #94928f;
 	color:#e00a22;
 	background:#f7f7f4;
 }
@@ -622,6 +623,377 @@ background: -o-linear-gradient(top, #ddf8aa, #b0d067);  /*Opera 11.10+*/}
 }
 /*=============红包详细===结束========*/
 
+/*
+==s====排行榜==
+*/
+.ranking {
+	/*<!--height:2.5em;-->*/
+	
+	padding:0 5em;
+}
+.ranking ul li {
+	margin:0;
+	padding:.8em 0 0 0;
+	position:relative;
+	background:#b6d554;
+	height:4em;
+	color:#39393b;
+	border-bottom:#e7e8e9 2px solid;
+}
+.ranking ul li.ranking_baise {
+	background:#ffffff;
+}
+.ranking ul li h6 {
+	/*===-数字顺序-====*/
+	margin:.5em 0 0 0;
+	padding:0;
+	left:0;
+	width:4.5em;
+	overflow:hidden;
+	position: absolute;
+	font-size:1.2em;
+	text-align:center;
+	float:left;
+	font-weight:normal;
+	border-right:#767b6d 1px solid;
+}
+.ranking ul li ul.ranking_name {
+	margin:0 0em 0 6.2em;
+	padding:0;
+	float:left;
+	width: auto;
+	position:absolute;
+	z-index:1;
+	
+}
+.ranking ul li ul.ranking_name li {
+	padding:0;
+	background:none;
+}
+.ranking ul li ul.ranking_name li h2 {
+	padding:0;
+	margin:0 .2em 0 .2em;
+	border-radius:1.036em;
+	overflow:hidden;
+	width:2.072em;
+	height:2.072em;
+	text-align:center;
+	border:#ffffff 1px solid;
+	float:left;
+	/*===-头像-====*/
+}
+.ranking ul li ul.ranking_name li h2 img {
+	width:1.072em;
+}
+.ranking ul li ul.ranking_name li h4 {
+	padding:0;
+	margin:0;
+	font-size:1.2em;
+	float:left;
+	width:13em;
+	/*===-昵称以及备注-====*/
+}
+.ranking ul li ul.ranking_name li h4 span {
+	padding:0 1.5em 0 0;
+	margin:0;
+	height:1.5em;
+	overflow:hidden;
+	font-size:1.2em;
+	font-weight:normal;
+}
+.ranking ul li ul.ranking_name li h4 p {
+	padding:0 1.5em 0 0;
+	margin:0;
+	font-size:.8em;
+	font-weight: normal;
+	height:1.5em;
+	overflow:hidden;
+	color:#ac9052;
+	line-height:1.5em;
+}
+.ranking ul li ul.ranking_name li h3 {
+	padding:0;
+	margin:0;
+	float:left;
+	width:2.5em;
+	text-align:center;
+	/*===-冠桂季图标-====*/
+}
+.ranking ul li ul.ranking_name li h3 img {
+	width:1.2em;
+}
 
+.ranking ul li h5 {
+	margin:.5em 0 0 0;
+	padding:0 0 0 .2em;
+	right:0;
+	width:8em;
+	overflow:hidden;
+	position:absolute;
+	border-left:#767b6d 1px solid;
+	text-align:center;
+	font-weight:normal;
+	font-size:1em;
+	/*===-串串数量-====*/
+}
+/*
 
+/*
+==开始====排行榜====2016.04.22============
+*/
+.title_bj {
+	background-image:url('../images/qubaba1_016plus.png');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-color:#e7e8e9;
+	background-attachment:fixed;
+}
+.title {
+	height:5em;
+	text-align:center;
+	
+}
+.title h4 {
+	padding:0;
+	margin:0 auto;
+	color:#ffffff;
+	text-shadow: 0 0 20px red #CCC;
+	font-weight:normal;
+	font-size:.6em;
+	
+}
+.title h4 img {
+	/*width:1.990em;*/
+	border-radius:2.042em;
+	overflow:hidden;
+	width:2.042em;
+	height:2.042em;
+	margin-right:.1em;
+}
+.title_m {
+	padding:0 8% .3em 8%;
+	margin-bottom:.1em;
+}
+.title_m ul li {
+	background: #ffffff;
+	border-bottom:#e7e8e9 1px solid;
+	height:3.5em;
+	padding:.5em 0 0 0;
+}
+.title_m ul li:last-child {
+	border-bottom:#e7e8e9 0px solid;
+}
+.title_m ul li ul.ranking_name li h2 {
+	border-radius:1.572em;
+	width:1.572em;
+	height:1.572em;
+	/*===-头像-====*/
+}
+.title_m ul li ul.ranking_name li h2 img {
+	width:1.572em;
+}
+.title_m ul li h6,.title_m ul li h5 {
+	border:#333 0px solid;
+	color:#9dbd36;
+	font-size:1em;
+	font-weight:normal;
+}
+.title_m ul li h6 {
+	color:#686867;
+}
+.title_m ul li ul.ranking_name li h4 p {
+	color:#a9a4a4;
+}
+.title_m ul li ul.ranking_name li h4.title_mw {
+	padding:.2em 0 0 0;
+	font-size:.8em;
+	height:1.5em;
+	overflow:hidden;
+	margin-top:.5em;
+	
+}
+/*
+======排行榜====2016.04.22===结束=========
+*/
 
+/*=============f 红包详细===结束========*/
+.admin_80 {
+	width:80%;
+	margin:0 auto;
+}
+.admin_detailed_tit {
+	margin:0 auto;
+	width:90%;
+	padding:1em 0;
+}
+.admin_detailed_tit h2 {
+	border-radius:2.572em;
+	width:2.572em;
+	height:2.572em;
+	margin:0 auto;
+	overflow:hidden;
+	
+	/*===-头像-====*/
+}
+.admin_detailed_tit h2 img {
+	width:2.572em;
+	/*===-头像-====*/
+}
+.admin_detailed_tit h4,.admin_detailed_tit p {
+	font-size:.9em;
+	font-weight:normal;
+	text-align:center;
+	padding:0;
+	margin:0;
+}
+.admin_detailed_tit p {
+	color:#CCC;
+}
+.admin_detailed_list p {
+	background:#f6f5f3;
+	font-size:.7em;
+	color:#333333;
+	padding:.2em .5em .2em 1em;
+}
+.admin_detailed_list ul li {
+	border-bottom:#e7e8e9 1px solid;
+	height:3em;
+	padding:.7em .8em 0 .2em;
+	margin:0 1.5em;
+}
+.admin_detailed_list ul li:last-child {
+	border-bottom:#e7e8e9 0px solid;
+}
+.admin_detailed_list ul li h4 {
+	font-size:.9em;
+	font-weight:normal;
+}
+.admin_detailed_list ul li h4 span {
+	padding:.5em 0 0 0;
+}
+.admin_detailed_list ul li h4 p {
+	color:#4c4947;
+	font-size:.9em;
+	padding:0 .2em 0 0;
+	width:30%;
+	float:left;
+	margin:0em 0em 0em .3em;
+	background:none;
+	line-height:2em;
+    text-align:center
+}
+.admin_detailed_list ul li.detailed_heiht {
+	height:2em;
+}
+.admin_detailed_list ul li h4 img {
+	border-radius:2.572em;
+	width:2.572em;
+	height:2.572em;
+	margin-right:.9em;
+}
+/*=============f 红包详细===结束========*/
+/*=============后台 个性信息===开始========*/
+.admin_if_bj {
+	background:#fdfcfc;
+	width:30%;
+	margin:1.5em auto 0 auto;
+}
+.admin_if {
+	
+	margin:0 auto;
+}
+.admin_if ul li {
+	height:2em;
+	line-height:2em;
+}
+.admin_if ul li h2,.admin_if ul li h3,.admin_if ul li h4 {
+	padding:0;
+	margin:0;
+	width:100%;
+	font-weight:normal;
+	float:left;
+	font-size:.9em;
+}
+.admin_if ul li h2 {
+	width:100%;
+	text-align:center;
+	color:#48bbe1;
+	font-size:.85em;
+	margin:0 auto;
+}
+/*.admin_if ul li h3 {
+	text-align:right;
+	color:#626261;
+}*/
+.admin_if ul li h4 {
+	text-align:center;
+	color:#48bbe1;
+	font-size:.85em;
+}
+.admin_if ul li h4 span {
+	color:#f49237;
+	font-size:1em;
+	padding:0 .2em 0 0;
+}
+
+/*=============后台 个性信息===结束========*/
+/*=============日报表===开始========*/
+.clearing {
+	padding:.2em 0 .5em 0;
+	text-align:center;
+	color:#333;
+	/*background:#f4f2f0;*/
+	width:98%;
+	margin:.5em 0 0 .8em;
+	/*line-height:0;*/
+}
+.clearing_wtop {
+	width:80%;
+	padding:0;
+	margin:0em auto 1.5em auto;
+	border:#dfe4cf solid 1px;
+	background:#fff;
+}
+.clearing_w {
+	width:100%;
+	padding:0;
+}
+.tab-add-xls {
+	width:100%;
+	background:#e5ebd2;
+	text-align:center;
+	font-family:"宋体";
+	font-size:.725em;
+	height:2.2em;
+	font-weight:normal;
+}
+.tab-add-xls th {
+	padding:.2em .3em;
+}
+.tab-add-xls-c{
+	background:#fcfff3;
+}
+.tab-add-xls-c td {
+	padding:.2em .3em;
+	font-size:.705em;
+	height:2em;
+}
+.award_box_content table tr td span.new_head img {
+	border-radius:1.972em;
+	overflow:hidden;
+	width:1.972em;
+	height:1.972em;
+	margin-right:.2em
+}
+/*=============日报表===结束========*/
+/*=============月报表===开始========*/
+.monthly_xls_hfont {
+	height:3em;
+	font-weight:normal;
+	font-size:.8em;
+}
+.monthly_xls_color {
+	color:#C30;
+	font-size:.8em;
+}
+/*=============月报表===结束========*

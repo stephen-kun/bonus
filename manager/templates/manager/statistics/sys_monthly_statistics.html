@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+{% include 'header.html' %}
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="award_box_title">月报表</div>
+        	<div class="award_box_content">
+                <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
+                  <tr>
+                    <th width="20%">时间</th>
+                    <th width="20%">充值(元)</th>
+                    <th width="20%">消耗(元)</th>
+                    <th width="20%">结余(元)</th>
+                    <th width="20%">帐户余额(元)</th>
+                  </tr>
+                  <tr class="monthly_xls_hfont">
+                    <td class="color_b">2016.05.02</td>
+                    <td class="color_b">205</td>
+                    <td class="color_a">100</td>
+                    <td class="color_a">10</td>
+                    <td class="color_a">105</td>
+                  </tr>
+                </table>
+            </div>
+        </div>
+    </section>    
+</article>
+<script language="JavaScript">
+var TbRow = document.getElementById("tab-color");
+if (TbRow != null)
+{
+for (var i=0;i<TbRow.rows.length ;i++ )
+{
+if (TbRow.rows[i].rowIndex%2==1)
+{
+TbRow.rows[i].style.backgroundColor="#ffffff";
+}
+else
+{
+TbRow.rows[i].style.backgroundColor="#f7f7f4";
+}
+}
+}
+</script> 
+</body>
+</html>

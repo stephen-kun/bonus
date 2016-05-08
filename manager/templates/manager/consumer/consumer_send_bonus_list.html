@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+{% include 'header.html' %}
+<body>
+<article class="admin_80">
+    <section>
+    	<div class="right_award_box">
+        	<div class="admin_detailed_tit">
+                <h2><img src="{{ consumer.picture }}" align="absmiddle"></h2>
+                <h4><font class="color_a">{{ consumer.name }}</font></h4>
+            </div>
+            <div class="admin_detailed_list">
+                <p>总共发出{{ bonus_num }}个红包</p>
+                <ul>
+                    {% for bonus in bonus_list %}
+                	<li class="detailed_heiht">
+                    <h4>
+                        {% ifequal bonus.bonus_type 0 %}
+                        <p><font color='black'>普通红包</font></p>
+                        {% else %}
+                        <p><font color='black'>手气红包</font></p>
+                        {% endifequal %}
+                        <p><font size="-1" color="#afacaa">{{ bonus.create_time|date:"Y-n-j H:i:s" }}</font></p><p><font color='orange'>{{bonus.bonus_num}}</font>红包，包含串串<font color='orange'>{{bonus.number}}</font>个</p>
+                    </h4>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </section>
+    
+    
+</article>
+
+</body>
+</html>

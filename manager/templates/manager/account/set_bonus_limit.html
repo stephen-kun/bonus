@@ -9,15 +9,16 @@
             <div class="award_box_content">
                 <div class="modify_password">
                 	<ul>
+                        {% for good in good_list %}
                     	<li>
-                        	<h4>额度</h4>
-                            <span><input type="text" class="admin_pass"></span>
+                        <h4>{{ good.name }}({{ good.price }}元/{{good.unit}})</h4>
+                        <span><input id="{{ good.name }}" type="text" class="admin_pass" value='0'></span>
                         </li>
+                        {% endfor %}
                         <li>
-                        	<h4>&nbsp;</h4>
+                        <h4>&nbsp;</h4>
                             <span>
-                                <input type="button" class="admin_save" value="保存">
-                                
+                                <input type="button" id="save" class="admin_save" value="保存">
                             </span>
                         </li>
                     </ul>
@@ -26,9 +27,30 @@
             </div>
         </div>
     </section>    
-    
-    
 </article>
+<script>
+ $("#save").click(function(){
+    {% for good in good_list %}
+    //console.log((/(^[1-9]\d*$)/.test($("#{{ good.name }}").val()) ) )
+    if( $("#{{ good.name }}").val() == "" || (/(^\d+$)/.test($("#{{ good.name }}").val()) )===false ){
+        Showbo.Msg.alert("输入出错");
+        return;
+    }
+    {% endfor %}
 
+    $.post("{% url 'account_action' %}", {"action":"limit_bonus"
+        {% for good in good_list %}
+            ,"{{ good.name }}":$("#{{ good.name }}").val()
+        {% endfor %}
+        },function(data){
+        if(data.state==0){
+                Showbo.Msg.alert("成功:" + data.message);
+                    //window.location.reload();
+                }else{
+                    Showbo.Msg.alert("失败:" + data.message);
+                }
+                }, "json");
+});
+</script>
 </body>
 </html>

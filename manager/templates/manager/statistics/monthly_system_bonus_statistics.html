@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>东启湘厨后台管理首页</title>
+<link href="../css/common.css" rel="stylesheet" type="text/css">
+<link href="../css/admin/admin.css" rel="stylesheet" type="text/css">
+<meta name="keywords" content="东启湘厨">
+<meta name="description" content="东启湘厨">
+</head>
+
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="award_box_title">月报表</div>
+        	<div class="award_box_content">
+                <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
+                  <tr>
+                    <th width="25%">时间</th>
+                    <th width="25%" colspan="2">系统红包</th>
+                    <th width="25%" colspan="2">顾客使用</th>
+                    <th width="25%" colspan="2">剩下红包与余额</th>
+                  </tr>
+                  <tr class="monthly_xls_hfont">
+                    <td class="color_b">2016.05.02</td>
+                    <td class="color_a">发15个</td>
+                    <td class="color_b">金额205元</td>
+                    <td class="color_a">使用5个</td>
+                    <td class="color_b">金额200元</td>
+                    <td class="color_a">10个</td>
+                    <td class="color_a">15元</td>
+                  </tr>
+                  <tr class="monthly_xls_hfont">
+                    <td class="color_b">2016.05.02</td>
+                    <td class="color_a">发15个</td>
+                    <td class="color_b">金额205元</td>
+                    <td class="color_a">使用5个</td>
+                    <td class="color_b">金额200元</td>
+                    <td class="color_a">10个</td>
+                    <td class="color_a">15元</td>
+                  </tr>
+                  <tr class="monthly_xls_hfont">
+                    <td class="color_b">2016.05.02</td>
+                    <td class="color_a">发15个</td>
+                    <td class="color_b">金额205元</td>
+                    <td class="color_a">使用5个</td>
+                    <td class="color_b">金额200元</td>
+                    <td class="color_a">10个</td>
+                    <td class="color_a">15元</td>
+                  </tr>
+                  <tr class="monthly_xls_color">
+                    <th width="25%">总计</th>
+                    <th>100个</th>
+                    <th>250元</th>
+                    <th>100个</th>
+                    <th>250元</th>
+                    <th width="13%">25个</th>
+                    <th width="12%">25元</th>
+                  </tr>
+                </table>
+            </div>
+        </div>
+    </section>    
+</article>
+<script language="JavaScript">
+var TbRow = document.getElementById("tab-color");
+if (TbRow != null)
+{
+for (var i=0;i<TbRow.rows.length ;i++ )
+{
+if (TbRow.rows[i].rowIndex%2==1)
+{
+TbRow.rows[i].style.backgroundColor="#ffffff";
+}
+else
+{
+TbRow.rows[i].style.backgroundColor="#f7f7f4";
+}
+}
+}
+</script> 
+</body>
+</html>

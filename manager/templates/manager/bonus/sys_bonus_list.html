@@ -17,7 +17,7 @@
                   {% for bonus in bonus_list %}
                   <tr>
                       <td align="middle" class="color_a">{{  bonus.title }}</td>
-                      <td align="middle" class="color_a">{{  bonus.create_time }}</td>
+                      <td align="middle" class="color_a">{{  bonus.create_time|date:"Y-n-j H:i:s" }}</td>
                       <td align="middle" class="color_b">{{ bonus.bonus_num }}个</td>
                     <td width="10%"><img src="/static/images/admin/edit.png" align="absmiddle">
                         <a href="{% url 'bonus_detail' %}?type=system&bonus_id={{ bonus.id_bonus }}" class="color_a" target="mainFrame">查看详情</a>

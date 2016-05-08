@@ -5,7 +5,7 @@
 <article>
     <section>
     	<div class="right_award_box">
-        	<div class="award_box_title">收到的红包</div>
+        	<div class="award_box_title">排行榜</div>
             <div class="award_box_content">
                 <div class="ranking title_m">
                     <ul>
@@ -25,6 +25,24 @@
                         {% endfor %}
                     </ul>
                 </div>
+                <!--<div class="ranking title_m">
+                    <ul>
+                        <li>
+                        	{% for  consumer in consumer_list %}
+                            <h6>1</h6>
+                                <ul class="ranking_name">
+                                    <li>
+                                        <h2><img src="{{consumer.picture}}" align="absmiddle"></h2>
+                                        <h4 class="title_mw">
+                                            <span>{{consumer.name}}</span>
+                                        </h4>
+                                    </li>
+                                </ul>
+                            <h5>{{consumer.rcv_bonus_num}}串</h5>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>-->
             </div>
         </div>
     </section>

@@ -20,7 +20,7 @@
                       <td align="left" class="color_a">{{ good.price }}</td>
                       <td align="left" class="color_a">{{ good.unit }}</td>
                       <td width="10%"><img src="/static/images/admin/edit.png" align="absmiddle"><a href="{% url 'good_item_edit' %}?good_id={{ good.id }}" class="color_a" target="mainFrame">编辑</a></td>
-                    <td width="10%"><img src="/static/images/admin/admin_05.png" align="absmiddle"><a href="#" onclick="delete_item({{ good.id }})" class="color_c">删除</a></td>
+                      <td width="10%"><img src="/static/images/admin/admin_05.png" align="absmiddle"><a href="#" onclick="delete_item({{ good.id }})" class="color_c">删除</a></td>
                   </tr>
                 {% endfor %}
               </table>

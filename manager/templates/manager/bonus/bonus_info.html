@@ -13,15 +13,11 @@
             <li><span class="menu-list"><img src="/static/images/admin/tit_hongbao.png" align="absmiddle">普通红包</span>
             <ul class="menu-undis">
                 <li><span class="menu-l-s"><a href="{% url 'send_bonus_list' %}" target="mainFrame">已发出</a></span></li>
-                <li><span class="menu-l-s"><a href="{% url 'recv_bonus_list' %}" target="mainFrame">已接收</a></span></li>
+                <li><span class="menu-l-s"><a href="{% url 'recv_bonus_list' %}" target="mainFrame">已抢到</a></span></li>
                 <li><span class="menu-l-s"><a href="{% url 'flying_bonus_list' %}" target="mainFrame">正在飞</a></span></li>
             </ul>
             <li><span class="menu-list"><img src="/static/images/admin/ranking.png" align="absmiddle">
                 <a href="{% url 'bonus_rank_list' %}" target="mainFrame">排行榜</a>
-            </span>
-            </li>
-            <li><span class="menu-list"><img src="/static/images/admin/statistics.png" align="absmiddle">
-                <a href="{% url 'bonus_rank_list' %}" target="mainFrame">统计数据</a>
             </span>
             </li>
         </ul>

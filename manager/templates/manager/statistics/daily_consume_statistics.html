@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+{% include 'header.html' %}
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="award_box_title">日报表</div>
+        	<div class="award_box_content">
+                <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
+                  <tr>
+                    <th width="15%">用户</th>
+                    <th width="15%">时间</th>
+                    <th width="10%">出入</th>
+                    <th width="25%">内容</th>
+                    <th width="20%">来源</th>
+                    <th width="15%">金额（单位/元）</th>
+                  </tr>
+
+                  {% for wallet in wallet_list %}
+                  <tr>
+                      <td class="color_a">
+                          <span class="new_head"><img src="{{ wallet.consumer.picture }}" align="absmiddle"></span>{{wallet.consumer.name}}</td>
+                      <td class="color_a">{{ wallet.ticket.consume_time|date:"Y-n-j H:i:s" }}</td>
+                    <td class="color_a">抵扣消耗</td>
+                    <td class="color_a">{{ wallet.money.name }}</td>
+                    <td class="color_a">{{ wallet.recharge.recharge_person.name }}的红包</td>
+                    <td class="color_a">{{ wallet.money.price }}</td>
+                  </tr>
+                  {% endfor %}
+                </table>
+            </div>
+            
+            
+        </div>
+        
+        <div class="clearing"><hr>结算</div>
+      	<div class="right_award_box clearing_wtop">
+        		<table cellspacing="2" class="clearing_w" cellpadding="0">
+                  <tr class="tab-add-xls">
+                    <th align="left" width="20%">名称</th>
+                    <th width="15%" align="left">总数</th>
+                    <th width="8%" align="left">使用</th>
+                    <th width="7%" align="left">剩余</th>
+                    <th align="left" width="15%">金额（元）</th>
+                  </tr>
+                  <tr class="tab-add-xls-c">
+                    <td align="left" class="color_a">发出的优惠券</td>
+                    <td  align="left" class="color_a">10</td>
+                    <td  align="left" class="color_a">5</td>
+                    <td  align="left" class="color_a">5</td>
+                    <td align="left" class="color_a">105</td>
+                  </tr>
+                </table>
+           </div>
+			<div class="right_award_box clearing_wtop">
+        		<table cellspacing="2" class="clearing_w" cellpadding="0">
+                  <tr class="tab-add-xls">
+                    <th align="left" width="20%">名称</th>
+                    <th width="15%" align="left">总数</th>
+                    <th width="8%" align="left">使用</th>
+                    <th width="7%" align="left">剩余</th>
+                    <th align="left" width="15%">金额（元）</th>
+                  </tr>
+                  <tr class="tab-add-xls-c">
+                    <td align="left" class="color_a">系统红包</td>
+                    <td  align="left" class="color_a">10</td>
+                    <td  align="left" class="color_a">5</td>
+                    <td  align="left" class="color_a">5</td>
+                    <td align="left" class="color_a">105</td>
+                  </tr>
+                </table>
+           </div>
+           <div class="right_award_box clearing_wtop">
+        		<table cellspacing="2" class="clearing_w" cellpadding="0">
+                  <tr class="tab-add-xls">
+                    <th align="left" width="20%">名称</th>
+                    <th width="15%" align="left">总数</th>
+                    <th width="8%" align="left">使用</th>
+                    <th width="7%" align="left">剩余</th>
+                    <th align="left" width="15%">金额（元）</th>
+                  </tr>
+                  <tr class="tab-add-xls-c">
+                    <td align="left" class="color_a">普通红包</td>
+                    <td  align="left" class="color_a">10</td>
+                    <td  align="left" class="color_a">5</td>
+                    <td  align="left" class="color_a">5</td>
+                    <td align="left" class="color_a">105</td>
+                  </tr>
+                </table>
+           </div>
+    </section>    
+    
+    
+</article>
+
+</body>
+</html>

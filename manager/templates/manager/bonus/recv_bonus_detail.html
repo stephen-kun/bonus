@@ -1,0 +1,104 @@
+<html>
+{% include "header.html" %}
+
+<body>
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="award_box_title">红包明细</div>
+            <div class="award_box_content">
+                <div class="bonus_list">
+                	<ul>
+                        {% if bonus.consumer %}
+                        <li>
+                        	<h4>发送者：</h4>
+                            <h5>{{ bonus.snd_bonus.consumer.name }}</h5>
+                        </li>
+                        {% endif %}
+
+                        {% ifequal bonus.bonus_type 0 %}
+                        <li>
+                            <h4>类型：</h4>
+                            <h5>普通红包</h5>
+                        </li>
+                        <li>
+                            <h4>目标：</h4>
+                            <h5>{{ bonus.to_table }}</h5>
+                        </li>
+                        {% else %}
+                        {% ifequal bonus.bonus_type 1 %}
+                        <li>
+                            <h4>类型：</h4>
+                            <h5>手气红包</h5>
+                        </li>
+                        {% else %}
+                        <li>
+                            <h4>类型：</h4>
+                            <h5>系统红包</h5>
+                        </li>
+                        {% endifequal %}
+                        {% endifequal %}
+
+                        {% if bonus.title %}
+                        <li>
+                        	<h4>冠名：</h4>
+                            <h5>{{ bonus.title }}</h5>
+                        </li>
+                        {% endif %}
+
+                        {% if bonus.to_message %}
+                        <li>
+                        	<h4>留言：</h4>
+                            <h5>{{ bonus.to_message }}</h5>
+                        </li>
+                        {% endif %}
+
+                        <li>
+                        	<h4>时间：</h4>
+                            <h5>{{ bonus.datetime }}</h5>
+                        </li>
+                        <li>
+                        	<h4>个数：</h4>
+                            <h5>{{ bonus.bonus_num }}个</h5>
+                        </li>
+
+                        <li>
+                        	<h4>内容：</h4>
+                            <span>{{ content }}</span>
+                        </li>
+                        <li>
+                        	<h4>剩余：</h4>
+                            {% ifequal remain_content '' %}
+                            <span>{{ bonus.bonus_remain }}个</span>
+                            {% else %}
+                            <span>{{ bonus.bonus_remain }}个 ({{ remain_content }})</span>
+                            {% endifequal %}
+                        </li>
+                    </ul>
+                    <div class="clear"></div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+<script language="JavaScript">
+var TbRow = document.getElementById("tab-color");
+if (TbRow != null)
+{
+for (var i=0;i<TbRow.rows.length ;i++ )
+{
+if (TbRow.rows[i].rowIndex%2==1)
+{
+TbRow.rows[i].style.backgroundColor="#ffffff";
+}
+else
+{
+TbRow.rows[i].style.backgroundColor="#f7f7f4";
+}
+}
+}
+</script>    
+</article>
+</body>
+
+</html>

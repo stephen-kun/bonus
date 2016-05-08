@@ -14,11 +14,20 @@ from django.core.exceptions import ObjectDoesNotExist
 import json
 from django.contrib.auth import authenticate
 
-from  weixin.models import DiningTable,VirtualMoney, SndBonus, RcvBonus, WalletMoney, Consumer
+from  weixin.models import *
+#from  weixin.models import DiningTable,VirtualMoney, SndBonus, RcvBonus, WalletMoney, Consumer, Recharge, Ticket
 from weixin import utils
+import datetime
+import time
+from manager.utils import *
+
+from manager.models import *
 
 def gen_id():
     return utils.create_primary_key()
+
+def get_admin_account():
+    return  Consumer.objects.get(open_id='0001')
 
 @login_required(login_url='/manager/login/')
 def index(request):
@@ -80,12 +89,12 @@ def create_bonus_action(request):
     elif(limitBonus(total_money)):
         return _response_json(1, u"红包超额了!")
     else:
-        bonus=SndBonus.objects.create(id_bonus=gen_id(), bonus_type=2, to_message=message, title=title, bonus_num=counter, bonus_remain=counter)
+        bonus=SndBonus.objects.create(id_bonus=gen_id(), consumer=get_admin_account(), bonus_type=2, to_message=message, title=title, bonus_num=counter, bonus_remain=counter)
         bonus.save()
         for good in good_list:
             good_counter = int(request.POST.get(good.name) )
             for i in range(good_counter):
-                w = WalletMoney.objects.create(id_money=gen_id(), bonus=bonus, money=good)
+                w = WalletMoney.objects.create(id_money=gen_id(),is_valid=True, snd_bonus=bonus, money=good)
                 w.save()
         return _response_json(0, u"红包发送成功!")
 
@@ -100,7 +109,7 @@ def bonus_detail(request):
         try:
             bonus=SndBonus.objects.get(id_bonus=id)
             for good in good_list:
-                wm_list = WalletMoney.objects.filter(bonus=bonus, money=good)
+                wm_list = WalletMoney.objects.filter(snd_bonus=bonus, money=good)
                 counter=0
                 remain_counter=0
                 for w in wm_list:
@@ -114,14 +123,16 @@ def bonus_detail(request):
                 if(remain_counter>0):
                     remain_content=remain_content+("%d%s%s,"%(remain_counter, good.unit, good.name))
 
-            return render_to_response("manager/bonus/bonus_detail.html", { 'bonus':bonus, 'content':content, 'remain_content':remain_content})
+            recv_bonus_list = RcvBonus.objects.filter(snd_bonus=bonus, consumer__isnull=False)
+            return render_to_response("manager/bonus/bonus_detail.html", { 'bonus':bonus, 'recv_bonus_list':recv_bonus_list, 'content':content, 'remain_content':remain_content})
 
         except ObjectDoesNotExist:
             return render_to_response("manager/bonus/bonus_detail.html")
 
     elif(bonus_type=='recv'):
-        bonus=Rcvonus.objects.get(id_bonus=id)
-        return render_to_response("manager/bonus/bonus_detail.html", { 'bonus':bonus, 'content':content, 'remain_content':remain_content})
+        recv_bonus_list=RcvBonus.objects.filter(id_bonus=id)
+        bonus = recv_bonus_list[0].snd_bonus
+        return render_to_response("manager/bonus/bonus_detail.html", { 'bonus':bonus, 'recv_bonus_list':recv_bonus_list, 'content':content, 'remain_content':remain_content})
     else:
         return render_to_response("manager/bonus/bonus_detail.html")
 
@@ -147,7 +158,7 @@ def account(request):
     return render_to_response("manager/account/account.html",{'current_user':current_user, 'is_admin':is_admin})
 
 def bonus_rank_list(request):
-    consumer_list = Consumer.objects.all().order_by("bonus_range").reverse()
+    consumer_list = Consumer.objects.exclude(open_id='0001').order_by("rcv_bonus_num").reverse()
     return render_to_response('manager/bonus/bonus_rank_list.html', {'consumer_list':consumer_list} )
 
 
@@ -204,6 +215,22 @@ def action(request):
         u.set_password(new_password)
         u.save()
         return _response_json(0, u"修改密码成功!")
+    elif(action=="limit_bonus"):
+        good_list = VirtualMoney.objects.all()
+        total_value = 0
+        admin = get_admin_account()
+        for good in good_list:
+            counter=int(request.POST.get(good.name))
+            total_value = total_value + counter*good.price
+        charge=Recharge.objects.create(id_recharge=gen_id(), recharge_value=total_value, recharge_type=1, recharge_person=admin )
+        charge.save()
+        for good in good_list:
+            counter=int(request.POST.get(good.name))
+            for c in range(counter):
+                wallet=WalletMoney.objects.create(id_money=gen_id(), is_valid=True, consumer=admin, recharge=charge, money=good)
+                wallet.save()
+
+        return _response_json(0, u"设置成功!")
     else:
         return _response_json(1, u"错误操作")
 
@@ -219,7 +246,8 @@ def set_coupon_limit(request):
 
 def set_bonus_limit(request):
     current_user = request.user
-    return render_to_response("manager/account/set_bonus_limit.html")
+    good_list = VirtualMoney.objects.all()
+    return render_to_response("manager/account/set_bonus_limit.html", {'good_list':good_list})
 
 #就餐信息
 @login_required(login_url='/manager/login/')
@@ -351,4 +379,108 @@ def table_action(request):
     else:
         return _response_json(1, u"错误操作!")
 
+
+
+@login_required(login_url='/manager/login/')
+def consumer_index(request):
+    current_user = request.user
+    if(current_user.username == "admin"):
+        print('admin')
+        is_admin = True
+    else:
+        is_admin = False
+
+    return render_to_response("manager/consumer/index.html",{'current_user':current_user, 'is_admin':is_admin})
+
+
+@login_required(login_url='/manager/login/')
+def consumer_list(request):
+    current_user = request.user
+    if(current_user.username == "admin"):
+        print('admin')
+        is_admin = True
+    else:
+        is_admin = False
+
+    consumer_list = Consumer.objects.exclude(open_id='0001')
+    return render_to_response("manager/consumer/consumer_list.html",{'current_user':current_user, 'is_admin':is_admin, 'consumer_list':consumer_list})
+
+
+@login_required(login_url='/manager/login/')
+def consumer_is_dining(request):
+    current_user = request.user
+    if(current_user.username == "admin"):
+        print('admin')
+        is_admin = True
+    else:
+        is_admin = False
+
+    info_list=[]
+    session_list = DiningSession.objects.filter(over_time__isnull=True)
+    for session in session_list:
+        cs_list = ConsumerSession.objects.filter(session=session)
+        consumer_list=[]
+        consumer_num=0
+        for cs in cs_list:
+            consumer_list.append(cs.consumer)
+            consumer_num +=1
+
+        info={'table':session.table, 'time':session.begin_time, 'consumer_num':consumer_num, 'consumer_list':consumer_list}
+        info_list.append(info)
+
+    return render_to_response("manager/consumer/consumer_is_dining.html",{'current_user':current_user, 'is_admin':is_admin, 'info_list':info_list})
+
+
+def consumer_detail(request):
+    open_id = request.GET.get('open_id')
+    try:
+        consumer=Consumer.objects.get(open_id=open_id)
+        return render_to_response("manager/consumer/consumer_detail.html",{'consumer':consumer})
+    except ObjectDoesNotExist:
+        return render_to_response("manager/consumer/consumer_detail.html")
+
+def consumer_bonus_list(request):
+    open_id = request.GET.get('open_id')
+    consumer=Consumer.objects.get(open_id=open_id)
+    bonus_type = request.GET.get('bonus_type')
+    if(bonus_type=='send'):
+        bonus_list = SndBonus.objects.filter(consumer=consumer)
+        bonus_num = len(bonus_list)
+        return render_to_response("manager/consumer/consumer_send_bonus_list.html",{'consumer':consumer, 'bonus_list':bonus_list, 'bonus_num':bonus_num})
+    else:
+        bonus_list = RcvBonus.objects.filter(consumer=consumer)
+        bonus_num = len(bonus_list)
+        return render_to_response("manager/consumer/consumer_recv_bonus_list.html",{'consumer':consumer, 'bonus_list':bonus_list, 'bonus_num':bonus_num})
+
+
+
+@login_required(login_url='/manager/login/')
+def statistics_index(request):
+    current_user = request.user
+    if(current_user.username == "admin"):
+        print('admin')
+        is_admin = True
+    else:
+        is_admin = False
+
+    return render_to_response("manager/statistics/index.html",{'current_user':current_user, 'is_admin':is_admin})
+
+
+@login_required(login_url='/manager/login/')
+def daily_statistics(request):
+    return render_to_response("manager/statistics/sys_daily_statistics.html")
+
+@login_required(login_url='/manager/login/')
+def daily_detail(request):
+    daily_detail = get_daily_detail()
+    return render_to_response("manager/statistics/sys_daily_detail.html", {'daily_detail':daily_detail})
+
+@login_required(login_url='/manager/login/')
+def monthly_coupon_statistics(request):
+    return render_to_response("manager/statistics/monthly_coupon_statistics.html")
+
+
+@login_required(login_url='/manager/login/')
+def sys_monthly_statistics(request):
+    return render_to_response("manager/statistics/sys_monthly_statistics.html")
 

@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^account/$', views.account, name='account'),
     url(r'^account/manage/$', views.account_manage, name='account_manage'),
     url(r'^account/create/$', views.account_create, name='create_account'),
-    url(r'^account/action/?$', views.action, name='action'),
+    url(r'^account/action/?$', views.action, name='account_action'),
     url(r'^account/change_password/$', views.change_password, name='change_password'),
 
 
@@ -45,6 +45,17 @@ urlpatterns = [
     url(r'^basic/create_bonus/$', views.create_bonus, name='create_bonus'),
     url(r'^basic/create_coupon/$', views.create_coupon, name='create_coupon'),
 
+    url(r'^consumer/index/$', views.consumer_index, name='consumer'),
+    url(r'^consumer/consumer_list/$', views.consumer_list, name='consumer_list'),
+    url(r'^consumer/consumer_is_dining/$', views.consumer_is_dining, name='consumer_is_dining'),
+    url(r'^consumer/consumer_detail/$', views.consumer_detail, name='consumer_detail'),
+    url(r'^consumer/consumer_bonus_list/$', views.consumer_bonus_list, name='consumer_bonus_list'),
+
+    url(r'^statistics/index/$', views.statistics_index, name='statistics'),
+    url(r'^statistics/daily_statistics/$', views.daily_statistics, name='sys_daily_statistics'),
+    url(r'^statistics/daily_detail/$', views.daily_detail, name='sys_daily_detail'),
+    url(r'^statistics/sys_monthly_statistics/$', views.sys_monthly_statistics, name='sys_monthly_statistics'),
+    url(r'^statistics/monthly_coupon_statistics/$', views.monthly_coupon_statistics, name='monthly_coupon_statistics'),
 
     url(r'.*', views.index, name='index'),
 ]
