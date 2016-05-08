@@ -44,13 +44,13 @@ function action_create_ticket(openid, total_money, url){
 							alert(JSONObject.error_message);								
 						}
 						else
-						{					
+						{	
+							flag = 0;					
 							var a=document.getElementById("create_ticket");					
 							a.style.backgroundColor="#bdbec0";
 							a.value = '查看券';			
 							document.getElementById("ticket_code").innerHTML = html.replace(/PART1/,JSONObject.part1).replace(/PART2/,JSONObject.part2).replace(/PART3/,JSONObject.part3);
-							document.getElementById("value").innerHTML = JSONObject.ticket_value;
-							flag = 0;	
+							document.getElementById("value").innerHTML = JSONObject.ticket_value;	
 
 							var modalLocation = $("#create_ticket").attr('data-reveal-id');
 							$('#'+modalLocation).reveal($(this).data());								
