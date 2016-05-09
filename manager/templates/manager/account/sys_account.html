@@ -13,7 +13,7 @@
             <div class="admin_if">
                 <ul>
                     <li><h4><font class="font_admin_626261">余额</font><span>
-                            {% for cg in consumer.valid_goods_detail %}
+                            {% for cg in consumer.valid_goods %}
                             {{ cg.number }}x{{ cg.good.name }}&nbsp
                             {% endfor %}
                         </span></h4></li>

@@ -4,6 +4,13 @@ from __future__ import unicode_literals
 from django.db import models
 from django.conf import settings
 import django.utils.timezone as timezone
+import string, random
+
+def create_primary_key(key='1', length=9):
+    a = list(string.digits)
+    random.shuffle(a)
+    primary = key + ''.join(a[:length])
+    return string.atoi(primary, 10)
 
 # Create your models here.
 # 红包日统计表
@@ -55,6 +62,7 @@ class DiningSession(models.Model):
 #消费者数据表
 class Consumer(models.Model):
     open_id = models.CharField(max_length=30, primary_key=True)	#微信openId
+    is_admin = models.BooleanField(default=False)
     name = models.CharField(max_length=30, default='小明')							#用户名
     sex = models.CharField(max_length=1, default='0')						#性别
     phone_num = models.CharField(max_length=20, null=True, blank=True)		#电话
@@ -77,16 +85,40 @@ class Consumer(models.Model):
         return self.name
 
     @property
-    def rechages(self):
+    def recharges(self):
         return self.recharge_set.all()
 
     @property
-    def valid_goods_detail(self):
+    def valid_goods(self):
         return self.consumer_goods.filter(is_valid=True)
 
     @property
     def invalid_goods_detail(self):
         return self.consumer_goods.filter(is_valid=False)
+
+    def get_valid_good(self, good):
+        account_good, created=self.consumer_goods.get_or_create(is_valid=True, good=good)
+        return account_good.number
+
+    def update_valid_good(self, good, number):
+        account_good, created=self.consumer_goods.get_or_create(is_valid=True, good=good)
+        account_good.number += number
+        account_good.save()
+
+    def account_charge(self, kw):
+        total_value=0
+        for name,counter in kw.items():
+            good=VirtualMoney.objects.get(name=name)
+            total_value = total_value + counter*good.price
+
+        recharge_type = 1 if self.is_admin else 0
+        charge=Recharge.objects.create(id_recharge=create_primary_key(), recharge_value=total_value, recharge_type=recharge_type, recharge_person=self )
+
+        for name,counter in kw.items():
+            good=VirtualMoney.objects.get(name=name)
+            for i in range(counter):
+                WalletMoney.objects.create(id_money=create_primary_key(), is_valid=True, consumer=self, recharge=charge, money=good)
+            self.update_valid_good(good, counter)
 
 class ConsumerAccountGoods(models.Model):
     good = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币

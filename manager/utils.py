@@ -5,17 +5,11 @@ from  weixin.models import *
 import datetime
 import time
 
-def save_daily_detail():
+def get_today_daily_detail():
     daily_detail_list = []
-    #charge_list = Recharge.objects.filter(recharge_time__day=datetime.date.today().strftime('%d')).order_by('recharge_time')
 
     good_list = VirtualMoney.objects.all()
-    charge_list = Recharge.objects.all()
-
-    total_content_list=[]
-    for g in good_list:
-        total_content={'name':g.name,'price':g.price, 'charge':0, 'charge_value':0, 'consume':0, 'consume_value':0}
-        total_content_list.append(total_content)
+    charge_list = Recharge.objects.filter(recharge_time__day=datetime.date.today().strftime('%d'))
 
     for charge in charge_list:
         if(charge.recharge_type==1):
@@ -23,9 +17,10 @@ def save_daily_detail():
         else:
             source='自己充值'
 
-        daily_detail = DailyDetail.objects.create(consumer=charge.recharge_person, time=charge.recharge_time, action=u'充值',source=source, value=charge.recharge_value)
+        daily_detail = DailyDetail(consumer=charge.recharge_person, time=charge.recharge_time, action=u'充值',source=source, value=charge.recharge_value)
 
         wallet_list=WalletMoney.objects.filter(recharge=charge)
+        ddc_content=[]
         for g in good_list:
             content={'name':g.name, 'number':0}
             for w in wallet_list:
@@ -34,21 +29,27 @@ def save_daily_detail():
 
             number=content['number']
             if(number!=0):
-                ddc = DailyDetailContent.objects.create(good=g, number=number, daily_detail=daily_detail )
-                ddc.save()
+                ddc = DailyDetailContent(good=g, number=number, daily_detail=daily_detail )
+                ddc_content.append(ddc)
 
-        daily_detail.save()
+        daily_detail.content = ddc_content
+        daily_detail_list.append(daily_detail)
 
-    #ticket_list = Ticket.objects.filter(is_consume=True, consume_time__day=datetime.date.today().strftime('%d'))
-    ticket_list = Ticket.objects.filter(is_consume=True)
+    ticket_list = Ticket.objects.filter(is_consume=True, consume_time__day=datetime.date.today().strftime('%d'))
+    #ticket_list = Ticket.objects.filter(is_consume=True)
     for ticket in ticket_list:
         wallet_list=WalletMoney.objects.filter(ticket=ticket)
+        content=[]
         for wallet in wallet_list:
-            ddc = DailyDetailContent.objects.create(good=wallet.money, number=1, daily_detail=daily_detail )
-            ddc.save()
             source = u"%s的充值"%(wallet.recharge.recharge_person.name)
-            daily_detail = DailyDetail.objects.create(consumer=wallet.consumer, time=ticket.consume_time, action=u'消耗',source=source, value=wallet.money.price)
-            daily_detail.save()
+            daily_detail = DailyDetail(consumer=wallet.consumer, time=ticket.consume_time, action=u'消耗',source=source, value=wallet.money.price)
+            ddc = DailyDetailContent(good=wallet.money, number=1, daily_detail=daily_detail )
+            content.append(ddc)
+            daily_detail.content=content
+            daily_detail_list.append(daily_detail)
+
+    daily_detail_list=sorted(daily_detail_list, cmp=lambda x, y: x.time>y.time)
+    return daily_detail_list
 
 def get_today_statistics_list():
     daily_detail_list = []
@@ -108,49 +109,74 @@ def get_today_statistics_list():
     return daily_detail_list, total_content_list, total_account
 
 
-def get_daily_detail():
-    daily_detail = DailyDetail.objects.all()
-    return daily_detail
+def get_daily_detail( time ):
+    now = datetime.datetime.now()
+    if((now-time).days==0):
+       return get_today_daily_detail()
+    else:
+       return DailyDetail.objects.filter(time__day=time.day)
 
-def save_daily_statistics():
-    dsr = DailyStatisticsRecord.objects.create()
+def save_today_daily_detail():
+    now = datetime.datetime.now()
+    DailyDetail.objects.filter(time__day=now.day).delete()
+    daily_detail_list = get_today_daily_detail()
+    for daily_detail in daily_detail_list:
+        daily_detail.save()
+        for ddc in daily_detail.content:
+            ddc.daily_detail=daily_detail
+            ddc.save()
+
+def get_today_daily_statistics():
+    dsr = DailyStatisticsRecord()
     good_set = VirtualMoney.objects.all()
     dgs_list=[]
     for good in good_set:
-        dgs_list.append(DailyGoodStatistics.objects.create(good=good, charge_number=0, consume_number=0, daily_statistics=dsr ))
+        dgs_list.append(DailyGoodStatistics(good=good, charge_number=0, consume_number=0, daily_statistics=dsr ))
 
-    dd=DailyDetail.objects.filter(action=u'充值')
+    #dd=DailyDetail.objects.filter(action=u'充值')
+    dd=get_today_daily_detail()
     charge_value=0
-    for d in dd:
-        charge_value += d.value
-        ddc = DailyDetailContent.objects.filter(daily_detail=d)
-        for dc in ddc:
-            for dgs in dgs_list:
-                if(dgs.good==dc.good):
-                    dgs.charge_number += dc.number
-
-    dd=DailyDetail.objects.filter(action=u'消耗')
     consume_value = 0
     for d in dd:
-        consume_value += d.value
-        ddc = DailyDetailContent.objects.filter(daily_detail=d)
-        for dc in ddc:
-            for dgs in dgs_list:
+        if(d.action==1):
+            charge_value += d.value
+            for dgs in d.content:
+                if(dgs.good==dc.good):
+                    dgs.charge_number += dc.number
+        elif(d.action==-1):
+            consume_value += d.value
+            for dgs in d.content:
                 if(dgs.good==dc.good):
                     dgs.consume_number += dc.number
 
-    for dgs in dgs_list:
-        dgs.save()
+    #for dgs in dgs_list:
+    #    dgs.save()
+    dsr.content = dgs_list
 
     dsr.charge_value = charge_value
     dsr.consume_value = consume_value
-    dsr.save()
 
-def get_daily_statistics():
-    daily_statistics = DailyStatisticsRecord.objects.filter(time__day=datetime.date.today().strftime('%d'))
-    return daily_statistics[0] if(len(daily_statistics)>0) else None
+    return dsr
+
+def save_today_daily_statistics():
+    time = datetime.datetime.now()
+    DailyStatisticsRecord.objects.filter(time__day=time.day).delete()
+    daily_statistics = get_today_daily_statistics()
+    daily_statistics.save()
+    for d in daily_statistics.content:
+        d.daily_statistics=daily_statistics
+        d.save()
+
+def get_daily_statistics(time):
+    now = datetime.datetime.now()
+    if((now-time).days==0):
+        daily_statistics = get_today_daily_statistics()
+    else:
+        daily_statistics = DailyStatisticsRecord.objects.get(time__day=time.day)
+
+    return daily_statistics
 
 def get_daily_statistics_set():
-    #daily_statistics_set = DailyStatisticsRecord.objects.filter(time__day=datetime.date.today().strftime('%m'))
+    daily_statistics_set = DailyStatisticsRecord.objects.filter(time__month=datetime.date.today().strftime('%m'))
     daily_statistics_set = DailyStatisticsRecord.objects.all()
     return daily_statistics_set

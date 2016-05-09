@@ -23,7 +23,11 @@
                           <span class="new_head"><img src="{{ item.consumer.picture}}" align="absmiddle"></span>{{item.consumer.name}}</td>
                       <td class="color_a">{{ item.time|date:"H:i:s" }}</td>
                       <td class="color_a">{{ item.action }}</td>
-                      <td class="color_a">{{ item.content }}</td>
+                      <td class="color_a">
+                          {% for c in item.content %}
+                          {{c.number}}x{{ c.good.name }}
+                          {% endfor %}
+                      </td>
                       <td class="color_a">{{ item.source }}</td>
                       <td class="color_a">{{ item.value }}</td>
                   </tr>

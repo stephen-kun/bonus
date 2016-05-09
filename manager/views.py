@@ -220,26 +220,14 @@ def action(request):
         u.save()
         return _response_json(0, u"修改密码成功!")
     elif(action=="limit_bonus"):
-        good_list = VirtualMoney.objects.all()
-        total_value = 0
+        good_list=VirtualMoney.objects.all()
         admin = get_admin_account()
+        kw={}
         for good in good_list:
             counter=int(request.POST.get(good.name))
-            total_value = total_value + counter*good.price
-        charge=Recharge.objects.create(id_recharge=gen_id(), recharge_value=total_value, recharge_type=1, recharge_person=admin )
-        charge.save()
-        for good in good_list:
-            counter=int(request.POST.get(good.name))
-            for c in range(counter):
-                wallet=WalletMoney.objects.create(id_money=gen_id(), is_valid=True, consumer=admin, recharge=charge, money=good)
-                wallet.save()
-                cgd_set = ConsumerAccountGoods.objects.filter(consumer=admin, good=good, is_valid=True)
-                if(len(cgd_set)<1):
-                    cgd = ConsumerAccountGoods.objects.create(consumer=admin, good=good, is_valid=True, number=1)
-                else:
-                    cgd = ConsumerAccountGoods.objects.get(consumer=admin, good=good, is_valid=True)
-                    cgd.number += 1
-                cgd.save()
+            kw[good.name]=counter
+
+        admin.account_charge(kw)
 
         return _response_json(0, u"设置成功!")
     else:
@@ -479,12 +467,30 @@ def statistics_index(request):
 
 @login_required(login_url='/manager/login/')
 def daily_statistics(request):
-    daily_statistics = get_daily_statistics()
+    date_str = request.GET.get('date')
+    if(date_str):
+        try:
+            time=datetime.datetime.strptime( date_str, "%Y-%m-%d")
+        except ValueError:
+            time=datetime.datetime.today()
+    else:
+        time=datetime.datetime.today()
+
+    daily_statistics = get_daily_statistics(time)
     return render_to_response("manager/statistics/sys_daily_statistics.html", {'daily_statistics':daily_statistics})
 
 @login_required(login_url='/manager/login/')
 def daily_detail(request):
-    daily_detail = get_daily_detail()
+    date_str = request.GET.get('date')
+    if(date_str):
+        try:
+            time=datetime.datetime.strptime( date_str, "%Y-%m-%d")
+        except ValueError:
+            time=datetime.datetime.today()
+    else:
+        time=datetime.datetime.today()
+
+    daily_detail = get_daily_detail(time)
     return render_to_response("manager/statistics/sys_daily_detail.html", {'daily_detail':daily_detail})
 
 @login_required(login_url='/manager/login/')

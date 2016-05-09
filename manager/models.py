@@ -8,18 +8,21 @@ from weixin.models import Consumer,VirtualMoney
 class DailyDetail(models.Model):
     consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)
     time = models.DateTimeField(default=timezone.now)					#结束就餐时间
-    action = models.CharField(default=u'充值', max_length=16)
+    action = models.IntegerField(default=1)
     source = models.CharField(default=u'管理员充值', max_length=32)
     value = models.FloatField(default=0)
 
     @property
     def content(self):
         c_set = self.content_set.all()
-        content=""
-        for c in c_set:
-            content=content+"%dx%s "%(c.number, c.good.name)
+        if(c_set.count()<1):
+            return self._content
+        else:
+            return c_set
 
-        return content
+    @content.setter
+    def content(self, c):
+        self._content = c
 
 class DailyDetailContent(models.Model):
     good = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)
@@ -39,7 +42,15 @@ class DailyStatisticsRecord(models.Model):
 
     @property
     def content(self):
-        return self.content_set.all()
+        c_set = self.content_set.all()
+        if(c_set.count()<1):
+            return self._content
+        else:
+            return c_set
+
+    @content.setter
+    def content(self, c):
+        self._content = c
 
 class DailyGoodStatistics(models.Model):
     good = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)
