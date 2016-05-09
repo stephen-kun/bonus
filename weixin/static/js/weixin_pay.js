@@ -1,4 +1,4 @@
-﻿
+﻿var flag_pay = 1;
 function consumer_pay(url, openid, money, method){
 	var xmlhttp;
 	if (window.XMLHttpRequest)
@@ -21,6 +21,11 @@ function consumer_pay(url, openid, money, method){
 			$("#weixin").html('<input type="button" class="blue" value="微信支付" >');
 		}
 	}
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);	
+	if(flag_pay)
+	{
+		xmlhttp.open("POST", url, true);
+		xmlhttp.send(data);	
+		flag_pay = 0;
+	}
+
 }

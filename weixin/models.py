@@ -52,8 +52,8 @@ class Consumer(models.Model):
 	sex = models.CharField(max_length=1, default='0')						#性别
 	phone_num = models.CharField(max_length=20, null=True, blank=True)		#电话			
 	address = models.CharField(max_length=30, null=True, blank=True)			#地址
-	email = models.CharField(max_length=30, null=True, blank=True)			#邮箱
-	picture = models.URLField(max_length=200, null=True, blank=True)			#头像地址
+	email = models.EmailField(null=True, blank=True)							#邮箱
+	picture = models.URLField(null=True, blank=True)							#头像地址
 	bonus_range = models.IntegerField(default=0)					#排行榜名次
 	snd_bonus_num = models.IntegerField(default=0)					#发红包总数
 	rcv_bonus_num = models.IntegerField(default=0)					#收红包总数
@@ -128,7 +128,8 @@ class SndBonus(models.Model):
 	is_exhausted = models.BooleanField(default=False)		#红包已耗尽
 	is_valid = models.BooleanField(default=True)			#红包已失效
 	create_time = models.DateTimeField(default=timezone.now)		#发送时间
-	user_time = models.IntegerField(default=0)						#抢完花费时间
+	over_time = models.DateTimeField(null=True, blank=True)		#抢完时间
+	user_time = models.DateTimeField(null=True, blank=True)		#抢完花费时间
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#发送红包者
 	session = models.ForeignKey(DiningSession, on_delete=models.CASCADE)	#就餐会话
 

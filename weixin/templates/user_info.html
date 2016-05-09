@@ -29,9 +29,21 @@
     
     <div class="wo_xinxi wo_xinxi_mt">
     	<ul>
+			{% if consumer.phone_num %}
         	<li><a href="#" target="_blank"><h4><span class="rfloat">{{consumer.phone_num}}</span>电话</h4></a></li>
+			{% else %}
+			<li><a href="#" target="_blank"><h4><span class="rfloat">请填写您的手机号码</span>电话</h4></a></li>
+			{% endif %}
+			{% if consumer.address %}
             <li><a href="#" target="_blank"><h4><span class="rfloat">{{consumer.address}}</span>我的地址</h4></a></li>
+			{% else %}
+            <li><a href="#" target="_blank"><h4><span class="rfloat">请填写您的地址</span>我的地址</h4></a></li>			
+			{% endif %}
+			{% if consumer.email %}
             <li><a href="#" target="_blank"><h4><span class="rfloat">{{consumer.email}}</span>Email</h4></a></li>
+			{% else %}
+            <li><a href="#" target="_blank"><h4><span class="rfloat">请填写您的邮箱</span>Email</h4></a></li>	
+			{% endif %}			
         </ul>
     </div>
   </section>

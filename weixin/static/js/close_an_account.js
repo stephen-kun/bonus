@@ -6,16 +6,16 @@
  * http://www.opensource.org/licenses/mit-license.php
 */
 
-var flag = 1;
+var flag_close_account = 1;
    
-
 function action_create_ticket(openid, total_money, url){
 	var auth_code ;
 	auth_code = document.getElementById("auth_code").value;
 	ticket_value = document.getElementById("ticket_value").value;
 	if(ticket_value){
 		if(auth_code){
-			if(flag){
+			if(flag_close_account){
+				flag_close_account = 0;	
 				var user_wallet, action;
 				var xmlhttp;
 				user_wallet = document.getElementById("user_wallet").value;
@@ -44,8 +44,7 @@ function action_create_ticket(openid, total_money, url){
 							alert(JSONObject.error_message);								
 						}
 						else
-						{	
-							flag = 0;					
+						{					
 							var a=document.getElementById("create_ticket");					
 							a.style.backgroundColor="#bdbec0";
 							a.value = '查看券';			

@@ -215,9 +215,12 @@ def action_bonus_message(data):
 	return ""
 	
 #红包婉拒
-def action_bonus_refuse(request):
-	
-	pass
+def action_bonus_refuse(data):
+	id_bonus = data['id_bonus']
+	rcv_bonus = RcvBonus.objects.get(id_bonus=id_bonus)
+	rcv_bonus.is_refuse = True
+	rcv_bonus.save()
+	return ''
 		
 #随机分配红包算法
 def get_random_bonus(money_num, bonus_num):
@@ -378,6 +381,17 @@ def close_an_account(consumer, ticket, ticket_value):
 				money.save()	
 	return sum
 	
+#红包退回操作
+def bonus_snd_back(rcv_bonus_list):
+	for rcv_bonus in rcv_bonus_list:
+		money_list = WalletMoney.objects.filter(rcv_bonus=rcv_bonus)
+		for money in money_list:
+			money.snd_bonus = None
+			money.rcv_bonus = None
+			money.is_send = False
+			money.is_receive = False
+			money.save()
+	
 	
 #创建消费券事件
 def action_create_ticket(data):
@@ -399,20 +413,17 @@ def action_create_ticket(data):
 		new_ticket.ticket_value = ticket_value
 		new_ticket.save()
 		
-		#失效该就餐会话发出的红包，将未抢红包返回客户账号
+		#失效该就餐会话发出的红包，将未抢红包以及婉拒红包返回客户账号
 		snd_bonus_list = SndBonus.objects.filter(session=consumer.session, is_exhausted=False)
 		for snd_bonus in snd_bonus_list:
 			snd_bonus.is_valid = False
 			snd_bonus.save()
 			rcv_bonus_list = RcvBonus.objects.filter(snd_bonus=snd_bonus, is_receive=False)
-			for rcv_bonus in rcv_bonus_list:
-				money_list = WalletMoney.objects.filter(rcv_bonus=rcv_bonus)
-				for money in money_list:
-					money.snd_bonus = None
-					money.rcv_bonus = None
-					money.is_send = False
-					money.is_receive = False
-					money.save()
+			bonus_snd_back(rcv_bonus_list)
+		
+		#婉拒红包退回
+		refuse_bonus_list = RcvBonus.objects.filter(is_refuse=True)
+		bonus_snd_back(refuse_bonus_list)
 			
 		#关闭就餐会话，释放桌台
 		consumer.session.over_time = timezone.now()
@@ -429,6 +440,7 @@ def action_create_ticket(data):
 		new_consumer = Consumer.objects.get(open_id=openid)	
 		#更新用户钱包余额及明细
 		new_consumer.own_bonus_detail = bonus_content_detail(consumer=new_consumer, type="own")
+		new_consumer.own_ticket_num += 1
 		update_wallet_money(new_consumer)
 		
 		#返回消费券码以及券值
@@ -548,13 +560,11 @@ def get_bonus(consumer, session, record_rcv_bonus, bonus_list, param_tuple):
 				remain_bonus[rand].is_receive = True
 				remain_bonus[rand].save()
 				if bonus.bonus_remain == 1:
-					bonus.bonus_remain = 0
-					bonus.bonus_exhausted = bonus.bonus_num
 					bonus.is_exhausted = True
+					bonus.over_time = timezone.now()
 					bonus.is_valid = False
-				else:
-					bonus.bonus_remain -= 1
-					bonus.bonus_exhausted += 1
+				bonus.bonus_remain -= 1
+				bonus.bonus_exhausted += 1
 				bonus.save()	 
 	return [bonus_num, total_money, total_number]
 	
