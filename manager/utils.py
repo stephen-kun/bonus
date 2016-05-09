@@ -17,7 +17,7 @@ def get_today_daily_detail():
         else:
             source='自己充值'
 
-        daily_detail = DailyDetail(consumer=charge.recharge_person, time=charge.recharge_time, action=u'充值',source=source, value=charge.recharge_value)
+        daily_detail = DailyDetail(consumer=charge.recharge_person, time=charge.recharge_time, action=1,source=source, value=charge.recharge_value)
 
         wallet_list=WalletMoney.objects.filter(recharge=charge)
         ddc_content=[]
@@ -42,13 +42,13 @@ def get_today_daily_detail():
         content=[]
         for wallet in wallet_list:
             source = u"%s的充值"%(wallet.recharge.recharge_person.name)
-            daily_detail = DailyDetail(consumer=wallet.consumer, time=ticket.consume_time, action=u'消耗',source=source, value=wallet.money.price)
+            daily_detail = DailyDetail(consumer=wallet.consumer, time=ticket.consume_time, action=-1,source=source, value=wallet.money.price)
             ddc = DailyDetailContent(good=wallet.money, number=1, daily_detail=daily_detail )
             content.append(ddc)
             daily_detail.content=content
             daily_detail_list.append(daily_detail)
 
-    daily_detail_list=sorted(daily_detail_list, cmp=lambda x, y: x.time>y.time)
+    daily_detail_list=sorted(daily_detail_list, key=lambda x: x.time)
     return daily_detail_list
 
 def get_today_statistics_list():
@@ -140,14 +140,17 @@ def get_today_daily_statistics():
     for d in dd:
         if(d.action==1):
             charge_value += d.value
-            for dgs in d.content:
-                if(dgs.good==dc.good):
-                    dgs.charge_number += dc.number
+            for dgs in dgs_list:
+                for c in d.content:
+                    if(dgs.good==c.good):
+                        dgs.charge_number += c.number
+
         elif(d.action==-1):
             consume_value += d.value
-            for dgs in d.content:
-                if(dgs.good==dc.good):
-                    dgs.consume_number += dc.number
+            for dgs in dgs_list:
+                for c in d.content:
+                    if(dgs.good==c.good):
+                        dgs.consume_number += c.number
 
     #for dgs in dgs_list:
     #    dgs.save()

@@ -120,6 +120,19 @@ class Consumer(models.Model):
                 WalletMoney.objects.create(id_money=create_primary_key(), is_valid=True, consumer=self, recharge=charge, money=good)
             self.update_valid_good(good, counter)
 
+    @property
+    def valid_tickets(self):
+        ticket_vn={}
+        tickets=self.ticket_set.filter(ticket_type=1,is_consume=False)
+        for t in tickets:
+            if(ticket_vn.has_key(t.ticket_value)):
+                ticket_vn[t.ticket_value] += 1
+            else:
+                ticket_vn[t.ticket_value] = 1
+
+        return ticket_vn
+
+
 class ConsumerAccountGoods(models.Model):
     good = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
     consumer = models.ForeignKey(Consumer, null=True,related_name='consumer_goods', on_delete=models.CASCADE)		#就餐的消费者
@@ -164,7 +177,7 @@ class Ticket(models.Model):
     valid_time = models.DateTimeField(null=True, blank=True)					#消费券有效时间
     is_consume = models.BooleanField(default=False)                             #是否被使用
     consume_time = models.DateTimeField(null=True, blank=True)					#消费使用时间
-    consumer = models.ForeignKey(Consumer, null=True, on_delete=models.CASCADE)	#消费券拥有着
+    consumer = models.ForeignKey(Consumer, null=True,related_name='ticket_set', on_delete=models.CASCADE)	#消费券拥有着
 
     def __unicode__(self):
         return '%s ticket id%d'%(self.consumer.name, self.id_ticket)

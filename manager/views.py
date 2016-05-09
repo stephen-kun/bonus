@@ -230,6 +230,14 @@ def action(request):
         admin.account_charge(kw)
 
         return _response_json(0, u"设置成功!")
+    elif(action=="limit_coupon"):
+        admin=get_admin_account()
+        counter=int(request.POST.get('counter'))
+        val=int(request.POST.get('value'))
+        print counter, val
+        for i in range(counter):
+            Ticket.objects.create(id_ticket=gen_id(), ticket_type=1, ticket_value=val, consumer=admin)
+        return _response_json(0, u"设置成功!")
     else:
         return _response_json(1, u"错误操作")
 

@@ -10,14 +10,17 @@
                 <div class="modify_password">
                 	<ul>
                     	<li>
-                        	<h4>额度</h4>
-                            <span><input type="text" class="admin_pass"></span>
+                        	<h4>券值</h4>
+                            <span><input id="coupon_value" type="text" class="admin_pass"></span>
+                        </li>
+                    	<li>
+                        	<h4>数量</h4>
+                            <span><input id="counter" type="text" class="admin_pass"></span>
                         </li>
                         <li>
                         	<h4>&nbsp;</h4>
                             <span>
-                                <input type="button" class="admin_save" value="保存">
-                                
+                                <input id="save" type="button" class="admin_save" value="保存">
                             </span>
                         </li>
                     </ul>
@@ -26,9 +29,27 @@
             </div>
         </div>
     </section>    
-    
-    
 </article>
-
+<script>
+ $("#save").click(function(){
+    var value = $("#coupon_value").val()
+    var counter = $("#counter").val()
+    //console.log(/(^[1-9][0-9]*$)/.test(value))
+    //console.log(/(^[1-9][0-9]*$)/.test(counter))
+    if( (/(^[1-9][0-9]*$)/.test(value)) && (/(^[1-9][0-9]*$)/.test(counter)) )
+    {
+        $.post("{% url 'account_action' %}", {"action":"limit_coupon", "value":value, "counter":counter},function(data){
+            if(data.state==0){
+                Showbo.Msg.alert("成功:" + data.message);
+                    //window.location.reload();
+                }else{
+                    Showbo.Msg.alert("失败:" + data.message);
+                }
+        }, "json");
+    }else{
+        Showbo.Msg.alert("输入出错！");
+    }
+});
+</script>
 </body>
 </html>

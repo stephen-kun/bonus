@@ -27,9 +27,16 @@
                     <!-- <li><h2>{{ consumer.create_time|date:"Y-n-j H:i:s"  }}</h2></li> -->
 
                     <li><h4><font class="font_admin_626261">排行榜第</font><span>{{ consumer.bonus_range }}</span>名</h4></li>
-                    <li><h4><font class="font_admin_626261">帐户余额</font><span>{{ consumer.own_bonus_value }}</span>元</h4></li>
-                    <li><h4><font class="font_admin_626261">可用礼券</font><span>{{ consumer.own_ticket_value }}</span>元</h4></li>
-
+                    <li><h4><font class="font_admin_626261">可用余额</font><span>
+                            {% for cg in consumer.valid_goods %}
+                            {{ cg.good.name }}x{{ cg.number }}&nbsp
+                            {% endfor %}
+                        </span></h4></li>
+                    <li><h4><font class="font_admin_626261">可用礼券</font><span>
+                            {% for value,counter in consumer.valid_tickets.items %}
+                            {{ value }}元券x{{counter}}&nbsp
+                            {% endfor %}
+                    </span></h4></li>
                     <li>
                     <h4><font class="font_admin_626261">抢红包</font><span>{{ consumer.rcv_bonus_num }}</span>次，<a href="{% url 'consumer_bonus_list' %}?open_id={{ consumer.open_id }}&bonus_type=recv">查看详细</a></h4>
                     </li>

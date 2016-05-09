@@ -12,12 +12,16 @@
             </div>
             <div class="admin_if">
                 <ul>
-                    <li><h4><font class="font_admin_626261">余额</font><span>
+                    <li><h4><font class="font_admin_626261">可用余额</font><span>
                             {% for cg in consumer.valid_goods %}
-                            {{ cg.number }}x{{ cg.good.name }}&nbsp
+                            {{ cg.good.name }}x{{ cg.number }}&nbsp
                             {% endfor %}
                         </span></h4></li>
-                    <li><h4><font class="font_admin_626261">可用礼券</font><span>{{ consumer.own_ticket_value }}</span>元</h4></li>
+                    <li><h4><font class="font_admin_626261">可用礼券</font><span>
+                            {% for value,counter in consumer.valid_tickets.items %}
+                            {{ value }}元券x{{counter}}&nbsp
+                            {% endfor %}
+                    </span></h4></li>
                 </ul>
                 <div class="clear"></div>
             </div>
