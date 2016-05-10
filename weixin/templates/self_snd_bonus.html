@@ -37,8 +37,9 @@
 				{% ifequal bonus.bonus_type 1 %}
             	<h3>手气红包</h3>
 				{% endifequal %}				
-                <h4>{{bonus.create_time|date:"F-j-Y"}}</h4>
+                <h4>{{bonus.create_time|date:"F-j"}}</h4>
                 <h5>{{bonus.number}}串</h5>
+				</a>
             </li>		
 		{% empty %}
 			<li>您还未发过串串，赶紧去发串串吧</li>

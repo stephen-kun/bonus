@@ -1,4 +1,4 @@
-var refuse_flag = 1;
+﻿var refuse_flag = 1;
 function refuse_bonus(id_bonus, url){
 	var xmlhttp;
 	var data = '{"id_bonus":"ID_BONUS", "action":"ajax_bonus_refuse"}';

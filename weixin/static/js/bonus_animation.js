@@ -1,4 +1,4 @@
-$(document).ready(function () {
+ï»¿$(document).ready(function () {
 	var flag = 25;
     (genClips = function () {
         $t = $('.item1');
@@ -85,9 +85,9 @@ $(document).ready(function () {
 						// Increase the time by 0.10
 						t = t + 0.10;
 
-						//Ìø³öÑ­»·
+						//è·³å‡ºå¾ªçŽ¯
 						if (t > totalt) {
-							clicked = false;//Ô­false
+							clicked = false;//åŽŸfalse
 							first = true;
 							clearInterval(z);
 						}
@@ -100,8 +100,8 @@ $(document).ready(function () {
     });
     r = setInterval(function () {
         if (first === true) {
-            $('.empty').addClass("");//»Î¶¯¼ÓShake
-            //TODO:»Î¶¯¼¸ÏÂ
+            $('.empty').addClass("");//æ™ƒåŠ¨åŠ Shake
+            //TODO:æ™ƒåŠ¨å‡ ä¸‹
             first = false;
         }
     }, 50);
