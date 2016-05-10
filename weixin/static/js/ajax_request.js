@@ -1,4 +1,4 @@
-
+﻿
 function ajax_request(url, cfunc, data)
 {
 	var xmlhttp;

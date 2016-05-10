@@ -10,6 +10,7 @@ import re
 import urllib2
 import json
 import pytz
+import traceback
 from django.utils import timezone
 
 COMMON_BONUS = 0
@@ -60,6 +61,15 @@ class _BonusContent():
 		self.price = price
 		self.unit = unit		
 		self.number = number	
+		
+#日志存储
+def log_print(back_func, log_level=3):
+	if log_level >= 3:
+		path = './log/FILE.txt'.replace('FILE', back_func.__name__)
+		f = open(path, 'a')
+		traceback.print_exc(file=f)
+		f.flush()
+		f.close()	
 		
 #VirtualMoney 转换为红包内容
 def virtual_money_to_bonus_content():
@@ -176,7 +186,7 @@ def count_total_money_on_table(openid):
 	
 #查看抢到的红包
 def check_geted_bonus(id_record):
-	print('*******check_geted_bonus********')
+	#print('*******check_geted_bonus********')
 	record_rcv_bonus = RecordRcvBonus.objects.get(id_record=id_record)
 	rcv_bonus_list = RcvBonus.objects.filter(record_rcv_bonus=record_rcv_bonus)
 	random_bonus = []
@@ -191,7 +201,8 @@ def check_geted_bonus(id_record):
 		elif bonus.bonus_type == SYS_BONUS:
 			system_bonus.append(geted_bonus)
 		else:
-			print('===can not match==\n')
+			#print('===can not match==\n')
+			pass
 	return dict(random_bonus=random_bonus, common_bonus=common_bonus, system_bonus=system_bonus)
 
 #获取红包类型字符串
@@ -432,7 +443,7 @@ def action_create_ticket(data):
 		consumer.on_table.save()			
 		consumer_list = Consumer.objects.filter(session=consumer.session)
 		for user in consumer_list:
-			print("++++++++++++请会话以及桌台+++++++++++++++++")
+			#print("++++++++++++请会话以及桌台+++++++++++++++++")
 			user.on_table = None
 			user.session = None
 			user.save()
@@ -490,7 +501,7 @@ def create_bonus_dict_to_session(request):
 #创建红包内容的字典
 def create_bonus_dict(request):
 	if "create_bonus" in request.session:
-		print("***session create_bonus****")
+		#print("***session create_bonus****")
 		return create_bonus_session_to_dict(request)
 	else:
 		return create_bonus_dict_to_session(request)
@@ -616,7 +627,7 @@ def action_get_bonus(openid, session):
 	
 #生成虚拟货币
 def create_vitural_money(consumer, snd_bonus, recharge, money, number, is_send):
-	print("***create_vitural_money %s**"%(number))
+	#print("***create_vitural_money %s**"%(number))
 	for x in range(int(number)):
 		wallet_money = WalletMoney(id_money=create_primary_key(), consumer=consumer, recharge=recharge, snd_bonus=snd_bonus, money=money)
 		wallet_money.is_send = is_send
@@ -659,7 +670,7 @@ def snd_bonus_from_session(session):
 	
 #解析支付请求
 def decode_choose_pay(request, data_dir):
-	print("**** decode_choose_pay  *****")
+	#print("**** decode_choose_pay  *****")
 	result = {}
 	total_money = 0
 	number = 0				#统计串串个数

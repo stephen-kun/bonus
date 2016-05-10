@@ -1,4 +1,4 @@
-// JavaScript Document
+﻿// JavaScript Document
 	function toshare(openid, id_bonus){
 		$(".am-share").addClass("am-modal-active");	
 		if($(".send_out").length>0){
