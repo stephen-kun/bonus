@@ -29,7 +29,7 @@ urlpatterns = [
 	url(r'^view_user_ticket',views.view_user_ticket, name='view_user_ticket'),	
 	url(r'^view_redirect_user_info',views.view_redirect_user_info, name='view_redirect_user_info'),		
 	url(r'^view_bonus_detail',views.view_bonus_detail, name='view_bonus_detail'),	
-	url(r'^view_redirect_bonus_detail',views.view_redirect_bonus_detail, name='view_redirect_bonus_detail'),	
-
-	
+	url(r'^view_redirect_bonus_detail',views.view_redirect_bonus_detail, name='view_redirect_bonus_detail'),
+	url(r'^check_consumer_code',views.check_consumer_code, name='check_consumer_code'),	
+	url(r'^release_dining_table',views.release_dining_table, name='release_dining_table'),	
 ]

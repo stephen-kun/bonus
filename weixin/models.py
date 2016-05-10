@@ -93,6 +93,7 @@ class Ticket(models.Model):
 	ticket_value = models.FloatField(default=0.0)			#券值
 	create_time = models.DateTimeField(default=timezone.now)					#消费券创建时间
 	valid_time = models.DateTimeField(null=True, blank=True)					#消费券有效时间
+	is_used = models.BooleanField(default=False)			#券是否已使用
 	consumer = models.ForeignKey(Consumer, null=True, blank=True, on_delete=models.CASCADE)	#消费券拥有着
 	
 	def __unicode__(self):

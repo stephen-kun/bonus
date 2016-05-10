@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 import django.utils.timezone as timezone
 import json
+import traceback
 from .wechat import PostResponse, wechat, TOKEN, APPID, APPSECRET
 from .utils import  action_get_bonus, is_consumer_dining, handle_ajax_request, get_user_openid, decode_bonus_detail,create_bonus_dict
 from .utils import check_geted_bonus, decode_choose_pay, get_bonus_type_str, get_record_openid, is_enough_pay, update_wallet_money
@@ -67,9 +68,63 @@ class _MenuUrl():
 	
 # Create your views here.
 
+#*********************餐行健对接接口*****************
+
+#验券接口
+@csrf_exempt
+def check_consumer_code(request):
+	try:
+		data_dict = json.loads(request.body)
+		id_ticket = str(data_dict['ticket_code'])
+		ticket = Ticket.objects.filter(id_ticket=id_ticket)
+		ticket_value = float(0)
+		response = {}
+		if len(ticket) and (ticket[0].is_used):
+			response = dict(status=1, err_msg="该券已使用")
+		elif len(ticket) and (ticket[0].is_used == False):
+			ticket_value = ticket[0].ticket_value
+			ticket[0].is_used = True
+			ticket[0].save()
+			response = dict(status=0, ticket_value=ticket_value)
+		else:
+			response = dict(status=2, err_msg="券码错误")
+		return HttpResponse(response)
+	except Exception as e:
+		# 生成日志
+		logger.debug(traceback.format_exc())
+		f = open('weixin_log.txt', 'a')
+		traceback.print_exc(file=f)
+		f.flush()
+		f.close()		
+		return HttpResponseBadRequest("Invalid param!")	
+
+#请桌接口
+@csrf_exempt
+def release_dining_table(request):		
+	try:
+		data_dict = json.loads(request.body)
+		index_table = str(data_dict['table'])
+		table = DiningTable.objects.get(index_table=index_table)
+		if table.status:
+			consumer_list = Consumer.objects.filter(on_table=table)
+			for consumer in consumer_list:
+				consumer.on_table = None
+				consumer.session = None
+				consumer.save()
+			table.status = False
+			table.save()
+		return HttpResponse('ok')	
+	except Exception as e:
+		# 生成日志
+		logger.debug(traceback.format_exc())
+		f = open('weixin_log.txt', 'a')
+		traceback.print_exc(file=f)
+		f.flush()
+		f.close()
+		return HttpResponseBadRequest("Invalid param!")			
 
 #**************微信入口界面必须做认证，不能用session*******************
-
+@csrf_exempt
 def view_redirect_func(redirect_uri):
 	url = OAUTH_URL.replace('REDIRECT_URL', redirect_uri)
 	return HttpResponseRedirect(url)
@@ -218,30 +273,6 @@ def view_user_ticket(request):
 	#print('---**view_user_ticket**---\n')
 	return check_session_openid(request, REDIRECT_UT_URL, display_user_ticket)	
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #结算界面认证
 @csrf_exempt
 def view_redirect_settle_account(request):	
@@ -423,16 +454,22 @@ def view_self_bonus_list(request):
 @csrf_exempt
 def view_ajax_request(request):	
 	#print('***view_ajax_request body: ****\n')
-	data = json.loads(request.body)
-	session = request.session
-	action = data['action']
-	#for key, value in data.items():
-		#print('%s ==> %s'%(key, value))
-		
-	#实现ajax请求处理函数
-	response = handle_ajax_request(action, data, session)
+	try:
+		data = json.loads(request.body)
+		session = request.session
+		action = data['action']
+		#for key, value in data.items():
+			#print('%s ==> %s'%(key, value))	
+		#实现ajax请求处理函数
+		response = handle_ajax_request(action, data, session)
 
-	return HttpResponse(response)
+		return HttpResponse(response)
+	except:
+		f = open("weixin_log.txt", 'a')
+		traceback.print_exc(file = f)
+		f.flush()
+		f.close()
+		return HttpResponseBadRequest("Invalid param!")	
 	
 #抢到的红包界面
 @csrf_exempt
