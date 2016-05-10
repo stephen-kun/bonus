@@ -1,28 +1,98 @@
-﻿<!-- 结算 -->
+<!-- 结算 -->
 {% extends "_bonus_base.html" %}
 
 {% block body %}
-<body class="bottom_40">
+<body class="issue-bj stanson bottom_40">
 {% block content %}
-<article class="issue-bj stanson">
+<article>
 <section>
   	<div class="issue-top">
-    	<h4>stanson</h4>
+    	<h4>{{snd_bonus.consumer.name}}</h4>
         <div class="Angel">
         	<div class="blades">
                 <div class="Angel-baby stansonimgbj"></div>
             </div>
-            <h2><img src="images/stanson.jpg"></h2>
+            <h2><img src="{{snd_bonus.consumer.picture}}"></h2>
         </div>
         
-        <h5 class="stansonimg">马克菠萝的日记</h5>
-        <h3 class="stansoncolor">1,508<span>串</span></h3>
+        <h5 class="stansonimg">{{snd_bonus.to_message}}</h5>
+        <h3 class="stansoncolor">{{snd_bonus.number}}<span>串</span></h3>
         <style type="text/css">
 			.blades{animation: spin 100s linear infinite;}
 		</style>
     </div>
-
 </section>
+
+<section>
+	<div class="accept">
+		{% if snd_bonus.is_exhausted and snd_bonus.user_time.hour and snd_bonus.user_time.minute %}
+		<h4>{{snd_bonus.number}}个串串，{{snd_bonus.user_time.hour}}小时{{snd_bonus.user_time.minute}}分钟被抢光</h4>
+		{% endif %}
+		{% if snd_bonus.is_exhausted and snd_bonus.user_time.hour and not snd_bonus.user_time.minute %}
+		<h4>{{snd_bonus.number}}个串串，{{snd_bonus.user_time.hour}}小时被抢光</h4>
+		{% endif %}		
+		{% if snd_bonus.is_exhausted and not snd_bonus.user_time.hour and snd_bonus.user_time.minute and snd_bonus.user_time.second %}
+		<h4>{{snd_bonus.number}}个串串，{{snd_bonus.user_time.minute}}分钟{{snd_bonus.user_time.second}}秒被抢光</h4>
+		{% endif %}	
+		{% if snd_bonus.is_exhausted and not snd_bonus.user_time.hour and snd_bonus.user_time.minute and not snd_bonus.user_time.second %}
+		<h4>{{snd_bonus.number}}个串串，{{snd_bonus.user_time.minute}}分钟被抢光</h4>
+		{% endif %}			
+		{% if snd_bonus.is_exhausted and not snd_bonus.user_time.hour and not snd_bonus.user_time.minute and snd_bonus.user_time.second %}
+		<h4>{{snd_bonus.number}}个串串，{{snd_bonus.user_time.second}}秒被抢光</h4>
+		{% endif %}			
+		{% if snd_bonus.is_valid and snd_bonus.bonus_remain %}
+		<h4>已领取{{snd_bonus.bonus_exhausted}}/{{snd_bonus.bonus_num}}个</h4>
+		{% endif %}
+		{% if not snd_bonus.is_valid and snd_bonus.bonus_remain %}
+		<h4>已领取{{snd_bonus.bonus_exhausted}}/{{snd_bonus.bonus_num}}个, 红包已失效</h4>
+		{% endif %}		
+	</div>
+</section>
+
+<section>
+  	<div class="chch-list">
+    	<ul>
+			{% for bonus in rcv_bonus_list %}
+        	<li class="xxbaise">
+            	<h2><img src="{{bonus.consumer.picture}}"></h2>
+            	<h3>{{bonus.consumer.name}}<br>
+				{% if bonus.is_message %}
+				<p>{{bonus.message}}</a></p>
+				{% else %}
+				{% ifequal bonus.consumer.open_id openid %}
+				<p id="{{bonus.id_bonus}}"><a onClick="message('{{bonus.id_bonus}}')">留言</a></p>
+				{% endifequal %}				
+				{% endif %}
+				{% if bonus.is_refuse %}
+				<h1>婉拒</h1>
+				{% endif %}
+				<span class="chchshj"><br>{{bonus.datetime|date:"F-j-Y"}}</span></h3>
+               	<h5>
+					{% if bonus.is_best and snd_bonus.is_exhausted %}
+					<img src="{{static_url}}images/5_zanstanson.png" align="absmiddle">	
+					{% endif %}	
+					<span class="rfloat">{{bonus.number}}串</span>
+				</h5>
+							
+            </li>
+			{% endfor %}
+		</ul>
+	</div>
+</section>
+
+<section>
+    <div class="am-share">
+		<h3 class="am-share-title">
+			<input type="text" class="blankin" name="message" id="message" value="谢谢您的红包">
+			<input type="text" class="blankiny" name="id_bonus" id="id_bonus">
+			<input type="text" class="blankiny" name="show_message" id="show_message">
+			<input type="button" class="send_out" value="发送" onClick="send_message('{{ajax_request_url}}')">
+		</h3>
+    </div>	
+</section> 
+<script type="text/javascript" src="{{static_url}}js/jquery.js"></script>
+<script type="text/javascript" src="{{static_url}}js/geted_bonus.js"></script>
+
 </article>
 {% endblock %}
 

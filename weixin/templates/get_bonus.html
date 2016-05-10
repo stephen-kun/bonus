@@ -1,4 +1,4 @@
-<!-- 抢红包 -->
+﻿<!-- 抢红包 -->
 {% extends "_bonus_base.html" %}
 
 {% block body %}
@@ -23,13 +23,13 @@
 						</div>
 					</div>
 				</div>
-			</section> 	
-			
+			</section> 				
 			<div class="popup" id="popup">
 				<h3 class="tch-share-title" id="rcv_bonus"></h3>
 				<ul class="tch-share-sns">
-					<li id="link1"><a href="{{geted_bonus_url}}" target="_blank">查看红包</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="" target="_blank">继续抢红包</a></a></li>
-					<li id="link2"><a href="" target="_blank">继续抢红包</a></li>
+					<li id="link1"><a href="{{geted_bonus_url}}" target="_parent">查看红包</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="" target="_parent" >继续抢红包</a></li>
+					<li id="link2"><a href="" target="_parent">继续抢红包</a></li>
+					
 				</ul>
 			</div>	
 				
@@ -39,16 +39,13 @@
 		</div>
 	</div>
 </section>
-
 <script src="{{static_url}}js/bonus_animation.js"></script>
 <script src="{{static_url}}js/get_bonus.js"></script>
 <script src="{{static_url}}js/Heightauto.js" type="text/javascript"></script><!--页面高自由高度-->
 </article>
 {% endblock %}
-
 {% block menu %}
 {% include '_menu.html' %}
 {% endblock %}
-
 </body>
 {% endblock %}

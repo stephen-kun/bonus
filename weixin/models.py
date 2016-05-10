@@ -52,13 +52,15 @@ class Consumer(models.Model):
 	sex = models.CharField(max_length=1, default='0')						#性别
 	phone_num = models.CharField(max_length=20, null=True, blank=True)		#电话			
 	address = models.CharField(max_length=30, null=True, blank=True)			#地址
-	picture = models.URLField(max_length=200, null=True, blank=True)			#头像地址
+	email = models.EmailField(null=True, blank=True)							#邮箱
+	picture = models.URLField(null=True, blank=True)							#头像地址
 	bonus_range = models.IntegerField(default=0)					#排行榜名次
 	snd_bonus_num = models.IntegerField(default=0)					#发红包总数
 	rcv_bonus_num = models.IntegerField(default=0)					#收红包总数
 	snd_bonus_value = models.IntegerField(default=0)				#发红包金额
 	own_bonus_value = models.IntegerField(default=0)				#可用红包金额
-	own_bonus_detail = models.CharField(max_length=100, null=True, blank=True)	#可用红包明细
+	own_bonus_detail = models.CharField(max_length=300, null=True, blank=True)	#可用红包明细
+	own_ticket_num = models.IntegerField(default=0)				#可用券数量
 	own_ticket_value = models.IntegerField(default=0)				#可用礼券金额
 	create_time = models.DateTimeField(default=timezone.now)		#首次关注时间
 	subscribe = models.BooleanField(default=True)					#是否关注
@@ -78,7 +80,12 @@ class Recharge(models.Model):
 	recharge_person = models.ForeignKey(Consumer, null=True, blank=True, on_delete=models.CASCADE)			#充值人			
 	
 	def __unicode__(self):
-		return '%s Recharge %d'%(self.recharge_person.name, self.id_recharge)	
+		if self.recharge_person:
+			return '%s Recharge %d'%(self.recharge_person.name, self.id_recharge)	
+		else:
+			return 'Recharge %d'%(self.id_recharge)	
+			
+
 		
 #消费券
 class Ticket(models.Model):
@@ -86,6 +93,7 @@ class Ticket(models.Model):
 	ticket_value = models.FloatField(default=0.0)			#券值
 	create_time = models.DateTimeField(default=timezone.now)					#消费券创建时间
 	valid_time = models.DateTimeField(null=True, blank=True)					#消费券有效时间
+	is_used = models.BooleanField(default=False)			#券是否已使用
 	consumer = models.ForeignKey(Consumer, null=True, blank=True, on_delete=models.CASCADE)	#消费券拥有着
 	
 	def __unicode__(self):
@@ -112,14 +120,17 @@ class SndBonus(models.Model):
 	to_table = models.CharField(max_length=3,null=True, blank=True)			#收红包的桌台
 	to_message = models.CharField(max_length=140, null=True, blank=True)		#赠言
 	title = models.CharField(max_length=40, null=True, blank=True)			#冠名
-	content = models.CharField(max_length=100, null=True, blank=True)			#红包内容
+	content = models.CharField(max_length=300, null=True, blank=True)			#红包内容
 	bonus_num = models.IntegerField(default=0)				#红包个数
 	number = models.IntegerField(default=0)				#串串个数
 	total_money = models.FloatField(default=0)				#总金额
 	bonus_remain = models.IntegerField(default=0)			#剩余红包个数
+	bonus_exhausted = models.IntegerField(default=0)		#已领红包个数
 	is_exhausted = models.BooleanField(default=False)		#红包已耗尽
 	is_valid = models.BooleanField(default=True)			#红包已失效
-	create_time = models.DateTimeField(default=timezone.now)					#发送时间
+	create_time = models.DateTimeField(default=timezone.now)		#发送时间
+	over_time = models.DateTimeField(null=True, blank=True)		#抢完时间
+	user_time = models.DateTimeField(null=True, blank=True)		#抢完花费时间
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#发送红包者
 	session = models.ForeignKey(DiningSession, on_delete=models.CASCADE)	#就餐会话
 
@@ -134,7 +145,7 @@ class RcvBonus(models.Model):
 	message = models.CharField(max_length=40, null=True, blank=True)		#留言内容
 	is_receive = models.BooleanField(default=False)						#是否已被领取
 	is_refuse = models.BooleanField(default=False)							#是否已拒绝
-	content = models.CharField(max_length=100, null=True, blank=True)		#红包内容
+	content = models.CharField(max_length=300, null=True, blank=True)		#红包内容
 	datetime = models.DateTimeField(default=timezone.now)					#接收时间
 	number = models.IntegerField(default=0)								#串串个数
 	total_money = models.FloatField(default=0)								#总金额	

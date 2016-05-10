@@ -2,10 +2,10 @@
 {% extends "_bonus_base.html" %}
 
 {% block body %}
-<body class="bottom_40">
+<body class="issue-bj bottom_40">
 
 {% block content %}
-<article class="issue-bj">
+<article>
 <section>
   	<div class="issue-top">
     	<h4>{{consumer.name}}</h4>
@@ -38,13 +38,14 @@
 		<ul>
 		{% for bonus in rcv_bonus_list %}
             <li class="shdbai">
-				<a href="{{bonus_detail_url}}/?id_bonus={{bonus.id_bonus}}" target="_parent">
+				<a href="{{bonus_detail_url}}/?id_bonus={{bonus.snd_bonus.id_bonus}}" target="_parent">
             	<h3>{{bonus.session.table.index_table}}号桌</h3>
 				{% if bonus.is_best %}
 				<h3><span class="rfloat"><img src="{{static_url}}images/5_zan.png" align="absmiddle"></span></h3>
 				{% endif %}
-                <h4>{{bonus.datetime|date:"F-j-Y"}}</h4>
+                <h4>{{bonus.datetime|date:"F-j"}}</h4>
                 <h5>{{bonus.number}}串</h5>
+				</a>
             </li>		
 		{% empty %}
 			<li>您还未抢到串串，赶紧去抢串串吧</li>

@@ -2,16 +2,16 @@
 {% extends "_bonus_base.html" %}
 
 {% block body %}
-<body class="bottom_40">
+<body class="qubaba_hsbj bottom_40">
 
 {% block content %}
 <article>
 <section>
-  	<div class="issue-top">
+  	<div class="issue-top Angel-voucher-mt">
     	
-        <div class="Angel">
+        <div class="Angel Angel-voucher-img">
         	<div class="blades">
-                <div class="Angel-baby"></div>
+                <div class="Angel-baby Angel-voucher130"></div>
             </div>
             <h2><img src="{{consumer.picture}}"></h2>
         </div>
@@ -23,7 +23,7 @@
 </section>
 
 <section>
-    <div class="box-food qbbaise">
+    <div class="box-food qbbaise box-food-mt">
     	<ul>
 			{% for key, value in good_list.items %}
         	<li>
@@ -37,9 +37,9 @@
     </div>
 	
     <div class="queding">
-        <h2 id='weixin' ><input type="button" class="green" value="微信支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '0')"></h2>
+        <span id='weixin' ><input type="button" class="green" value="微信支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '0')"></span>
 		{% if enough_money %}
-        <h2 id='wallet'><input type="button" class="bule" value="钱包支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '1')"></h2>
+        <span id='wallet'><input type="button" class="bule" value="钱包支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '1')"></span>
 		{% endif %}
     </div>
 	

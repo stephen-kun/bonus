@@ -113,6 +113,7 @@ class PostResponse():
 		self.type = wechat.message.type
 		self.raw = wechat.message.raw
 		self.message = wechat.message
+		#request.session['openid'] = wechat.message.source
 	
 	#关注
 	def _subscribe(self):

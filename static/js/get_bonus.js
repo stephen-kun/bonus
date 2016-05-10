@@ -1,4 +1,4 @@
-﻿
+
 //窗口水平居中
 $(window).resize(function(){
 	tc_center();

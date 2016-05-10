@@ -1,4 +1,4 @@
-﻿
+var flag_pay = 1;
 function consumer_pay(url, openid, money, method){
 	var xmlhttp;
 	if (window.XMLHttpRequest)
@@ -18,9 +18,15 @@ function consumer_pay(url, openid, money, method){
 		if(xmlhttp.readyState==4 && xmlhttp.status==200)
 		{
 			// 实现跳转
-			$("#weixin").html('<input type="button" class="blue" value="微信支付" >');
+			//$("#weixin").html('<input type="button" class="blue" value="微信支付" >');
+			alert("支付成功！")
 		}
 	}
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);	
+	if(flag_pay)
+	{
+		xmlhttp.open("POST", url, true);
+		xmlhttp.send(data);	
+		flag_pay = 0;
+	}
+
 }

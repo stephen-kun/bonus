@@ -1,3 +1,4 @@
+ï»¿var refuse_flag = 1;
 function refuse_bonus(id_bonus, url){
 	var xmlhttp;
 	var data = '{"id_bonus":"ID_BONUS", "action":"ajax_bonus_refuse"}';
@@ -19,7 +20,7 @@ function refuse_bonus(id_bonus, url){
 			var result = JSON.parse(xmlhttp.responseText);
 			if(result.status == '0')
 			{
-				var html = '<input type="button" id="button" class="gray" value="Íñ¾Ü">';
+				var html = '<input type="button" id="button" class="gray" value="å©‰æ‹’">';
 				var id = "hID_BONUS".replace(/ID_BONUS/, id_bonus);
 				document.getElementById(id).innerHTML = html;				
 			}
@@ -30,8 +31,14 @@ function refuse_bonus(id_bonus, url){
 
 		}
 	}
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);		
+	
+	if(refuse_flag)
+	{
+		refuse_flag = 0;		
+		xmlhttp.open("POST", url, true);
+		xmlhttp.send(data);			
+	}
+	
 	
 }
 
@@ -65,7 +72,7 @@ function send_message(url){
 	xmlhttp.send(data);	
 }
 	
-function message(openid, id_bonus){
+function message(id_bonus){
 	$(".am-share").addClass("am-modal-active");	
 	if($(".send_out").length>0){
 		$(".send_out").addClass("sharebg-active");

@@ -6,27 +6,16 @@
  * http://www.opensource.org/licenses/mit-license.php
 */
 
-var flag = 1;
-function setSelectUserNo(radioObj){  
-	  
-	var radioCheck= $(radioObj).val();  
-	if("1"==radioCheck){  
-		$(radioObj).attr("checked",false);  
-		$(radioObj).val("0");  
-		  
-	}else{   
-		$(radioObj).val("1");  
-		  
-	}  
-}    
-
+var flag_close_account = 1;
+   
 function action_create_ticket(openid, total_money, url){
 	var auth_code ;
 	auth_code = document.getElementById("auth_code").value;
 	ticket_value = document.getElementById("ticket_value").value;
 	if(ticket_value){
 		if(auth_code){
-			if(flag){
+			if(flag_close_account){
+				flag_close_account = 0;	
 				var user_wallet, action;
 				var xmlhttp;
 				user_wallet = document.getElementById("user_wallet").value;
@@ -60,8 +49,7 @@ function action_create_ticket(openid, total_money, url){
 							a.style.backgroundColor="#bdbec0";
 							a.value = '查看券';			
 							document.getElementById("ticket_code").innerHTML = html.replace(/PART1/,JSONObject.part1).replace(/PART2/,JSONObject.part2).replace(/PART3/,JSONObject.part3);
-							document.getElementById("value").innerHTML = JSONObject.ticket_value;
-							flag = 0;	
+							document.getElementById("value").innerHTML = JSONObject.ticket_value;	
 
 							var modalLocation = $("#create_ticket").attr('data-reveal-id');
 							$('#'+modalLocation).reveal($(this).data());								

@@ -1,4 +1,5 @@
-$(document).ready(function () {
+ï»¿$(document).ready(function () {
+	var flag = 25;
     (genClips = function () {
         $t = $('.item1');
         var amount = 5;
@@ -8,7 +9,7 @@ $(document).ready(function () {
         var y = 0;
         var index = 1;
         for (var z = 0; z <= (amount * width) ; z = z + width) {
-            $('<img class="clipped" src="images/jb' + index + '.png" />').appendTo($('.item1 .clipped-box'));
+            $('<img class="clipped" src="/weixin/static/images/jb' + index + '.png" />').appendTo($('.item1 .clipped-box'));
             if (z === (amount * width) - width) {
                 y = y + height;
                 z = -width;
@@ -28,7 +29,7 @@ $(document).ready(function () {
     var first = false,
         clicked = false;
     // On click
-    $('.item1 div.kodai').on('click', function () {
+    $('.item1 div.kodai img').on('click', function () {
 
         if (clicked === false) {
             $('.full').css({
@@ -44,59 +45,63 @@ $(document).ready(function () {
             });
             // Apply to each clipped-box div.
             $('.clipped-box img').each(function () {
-                var v = rand(220, 89),
-                    angle = rand(80, 89), 
-                    theta = (angle * Math.PI) / 140, 
-                    g = -9.8; 
+				if(flag){
+					var v = rand(180, 89),
+						angle = rand(80, 89), 
+						theta = (angle * Math.PI) / 140, 
+						g = -9.9; 
 
-                // $(this) as self
-                var self = $(this);
-                var t = 0,
-                    z, r, nx, ny,
-                    totalt =20;
-                var negate = [1, -1, 0],
-                    direction = negate[Math.floor(Math.random() * negate.length)];
+					// $(this) as self
+					var self = $(this);
+					var t = 0,
+						z, r, nx, ny,
+						totalt =30;
+					var negate = [1, -1, 0],
+						direction = negate[Math.floor(Math.random() * negate.length)];
 
-                var randDeg = rand(-5, 10),
-                    randScale = rand(0.9, 1.1),
-                    randDeg2 = rand(60, 5);
+					var randDeg = rand(-5, 10),
+						randScale = rand(0.9, 1.1),
+						randDeg2 = rand(60, 10);
 
-                // And apply those
-                $(this).css({
-                    'transform': 'scale(' + randScale + ') skew(' + randDeg + 'deg) rotateZ(' + randDeg2 + 'deg)'
-                });
+					// And apply those
+					$(this).css({
+						'transform': 'scale(' + randScale + ') skew(' + randDeg + 'deg) rotateZ(' + randDeg2 + 'deg)'
+					});
 
-                // Set an interval
-                z = setInterval(function () {
-                    var ux = (Math.cos(theta) * v) * direction;
-                    var uy = (Math.sin(theta) * v) - ((+g) * t);
-                    nx = (ux * t);
-                    ny = (uy * t) + (0.25 * (g) * Math.pow(t, 2));
-                    if (ny < -40) {
-                        ny = -40;
-                    }
-                    //$("#html").html("g:" + g + "bottom:" + ny + "left:" + nx + "direction:" + direction);
-                    $(self).css({
-                        'top': (ny) + '0px',
-                        'left': (nx) + 'px'
-                    });
-                    // Increase the time by 0.10
-                    t = t + 0.10;
+					// Set an interval
+					z = setInterval(function () {
+						var ux = (Math.cos(theta) * v) * direction;
+						var uy = (Math.sin(theta) * v) - ((+g) * t);
+						nx = (ux * t);
+						ny = (uy * t) + (0.25 * (g) * Math.pow(t, 2));
+						if (ny < -40) {
+							ny = -40;
+						}
+						//$("#html").html("g:" + g + "bottom:" + ny + "left:" + nx + "direction:" + direction);
+						$(self).css({
+							'top': (ny) + '0px',
+							'left': (nx) + 'px'
+						});
+						// Increase the time by 0.10
+						t = t + 0.10;
 
-                    //Ìø³öÑ­»·
-                    if (t > totalt) {
-                        clicked = false;
-                        first = true;
-                        clearInterval(z);
-                    }
-                }, 20);
+						//è·³å‡ºå¾ªçŽ¯
+						if (t > totalt) {
+							clicked = false;//åŽŸfalse
+							first = true;
+							clearInterval(z);
+						}
+					}, 30);		
+					flag -= 1;
+				}
+                
             });
         }
     });
     r = setInterval(function () {
         if (first === true) {
-            $('.empty').addClass("");//»Î¶¯¼ÓShake
-            //TODO:»Î¶¯¼¸ÏÂ
+            $('.empty').addClass("");//æ™ƒåŠ¨åŠ Shake
+            //TODO:æ™ƒåŠ¨å‡ ä¸‹
             first = false;
         }
     }, 50);

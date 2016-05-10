@@ -20,7 +20,6 @@ function setContainerSize() {
     size = getViewSize();
     console.log(size);
     document.getElementById("Heightauto").style.height = size["h"] - 40 + "px";
-	document.getElementById("Heightauto_two").style.height = size["h"] - 80 + "px";
 }
  
 setContainerSize();
