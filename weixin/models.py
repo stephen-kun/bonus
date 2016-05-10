@@ -5,6 +5,7 @@ from django.db import models
 from django.conf import settings
 import django.utils.timezone as timezone
 import string, random
+from django.core.exceptions import ObjectDoesNotExist
 
 def create_primary_key(key='1', length=9):
     a = list(string.digits)
@@ -88,23 +89,6 @@ class Consumer(models.Model):
     def recharges(self):
         return self.recharge_set.all()
 
-    @property
-    def valid_goods(self):
-        return self.consumer_goods.filter(is_valid=True)
-
-    @property
-    def invalid_goods_detail(self):
-        return self.consumer_goods.filter(is_valid=False)
-
-    def get_valid_good(self, good):
-        account_good, created=self.consumer_goods.get_or_create(is_valid=True, good=good)
-        return account_good.number
-
-    def update_valid_good(self, good, number):
-        account_good, created=self.consumer_goods.get_or_create(is_valid=True, good=good)
-        account_good.number += number
-        account_good.save()
-
     def account_charge(self, kw):
         total_value=0
         for name,counter in kw.items():
@@ -118,7 +102,33 @@ class Consumer(models.Model):
             good=VirtualMoney.objects.get(name=name)
             for i in range(counter):
                 WalletMoney.objects.create(id_money=create_primary_key(), is_valid=True, consumer=self, recharge=charge, money=good)
-            self.update_valid_good(good, counter)
+            self.change_valid_good(good, 0, counter)
+
+    @property
+    def invalid_goods_detail(self):
+        return self.consumer_goods.filter(is_valid=False)
+
+    @property
+    def valid_goods(self):
+        return self.consumer_goods.filter(status=0)
+
+    def get_valid_good_number(self, good):
+        account_good, created=self.consumer_goods.get_or_create(is_valid=True, good=good)
+        return account_good.number
+
+    def get_valid_good_number_by_name(self, good_name):
+        try:
+            good = VirtualMoney.objects.get(name=good_name)
+        except ObjectDoesNotExist:
+            return 0
+
+        account_good, created=self.consumer_goods.get_or_create(status=0, good=good)
+        return account_good.number
+
+    def change_valid_good(self, good, status, number):
+        account_good, created=self.consumer_goods.get_or_create(status=status, good=good)
+        account_good.number += number
+        account_good.save()
 
     @property
     def valid_tickets(self):
@@ -132,12 +142,29 @@ class Consumer(models.Model):
 
         return ticket_vn
 
+    def get_wallets_by_good(self, good):
+        valid_wallets=self.wallet_set.filter(is_used=False,is_send=False, money=good)
+        return valid_wallets
+
+    def send_bonus(self,counter, good_contents, title="", message=""):
+        bonus=SndBonus.objects.create(id_bonus=create_primary_key(), consumer=self, bonus_type=2, to_message=message, title=title, bonus_num=counter, bonus_remain=counter)
+        for name,number in good_contents.items():
+            for c in self.valid_goods:
+                if(name==c.good.name):
+                    wallets=self.get_wallets_by_good(c.good)
+                    for i in range(number):
+                        for w in wallets:
+                            w.snd_bonus=bonus
+                            w.is_send=True
+                            w.save()
+                    self.change_valid_good(c.good, 0, -number)
+                    self.change_valid_good(c.good, 1, number)
 
 class ConsumerAccountGoods(models.Model):
     good = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
     consumer = models.ForeignKey(Consumer, null=True,related_name='consumer_goods', on_delete=models.CASCADE)		#就餐的消费者
     number = models.IntegerField(default=0)
-    is_valid= models.BooleanField(default=True)
+    status = models.IntegerField(default=0) #0-idle, 1-fling, 2-used
 
 #Consumer 就餐记录
 class ConsumerSession(models.Model):
@@ -250,7 +277,7 @@ class WalletMoney(models.Model):
 	id_money = models.IntegerField(primary_key=True)				#虚拟钱币的唯一id
 	is_valid = models.BooleanField(default=False)					#是否有效
 	is_used = models.BooleanField(default=False)					#是否已用
-	consumer = models.ForeignKey(Consumer, null=True, on_delete=models.CASCADE)		#钱包拥有着
+	consumer = models.ForeignKey(Consumer, null=True, related_name="wallet_set", on_delete=models.CASCADE)		#钱包拥有着
 	snd_bonus = models.ForeignKey(SndBonus, null=True, on_delete=models.CASCADE)		#红包唯一id
 	is_send = models.BooleanField(default=False)							#是否已发做红包
 	ticket = models.ForeignKey(Ticket, null=True, on_delete=models.CASCADE)			#消费券唯一id

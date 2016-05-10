@@ -51,7 +51,7 @@ def bonus_info(request):
     return render_to_response("manager/bonus/bonus_info.html")
 
 def send_bonus_list(request):
-    bonus_list=SndBonus.objects.filter(consumer__isnull=False)
+    bonus_list=SndBonus.objects.filter(consumer__isnull=False).order_by('create_time')
     return render_to_response("manager/bonus/bonus_list.html", {'title':'发出的红包', 'bonus_list':bonus_list})
 
 def recv_bonus_list(request):
@@ -59,7 +59,7 @@ def recv_bonus_list(request):
     return render_to_response("manager/bonus/recv_bonus_list.html", {'bonus_list':bonus_list})
 
 def flying_bonus_list(request):
-    bonus_list=SndBonus.objects.filter(is_exhausted=False)
+    bonus_list=SndBonus.objects.filter(is_exhausted=False).order_by('create_time')
     return render_to_response("manager/bonus/flying_bonus_list.html", {'bonus_list':bonus_list})
 
 def create_bonus(request):
@@ -73,11 +73,12 @@ def create_bonus_action(request):
     message=request.POST.get("message")
     counter = int(request.POST.get("counter"))
     good_list = VirtualMoney.objects.all()
-
     total_money=0
     total_counter=0
+    good_contents={}
     for good in good_list:
         good_counter = int(request.POST.get(good.name) )
+        good_contents[good.name]=good_counter
         total_counter = total_counter + good_counter
         total_money =  total_money + good_counter*good.price
 
@@ -86,16 +87,12 @@ def create_bonus_action(request):
 
     if(total_money==0):
         return _response_json(1, u"红包没有内容!")
-    elif(limitBonus(total_money)):
-        return _response_json(1, u"红包超额了!")
+
+    (success, err) = check_account_limit(good_contents)
+    if( not success):
+        return _response_json(1, err)
     else:
-        bonus=SndBonus.objects.create(id_bonus=gen_id(), consumer=get_admin_account(), bonus_type=2, to_message=message, title=title, bonus_num=counter, bonus_remain=counter)
-        bonus.save()
-        for good in good_list:
-            good_counter = int(request.POST.get(good.name) )
-            for i in range(good_counter):
-                w = WalletMoney.objects.create(id_money=gen_id(),is_valid=True, snd_bonus=bonus, money=good)
-                w.save()
+        get_admin_account().send_bonus(counter=counter, good_contents=good_contents, title=title, message=message)
         return _response_json(0, u"红包发送成功!")
 
 
@@ -137,8 +134,13 @@ def bonus_detail(request):
         return render_to_response("manager/bonus/bonus_detail.html")
 
 #判断发送的红包是否超额
-def limitBonus(total):
-    return False
+def check_account_limit(good_contents):
+    admin = get_admin_account()
+    for name,number in good_contents.items():
+        if number>admin.get_valid_good_number_by_name(name):
+            return False,u"帐户%s数量不足！"%name
+
+    return True,"Success!"
 
 def sys_bonus_list(request):
     bonus_list=SndBonus.objects.filter(bonus_type=2)
@@ -161,7 +163,6 @@ def bonus_rank_list(request):
     consumer_list = Consumer.objects.exclude(open_id='0001').order_by("rcv_bonus_num").reverse()
     return render_to_response('manager/bonus/bonus_rank_list.html', {'consumer_list':consumer_list} )
 
-
 def sys_account_detail(request):
     consumer=Consumer.objects.get(open_id='0001')
     return render_to_response("manager/account/sys_account.html",{'consumer':consumer})
@@ -173,7 +174,6 @@ def account_manage(request):
 def account_create(request):
     current_user = request.user
     return render_to_response("manager/account/create_account.html", {'current_user': current_user})
-
 
 def _response_json(state, message):
     data = {}
@@ -245,11 +245,9 @@ def change_password(request):
     current_user = request.user
     return render_to_response("manager/account/change_password.html", {'current_user': current_user})
 
-
 def set_coupon_limit(request):
     current_user = request.user
     return render_to_response("manager/account/set_coupon_limit.html")
-
 
 def set_bonus_limit(request):
     current_user = request.user
@@ -386,8 +384,6 @@ def table_action(request):
     else:
         return _response_json(1, u"错误操作!")
 
-
-
 @login_required(login_url='/manager/login/')
 def consumer_index(request):
     current_user = request.user
@@ -398,7 +394,6 @@ def consumer_index(request):
         is_admin = False
 
     return render_to_response("manager/consumer/index.html",{'current_user':current_user, 'is_admin':is_admin})
-
 
 @login_required(login_url='/manager/login/')
 def consumer_list(request):
@@ -411,7 +406,6 @@ def consumer_list(request):
 
     consumer_list = Consumer.objects.exclude(open_id='0001')
     return render_to_response("manager/consumer/consumer_list.html",{'current_user':current_user, 'is_admin':is_admin, 'consumer_list':consumer_list})
-
 
 @login_required(login_url='/manager/login/')
 def consumer_is_dining(request):
@@ -437,7 +431,6 @@ def consumer_is_dining(request):
 
     return render_to_response("manager/consumer/consumer_is_dining.html",{'current_user':current_user, 'is_admin':is_admin, 'info_list':info_list})
 
-
 def consumer_detail(request):
     open_id = request.GET.get('open_id')
     try:
@@ -459,8 +452,6 @@ def consumer_bonus_list(request):
         bonus_num = len(bonus_list)
         return render_to_response("manager/consumer/consumer_recv_bonus_list.html",{'consumer':consumer, 'bonus_list':bonus_list, 'bonus_num':bonus_num})
 
-
-
 @login_required(login_url='/manager/login/')
 def statistics_index(request):
     current_user = request.user
@@ -472,9 +463,14 @@ def statistics_index(request):
 
     return render_to_response("manager/statistics/index.html",{'current_user':current_user, 'is_admin':is_admin})
 
-
 @login_required(login_url='/manager/login/')
 def daily_statistics(request):
+    request_type=request.GET.get('type')
+    if request_type=="consumers":
+        is_admin=False
+    else:
+        is_admin=True
+
     date_str = request.GET.get('date')
     if(date_str):
         try:
@@ -484,11 +480,17 @@ def daily_statistics(request):
     else:
         time=datetime.datetime.today()
 
-    daily_statistics = get_daily_statistics(time)
+    daily_statistics = get_daily_statistics(time, is_admin)
     return render_to_response("manager/statistics/sys_daily_statistics.html", {'daily_statistics':daily_statistics})
 
 @login_required(login_url='/manager/login/')
 def daily_detail(request):
+    request_type=request.GET.get('type')
+    if request_type=="consumers":
+        is_admin=False
+    else:
+        is_admin=True
+
     date_str = request.GET.get('date')
     if(date_str):
         try:
@@ -498,17 +500,31 @@ def daily_detail(request):
     else:
         time=datetime.datetime.today()
 
-    daily_detail = get_daily_detail(time)
+    daily_detail = get_daily_detail(time, is_admin)
     return render_to_response("manager/statistics/sys_daily_detail.html", {'daily_detail':daily_detail})
 
 @login_required(login_url='/manager/login/')
 def monthly_coupon_statistics(request):
     return render_to_response("manager/statistics/monthly_coupon_statistics.html")
 
-
 @login_required(login_url='/manager/login/')
-def sys_monthly_statistics(request):
-    daily_statistics_set = get_daily_statistics_set()
+def monthly_statistics(request):
+    request_type=request.GET.get('type')
+    if request_type=="consumers":
+        is_admin=False
+    else:
+        is_admin=True
+
+    date_str = request.GET.get('date')
+    if(date_str):
+        try:
+            time=datetime.datetime.strptime( date_str, "%Y-%m-%d")
+        except ValueError:
+            time=datetime.datetime.today()
+    else:
+        time=datetime.datetime.today()
+
+    daily_statistics_set = get_daily_statistics_set(time, is_admin)
     return render_to_response("manager/statistics/sys_monthly_statistics.html",{'daily_statistics_set': daily_statistics_set})
 
 

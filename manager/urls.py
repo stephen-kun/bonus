@@ -53,10 +53,9 @@ urlpatterns = [
     url(r'^consumer/consumer_bonus_list/$', views.consumer_bonus_list, name='consumer_bonus_list'),
 
     url(r'^statistics/index/$', views.statistics_index, name='statistics'),
-    url(r'^statistics/daily_statistics/$', views.daily_statistics, name='sys_daily_statistics'),
-    url(r'^statistics/daily_detail/$', views.daily_detail, name='sys_daily_detail'),
-    url(r'^statistics/sys_monthly_statistics/$', views.sys_monthly_statistics, name='sys_monthly_statistics'),
-    url(r'^statistics/monthly_coupon_statistics/$', views.monthly_coupon_statistics, name='monthly_coupon_statistics'),
+    url(r'^statistics/daily_statistics/$', views.daily_statistics, name='daily_statistics'),
+    url(r'^statistics/daily_detail/$', views.daily_detail, name='daily_detail'),
+    url(r'^statistics/sys_monthly_statistics/$', views.monthly_statistics, name='monthly_statistics'),
 
 
     url(r'.*', views.index, name='index'),

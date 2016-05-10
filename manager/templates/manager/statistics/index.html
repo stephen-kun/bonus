@@ -7,15 +7,16 @@
         <ul id="menu">
             <li><span class="menu-list"><img src="/static/images/admin/ranking.png" align="absmiddle">管理员帐户</span>
             <ul class="menu-undis">
-                <li><span class="menu-l-s"><a href="{% url 'sys_account' %}" target="mainFrame">帐户</a></span></li>
-                <li><span class="menu-l-s"><a href="{% url 'sys_daily_detail' %}" target="mainFrame">日明细</a></span></li>
-                <li><span class="menu-l-s"><a href="{% url 'sys_daily_statistics' %}" target="mainFrame">日结算</a></span></li>
-                <li><span class="menu-l-s"><a href="{% url 'sys_monthly_statistics' %}" target="mainFrame">月统计</a></span></li>
+                <li><span class="menu-l-s"><a href="{% url 'daily_detail' %}?type=admin" target="mainFrame">日明细</a></span></li>
+                <li><span class="menu-l-s"><a href="{% url 'daily_statistics' %}?type=admin" target="mainFrame">日结算</a></span></li>
+                <li><span class="menu-l-s"><a href="{% url 'monthly_statistics' %}?type=admin" target="mainFrame">月统计</a></span></li>
             </ul>
             </li>
             <li><span class="menu-list"><img src="/static/images/admin/statistics.png" align="absmiddle">普通帐号</span>
             <ul class="menu-undis">
-                <li><span class="menu-l-s"><a href="{% url 'sys_daily_detail' %}" target="mainFrame">红包</a></span></li>
+                <li><span class="menu-l-s"><a href="{% url 'daily_detail' %}?type=consumers" target="mainFrame">日明细</a></span></li>
+                <li><span class="menu-l-s"><a href="{% url 'daily_statistics' %}?type=consumers" target="mainFrame">日结算</a></span></li>
+                <li><span class="menu-l-s"><a href="{% url 'monthly_statistics' %}?type=consumers" target="mainFrame">月统计</a></span></li>
             </ul>
             </li>
         </ul>
@@ -29,6 +30,6 @@
     <div class="right-f-title">
         <b>当前位置：</b><a href="index.html" target="mainFrame">管理首页</a> > 统计数据
     </div>
-    <iframe id="mainFrame" name="mainFrame" src="{% url 'sys_daily_statistics' %}"  frameborder="0" ></iframe>
+    <iframe id="mainFrame" name="mainFrame" src="{% url 'daily_statistics' %}"  frameborder="0" ></iframe>
 </div>
 {% endblock %}

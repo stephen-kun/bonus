@@ -11,6 +11,7 @@ class DailyDetail(models.Model):
     action = models.IntegerField(default=1)
     source = models.CharField(default=u'管理员充值', max_length=32)
     value = models.FloatField(default=0)
+    is_admin = models.BooleanField(default=True)
 
     @property
     def content(self):
@@ -35,6 +36,7 @@ class DailyStatisticsRecord(models.Model):
     consume_value = models.FloatField(default=0)
     charge_value = models.FloatField(default=0)
     account=models.FloatField(default=0)
+    is_admin = models.BooleanField(default=True)
 
     @property
     def balance(self):
