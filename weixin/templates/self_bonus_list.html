@@ -1,7 +1,11 @@
-﻿{% extends "_bonus_base.html" %}
+﻿<!-- 排行榜 -->
+{% extends "_bonus_base.html" %}
+
+{% block body %}
+<body class="title_bj bottom_40">
 
 {% block content %}
-
+<article>
 <section>
   	<div class="title">
     	<h4><img src="{{top_consumer.picture}}" align="absmiddle">{{top_consumer.name}}占您的榜首</h4>    
@@ -45,5 +49,14 @@
 	</div>
 	
 </section>
+</article>
 
 {% endblock %}
+
+{% block menu %}
+{% include '_menu.html' %}
+{% endblock %}
+
+</body>
+{% endblock %}
+

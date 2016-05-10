@@ -48,7 +48,7 @@ def bonus_info(request):
         is_admin = True
     else:
         is_admin = False
-    return render_to_response("manager/bonus/bonus_info.html")
+    return render_to_response("manager/bonus/bonus_info.html", locals())
 
 def send_bonus_list(request):
     bonus_list=SndBonus.objects.filter(consumer__isnull=False).order_by('create_time')
@@ -266,7 +266,13 @@ def dining_list(request):
 
 #店内基本信息
 def basic(request):
-    return render_to_response("manager/basic/index.html")
+    current_user = request.user
+    if(current_user.username == "admin"):
+        print('admin')
+        is_admin = True
+    else:
+        is_admin = False
+    return render_to_response("manager/basic/index.html", locals())
 
 def delete_account(request):
     current_user = request.user

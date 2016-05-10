@@ -3,7 +3,7 @@
 
 {% block left_frame %}
     	<div class="left-frame">
-        	<div class="left-f-title">基本设置</div>
+        	<div class="left-f-title">管理员</div>
             <div class="left-f-content">
             	<ul id="menu">
                     <li><span class="menu-list"><img src="/static/images/admin/sys_bonus.png" align="absmiddle">红包</span>
@@ -23,8 +23,8 @@
 {% block right_frame %}
         <div class="right-frame">
           <div class="right-f-title">
-            <b>当前位置：</b><a href="index.html" target="mainFrame">管理首页</a> > 管理员设置
+              <b>当前位置：</b>管理员
           </div>
-          <iframe id="mainFrame" name="mainFrame" src="{% url 'tables_info'%}"  frameborder="0" ></iframe>
+          <iframe id="mainFrame" name="mainFrame" src="{% url 'sys_bonus_list'%}"  frameborder="0" ></iframe>
         </div>
 {% endblock %}

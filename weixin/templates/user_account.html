@@ -1,7 +1,11 @@
-﻿{% extends "_bonus_base.html" %}
+﻿<!-- 我 -->
+{% extends "_bonus_base.html" %}
+
+{% block body %}
+<body class="qubaba_hsbj bottom_40">
 
 {% block content %}
-
+<article>
 <section>
     <div class="wo">
         <h2><img src="{{consumer.picture}}"></h2>
@@ -21,9 +25,9 @@
         	<li>
             	<h4><span class="rfloat"><font class="qbred">{{consumer.own_bonus_value}}￥</font></span><img src="{{static_url}}images/qiangbao2.png" align="absmiddle"><a>钱包</a></h4>
             </li>	
-			{% for key, value in good_list.items %}
+			{% for value in good_list%}
         	<li>
-            	<h4><span class="rfloat"><font class="qbred">{{value.number}}</font>{{value.name}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
+            	<h4><span class="rfloat"><font class="qbred">{{value.number}}</font>{{value.unit}}</span>{{value.name}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
             </li>			
 			{% endfor %}
 		</ul>
@@ -46,5 +50,12 @@
     </div>	
 	
 </section>
+</article>
 
+{% endblock %}
+
+{% block menu %}
+{% include '_menu.html' %}
+{% endblock %}
+</body>
 {% endblock %}

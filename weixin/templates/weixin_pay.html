@@ -1,13 +1,17 @@
-﻿{% extends "_bonus_base.html" %}
+﻿<!-- 支付 -->
+{% extends "_bonus_base.html" %}
+
+{% block body %}
+<body class="qubaba_hsbj bottom_40">
 
 {% block content %}
-
+<article>
 <section>
-  	<div class="issue-top">
+  	<div class="issue-top Angel-voucher-mt">
     	
-        <div class="Angel">
+        <div class="Angel Angel-voucher-img">
         	<div class="blades">
-                <div class="Angel-baby"></div>
+                <div class="Angel-baby Angel-voucher130"></div>
             </div>
             <h2><img src="{{consumer.picture}}"></h2>
         </div>
@@ -19,11 +23,11 @@
 </section>
 
 <section>
-    <div class="box-food qbbaise">
+    <div class="box-food qbbaise box-food-mt">
     	<ul>
 			{% for key, value in good_list.items %}
         	<li>
-            	<h4><span class="rfloat"><font class="qbred">{{value.number}}</font>{{value.name}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
+            	<h4><span class="rfloat"><font class="qbred">{{value.number}}</font>{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
             </li>
 			{% endfor %}
             <li>
@@ -33,45 +37,20 @@
     </div>
 	
     <div class="queding">
-        <input type="button" class="green" value="微信支付" onclick="weixin_pay('{{consumer.open_id}}', '{{total_money}}', '{{id_recharge}}')">
+        <span id='weixin' ><input type="button" class="green" value="微信支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '0')"></span>
 		{% if enough_money %}
-        <input type="button" class="bule" value="钱包支付" onclick="wallet_pay()">
+        <span id='wallet'><input type="button" class="bule" value="钱包支付" onclick="consumer_pay('{{ajax_request_url}}','{{consumer.open_id}}', '{{total_money}}', '1')"></span>
 		{% endif %}
     </div>
 	
 </section>
 
-<script>
-function weixin_pay(openid, money, id_recharge){
-	var xmlhttp;
-	var url = 'http://120.76.122.53/weixin/view_ajax_request';
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-	  xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-	  
-	var data_str = '{"money":"MONEY", "openid":"OPENID", "action":"ACTION", "id_recharge":"ID_RECHARGE"}';
-	var data = data_str.replace(/MONEY/, money).replace(/OPENID/, openid).replace(/ACTION/, 'ajax_weixin_pay').replace(/ID_RECHARGE/, id_recharge);
-	
-	xmlhttp.onreadystatechange=function()
-	{
-		if(xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			alert(xmlhttp.responseText);
-		}
-	}
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);	
-}
+<script type="text/javascript" src="{{static_url}}js/weixin_pay.js"></script>
+</article>
+{% endblock %}
 
-function wallet_pay(){
-	alert('支付成功')
-}
-</script>
-
-
+{% block menu %}
+{% include '_menu.html' %}
+{% endblock %}
+</body>
 {% endblock %}

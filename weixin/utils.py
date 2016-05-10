@@ -1,19 +1,25 @@
-# -*- coding: utf-8 -*-
+ï»¿# -*- coding: utf-8 -*-
 # utils.py
 # Create your utils here.
 import random, string
-from django.core.exceptions import ObjectDoesNotExist
-from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
-from .models import DiningSession,Ticket, RcvBonus, BonusMessage,SndBonus,Recharge, RecordRcvBonus
+from django.core.exceptions import ObjectDoesNotExist 
+from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
+from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
+import re
 import urllib2
 import json
 import pytz
+import traceback
 from django.utils import timezone
 
 COMMON_BONUS = 0
-RANDOM_BONUS = 1
-SYS_BONUS	= 2
+RANDOM_BONUS = 1	
+SYS_BONUS	= 2	
+
+WEIXIN_PAY = '0'
+WALLET_PAY = '1'
+
 
 AJAX_GET_BONUS = 'ajax_get_bonus'
 AJAX_CREATE_TICKET = 'ajax_create_ticket'
@@ -21,7 +27,10 @@ AJAX_WEIXIN_PAY = 'ajax_weixin_pay'
 AJAX_BONUS_REFUSE = 'ajax_bonus_refuse'
 AJAX_BONUS_MESSAGE = 'ajax_bonus_message'
 
-LIST_KEY_ID	= '1111111111'
+AUTH_CODE = '888888'
+LIST_KEY_ID	= 'ä¸²ä¸²'
+
+
 
 class _GetedBonus():
 	def __init__(self, rcv_bonus):
@@ -32,68 +41,157 @@ class _GetedBonus():
 		self.message = rcv_bonus.snd_bonus.to_message
 		self.datetime = rcv_bonus.datetime
 		self.title = rcv_bonus.snd_bonus.title
-		self.content = json.loads(rcv_bonus.content)
-
+		l_content = bonus_content_json_to_models(rcv_bonus.content)
+		self.content = l_content
+		
+class _Bonus():
+	def __init__(self, open_id=None, bonus_type=0, content=None, table=None, message=None, money=0, bonus_num=0, number=0):
+		self.open_id = open_id
+		self.bonus_type = bonus_type
+		self.content = content
+		self.table = table
+		self.message = message
+		self.money = money
+		self.bonus_num = bonus_num
+		self.number = number		#ä¸²ä¸²ä¸ªæ•°
+		
 class _BonusContent():
-	def __init__(self, name=None, price=None, unit=None, number=None):
-		self.name = name
+	def __init__(self, name=None, price=None, unit=None, number=0):
+		self.name = name	
 		self.price = price
-		self.unit = unit
-		self.number = number
+		self.unit = unit		
+		self.number = number	
+		
+#æ—¥å¿—å­˜å‚¨
+def log_print(back_func, log_level=3):
+	if log_level >= 3:
+		path = './log/FILE.txt'.replace('FILE', back_func.__name__)
+		f = open(path, 'a')
+		traceback.print_exc(file=f)
+		f.flush()
+		f.close()	
+		
+#VirtualMoney è½¬æ¢ä¸ºçº¢åŒ…å†…å®¹
+def virtual_money_to_bonus_content():
+	virtual_money = VirtualMoney.objects.all()
+	l_content = []
+	
+	for money in virtual_money:
+		content = _BonusContent()
+		content.name = money.name
+		content.price = money.price
+		content.unit = money.unit
+		content.number = 0
+		l_content.append(content)
+	
+	return l_content
+		
+		
+#çº¢åŒ…å†…å®¹ modelsè½¬æ¢ä¸ºjson
+def bonus_content_models_to_json(models_list):
+	l_name = []
+	l_bonus = []
+	l_content = virtual_money_to_bonus_content()
+		
+	for content in l_content:
+		for money in models_list:	
+			if money.money.name == content.name:
+				content.number += 1
+		bonus = dict(name=content.name, price=content.price, unit=content.unit, number=content.number)
+		l_name.append(content.name)
+		l_bonus.append(bonus)
+	
+	return json.dumps(dict(zip(l_name, l_bonus)))
+	
+#çº¢åŒ…å†…å®¹jsonè½¬æ¢ä¸ºmodels
+def bonus_content_json_to_models(json_content):
+	dict_content = json.loads(json_content)
+	l_content = []
+	for value in dict_content.itervalues():
+		content = _BonusContent()
+		content.name = value['name']
+		content.price = value['price']
+		content.unit = value['unit']
+		content.number = value['number']
+		l_content.append(content)
+	return l_content
+	
+	
+		
+#åˆ¤æ–­ç”¨æˆ·æ˜¯å¦æœ‰è¶³å¤Ÿé›¶é’±æ”¯ä»˜çº¢åŒ…
+def is_enough_pay(consumer, bonus_content):
+	if consumer.own_bonus_detail:
+		# åé¢åšæ•°æ®æ£€æµ‹ï¼Œå¦‚æœ‰å¼‚å¸¸ï¼Œèƒ½å¤Ÿè‡ªä¿®å¤
+		content_list = bonus_content_json_to_models(consumer.own_bonus_detail)
+		for content in content_list:
+			key = content.name
+			if key in bonus_content:
+				if int(bonus_content[key]) > content.number:
+					return False
+		return True
+	else:
+		return False
+	
+	
+def get_record_openid(id_record):
+	record_rcv_bonus = RecordRcvBonus.objects.get(id_record=id_record)
+	return record_rcv_bonus.consumer.open_id
+	
+#ajaxè¯·æ±‚å‚æ•°æ£€æµ‹
+def check_ajax_params(src_keys, dest_dict):
+	for key in src_keys:
+		if dest_dict.has_key(key):
+			pass
+		else:
+			return False
+	return True
 
-#³õÊ¼»¯Êı¾İ±í
-def init_models():
-	table = DiningTable.objects.get_or_create(index_table='0')
-	null_dining_table=table[0]
-	consumer = Consumer.objects.get_or_create(open_id='2000000000', name='null', on_table=null_dining_table)
-	null_consumer=consumer[0]
-	consumer = Consumer.objects.get_or_create(open_id='3000000000', name='admin', on_table=null_dining_table)
-	admin_consumer=consumer[0]
-	record_rcv_bonus = RecordRcvBonus.objects.get_or_create(id_record=2000000000, consumer=null_consumer)
-	null_record_rcv_bonus = record_rcv_bonus[0]
-	recharge = Recharge.objects.get_or_create(id_recharge=2000000000, recharge_person=null_consumer)
-	null_recharge=recharge[0]
-	ticket = Ticket.objects.get_or_create(id_ticket=2000000000, consumer=null_consumer)
-	null_ticket=ticket[0]
-	snd_bonus = SndBonus.objects.get_or_create(id_bonus=2000000000, consumer=null_consumer, is_exhausted=True)
-	null_snd_bonus=snd_bonus[0]
-	rcv_bonus = RcvBonus.objects.get_or_create(id_bonus=2000000000, snd_bonus=null_snd_bonus, consumer=null_consumer, table=null_dining_table, record_rcv_bonus=null_record_rcv_bonus)
-	null_rcv_bonus=rcv_bonus[0]
-
-#»ñÈ¡ÓÃ»§openid
+		
+#è·å–ç”¨æˆ·openid
 def get_user_openid(request, access_token_url):
-	code = request.GET.get(u'code')
-	url = access_token_url.replace('CODE', code)
-	response = urllib2.urlopen(url)
-	content = response.read()
-	access_token = json.loads(content)
-	return access_token['openid']
+	try:
+		code = request.GET.get(u'code')
+		url = access_token_url.replace('CODE', code)
+		response = urllib2.urlopen(url)
+		content = response.read()
+		access_token = json.loads(content)	
+		openid = access_token['openid']	
+		return openid	
+	except:
+		log_print(get_user_openid)
+		return None
 
 
-#¼ì²âÓÃ»§ÊÇ·ñÔÚ¾Í²Í×´Ì¬
+#æ£€æµ‹ç”¨æˆ·æ˜¯å¦åœ¨å°±é¤çŠ¶æ€
 def is_consumer_dining(openid):
-	consumer = Consumer.objects.get(open_id=openid)
-	return consumer.on_table.status
-
-
-#Ö÷¼üÉú³É·½·¨
+	try:
+		consumer = Consumer.objects.get(open_id=openid)
+		if consumer.on_table:
+			return consumer.on_table.status
+		else:
+			return False
+	except ObjectDoesNotExist:
+		return False
+	
+	
+#ä¸»é”®ç”Ÿæˆæ–¹æ³•
 def create_primary_key(key='1', length=9):
     a = list(string.digits)
-    random.shuffle(a)
+    random.shuffle(a)   
     primary = key + ''.join(a[:length])
     return string.atoi(primary, 10)
-
-#Í³¼Æ²Í×ÀÇÀµ½µÄËùÓĞºì°ü½ğ¶î
+	
+#ç»Ÿè®¡é¤æ¡ŒæŠ¢åˆ°çš„æ‰€æœ‰çº¢åŒ…é‡‘é¢
 def count_total_money_on_table(openid):
 	consumer = Consumer.objects.get("openid")
 	table = consumer.on_table
 	consumer_list = Consumer.objects.filter(on_table=table)
-
-
-
-#²é¿´ÇÀµ½µÄºì°ü
+	
+	
+	
+#æŸ¥çœ‹æŠ¢åˆ°çš„çº¢åŒ…
 def check_geted_bonus(id_record):
-	print('*******check_geted_bonus********')
+	#print('*******check_geted_bonus********')
 	record_rcv_bonus = RecordRcvBonus.objects.get(id_record=id_record)
 	rcv_bonus_list = RcvBonus.objects.filter(record_rcv_bonus=record_rcv_bonus)
 	random_bonus = []
@@ -108,308 +206,524 @@ def check_geted_bonus(id_record):
 		elif bonus.bonus_type == SYS_BONUS:
 			system_bonus.append(geted_bonus)
 		else:
-			print('===can not match==\n')
+			#print('===can not match==\n')
+			pass
 	return dict(random_bonus=random_bonus, common_bonus=common_bonus, system_bonus=system_bonus)
 
-#»ñÈ¡ºì°üÀàĞÍ×Ö·û´®
+#è·å–çº¢åŒ…ç±»å‹å­—ç¬¦ä¸²
 def get_bonus_type_str(bonus_type):
 	if bonus_type == 0:
-		return "ÆÕÍ¨ºì°ü"
+		return "æ™®é€šçº¢åŒ…"
 	elif bonus_type == 1:
-		return "ÊÖÆøºì°ü"
+		return "æ‰‹æ°”çº¢åŒ…"
 	else:
-		return "ÏµÍ³ºì°ü"
+		return "ç³»ç»Ÿçº¢åŒ…"
+	
 
+#çº¢åŒ…ç•™è¨€
+def action_bonus_message(data):
+	id_bonus = data["id_bonus"]
+	message = data["message"]
+	rcv_bonus = RcvBonus.objects.get(id_bonus=id_bonus)
+	rcv_bonus.message = message
+	rcv_bonus.is_message = True
+	rcv_bonus.save()
+	return ""
+	
+#çº¢åŒ…å©‰æ‹’
+def action_bonus_refuse(data):
+	id_bonus = data['id_bonus']
+	rcv_bonus = RcvBonus.objects.get(id_bonus=id_bonus)
+	rcv_bonus.is_refuse = True
+	rcv_bonus.save()
+	return ''
+		
+#éšæœºåˆ†é…çº¢åŒ…ç®—æ³•
+def get_random_bonus(money_num, bonus_num):
+	l_money = []
+	while bonus_num:
+		if bonus_num == 1:
+			l_money.append(money_num)
+			return l_money
+		
+		money_min = 1
+		money_max = int(money_num/bonus_num*2)
+		rand = random.random()
+		money = int(money_max*rand)
+		if money < money_min:
+			money = money_min
+		l_money.append(money)
+		bonus_num -= 1
+		money_num -= money
+	return l_money
+	
+#å°†çº¢åŒ…åˆ†æ‹†
+def snd_bonus_random_rcv_bonus(snd_bonus, number_list):
+	number_list.sort(reverse=True)
+	is_best = True
+	total_number = 0
+	for number in number_list: 
+		total_money = 0
+		rcv_bonus = RcvBonus.objects.create(id_bonus=create_primary_key(), snd_bonus=snd_bonus)
+		money_list = WalletMoney.objects.filter(snd_bonus=snd_bonus, is_receive=False)[0:number]
+		account = 0	#ç»Ÿè®¡ä¸²ä¸²ä¸ªæ•°
+		for money in money_list:
+			money.rcv_bonus = rcv_bonus
+			money.is_receive = True 
+			if money.money.name == LIST_KEY_ID:
+				account += 1
+			money.save()
+			total_money += money.money.price
+		rcv_bonus.bonus_type = snd_bonus.bonus_type
+		rcv_bonus.number = account
+		rcv_bonus.total_money = total_money
+		if is_best and (rcv_bonus.bonus_type != COMMON_BONUS):
+			rcv_bonus.is_best = True
+			is_best = False
+		rcv_bonus.content = bonus_content_detail(bonus=rcv_bonus, type='rcv')
+		rcv_bonus.save()
+		total_number += account
+	snd_bonus.consumer.snd_bonus_num += total_number
+	snd_bonus.consumer.save()
 
-#ºì°üÁôÑÔ
-def action_bonus_message(request):
-	#´ÓrequestÖĞ½âÎö³öopenid,rcv_bonus_id,message
-	#ÔÚBonusMessage±íÖĞ´´½¨Ò»Ìõ¼ÇÂ¼
-	#ĞŞ¸ÄRcvBonus±íÖĞis_message==True
-	pass
+#å¾®ä¿¡æ”¯ä»˜
+def action_weixin_pay(data, session):
+	if data["method"] == WEIXIN_PAY:
+		#é˜²æ­¢é‡å¤æ”¯ä»˜
+		bonus = snd_bonus_from_session(session)
+		if bonus is None:
+			return "have pay!"
+			
+		#åˆ›å»ºä¸€æ¡å……å€¼è®°å½•
+		recharge = Recharge.objects.create(id_recharge=create_primary_key())
+		recharge.recharge_value = float(data['money'])
+		recharge.recharge_type = int(WEIXIN_PAY)
+		openid = data['openid']
+		consumer = Consumer.objects.get(open_id=openid)
+		recharge.recharge_person = consumer
+		
+		#åˆ›å»ºä¸€æ¡å‘çº¢åŒ…è®°å½•
+		new_snd_bonus = SndBonus.objects.create(id_bonus=create_primary_key(), consumer=consumer, session=consumer.session)
+		new_snd_bonus.to_message = bonus.message
+		new_snd_bonus.to_table = bonus.table
+		new_snd_bonus.bonus_type = int(bonus.bonus_type)
+		new_snd_bonus.number = bonus.number
+		new_snd_bonus.total_money = bonus.money
+		new_snd_bonus.bonus_num = int(bonus.bonus_num)
+		new_snd_bonus.bonus_remain = new_snd_bonus.bonus_num
 
-#ºì°üÍñ¾Ü
-def action_bonus_refuse(request):
-	#´ÓrequestÖĞ½âÎö³öopenid,rcv_bonus_id
-	#¸ù¾İrcv_bonus_idÔÚ±íPersonMoneyÖĞÕÒµ½Íñ¾ÜµÄid_money¡£
-	#ÔÚPersonRecharge±íÖĞ´´½¨Ò»Ìõ¼ÇÂ¼
-	pass
-
-#Î¢ĞÅÖ§¸¶
-def action_weixin_pay(data):
-	#Ö§¸¶³É¹¦£¬ÔÚPersonRecharge±íÖĞ´´½¨Ò»ÌõĞÂ¼ÍÂ¼
-	#ÔÚPersonMoney±íÖĞ´´½¨ÏàÓ¦µÄ¼ÇÂ¼
-	#Ö§¸¶Ê§°Ü£¬ÔÚPersonBonus±íÉ¾³ıÒ»ÌõopenidµÄ×îĞÂµÄ¼ÇÂ¼
-	id_recharge = data['id_recharge']
-	recharge = Recharge.objects.get(id_recharge=id_recharge)
-	WalletMoney.objects.filter(recharge=recharge).update(is_valid=True)
+		#ç”Ÿæˆè™šæ‹Ÿè´§å¸
+		is_send = True
+		money_num = 0
+		money_list = VirtualMoney.objects.all()
+		for money in money_list:
+			content = bonus.content[money.name]
+			content = json.loads(content)
+			number = content['number']
+			money_num += int(number)
+			create_vitural_money(consumer, new_snd_bonus, recharge, money, number, is_send)
+		recharge.save()
+		new_snd_bonus.content = bonus.content
+		new_snd_bonus.save()	
+		consumer.own_bonus_detail = bonus_content_detail(consumer=consumer, type='own')
+		consumer.save()
+		
+		#éšæœºåˆ†é…çº¢åŒ…	
+		number_list = get_random_bonus(int(money_num), int(new_snd_bonus.bonus_num))
+		snd_bonus_random_rcv_bonus(new_snd_bonus, number_list)	
+	else:
+		pass
+	del session['snd_bonus']
 	return 'pay suc!'
+	
+#æ›´æ–°ç”¨æˆ·é’±åŒ…ä½™é¢
+def update_wallet_money(consumer):
+	money_list = WalletMoney.objects.filter(consumer=consumer, is_used=False, is_valid=True, is_send=False)
+	sum_money = float(0)
+	for money in money_list:
+		price = money.money.price
+		sum_money += price
+	
+	consumer.own_bonus_value = sum_money
+	consumer.save()
+	return consumer
+	
+#ç»“ç®—æ“ä½œ
+def close_an_account(consumer, ticket, ticket_value):
+	sum = float(0) 			#ç»Ÿè®¡é‡‘é¢
+	is_remain = False			#æ˜¯å¦ç»“ä½™
+	#æŸ¥æ‰¾å°±é¤ä¼šè¯ä¸­æŠ¢åˆ°çš„æ‰€æœ‰çº¢åŒ…
+	rcv_bonus_list = RcvBonus.objects.filter(session=consumer.session)
+	for bonus in rcv_bonus_list:
+		money_list = WalletMoney.objects.filter(rcv_bonus=bonus, is_used=False, is_valid=True)
+		for money in money_list:
+			if is_remain:
+				money.consumer = consumer
+				money.ticket = None
+				money.is_send = False
+				money.is_receive = False
+				money.snd_bonus = None
+				money.rcv_bonus = None
+				money.save()
+			else:
+				price = money.money.price
+				sum += price				
+				if sum > ticket_value:
+					sum -= price
+					is_remain = True
+					money.consumer = consumer
+					money.ticket = None
+					money.is_send = False
+					money.is_receive = False
+					money.snd_bonus = None
+					money.rcv_bonus = None					
+					money.save()
+				else:
+					money.ticket = ticket
+					money.consumer = consumer
+					money.save()
+	
+	#ä½¿ç”¨é’±åŒ…ä½™é¢
+	if is_remain == False:
+		wallet_list = WalletMoney.objects.filter(consumer=consumer, is_used=False, is_valid=True, ticket=None)
+		for money in wallet_list:
+			price = money.money.price
+			sum += price	
+			if sum > ticket_value:
+				sum -= price
+				break
+			else:
+				money.ticket = ticket
+				money.save()	
+	return sum
+	
+#çº¢åŒ…é€€å›æ“ä½œ
+def bonus_snd_back(rcv_bonus_list):
+	for rcv_bonus in rcv_bonus_list:
+		money_list = WalletMoney.objects.filter(rcv_bonus=rcv_bonus)
+		for money in money_list:
+			money.snd_bonus = None
+			money.rcv_bonus = None
+			money.is_send = False
+			money.is_receive = False
+			money.save()
+	
+	
+#åˆ›å»ºæ¶ˆè´¹åˆ¸äº‹ä»¶
+def action_create_ticket(data):
+	src_keys = ['openid', 'user_wallet', 'total_money','ticket_value', 'auth_code']
+	if check_ajax_params(src_keys, data):
+		openid = data['openid']
+		consumer = Consumer.objects.get(open_id=openid)		
+		ticket_value = float(data['ticket_value'])
+		auth_code = data['auth_code']
+		if auth_code != AUTH_CODE:
+			return dict(status=2, error_message="éªŒè¯ç é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼")
+	
+		#ç”Ÿæˆä¸€æ¡æ¶ˆè´¹åˆ¸è®°å½•
+		new_ticket = Ticket.objects.create(id_ticket=create_primary_key(), valid_time=timezone.now())
+		new_ticket.consumer = consumer
 
-#´´½¨Ïû·ÑÈ¯ÊÂ¼ş
-def action_create_ticket(request):
-	#´ÓrequestÖĞ½âÎö³öopenid
-	#ÔÚTicket±íÖĞ´´½¨Ò»ÌõĞÂµÄ¼ÇÂ¼
-	#¸üĞÂSystemMoney±íÖĞticket×Ö¶Î
-	#¸üĞÂPersonMoney±íÖĞticket×Ö¶Î
-	pass
-
-#´´½¨ºì°üÄÚÈİµÄ×Öµä
-def create_bonus_dir():
+		#ç»“ç®—æ“ä½œ
+		ticket_value = close_an_account(consumer, new_ticket, ticket_value)
+		new_ticket.ticket_value = ticket_value
+		new_ticket.save()
+		
+		#å¤±æ•ˆè¯¥å°±é¤ä¼šè¯å‘å‡ºçš„çº¢åŒ…ï¼Œå°†æœªæŠ¢çº¢åŒ…ä»¥åŠå©‰æ‹’çº¢åŒ…è¿”å›å®¢æˆ·è´¦å·
+		snd_bonus_list = SndBonus.objects.filter(session=consumer.session, is_exhausted=False)
+		for snd_bonus in snd_bonus_list:
+			snd_bonus.is_valid = False
+			snd_bonus.save()
+			rcv_bonus_list = RcvBonus.objects.filter(snd_bonus=snd_bonus, is_receive=False)
+			bonus_snd_back(rcv_bonus_list)
+		
+		#å©‰æ‹’çº¢åŒ…é€€å›
+		refuse_bonus_list = RcvBonus.objects.filter(is_refuse=True)
+		bonus_snd_back(refuse_bonus_list)
+			
+		#å…³é—­å°±é¤ä¼šè¯ï¼Œé‡Šæ”¾æ¡Œå°
+		consumer.session.over_time = timezone.now()
+		consumer.session.save()
+		consumer.on_table.status = False
+		consumer.on_table.save()			
+		consumer_list = Consumer.objects.filter(session=consumer.session)
+		for user in consumer_list:
+			#print("++++++++++++è¯·ä¼šè¯ä»¥åŠæ¡Œå°+++++++++++++++++")
+			user.on_table = None
+			user.session = None
+			user.save()
+		
+		new_consumer = Consumer.objects.get(open_id=openid)	
+		#æ›´æ–°ç”¨æˆ·é’±åŒ…ä½™é¢åŠæ˜ç»†
+		new_consumer.own_bonus_detail = bonus_content_detail(consumer=new_consumer, type="own")
+		new_consumer.own_ticket_num += 1
+		update_wallet_money(new_consumer)
+		
+		#è¿”å›æ¶ˆè´¹åˆ¸ç ä»¥åŠåˆ¸å€¼
+		id_ticket = str(new_ticket.id_ticket)
+		return dict(status=0, ticket_value=ticket_value, part1=id_ticket[0:3], part2=id_ticket[3:6], part3=id_ticket[6:10])
+	else:
+		return dict(status=1, error_message="å‚æ•°é”™è¯¯")
+		
+def update_bonus_dict_to_session(request, update_dir):
+	l_name = []
+	l_content = []
+	for key, value in update_dir.items():
+		l_name.append(key)
+		content = dict(name=value.name, price=value.price, unit=value.unit, number=value.number)
+		content = json.dumps(content)
+		l_content.append(content)
+	request.session['create_bonus'] = dict(zip(l_name, l_content))
+		
+def create_bonus_session_to_dict(request):
+	create_bonus = request.session['create_bonus']
+	l_name = []
+	l_money = []
+	for key,value in create_bonus.items():
+		l_name.append(key)
+		content = _BonusContent()
+		temp = json.loads(value)
+		content.name = temp['name']
+		content.price = temp['price']
+		content.unit = temp['unit']
+		l_money.append(content)
+	return dict(zip(l_name, l_money))	
+	
+def create_bonus_dict_to_session(request):
 	virtual_money = VirtualMoney.objects.all()
 	l_name = []
 	l_money = []
+	l_content = []
 	for money in virtual_money:
 		l_name.append(money.name)
 		l_money.append(money)
+		content = dict(name=money.name, price=money.price, unit=money.unit, number=0)
+		content = json.dumps(content)
+		l_content.append(content)
+	request.session['create_bonus'] = dict(zip(l_name, l_content))
 	return dict(zip(l_name, l_money))
-
-#ÎÒµÄÇ®°üÄÚÈİ×Ö·û´®
+		
+#åˆ›å»ºçº¢åŒ…å†…å®¹çš„å­—å…¸
+def create_bonus_dict(request):
+	if "create_bonus" in request.session:
+		#print("***session create_bonus****")
+		return create_bonus_session_to_dict(request)
+	else:
+		return create_bonus_dict_to_session(request)
+	
+#æˆ‘çš„é’±åŒ…å†…å®¹å­—ç¬¦ä¸²
 def decode_bonus_detail(consumer):
 	bonus_detail = consumer.own_bonus_detail
-	return json.loads(bonus_detail)
-
-
-#Éú³Éºì°üÄÚÈİ×Ö·û´®
-def bonus_content_str(bonus, type='rcv', consumer=None, is_valid=True):
+	l_content = []
+	if bonus_detail:
+		l_content = bonus_content_json_to_models(bonus_detail)
+	return l_content
+	
+#ç”Ÿæˆçº¢åŒ…å†…å®¹å­—ç¬¦ä¸²
+def bonus_content_detail(bonus=None, consumer=None, type='rcv'):
 	'''
-	type : snd ±íÊ¾·¢ËÍµÄºì°ü£¬rcv ±íÊ¾½ÓÊÕµÄºì°ü, own ±íÊ¾ÓµÓĞµÄºì°ü
+	type : snd è¡¨ç¤ºå‘é€çš„çº¢åŒ…ï¼Œrcv è¡¨ç¤ºæ¥æ”¶çš„çº¢åŒ…, own è¡¨ç¤ºæ‹¥æœ‰çš„çº¢åŒ…
 	'''
+	wallet_money = None
 	if type == 'snd':
 		wallet_money = WalletMoney.objects.filter(snd_bonus=bonus)
 	elif type == 'rcv':
 		wallet_money = WalletMoney.objects.filter(rcv_bonus=bonus)
 	elif type == 'own':
-		wallet_money = WalletMoney.objects.filter(consumer=consumer, is_valid=is_valid)
-	virtual_money = VirtualMoney.objects.all()
-	l_name = []
-	l_unit = []
-	for money in virtual_money:
-		l_name.append(money.name)
-		l_unit.append(money.unit)
-	content_dir = dict(zip(l_name, l_unit))
-	temp_dir = content_dir.copy()
-	for x in wallet_money:
-		temp_dir[x.money.name] += "*"
-	for key, value in temp_dir.iteritems():
-		v = value.count("*")
-		content_dir[key] = '{0}{1}'.format(v, content_dir[key])
-	return json.dumps(content_dir)
+		wallet_money = WalletMoney.objects.filter(consumer=consumer, is_used=False, is_valid=True, is_send=False)
+	
+	return bonus_content_models_to_json(wallet_money)
 
-#Õ¹ÏÖÇÀµ½µÄºì°ü
+
+#å±•ç°æŠ¢åˆ°çš„çº¢åŒ…
 def display_get_bonus(id_record, bonus_type):
+	''' 
+	bonus_type: 0:æ™®é€šçº¢åŒ…ï¼Œ 1:æ‰‹æ°”çº¢åŒ…ï¼Œ 2:ç³»ç»Ÿçº¢åŒ…
 	'''
-	bonus_type: 0:ÆÕÍ¨ºì°ü£¬ 1:ÊÖÆøºì°ü£¬ 2:ÏµÍ³ºì°ü
-	'''
-	bonus_list = []
+	bonus_list = []	
 	try:
 		record_rcv_bonus = RecordRcvBonus.objects.get(id_record=id_record)
 		rcv_bonus = RcvBonus.objects.filter(bonus_type=bonus_type, record_rcv_bonus=record_rcv_bonus)
 		for bonus in rcv_bonus:
 			geted_bonus = _GetedBonus(rcv_bonus=bonus)
-			bonus_list.append(geted_bonus)
+			bonus_list.append(geted_bonus)	
 	except ObjectDoesNotExist:
 		pass
 	return bonus_list
-
-#ÇÀºì°üÊÂ¼ş
-def action_get_bonus(openid):
-	#·µ»ØÇÀµ½µÄºì°ü¸öÊı
-	bonus_num = 0	#Í³¼ÆÇÀµ½µÄºì°ü¸öÊı
-	number = 0		#Í³¼Æ´®´®¸öÊı
-	total_money = 0 #Í³¼ÆÇÀµ½µÄºì°ü×Ü¶î
-	consumer = Consumer.objects.get(open_id=openid)
-	session = consumer.session							#¾Í²Í»á»°
-	snd_bonus_list = SndBonus.objects.filter(is_exhausted=False)
-	primary_key = create_primary_key()
-	if len(snd_bonus_list):
-		# ´´½¨Ò»ÌõÇÀºì°ü¼ÇÂ¼
-		record_rcv_bonus = RecordRcvBonus.objects.create(id_record=primary_key, consumer=consumer)
-		for bonus in snd_bonus_list:
-			rcv_bonus_list = RcvBonus.objects.filter(consumer=consumer,snd_bonus=bonus)
-			if len(rcv_bonus_list) == 0:
-				if (bonus.bonus_type == COMMON_BONUS) and (bonus.to_table != consumer.on_table.index_table):
-					continue
-				new_rcv_bonus = RcvBonus.objects.create(id_bonus=create_primary_key(), snd_bonus=bonus, consumer=consumer, table=consumer.on_table, record_rcv_bonus=record_rcv_bonus)
-				money_list = WalletMoney.objects.filter(bonus=bonus, is_receive=False)
-
-				print('===money:%d  remain:%d==\n'%(len(money_list), bonus.bonus_remain))
-				get_num = 0
+	
+#æŠ¢çº¢åŒ…
+def get_bonus(consumer, session, record_rcv_bonus, bonus_list, param_tuple):
+	bonus_num = param_tuple[0]
+	total_money = param_tuple[1]
+	total_number = param_tuple[2]
+	if len(bonus_list):
+		for bonus in bonus_list:
+			#åˆ¤æ–­è¯¥çº¢åŒ…æ˜¯å¦èƒ½æŠ¢
+			get_bonus = RcvBonus.objects.filter(snd_bonus=bonus, consumer=consumer)
+			if len(get_bonus):
+				continue
+			remain_bonus = RcvBonus.objects.filter(snd_bonus=bonus).exclude(is_receive=True)
+			length = len(remain_bonus)
+			if length:
+				rand = random.randint(0, (length-1))
+				bonus_num += 1
+				total_money += remain_bonus[rand].total_money
+				total_number += remain_bonus[rand].number
+				remain_bonus[rand].consumer = consumer
+				remain_bonus[rand].datetime = timezone.now()
+				remain_bonus[rand].session = session
+				remain_bonus[rand].record_rcv_bonus = record_rcv_bonus
+				remain_bonus[rand].is_receive = True
+				remain_bonus[rand].save()
 				if bonus.bonus_remain == 1:
-					get_num = len(money_list)
-				else:
-					num = len(money_list) - bonus.bonus_remain + 1
-					get_num = random.randint(1, num)
-				print('****get_num:%d***\n'%(get_num))
-				for i in range(0, get_num):
-					if money_list[i].money.id == LIST_KEY_ID:
-						number += 1	#Í³¼ÆÇÀµ½µÄ´®´®¸öÊı
-					money_list[i].rcv_bonus = new_rcv_bonus
-					money_list[i].is_receive = True
-					money_list[i].consumer = consumer
-					money_list[i].save()
-					total_money += money_list[i].money.value
-				bonus_num +=1
-				bonus.bonus_remain -= 1
-				if bonus.bonus_remain == 0:
 					bonus.is_exhausted = True
-				bonus.save()
-				new_rcv_bonus.number = number
-				new_rcv_bonus.bonus_type = bonus.bonus_type
-				new_rcv_bonus.content = bonus_content_str(bonus=new_rcv_bonus)
+					bonus.over_time = timezone.now()
+					bonus.is_valid = False
+				bonus.bonus_remain -= 1
+				bonus.bonus_exhausted += 1
+				bonus.save()	 
+	return [bonus_num, total_money, total_number]
+	
+#æŠ¢çº¢åŒ…äº‹ä»¶
+def action_get_bonus(openid, session):
 
-				#Ìí¼Ó¾Í²Í»á»°ĞÅÏ¢
-				new_rcv_bonus.session = session
-				session.total_money += total_money
-				session.total_bonus += number
-				session.save()
-
-				new_rcv_bonus.save()
-				consumer.rcv_bonus_num += number
-				consumer.save()
+	#è¿”å›æŠ¢åˆ°çš„çº¢åŒ…ä¸ªæ•°
+	bonus_num = 0			#ç»Ÿè®¡æŠ¢åˆ°çš„çº¢åŒ…ä¸ªæ•°
+	total_number = 0		#ç»Ÿè®¡ä¸²ä¸²ä¸ªæ•°
+	total_money = 0 		#ç»Ÿè®¡æŠ¢åˆ°çš„çº¢åŒ…æ€»é¢
+	
+	consumer = Consumer.objects.get(open_id=openid)				
+	
+	#å‡†å¤‡ä¸€æ¡æŠ¢çº¢åŒ…è®°å½•
+	record_rcv_bonus = RecordRcvBonus(id_record=create_primary_key(), consumer=consumer)
+	
+	#è¿‡æ»¤èƒ½å¤ŸæŠ¢çš„å„ç±»çº¢åŒ…
+	common_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True, bonus_type=COMMON_BONUS).exclude(consumer=consumer)
+	random_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True, bonus_type=RANDOM_BONUS)
+	system_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True, bonus_type=SYS_BONUS)	
+	
+	#åˆ†é…çº¢åŒ…
+	param_list = [bonus_num, total_money, total_number]
+	param_list = get_bonus(consumer, consumer.session, record_rcv_bonus,common_bonus_list, param_list)
+	param_list = get_bonus(consumer, consumer.session, record_rcv_bonus,random_bonus_list, param_list)
+	param_list = get_bonus(consumer, consumer.session, record_rcv_bonus,system_bonus_list, param_list)	
+	bonus_num = param_list[0]
+	total_money = param_list[1]
+	total_number = param_list[2]
+	
+	if bonus_num:
+		#æ›´æ–°sessionä¿¡æ¯
+		consumer.session.total_bonus += bonus_num
+		consumer.session.total_money += total_money
+		consumer.session.total_number += total_number
+		consumer.session.save()
+		consumer.rcv_bonus_num += total_number
+		consumer.save()
+				
+		#æ›´æ–°æŠ¢çº¢åŒ…è®°å½•
 		record_rcv_bonus.bonus_num = bonus_num
 		record_rcv_bonus.save()
-	response = dict(number=bonus_num, id_record=primary_key)
+		
+		#å­˜å‚¨django session
+		session['id_record'] = record_rcv_bonus.id_record
+			
+	response = dict(status=0, number=bonus_num)
 	return json.dumps(response)
-
-#Éú³ÉĞéÄâ»õ±Ò
-def create_vitural_money(consumer, snd_bonus, recharge, money, number):
-	print("***create_vitural_money %s**"%(number))
-	#init_models()
-	#null_ticket = Ticket.objects.get(id_ticket=2000000000)
-	#null_snd_bonus = SndBonus.objects.get(id_bonus=2000000000)
-	#null_rcv_bonus = RcvBonus.objects.get(id_bonus=2000000000)
+	
+#ç”Ÿæˆè™šæ‹Ÿè´§å¸
+def create_vitural_money(consumer, snd_bonus, recharge, money, number, is_send):
+	#print("***create_vitural_money %s**"%(number))
 	for x in range(int(number)):
-		wallet_money = WalletMoney.objects.create(id_money=create_primary_key(), consumer=consumer, recharge=recharge, bonus=snd_bonus, money=money)
+		wallet_money = WalletMoney(id_money=create_primary_key(), consumer=consumer, recharge=recharge, snd_bonus=snd_bonus, money=money)
+		wallet_money.is_send = is_send
+		wallet_money.is_valid = True
+		wallet_money.is_used = False
 		wallet_money.save()
-
-#·¢ÆÕÍ¨ºì°üÊÂ¼ş
-def action_set_common_bonus(consumer, data_dir):
-	#ÔÚPersonBonus±íÖĞ´´½¨Ò»Ìõ¼ÇÂ¼
-	#²éÑ¯Consumer±íÖĞown_bonus_detail×Ö¶Î£¬ÅĞ¶ÏÊÇ·ñĞèÒªÎ¢ĞÅÖ§¸¶
-	#Èç¹ûĞèÒªÎ¢ĞÅÖ§¸¶£¬¼ÆËã³öĞèÒªÖ§¸¶µÄ½ğ¶î£¬È»ºóµ÷ÓÃÎ¢ĞÅÖ§¸¶
-	print('***action_set_common_bonus******\n')
-	id_bonus = create_primary_key()
-	index_table = data_dir['table']
-	dining_table = DiningTable.objects.get(index_table=index_table)
-	snd_bonus = SndBonus.objects.create(id_bonus=id_bonus, consumer=consumer)
-	snd_bonus.bonus_type = data_dir['bonus_type']
-	snd_bonus.to_table = index_table
-	snd_bonus.to_message = data_dir['message']
-	snd_bonus.bonus_num = dining_table.seats
-	snd_bonus.bonus_remain = dining_table.seats
-
-	vitural_money_list = VirtualMoney.objects.all()
-	l_id = []
-	l_money = []
-	for money in vitural_money_list:
-		l_id.append(money.id)
-		l_money.append(money)
-	money_dir = dict(zip(l_id, l_money))
-
-	recharge = Recharge.objects.create(id_recharge=create_primary_key(), recharge_person=consumer)
-	total_money = 0
-	l_name = []
-	l_good = []
-	for key, value in data_dir.items():
-		if key in money_dir:
-			bc = _BonusContent()
-			bc.name = money_dir[key].name
-			bc.price = money_dir[key].price
-			bc.unit = money_dir[key].unit
-			bc.number = int(value)
-			l_name.append(bc.name)
-			l_good.append(bc)
-			total_money += bc.number*money_dir[key].value
-			#Éú³ÉĞéÄâ»õ±Ò
-			create_vitural_money(consumer, snd_bonus, recharge, money_dir[key], value)
-			if key == LIST_KEY_ID:
-				snd_bonus.number = bc.number
-				consumer.snd_bonus_num += bc.number
-				consumer.save()
-	snd_bonus.session = consumer.session
-	snd_bonus.save()
-	good_dir = dict(zip(l_name, l_good))
-	return dict(good_list=good_dir, total_money=total_money, enough_money=False, id_recharge=recharge.id_recharge)
-
-
-#·¢ÊÖÆøºì°üÊÂ¼ş
-def action_set_random_bonus(consumer, data_dir):
-	#ÔÚPersonBonus±íÖĞ´´½¨Ò»Ìõ¼ÇÂ¼
-	#²éÑ¯Consumer±íÖĞown_bonus_detail×Ö¶Î£¬ÅĞ¶ÏÊÇ·ñĞèÒªÎ¢ĞÅÖ§¸¶
-	#Èç¹ûĞèÒªÎ¢ĞÅÖ§¸¶£¬¼ÆËã³öĞèÒªÖ§¸¶µÄ½ğ¶î£¬È»ºóµ÷ÓÃÎ¢ĞÅÖ§¸¶
-	print('***action_set_random_bonus******\n')
-	id_bonus = create_primary_key()
-	index_table = data_dir['table']
-	dining_table = DiningTable.objects.get(index_table=index_table)
-	snd_bonus = SndBonus.objects.create(id_bonus=id_bonus, consumer=consumer)
-	snd_bonus.bonus_type = data_dir['bonus_type']
-	snd_bonus.to_table = index_table
-	snd_bonus.to_message = data_dir['message']
-	snd_bonus.bonus_num = data_dir['bonus_num']
-	snd_bonus.bonus_remain = data_dir['bonus_num']
-	vitural_money_list = VirtualMoney.objects.all()
-	l_id = []
-	l_money = []
-	for money in vitural_money_list:
-		l_id.append(money.id)
-		l_money.append(money)
-	money_dir = dict(zip(l_id, l_money))
-
-	recharge = Recharge.objects.create(id_recharge=create_primary_key(), recharge_person=consumer)
-	total_money = 0
-	l_name = []
-	l_good = []
-	for key, value in data_dir.items():
-		if key in money_dir:
-			bc = _BonusContent()
-			bc.name = money_dir[key].name
-			bc.price = money_dir[key].price
-			bc.unit = money_dir[key].unit
-			bc.number = int(value)
-			l_name.append(bc.name)
-			l_good.append(bc)
-			total_money += bc.number*money_dir[key].value
-			#Éú³ÉĞéÄâ»õ±Ò
-			create_vitural_money(consumer, snd_bonus,recharge, money_dir[key], value)
-			if key == LIST_KEY_ID:
-				snd_bonus.number = bc.number
-				consumer.snd_bonus_num += bc.number
-				consumer.save()
-	snd_bonus.session = consumer.session
-	snd_bonus.save()
-	good_dir = dict(zip(l_name, l_good))
-	return dict(good_list=good_dir, total_money=total_money, enough_money=False, id_recharge=recharge.id_recharge)
-
-#·¢ÏµÍ³ºì°üÊÂ¼ş
-def action_set_system_bonus(consumer, data_dir):
-	#²éÑ¯settings.AUTH_USER_MODEL±íÖĞown_bonus_detail×Ö¶Î£¬ÅĞ¶ÏÊÇ·ñĞèÓĞ×ã¹»µÄĞéÄâÇ®±Ò
-	#Èç¹ûÓĞ×ã¹»µÄĞéÄâÇ®±Ò£¬ÔòÔÚSystemBonus±íÖĞ´´½¨Ò»Ìõ¼ÇÂ¼£¬·ñÔòÌáÊ¾½ñÈÕÏµÍ³ºì°üÒÑÅÉÍê¡£
-	#¸üĞÂSystemMoney±íÖĞbonus×Ö¶ÎÖµ
-	pass
-
-#½âÎöÖ§¸¶ÇëÇó
-def decode_choose_pay(consumer, data_dir):
-	print("****decode_choose_pay %s *****"%(data_dir.get('bonus_type')))
-	bonus_type = int(data_dir.get('bonus_type'))
+	
+#å°†å‘çº¢åŒ…å†…å®¹å­˜å…¥session
+def snd_bonus_to_session(request, bonus):
+	snd_bonus = dict(bonus_type=bonus.bonus_type, table=bonus.table, message=bonus.message, money=bonus.money, bonus_num=bonus.bonus_num, content=bonus.content, number=bonus.number)
+	snd_bonus = json.dumps(snd_bonus)
+	request.session['snd_bonus'] = snd_bonus
+	
+#ä»sessionä¸­è§£æå‡ºå‘çº¢åŒ…å†…å®¹
+def snd_bonus_from_session(session):
+	bonus = _Bonus()
+	if 'snd_bonus' in session:
+		snd_bonus = session['snd_bonus']
+		snd_bonus = json.loads(snd_bonus)
+		for key, value in snd_bonus.items():
+			if key == 'table':
+				bonus.table = value
+			elif key == 'message':
+				bonus.message = value
+			elif key == 'money':
+				bonus.money = value
+			elif key == 'bonus_num':
+				bonus.bonus_num = value
+			elif key == "number":
+				bonus.number = value
+			elif key == 'content':
+				bonus.content = value
+			elif key == 'bonus_type':
+				bonus.bonus_type = value
+		return bonus
+	else:
+		return None
+	
+	
+	
+#è§£ææ”¯ä»˜è¯·æ±‚
+def decode_choose_pay(request, data_dir):
+	#print("**** decode_choose_pay  *****")
 	result = {}
-	if bonus_type == COMMON_BONUS:
-		result = action_set_common_bonus(consumer, data_dir)
-	elif bonus_type == RANDOM_BONUS:
-		result = action_set_random_bonus(consumer, data_dir)
+	total_money = 0
+	number = 0				#ç»Ÿè®¡ä¸²ä¸²ä¸ªæ•°
+	create_bonus = create_bonus_dict(request)
+	bonus = _Bonus()
+	for key, value in data_dir.items():
+		if key in create_bonus:
+			create_bonus[key].number = value
+			price = float(create_bonus[key].price)
+			num = int(value)
+			total_money += price*num
+			if key == LIST_KEY_ID:
+				number += int(value)
+		else:
+			if key == 'table':
+				bonus.table = value
+			elif key == 'message':
+				bonus.message = value
+			elif key == "bonus_num":
+				bonus.bonus_num = value
+			elif key == "bonus_type":
+				bonus.bonus_type = value
+	bonus.money = total_money
+	bonus.number = number
+	update_bonus_dict_to_session(request, create_bonus)
+	content = request.session['create_bonus']
+	bonus.content = content
+	snd_bonus_to_session(request, bonus)
+	result = dict(good_list=create_bonus, total_money=total_money)
 	return result
-
-#ajaxÇëÇó´¦Àíº¯Êı
-def handle_ajax_request(action, data):
-	if action == AJAX_GET_BONUS:
-		return action_get_bonus(data['openid'])
-	elif action == AJAX_CREATE_TICKET:
-		response = dict(status=1, part1=1234, part2=2345, part3=4567)
-		return json.dumps(response)
-	elif action == AJAX_WEIXIN_PAY:
-		return action_weixin_pay(data)
-	elif action == AJAX_BONUS_MESSAGE:
-		pass
-	elif action == AJAX_BONUS_REFUSE:
-		pass
-	return 'ok'
-
+	
+#ajaxè¯·æ±‚å¤„ç†å‡½æ•°
+def handle_ajax_request(action, data, session):
+	if isinstance(data, (dict,)):	
+		if action == AJAX_GET_BONUS:
+			return action_get_bonus(data['openid'], session)
+		elif action == AJAX_CREATE_TICKET:
+			#æ¸…django session
+			if 'openid' in session:
+				del session['openid']
+			response = action_create_ticket(data)
+			return json.dumps(response)
+		elif action == AJAX_WEIXIN_PAY:
+			return action_weixin_pay(data, session)
+		elif action == AJAX_BONUS_MESSAGE:
+			return action_bonus_message(data)
+		elif action == AJAX_BONUS_REFUSE:
+			return action_bonus_refuse(data)
+	else:
+		return "faild"
+	

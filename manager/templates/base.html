@@ -16,7 +16,9 @@
                 <li><a href="{% url 'bonus_info' %}">红包</a></li>
                 <li><a href="{% url 'consumer' %}">顾客</a></li>
                 <li><a href="{% url 'statistics' %}">统计</a></li>
+                {% if current_user.is_superuser%}
                 <li><a href="{% url 'account' %}">店长</a></li>
+                {% endif %}
                 <li><a href="#">论坛</a></li>
             </ul>
     </nav>

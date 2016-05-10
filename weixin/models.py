@@ -226,13 +226,19 @@ class SndBonus(models.Model):
 	to_table = models.CharField(max_length=3,null=True, blank=True)			#收红包的桌台
 	to_message = models.CharField(max_length=140, null=True, blank=True)		#赠言
 	title = models.CharField(max_length=40, null=True, blank=True)			#冠名
+	content = models.CharField(max_length=300, null=True, blank=True)			#红包内容
 	bonus_num = models.IntegerField(default=0)				#红包个数
 	number = models.IntegerField(default=0)				#串串个数
+	total_money = models.FloatField(default=0)				#总金额
 	bonus_remain = models.IntegerField(default=0)			#剩余红包个数
+	bonus_exhausted = models.IntegerField(default=0)		#已领红包个数
 	is_exhausted = models.BooleanField(default=False)		#红包已耗尽
-	create_time = models.DateTimeField(default=timezone.now)					#发送时间
-	consumer = models.ForeignKey(Consumer, null=True, on_delete=models.CASCADE)	#发送红包者
-	session = models.ForeignKey(DiningSession, null=True, on_delete=models.CASCADE)	#就餐会话
+	is_valid = models.BooleanField(default=True)			#红包已失效
+	create_time = models.DateTimeField(default=timezone.now)		#发送时间
+	over_time = models.DateTimeField(null=True, blank=True)		#抢完时间
+	user_time = models.DateTimeField(null=True, blank=True)		#抢完花费时间
+	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#发送红包者
+	session = models.ForeignKey(DiningSession, on_delete=models.CASCADE)	#就餐会话
 
 	def __unicode__(self):
 		return '%s SndBonus %d'%(self.consumer.name, self.id_bonus)
@@ -242,10 +248,13 @@ class RcvBonus(models.Model):
 	id_bonus = models.IntegerField(primary_key=True)						#收到的红包唯一id
 	bonus_type = models.IntegerField(default=0)							#红包类型：0:普通红包/1:手气红包/2:系统红包
 	is_message = models.BooleanField(default=False)						#是否已留言
+	message = models.CharField(max_length=40, null=True, blank=True)		#留言内容
+	is_receive = models.BooleanField(default=False)						#是否已被领取
 	is_refuse = models.BooleanField(default=False)							#是否已拒绝
-	content = models.CharField(max_length=100, null=True, blank=True)		#红包内容
+	content = models.CharField(max_length=300, null=True, blank=True)		#红包内容
 	datetime = models.DateTimeField(default=timezone.now)					#接收时间
 	number = models.IntegerField(default=0)								#串串个数
+	total_money = models.FloatField(default=0)								#总金额
 	is_best = models.BooleanField(default=False)							#是否手气最佳
 	snd_bonus = models.ForeignKey(SndBonus, null=True, on_delete=models.CASCADE)		#红包的唯一id
 	consumer = models.ForeignKey(Consumer, null=True, on_delete=models.CASCADE)		#消费者的唯一id
@@ -275,7 +284,7 @@ class BonusMessage(models.Model):
 # 钱包
 class WalletMoney(models.Model):
 	id_money = models.IntegerField(primary_key=True)				#虚拟钱币的唯一id
-	is_valid = models.BooleanField(default=False)					#是否有效
+	is_valid = models.BooleanField(default=True)					#是否有效
 	is_used = models.BooleanField(default=False)					#是否已用
 	consumer = models.ForeignKey(Consumer, null=True, related_name="wallet_set", on_delete=models.CASCADE)		#钱包拥有着
 	snd_bonus = models.ForeignKey(SndBonus, null=True, on_delete=models.CASCADE)		#红包唯一id

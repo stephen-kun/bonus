@@ -1,6 +1,11 @@
-﻿{% extends "_bonus_base.html" %}
+<!-- 普通红包 -->
+{% extends "_bonus_base.html" %}
+
+{% block body %}
+<body class="qubaba_hsbj bottom_40">
 
 {% block content %}
+<article>
 <form action="{{choose_pay_url}}" method="get">  
 <section>
   	<div class="box-duixiang">
@@ -10,11 +15,14 @@
     </div>
     <div class="box-food">
 		<ul>
-		{% for key, value in good_list.items %}
-			<li>
-            	<h4><span class="rfloat"><input type="number" name='{{value.id}}' class="kongbai">{{value.unit}}</span>{{key}}<span class="box-food-gray">{{value.price}}</span></h4>
+		{% for key, value in good_list.items %}		
+        	<li>
+            	<h4><span class="rfloat"><input type="number" name="{{value.name}}" class="kongbai">{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
             </li>
-		{% endfor %}
+		{% endfor %} 
+			<li>
+				<h4><span class="rfloat"><input type="number" name="bonus_num" class="kongbai">个</span>红包个数</h4>			
+			</li>		
 		</ul>
 	</div>
     <div class="box-duixiang liuyanbj">
@@ -37,6 +45,12 @@
 <style type="text/css">
 	.blades{animation: spin 100s linear infinite;}
 </style>
+</article>
+{% endblock %}
 
+{% block menu %}
+{% include '_menu.html' %}
+{% endblock %}
 
+</body>
 {% endblock %}

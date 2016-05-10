@@ -42,7 +42,7 @@
 {% block right_frame %}
 <div class="right-frame">
     <div class="right-f-title">
-        <b>当前位置：</b><a href="index.html" target="mainFrame">管理首页</a> > 管理员设置
+        <b>当前位置：</b>店长权限
     </div>
     {% if is_admin %}
     <iframe id="mainFrame" name="mainFrame" src="{% url 'account_manage' %}"  frameborder="0" ></iframe>
