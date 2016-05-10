@@ -20,7 +20,7 @@ function refuse_bonus(id_bonus, url){
 			var result = JSON.parse(xmlhttp.responseText);
 			if(result.status == '0')
 			{
-				var html = '<input type="button" id="button" class="gray" value="Íñ¾Ü">';
+				var html = '<input type="button" id="button" class="gray" value="å©‰æ‹’">';
 				var id = "hID_BONUS".replace(/ID_BONUS/, id_bonus);
 				document.getElementById(id).innerHTML = html;				
 			}

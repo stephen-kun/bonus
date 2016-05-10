@@ -1,4 +1,4 @@
-﻿var flag_pay = 1;
+var flag_pay = 1;
 function consumer_pay(url, openid, money, method){
 	var xmlhttp;
 	if (window.XMLHttpRequest)
