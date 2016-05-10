@@ -18,7 +18,8 @@ function consumer_pay(url, openid, money, method){
 		if(xmlhttp.readyState==4 && xmlhttp.status==200)
 		{
 			// 实现跳转
-			$("#weixin").html('<input type="button" class="blue" value="微信支付" >');
+			//$("#weixin").html('<input type="button" class="blue" value="微信支付" >');
+			alert("支付成功！")
 		}
 	}
 	if(flag_pay)
