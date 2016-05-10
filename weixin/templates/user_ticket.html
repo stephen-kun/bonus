@@ -34,8 +34,9 @@
 		<div class="box-food qbbaise">
 			<ul>
 				{% for ticket in  ticket_list %}
-				<li class="">
-					<h4><span class="rfloat font8">有效期<font class="qbred">{{ticket.valid_time|date:"F-j-Y"}}</font></span>{{ticket.consumer.name}}</h4>
+				<li>
+					<h3><font class="qbred">{{ticket.consumer.name}}</font>领取了！<font class="qbred">[规划]</font>冠名赞助券</h3>
+					<h4><span class="rfloat font8">有效期<font class="qbred">{{ticket.valid_time|date:"F-j-Y"}}</font></span><font class="qbred">30元</font></h4>
 				</li>
 				{% endfor %}
 			</ul>

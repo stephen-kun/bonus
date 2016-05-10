@@ -1460,7 +1460,7 @@ input.code {
 	margin:0;
 }
 .wo h2 img {
-	width:2.5em;
+	width:2em;
 }
 .wo h4 {
 	float:left;
@@ -1482,6 +1482,14 @@ input.code {
 	margin:0;
 	font-size:.7em;
 	float:left;
+}
+.box-food ul li h3 {
+	padding:.5em;
+	margin:0 0 .3em 0;
+	font-size:.7em;
+	font-weight:normal;
+	color:#4d4d4d;
+	background:#f5f9e6;
 }
 .box-food ul li h4 a {
 	margin:0;
@@ -1567,7 +1575,30 @@ input.code {
 	color:#5d6519;
 }
 /*=========用户提示=====结束=========*/
-
+/*=========404提示=====开始=========*/
+.no_404bj {
+	background-image:url('../images/404img.png');
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-size:cover;
+}
+.no_404img {
+	width:40%;
+	margin:0 auto;
+}
+.no_404img img {
+	width:100%;
+}
+.no_404img p {
+	padding:1em 0 0 0;
+	margin:0;
+	text-align:center;
+	width:100%;
+}
+.no_404img p a {
+	color:#a97b50;
+}
+/*=========404提示=====结束=========*/
 
 }
 
@@ -3013,7 +3044,7 @@ input.code {
 	margin:0;
 }
 .wo h2 img {
-	width:2.5em;
+	width:2em;
 }
 .wo h4 {
 	float:left;
@@ -3035,6 +3066,14 @@ input.code {
 	margin:0;
 	font-size:.7em;
 	float:left;
+}
+.box-food ul li h3 {
+	padding:.5em;
+	margin:0 0 .3em 0;
+	font-size:.7em;
+	font-weight:normal;
+	color:#4d4d4d;
+	background:#f5f9e6;
 }
 .box-food ul li h4 a {
 	margin:0;
@@ -3120,7 +3159,28 @@ input.code {
 	color:#5d6519;
 }
 /*=========用户提示=====结束=========*/
-
+/*=========404提示=====开始=========*/
+.no_404bj {
+	background-image:url('../images/404img.png');
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-size:cover;
+}
+.no_404img {
+	width:100%;
+}
+.no_404img img {
+	width:100%;
+}
+.no_404img p {
+	padding:1em 0 0 0;
+	margin:0;
+	text-align:center;
+}
+.no_404img p a {
+	color:#a97b50;
+}
+/*=========404提示=====结束=========*/
 
 }
 
@@ -4600,7 +4660,7 @@ input.code {
 	margin:0;
 }
 .wo h2 img {
-	width:2.5em;
+	width:2em;
 }
 .wo h4 {
 	float:left;
@@ -4622,6 +4682,14 @@ input.code {
 	margin:0;
 	font-size:.7em;
 	float:left;
+}
+.box-food ul li h3 {
+	padding:.5em;
+	margin:0 0 .3em 0;
+	font-size:.7em;
+	font-weight:normal;
+	color:#4d4d4d;
+	background:#f5f9e6;
 }
 .box-food ul li h4 a {
 	margin:0;
@@ -4710,7 +4778,28 @@ input.code {
 	color:#5d6519;
 }
 /*=========用户提示=====结束=========*/
-
+/*=========404提示=====开始=========*/
+.no_404bj {
+	background-image:url('../images/404img.png');
+	background-repeat: no-repeat;
+	background-attachment:fixed;
+	background-size:cover;
+}
+.no_404img {
+	width:100%;
+}
+.no_404img img {
+	width:100%;
+}
+.no_404img p {
+	/*padding:3em 0 0 0;*/
+	margin:0;
+	text-align:center;
+}
+.no_404img p a {
+	color:#a97b50;
+}
+/*=========404提示=====结束=========*/
 
 }
 
@@ -6230,7 +6319,7 @@ input.code {
 	margin:0;
 }
 .wo h2 img {
-	width:2.5em;
+	width:2em;
 }
 .wo h4 {
 	float:left;
@@ -6252,6 +6341,14 @@ input.code {
 	margin:0;
 	font-size:.7em;
 	float:left;
+}
+.box-food ul li h3 {
+	padding:.5em;
+	margin:0 0 .3em 0;
+	font-size:.7em;
+	font-weight:normal;
+	color:#4d4d4d;
+	background:#f5f9e6;
 }
 .box-food ul li h4 a {
 	margin:0;
@@ -6339,10 +6436,36 @@ input.code {
 	color:#5d6519;
 }
 /*=========用户提示=====结束=========*/
-
+/*=========404提示=====开始=========*/
+.no_404bj {
+	background-image:url('../images/404img.png');
+	background-repeat: no-repeat;
+	background-attachment:fixed;
+	background-size:cover;
+}
+.no_404img {
+	width:100%;
+	/*padding:5.5em 0 0 0;*/
+}
+.no_404img img {
+	width:100%;
+}
+.no_404img p {
+	padding:3em 0 0 0;
+	margin:0;
+	text-align:center;
+}
+.no_404img p a {
+	color:#a97b50;
+}
+/*=========404提示=====结束=========*/
 }
 @media screen and (min-width:360px) and (max-width:677px) {
 /*======三星S5======*/
+.no_404img {
+	/*padding:6.3em 0 0 0;*/
+}
+
 .tip-box {
 	height:640px;
 }
@@ -6362,6 +6485,9 @@ input.code {
 }
 @media screen and (min-width:375px) and (max-width:677px) {
 /*======苹果6======*/
+.no_404img {
+	/*padding:6.5em 0 0 0;*/
+}
 .tip-box {
 	height:667px;
 }
@@ -6379,6 +6505,9 @@ input.code {
 }
 @media screen and (min-width:411px) and (max-width:731px) {
 /*======Nexus 5X======*/
+.no_404img {
+	/*padding:7.3em 0 0 0;*/
+}
 .tip-box {
 	height:731px;
 }
@@ -6393,6 +6522,9 @@ input.code {
 }
 @media screen and (min-width:414px) and (max-width:773px) {
 /*======苹果6 plus======*/
+.no_404img {
+	/*padding:7.2em 0 0 0;*/
+}
 .tip-box {
 	height:736px;
 }
@@ -6411,6 +6543,9 @@ input.code {
 @media screen and (min-width:435px) and (max-width:773px) {
 
 /*======Nexus 6p======*/
+.no_404img {
+	/*padding:7.5em 0 0 0;*/
+}
 
 .tip-box {
 	height:773px;
@@ -6430,6 +6565,9 @@ input.code {
 @media screen and (min-width:768px) and (max-width:1024px) {
 
 /*======Nexus 6p======*/
+.no_404img {
+	/*padding:13.3em 0 0 0;*/
+}
 .tip-box {
 	height:1024px;
 }

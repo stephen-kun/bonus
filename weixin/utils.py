@@ -60,7 +60,7 @@ class _BonusContent():
 		self.price = price
 		self.unit = unit		
 		self.number = number	
-
+		
 #VirtualMoney 转换为红包内容
 def virtual_money_to_bonus_content():
 	virtual_money = VirtualMoney.objects.all()
