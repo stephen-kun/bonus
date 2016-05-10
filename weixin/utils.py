@@ -149,12 +149,17 @@ def check_ajax_params(src_keys, dest_dict):
 		
 #获取用户openid
 def get_user_openid(request, access_token_url):
-	code = request.GET.get(u'code')
-	url = access_token_url.replace('CODE', code)
-	response = urllib2.urlopen(url)
-	content = response.read()
-	access_token = json.loads(content)	
-	return access_token['openid']	
+	try:
+		code = request.GET.get(u'code')
+		url = access_token_url.replace('CODE', code)
+		response = urllib2.urlopen(url)
+		content = response.read()
+		access_token = json.loads(content)	
+		openid = access_token['openid']	
+		return openid	
+	except:
+		log_print(get_user_openid)
+		return None
 
 
 #检测用户是否在就餐状态
