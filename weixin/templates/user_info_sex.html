@@ -12,7 +12,7 @@
 			<label>
 			<div class="wo_xinxi_edit" style="text-align:left; padding:.3em .2em; margin:0 .8em; border-bottom:#f0efef 1px solid;">			
 				<span class="rfloat" style="width:auto;">
-				{% ifequal consumer.sex 1 %}
+				{% ifequal consumer.sex '1' %}
 				<input type="radio" id="sex_man" name="check" value='1' checked>
 				{% else %}
 				<input type="radio" id="sex_man" name="check" value="1">				
@@ -23,10 +23,10 @@
 			<label>
 			<div class="wo_xinxi_edit" style="text-align:left; padding:.3em .2em; margin:0 .8em; border-bottom:#f0efef 1px solid;">
 				<span class="rfloat" style="width:auto;">
-				{% ifequal consumer.sex 2 %}
-				<input type="radio" id="sex_women" name="check" value="2"  checked>
+				{% ifequal consumer.sex '2' %}
+				<input type="radio" id="sex_woman" name="check" value="2"  checked>
 				{% else %}
-				<input type="radio" id="sex_women" name="check" value="2">				
+				<input type="radio" id="sex_woman" name="check" value="2">				
 				{% endifequal %}				
 				</span>女
 			</div>
