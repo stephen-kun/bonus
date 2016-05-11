@@ -13,9 +13,9 @@
 			<div class="wo_xinxi_edit" style="text-align:left; padding:.3em .2em; margin:0 .8em; border-bottom:#f0efef 1px solid;">			
 				<span class="rfloat" style="width:auto;">
 				{% ifequal consumer.sex '1' %}
-				<input type="radio" id="sex_man" name="check" value='1' checked>
+				<input type="radio" id="sex_man" name="check" value='1' checked onclick="submit_sex_man('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">
 				{% else %}
-				<input type="radio" id="sex_man" name="check" value="1">				
+				<input type="radio" id="sex_man" name="check" value="1" onclick="submit_sex_man('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">				
 				{% endifequal %}
 				</span>男
 			</div>
@@ -24,9 +24,9 @@
 			<div class="wo_xinxi_edit" style="text-align:left; padding:.3em .2em; margin:0 .8em; border-bottom:#f0efef 1px solid;">
 				<span class="rfloat" style="width:auto;">
 				{% ifequal consumer.sex '2' %}
-				<input type="radio" id="sex_woman" name="check" value="2"  checked>
+				<input type="radio" id="sex_woman" name="check" value="2"  checked onclick="submit_sex_woman('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">
 				{% else %}
-				<input type="radio" id="sex_woman" name="check" value="2">				
+				<input type="radio" id="sex_woman" name="check" value="2" onclick="submit_sex_woman('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">				
 				{% endifequal %}				
 				</span>女
 			</div>
@@ -73,18 +73,6 @@ input:checked ~ input:active {
   background-position: 0 -24px;
 }
 </style>  
-
-<script type="text/javascript">
-$("#sex_man").click(function(){
-	var value = $("#sex_man").val();
-	alert(value);
-});
-
-$("#sex_woman").click(function(){
-	var value = $("#sex_woman").val();
-	alert(value);
-});
-</script>
 
 </article>
 {% endblock %}
