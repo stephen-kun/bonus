@@ -1,0 +1,140 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!--<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=2.0">-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<!--<meta name="x5-fullscreen" content="true">-->
+<title>结算</title>
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<link href="css/common.css" rel="stylesheet" type="text/css">
+<meta name="keywords" content="东启湘厨">
+<meta name="description" content="东启湘厨">
+<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="js/jquery.popup.js"></script>
+
+</head>
+
+<body class="qubaba_hsbj bottom_40">
+
+
+<article>
+
+  <section>
+  	<div class="issue-top">
+    	
+        <div class="Angel">
+        	<div class="blades">
+                <div class="Angel-baby"></div>
+            </div>
+            <h2><img src="images/angelababy.png"></h2>
+        </div>
+        <!--<h4>Angelababy</h4>-->
+        <!--<h5>Angelababy<span>张</span></h5>-->
+        <h3>Angelababy</h3>
+        <style type="text/css">
+			.blades{animation: spin 100s linear infinite;}
+		</style>
+    </div>
+  </section>
+  <section>
+  	<!--<div class="box-duixiang">
+    	<h4><span class="rfloat"><font class="qbred">2016￥</font></span>我抢到的</h4>
+    </div>-->
+    <form action="jiesuan.html" method="get">
+    <div class="box-food qbbaise">
+    	<ul>
+        	<li>
+            	<h4><span class="rfloat"><font class="qbred">2016￥</font></span>抢到的串串</h4>
+            </li>
+            <li>
+            	<h4><span class="rfloat"><font class="qbred"><label>
+            	    <input type="radio" name="#var.checked" value="0" onclick="setSelectUserNo(this);" onchange="changeRadio(this)">
+            	    </label></font></span>我的钱包</h4>
+            </li>
+            <li>
+            	<h4>验证码：<input type="number" class="code" placeholder="输入验证码"></h4>
+            </li>
+        </ul>
+    </div>
+    <div class="queding">
+        <input type="button" class="jin" data-reveal-id="myModal" id="button" value="生成券" onclick="button1()">
+    	<!--<a href="javascript:void(0);" data-reveal-id="myModal">
+点击弹出-模拟帐户申请</a>-->
+    </div>
+    </form>
+  </section>
+  <script>
+  	function setSelectUserNo(radioObj){  
+          
+        var radioCheck= $(radioObj).val();  
+        if("1"==radioCheck){  
+            $(radioObj).attr("checked",false);  
+            $(radioObj).val("0");  
+              
+        }else{   
+            $(radioObj).val("1");  
+              
+        }  
+    }    
+  </script>
+  <script type="text/javascript">
+function button1(){
+ var a=document.getElementById("button")
+ var b=a.style.backgroundColor;
+ if(b==""){
+  a.style.backgroundColor="#bdbec0";
+  c.style.display="block";
+ }else{
+  a.style.backgroundColor="#bdbec0";
+  c.style.display="none";
+ }
+}
+</script>
+<div id="myModal" class="reveal-modal">
+	<h2>趣八八优惠券码</h2>
+	<p>165</p><p>505</p><p>1650</p>
+	<a class="close-reveal-modal">X</a>
+</div>
+
+</article>
+
+<div class="btn3 clearfix">
+    <div class="menu" >
+        <div class="bt-name">红包</div>
+        <div class="sanjiao"></div>
+        <div  class="new-sub">
+            <ul>
+                <li><a href="qiangchuanchuan.html">抢红包</a></li>
+                <li><a href="xuanzefachuanchuan.html" >发红包</a></li>
+            </ul>
+            <div class="tiggle"></div>
+            <div class="innertiggle"></div>
+        </div>
+    </div><!--menu-->
+    <div class="menu">
+        <div class="bt-name"><a href="jiesuan.html">结算</a></div>
+    </div><!--menu-->
+    <div class="menu">
+        <div class="bt-name"><a href="#">论坛</a></div>
+    </div><!--menu-->
+    <div class="menu" >
+        <div class="bt-name">我</div>
+        <div class="sanjiao"></div>
+        <div  class="new-sub">
+            <ul>
+                <li><a href="wo.html" >我</a></li>
+                <li><a href="wodexinxi.html" >个人信息</a></li>
+                <li><a href="wodeliquan.html" >我的礼券</a></li>
+                <li><a href="paihangbang_xin.html" >排行榜</a></li>
+                <li><a href="fachudechuanchuan-stanson.html" >发出红包</a></li>
+                <li><a href="shoudaodechuanchuan.html" >收到红包</a></li>
+            </ul>
+            <div class="tiggle"></div>
+            <div class="innertiggle"></div>
+        </div>
+    </div><!--menu-->
+</div><!--btn3-->
+<script type="text/javascript" src="js/bottom-menu.js"></script>
+</body>
+</html>

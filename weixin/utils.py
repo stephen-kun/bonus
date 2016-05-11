@@ -1,9 +1,9 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # utils.py
 # Create your utils here.
 import random, string
 from django.core.exceptions import ObjectDoesNotExist 
-from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
+from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
 import re
@@ -26,9 +26,14 @@ AJAX_CREATE_TICKET = 'ajax_create_ticket'
 AJAX_WEIXIN_PAY = 'ajax_weixin_pay'
 AJAX_BONUS_REFUSE = 'ajax_bonus_refuse'
 AJAX_BONUS_MESSAGE = 'ajax_bonus_message'
+AJAX_MODIFY_PHONE = 'ajax_modify_phone'
+AJAX_MODIFY_NAME = 'ajax_modify_name'
+AJAX_MODIFY_ADDRESS = 'ajax_modify_address'
+AJAX_MODIFY_EMAIL = 'ajax_modify_email'
+AJAX_MODIFY_SEX = 'ajax_modify_sex'
 
 AUTH_CODE = '888888'
-LIST_KEY_ID	= '串串'
+LIST_KEY_ID	= u'串串'
 
 
 
@@ -175,11 +180,11 @@ def is_consumer_dining(openid):
 	
 	
 #主键生成方法
-def create_primary_key(key='1', length=9):
-    a = list(string.digits)
-    random.shuffle(a)   
-    primary = key + ''.join(a[:length])
-    return string.atoi(primary, 10)
+def create_primary_key(length=12):
+	a = list(string.digits)
+	random.shuffle(a)   
+	primary = ''.join(a[:length])
+	return primary
 	
 #统计餐桌抢到的所有红包金额
 def count_total_money_on_table(openid):
@@ -295,12 +300,11 @@ def action_weixin_pay(data, session):
 			return "have pay!"
 			
 		#创建一条充值记录
-		recharge = Recharge.objects.create(id_recharge=create_primary_key())
+		openid = data['openid']
+		consumer = Consumer.objects.get(open_id=openid)		
+		recharge = Recharge.objects.create(recharge_person=consumer)
 		recharge.recharge_value = float(data['money'])
 		recharge.recharge_type = int(WEIXIN_PAY)
-		openid = data['openid']
-		consumer = Consumer.objects.get(open_id=openid)
-		recharge.recharge_person = consumer
 		
 		#创建一条发红包记录
 		new_snd_bonus = SndBonus.objects.create(id_bonus=create_primary_key(), consumer=consumer, session=consumer.session)
@@ -707,6 +711,36 @@ def decode_choose_pay(request, data_dir):
 	result = dict(good_list=create_bonus, total_money=total_money)
 	return result
 	
+def action_modify_phone(data):
+	openid = data['openid']
+	phone_num = data['phone_num']
+	Consumer.objects.filter(open_id=openid).update(phone_num=phone_num)
+	return ''
+
+def action_modify_address(data):
+	openid = data['openid']
+	address = data['address']
+	Consumer.objects.filter(open_id=openid).update(address=address)
+	return ''
+
+def action_modify_email(data):
+	openid = data['openid']
+	email = data['email']
+	Consumer.objects.filter(open_id=openid).update(email=email)
+	return ''
+	
+def action_modify_name(data):
+	openid = data['openid']
+	name = data['name']
+	Consumer.objects.filter(open_id=openid).update(name=name)
+	return ''
+
+def action_modify_sex(data):
+	openid = data['openid']
+	sex = data['sex']
+	Consumer.objects.filter(open_id=openid).update(sex=sex)
+	return ''
+	
 #ajax请求处理函数
 def handle_ajax_request(action, data, session):
 	if isinstance(data, (dict,)):	
@@ -724,6 +758,16 @@ def handle_ajax_request(action, data, session):
 			return action_bonus_message(data)
 		elif action == AJAX_BONUS_REFUSE:
 			return action_bonus_refuse(data)
+		elif action == AJAX_MODIFY_PHONE:
+			return action_modify_phone(data)
+		elif action == AJAX_MODIFY_ADDRESS:
+			return action_modify_address(data)
+		elif action == AJAX_MODIFY_EMAIL:
+			return action_modify_email(data)
+		elif action == AJAX_MODIFY_NAME:
+			return action_modify_name(data)
+		elif action == AJAX_MODIFY_SEX:
+			return action_modify_sex(data)
 	else:
 		return "faild"
 	

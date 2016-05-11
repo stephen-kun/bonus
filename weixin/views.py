@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from django.http.response import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist 
 from django.views.decorators.csrf import csrf_exempt
@@ -10,7 +10,7 @@ import json
 from .wechat import PostResponse, wechat, TOKEN, APPID, APPSECRET
 from .utils import  action_get_bonus, is_consumer_dining, handle_ajax_request, get_user_openid, decode_bonus_detail,create_bonus_dict
 from .utils import check_geted_bonus, decode_choose_pay, get_bonus_type_str, get_record_openid, is_enough_pay, update_wallet_money, log_print
-from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
+from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
 
@@ -43,8 +43,6 @@ SELF_RCV_BONUS_URL = 'http://%s/weixin/view_self_rcv_bonus'%(ADDRESS_IP)
 SELF_SND_BONUS_URL = 'http://%s/weixin/view_self_snd_bonus'%(ADDRESS_IP)
 SELF_BONUS_LIST_URL = 'http://%s/weixin/view_self_bonus_list'%(ADDRESS_IP)
 CHOOSE_PAY_URL = 'http://%s/weixin/view_choose_pay'%(ADDRESS_IP)
-SEND_MESSAGE_URL = 'http://%s/weixin/view_choose_pay'%(ADDRESS_IP)
-BONUS_REFUSE_URL = 'http://%s/weixin/view_choose_pay'%(ADDRESS_IP)
 USER_ACCOUNT_URL = 'http://%s/weixin/view_user_account'%(ADDRESS_IP)
 USER_INFO_URL = 'http://%s/weixin/view_user_info'%(ADDRESS_IP)
 USER_TICKET_URL = 'http://%s/weixin/view_user_ticket'%(ADDRESS_IP)
@@ -64,8 +62,81 @@ class _MenuUrl():
 	self_snd_bonus_url = SELF_SND_BONUS_URL
 	self_rcv_bonus_url = SELF_RCV_BONUS_URL
 	
+class _UserInfoUrl():
+	name = 'http://%s/weixin/view_user_name'%(ADDRESS_IP)
+	sex = 'http://%s/weixin/view_user_sex'%(ADDRESS_IP)
+	phone = 'http://%s/weixin/view_user_phone'%(ADDRESS_IP)
+	address = 'http://%s/weixin/view_user_address'%(ADDRESS_IP)
+	email = 'http://%s/weixin/view_user_email'%(ADDRESS_IP)	
 	
 # Create your views here.
+
+#*********************个人信息修改views*****************
+@csrf_exempt
+def view_user_phone(request):
+	try:
+		openid = request.session['openid']
+		title = '修改电话'
+		static_url = settings.STATIC_URL
+		ajax_request_url = AJAX_REQUEST_POST_URL
+		user_info_url = USER_INFO_URL
+		return render_to_response("user_info_phone.html", locals())		
+	except:
+		log_print(view_user_info_phone)
+		return HttpResponseBadRequest('error')
+		
+@csrf_exempt
+def view_user_name(request):
+	try:
+		openid = request.session['openid']
+		title = '修改昵称'
+		static_url = settings.STATIC_URL
+		ajax_request_url = AJAX_REQUEST_POST_URL
+		user_info_url = USER_INFO_URL
+		return render_to_response("user_info_name.html", locals())		
+	except:
+		log_print(view_user_info_name)
+		return HttpResponseBadRequest('error')
+		
+@csrf_exempt
+def view_user_address(request):
+	try:
+		openid = request.session['openid']
+		title = '修改地址'
+		static_url = settings.STATIC_URL
+		ajax_request_url = AJAX_REQUEST_POST_URL
+		user_info_url = USER_INFO_URL
+		return render_to_response("user_info_address.html", locals())		
+	except:
+		log_print(view_user_info_address)
+		return HttpResponseBadRequest('error')
+
+@csrf_exempt
+def view_user_email(request):
+	try:
+		openid = request.session['openid']
+		title = '修改电话'
+		static_url = settings.STATIC_URL
+		ajax_request_url = AJAX_REQUEST_POST_URL
+		user_info_url = USER_INFO_URL
+		return render_to_response("user_info_email.html", locals())		
+	except:
+		log_print(view_user_info_email)
+		return HttpResponseBadRequest('error')
+
+@csrf_exempt
+def view_user_sex(request):
+	try:
+		openid = request.session['openid']
+		title = '修改性别'
+		static_url = settings.STATIC_URL
+		ajax_request_url = AJAX_REQUEST_POST_URL
+		user_info_url = USER_INFO_URL
+		return render_to_response("user_info_sex.html", locals())		
+	except:
+		log_print(view_user_info_sex)
+		return HttpResponseBadRequest('error')		
+
 
 #*********************餐行健对接接口*****************
 
@@ -78,11 +149,11 @@ def check_consumer_code(request):
 		ticket = Ticket.objects.filter(id_ticket=id_ticket)
 		ticket_value = float(0)
 		response = {}
-		if len(ticket) and (ticket[0].is_used):
+		if len(ticket) and (ticket[0].is_consume):
 			response = dict(status=1, err_msg="该券已使用")
-		elif len(ticket) and (ticket[0].is_used == False):
+		elif len(ticket) and (ticket[0].is_consume == False):
 			ticket_value = ticket[0].ticket_value
-			ticket[0].is_used = True
+			ticket[0].is_consume = True
 			ticket[0].save()
 			response = dict(status=0, ticket_value=ticket_value)
 		else:
@@ -238,6 +309,7 @@ def display_user_info(open_id, request):
 		static_url = settings.STATIC_URL	
 		consumer = Consumer.objects.get(open_id=openid)
 		menu = _MenuUrl()
+		user_info = _UserInfoUrl()
 		return render_to_response('user_info.html', locals())			
 	except:
 		log_print(display_user_info) 
@@ -547,7 +619,7 @@ def view_choose_pay(request):
 	except:
 		log_print(view_choose_pay) 
 		return HttpResponseBadRequest('Bad request')	
-    
+	
 @csrf_exempt
 def view_wechat_token(request):
 	if request.method == 'GET':

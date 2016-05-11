@@ -45,8 +45,16 @@ function refuse_bonus(id_bonus, url){
 function send_message(url){
 	var openid, id_bonus, message, data;
 	var xmlhttp;
-	id_bonus = document.getElementById('id_bonus').value;
-	message = document.getElementById("message").value;
+	id_bonus = $("#id_bonus").val();
+	if($("#message").val())
+	{
+		message = $("#message").val();		
+	}
+	else
+	{
+		message = $("#message").attr('placeholder');		
+	}
+
 
 	data = '{"id_bonus":"ID_BONUS","message":"MESSAGE", "action":"ajax_bonus_message"}';
 	data = data.replace(/ID_BONUS/, id_bonus).replace(/MESSAGE/, message);
