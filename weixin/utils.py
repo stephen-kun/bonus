@@ -599,7 +599,7 @@ def action_get_bonus(openid, session):
 	consumer = Consumer.objects.get(open_id=openid)				
 	
 	#准备一条抢红包记录
-	record_rcv_bonus = RecordRcvBonus(id_record=create_primary_key(), consumer=consumer)
+	record_rcv_bonus = RecordRcvBonus.objects.create(id_record=create_primary_key(), consumer=consumer)
 	
 	#过滤能够抢的各类红包
 	common_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True, bonus_type=COMMON_BONUS).exclude(consumer=consumer)
