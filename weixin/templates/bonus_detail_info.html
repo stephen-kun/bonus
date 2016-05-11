@@ -66,7 +66,7 @@
 				{% if bonus.is_refuse %}
 				<h1>婉拒</h1>
 				{% endif %}
-				<span class="chchshj"><br>{{bonus.datetime|date:"F-j-Y"}}</span></h3>
+				<span class="chchshj"><br>{{bonus.datetime|date:"m-j"}}</span></h3>
                	<h5>
 					{% if bonus.is_best and snd_bonus.is_exhausted %}
 					<img src="{{static_url}}images/5_zanstanson.png" align="absmiddle">	
@@ -83,7 +83,7 @@
 <section>
     <div class="am-share">
 		<h3 class="am-share-title">
-			<input type="text" class="blankin" name="message" id="message" value="谢谢您的红包">
+			<input type="text" class="blankin" name="message" id="message" placeholder="谢谢您的红包">
 			<input type="text" class="blankiny" name="id_bonus" id="id_bonus">
 			<input type="text" class="blankiny" name="show_message" id="show_message">
 			<input type="button" class="send_out" value="发送" onClick="send_message('{{ajax_request_url}}')">

@@ -11,6 +11,7 @@ function tc_center(){
 	$(".popup").css({bottom:_bottom,left:_left});
 }	
 
+var flag_get_bonus = 1;
 function click_get_bonus(url, openid){
 	// ajax 请求
 	var data = '{"action":"ACTION", "openid":"OPENID", "timestamp":"TIMESTAMP"}';
@@ -48,7 +49,12 @@ function click_get_bonus(url, openid){
 		}
 	};
 	
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);
+	if(flag_get_bonus)
+	{
+		xmlhttp.open("POST", url, true);
+		xmlhttp.send(data);		
+		flag_get_bonus = 0;
+	}
+
 }	
 	
