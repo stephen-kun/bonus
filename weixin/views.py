@@ -84,7 +84,7 @@ def view_user_phone(request):
 		user_info_url = USER_INFO_URL
 		return render_to_response("user_info_phone.html", locals())		
 	except:
-		log_print(view_user_info_phone)
+		log_print(view_user_phone)
 		return HttpResponseBadRequest('error')
 		
 @csrf_exempt
@@ -97,7 +97,7 @@ def view_user_name(request):
 		user_info_url = USER_INFO_URL
 		return render_to_response("user_info_name.html", locals())		
 	except:
-		log_print(view_user_info_name)
+		log_print(view_user_name)
 		return HttpResponseBadRequest('error')
 		
 @csrf_exempt
@@ -110,7 +110,7 @@ def view_user_address(request):
 		user_info_url = USER_INFO_URL
 		return render_to_response("user_info_address.html", locals())		
 	except:
-		log_print(view_user_info_address)
+		log_print(view_user_address)
 		return HttpResponseBadRequest('error')
 
 @csrf_exempt
@@ -123,7 +123,7 @@ def view_user_email(request):
 		user_info_url = USER_INFO_URL
 		return render_to_response("user_info_email.html", locals())		
 	except:
-		log_print(view_user_info_email)
+		log_print(view_user_email)
 		return HttpResponseBadRequest('error')
 
 @csrf_exempt
@@ -137,7 +137,7 @@ def view_user_sex(request):
 		user_info_url = USER_INFO_URL
 		return render_to_response("user_info_sex.html", locals())		
 	except:
-		log_print(view_user_info_sex)
+		log_print(view_user_sex)
 		return HttpResponseBadRequest('error')		
 
 
