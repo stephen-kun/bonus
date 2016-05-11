@@ -1,4 +1,4 @@
-<!-- 我的信息 --电话 -->
+<!-- 我的信息 --性别 -->
 {% extends "_bonus_base.html" %}
 
 {% block body %}
@@ -12,15 +12,22 @@
 			<label>
 			<div class="wo_xinxi_edit" style="text-align:left; padding:.3em .2em; margin:0 .8em; border-bottom:#f0efef 1px solid;">			
 				<span class="rfloat" style="width:auto;">
-				<input type="radio" name="check" value="1" id="RadioGroup1_0" checked>
+				{% ifequal consumer.sex '1' %}
+				<input type="radio" id="sex_man" name="check" value='1' checked onclick="submit_sex_man('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">
+				{% else %}
+				<input type="radio" id="sex_man" name="check" value="1" onclick="submit_sex_man('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">				
+				{% endifequal %}
 				</span>男
 			</div>
 			</label>
 			<label>
 			<div class="wo_xinxi_edit" style="text-align:left; padding:.3em .2em; margin:0 .8em; border-bottom:#f0efef 1px solid;">
-			
 				<span class="rfloat" style="width:auto;">
-				<input type="radio" name="check" value="2" id="RadioGroup1_1">
+				{% ifequal consumer.sex '2' %}
+				<input type="radio" id="sex_woman" name="check" value="2"  checked onclick="submit_sex_woman('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">
+				{% else %}
+				<input type="radio" id="sex_woman" name="check" value="2" onclick="submit_sex_woman('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">				
+				{% endifequal %}				
 				</span>女
 			</div>
 			</label>
@@ -66,6 +73,7 @@ input:checked ~ input:active {
   background-position: 0 -24px;
 }
 </style>  
+
 </article>
 {% endblock %}
 
