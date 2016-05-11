@@ -55,7 +55,7 @@ def send_bonus_list(request):
     return render_to_response("manager/bonus/snd_bonus_list.html", {'title':'发出的红包', 'bonus_list':bonus_list})
 
 def recv_bonus_list(request):
-    bonus_list=RcvBonus.objects.filter(datetime__date=datetime.datetime.today())
+    bonus_list=RcvBonus.objects.filter(datetime__date=datetime.datetime.today(), is_receive=True)
     return render_to_response("manager/bonus/recv_bonus_list.html", {'bonus_list':bonus_list})
 
 def flying_bonus_list(request):
