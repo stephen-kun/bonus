@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from django.http.response import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist 
 from django.views.decorators.csrf import csrf_exempt
@@ -619,7 +619,7 @@ def view_choose_pay(request):
 	except:
 		log_print(view_choose_pay) 
 		return HttpResponseBadRequest('Bad request')	
-    
+	
 @csrf_exempt
 def view_wechat_token(request):
 	if request.method == 'GET':

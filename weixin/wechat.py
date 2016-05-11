@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # wechat.py
 # Create your wechat here.
 from django.http.response import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect

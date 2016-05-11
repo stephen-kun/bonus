@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from django.db import models
@@ -62,89 +62,89 @@ class Consumer(models.Model):
 	session = models.ForeignKey(DiningSession, null=True, blank=True, on_delete=models.CASCADE)	#就餐会话
 	latest_time = models.DateTimeField(default=timezone.now)		#最近到店时间
 
-    def __unicode__(self):
-        return self.name
+	def __unicode__(self):
+		return self.name
 
-    @property
-    def recharges(self):
-        return self.recharge_set.all()
+	@property
+	def recharges(self):
+		return self.recharge_set.all()
 
-    def account_charge(self, kw):
-        total_value=0
-        for name,counter in kw.items():
-            good=VirtualMoney.objects.get(name=name)
-            total_value = total_value + counter*good.price
+	def account_charge(self, kw):
+		total_value=0
+		for name,counter in kw.items():
+			good=VirtualMoney.objects.get(name=name)
+			total_value = total_value + counter*good.price
 
-        recharge_type = 1 if self.is_admin else 0
-        charge=Recharge.objects.create(recharge_value=total_value, recharge_type=recharge_type, recharge_person=self )
+		recharge_type = 1 if self.is_admin else 0
+		charge=Recharge.objects.create(recharge_value=total_value, recharge_type=recharge_type, recharge_person=self )
 
-        for name,counter in kw.items():
-            good=VirtualMoney.objects.get(name=name)
-            for i in range(counter):
-                WalletMoney.objects.create(id_money=create_primary_key(), is_valid=True, consumer=self, recharge=charge, money=good)
-            self.change_valid_good(good, 0, counter)
+		for name,counter in kw.items():
+			good=VirtualMoney.objects.get(name=name)
+			for i in range(counter):
+				WalletMoney.objects.create(id_money=create_primary_key(), is_valid=True, consumer=self, recharge=charge, money=good)
+			self.change_valid_good(good, 0, counter)
 
-    @property
-    def invalid_goods_detail(self):
-        return self.consumer_goods.filter(is_valid=False)
+	@property
+	def invalid_goods_detail(self):
+		return self.consumer_goods.filter(is_valid=False)
 
-    @property
-    def valid_goods(self):
-        return self.consumer_goods.filter(status=0)
+	@property
+	def valid_goods(self):
+		return self.consumer_goods.filter(status=0)
 
-    def get_valid_good_number(self, good):
-        account_good, created=self.consumer_goods.get_or_create(is_valid=True, good=good)
-        return account_good.number
+	def get_valid_good_number(self, good):
+		account_good, created=self.consumer_goods.get_or_create(is_valid=True, good=good)
+		return account_good.number
 
-    def get_valid_good_number_by_name(self, good_name):
-        try:
-            good = VirtualMoney.objects.get(name=good_name)
-        except ObjectDoesNotExist:
-            return 0
+	def get_valid_good_number_by_name(self, good_name):
+		try:
+			good = VirtualMoney.objects.get(name=good_name)
+		except ObjectDoesNotExist:
+			return 0
 
-        account_good, created=self.consumer_goods.get_or_create(status=0, good=good)
-        return account_good.number
+		account_good, created=self.consumer_goods.get_or_create(status=0, good=good)
+		return account_good.number
 
-    def change_valid_good(self, good, status, number):
-        account_good, created=self.consumer_goods.get_or_create(status=status, good=good)
-        account_good.number += number
-        account_good.save()
+	def change_valid_good(self, good, status, number):
+		account_good, created=self.consumer_goods.get_or_create(status=status, good=good)
+		account_good.number += number
+		account_good.save()
 
-    @property
-    def valid_tickets(self):
-        ticket_vn={}
-        tickets=self.ticket_set.filter(ticket_type=1,is_consume=False)
-        for t in tickets:
-            if(ticket_vn.has_key(t.ticket_value)):
-                ticket_vn[t.ticket_value] += 1
-            else:
-                ticket_vn[t.ticket_value] = 1
+	@property
+	def valid_tickets(self):
+		ticket_vn={}
+		tickets=self.ticket_set.filter(ticket_type=1,is_consume=False)
+		for t in tickets:
+			if(ticket_vn.has_key(t.ticket_value)):
+				ticket_vn[t.ticket_value] += 1
+			else:
+				ticket_vn[t.ticket_value] = 1
 
-        return ticket_vn
+		return ticket_vn
 
-    def get_wallets_by_good(self, good):
-        valid_wallets=self.wallet_set.filter(is_used=False,is_send=False, money=good)
-        return valid_wallets
+	def get_wallets_by_good(self, good):
+		valid_wallets=self.wallet_set.filter(is_used=False,is_send=False, money=good)
+		return valid_wallets
 
-    def send_bonus(self,counter, good_contents, title="", message=""):
-        bonus=SndBonus.objects.create(id_bonus=create_primary_key(), consumer=self, bonus_type=2, to_message=message, title=title, bonus_num=counter, bonus_remain=counter)
-        for name,number in good_contents.items():
-            for c in self.valid_goods:
-                if(name==c.good.name):
-                    wallets=self.get_wallets_by_good(c.good)
-                    for i in range(number):
-                        for w in wallets:
-                            w.snd_bonus=bonus
-                            w.is_send=True
-                            w.save()
-                    self.change_valid_good(c.good, 0, -number)
-                    self.change_valid_good(c.good, 1, number)
+	def send_bonus(self,counter, good_contents, title="", message=""):
+		bonus=SndBonus.objects.create(id_bonus=create_primary_key(), consumer=self, bonus_type=2, to_message=message, title=title, bonus_num=counter, bonus_remain=counter)
+		for name,number in good_contents.items():
+			for c in self.valid_goods:
+				if(name==c.good.name):
+					wallets=self.get_wallets_by_good(c.good)
+					for i in range(number):
+						for w in wallets:
+							w.snd_bonus=bonus
+							w.is_send=True
+							w.save()
+					self.change_valid_good(c.good, 0, -number)
+					self.change_valid_good(c.good, 1, number)
 
 class ConsumerAccountGoods(models.Model):
-    good = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
-    consumer = models.ForeignKey(Consumer, null=True,related_name='consumer_goods', on_delete=models.CASCADE)		#就餐的消费者
-    number = models.IntegerField(default=0)
-    status = models.IntegerField(default=0) #0-idle, 1-fling, 2-used
+	good = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
+	consumer = models.ForeignKey(Consumer, null=True,related_name='consumer_goods', on_delete=models.CASCADE)		#就餐的消费者
+	number = models.IntegerField(default=0)
+	status = models.IntegerField(default=0) #0-idle, 1-fling, 2-used
 
 #Consumer 就餐记录
 class ConsumerSession(models.Model):
@@ -154,36 +154,36 @@ class ConsumerSession(models.Model):
 
 #充值记录
 class Recharge(models.Model):
-    recharge_value = models.FloatField(default=0.0)			#充值金额
-    recharge_time = models.DateTimeField(default=timezone.now)						#充值时间
-    recharge_type = models.IntegerField(default=0)				#充值方式：微信/商家系统/买单结余/婉拒/红包未被领取
-    recharge_person = models.ForeignKey(Consumer, null=True, related_name='recharge_set', on_delete=models.CASCADE)			#充值人
+	recharge_value = models.FloatField(default=0.0)			#充值金额
+	recharge_time = models.DateTimeField(default=timezone.now)						#充值时间
+	recharge_type = models.IntegerField(default=0)				#充值方式：微信/商家系统/买单结余/婉拒/红包未被领取
+	recharge_person = models.ForeignKey(Consumer, null=True, related_name='recharge_set', on_delete=models.CASCADE)			#充值人
 
-    def __unicode__(self):
-        return '%s Recharge'%(self.recharge_person.name)
+	def __unicode__(self):
+		return '%s Recharge'%(self.recharge_person.name)
 
-    @property
-    def consumed_wallets(self):
-        return self.wallet_set.filter(is_used=True)
+	@property
+	def consumed_wallets(self):
+		return self.wallet_set.filter(is_used=True)
 
-    @property
-    def not_consumed_wallets(self):
-        return self.wallet_set.filter(is_used=False)
+	@property
+	def not_consumed_wallets(self):
+		return self.wallet_set.filter(is_used=False)
 
-    @property
-    def all_wallets(self):
-        return self.wallet_set.all()
+	@property
+	def all_wallets(self):
+		return self.wallet_set.all()
 
 #消费券
 class Ticket(models.Model):
-    id_ticket = models.CharField(unique=True, max_length=12)		#消费券唯一id
-    ticket_type = models.IntegerField(default=0)            #消费券类型：0-生成券，1-系统券
-    ticket_value = models.FloatField(default=0.0)			#券值
-    create_time = models.DateTimeField(default=timezone.now)					#消费券创建时间
-    valid_time = models.DateTimeField(null=True, blank=True)					#消费券有效时间
-    is_consume = models.BooleanField(default=False)                             #是否被使用
-    consume_time = models.DateTimeField(null=True, blank=True)					#消费使用时间
-    consumer = models.ForeignKey(Consumer, null=True,related_name='ticket_set', on_delete=models.CASCADE)	#消费券拥有着
+	id_ticket = models.CharField(unique=True, max_length=12)		#消费券唯一id
+	ticket_type = models.IntegerField(default=0)            #消费券类型：0-生成券，1-系统券
+	ticket_value = models.FloatField(default=0.0)			#券值
+	create_time = models.DateTimeField(default=timezone.now)					#消费券创建时间
+	valid_time = models.DateTimeField(null=True, blank=True)					#消费券有效时间
+	is_consume = models.BooleanField(default=False)                             #是否被使用
+	consume_time = models.DateTimeField(null=True, blank=True)					#消费使用时间
+	consumer = models.ForeignKey(Consumer, null=True,related_name='ticket_set', on_delete=models.CASCADE)	#消费券拥有着
 	
 	def __unicode__(self):
 		if self.consumer:
