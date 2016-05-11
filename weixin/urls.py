@@ -32,4 +32,9 @@ urlpatterns = [
 	url(r'^view_redirect_bonus_detail',views.view_redirect_bonus_detail, name='view_redirect_bonus_detail'),
 	url(r'^check_consumer_code',views.check_consumer_code, name='check_consumer_code'),	
 	url(r'^release_dining_table',views.release_dining_table, name='release_dining_table'),	
+	url(r'^view_user_phone',views.view_user_phone, name='view_user_phone'),		
+	url(r'^view_user_name',views.view_user_name, name='view_user_name'),	
+	url(r'^view_user_address',views.view_user_address, name='view_user_address'),	
+	url(r'^view_user_email',views.view_user_email, name='view_user_email'),	
+	url(r'^view_user_sex',views.view_user_sex, name='view_user_sex'),	
 ]

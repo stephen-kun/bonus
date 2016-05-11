@@ -9,20 +9,18 @@
 
   <section>
   	<div class="wo">
-    	<a href="#" target="_parent">
         <h4>{{consumer.name}}</h4>
         <h2><img src="{{consumer.picture}}"></h2>
-        </a>
     </div>
   </section>
   <section>
   	<div class="wo_xinxi">
     	<ul>
-        	<li><a href="#" target="_blank"><h4><span class="rfloat">{{consumer.name}}</span>昵称</h4></a></li>
+        	<li><a href="{{user_info.name}}" target="_blank"><h4><span class="rfloat">{{consumer.name}}</span>昵称</h4></a></li>
 			{% ifequal consumer.sex '1' %}
-			<li><a href="#" target="_blank"><h4><span class="rfloat">男</span>性别</h4></a></li>
+			<li><a href="{{user_info.sex}}" target="_blank"><h4><span class="rfloat">男</span>性别</h4></a></li>
 			{% else %}
-			<li><a href="#" target="_blank"><h4><span class="rfloat">女</span>性别</h4></a></li>
+			<li><a href="{{user_info.sex}}" target="_blank"><h4><span class="rfloat">女</span>性别</h4></a></li>
 			{% endifequal %}
 		</ul>
     </div>
@@ -30,19 +28,19 @@
     <div class="wo_xinxi wo_xinxi_mt">
     	<ul>
 			{% if consumer.phone_num %}
-        	<li><a href="#" target="_blank"><h4><span class="rfloat">{{consumer.phone_num}}</span>电话</h4></a></li>
+        	<li><a href="{{user_info.phone}}" target="_blank"><h4><span class="rfloat">{{consumer.phone_num}}</span>电话</h4></a></li>
 			{% else %}
-			<li><a href="#" target="_blank"><h4><span class="rfloat">请填写您的手机号码</span>电话</h4></a></li>
+			<li><a href="{{user_info.phone}}" target="_blank"><h4><span class="rfloat">请填写您的手机号码</span>电话</h4></a></li>
 			{% endif %}
 			{% if consumer.address %}
-            <li><a href="#" target="_blank"><h4><span class="rfloat">{{consumer.address}}</span>我的地址</h4></a></li>
+            <li><a href="{{user_info.address}}" target="_blank"><h4><span class="rfloat">{{consumer.address}}</span>我的地址</h4></a></li>
 			{% else %}
-            <li><a href="#" target="_blank"><h4><span class="rfloat">请填写您的地址</span>我的地址</h4></a></li>			
+            <li><a href="{{user_info.address}}" target="_blank"><h4><span class="rfloat">请填写您的地址</span>我的地址</h4></a></li>			
 			{% endif %}
 			{% if consumer.email %}
-            <li><a href="#" target="_blank"><h4><span class="rfloat">{{consumer.email}}</span>Email</h4></a></li>
+            <li><a href="{{user_info.email}}" target="_blank"><h4><span class="rfloat">{{consumer.email}}</span>Email</h4></a></li>
 			{% else %}
-            <li><a href="#" target="_blank"><h4><span class="rfloat">请填写您的邮箱</span>Email</h4></a></li>	
+            <li><a href="{{user_info.email}}" target="_blank"><h4><span class="rfloat">请填写您的邮箱</span>Email</h4></a></li>	
 			{% endif %}			
         </ul>
     </div>

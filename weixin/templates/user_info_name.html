@@ -1,1 +1,26 @@
+<!-- 我的信息 --昵称 -->
+{% extends "_bonus_base.html" %}
 
+{% block body %}
+<body class="bottom_40">
+
+{% block content %}
+<article>
+
+	<section>    
+		<div class="wo_xinxi wo_xinxi_mt">
+			<div class="wo_xinxi_edit">
+				<input class="nichen" id="name" placeholder="填入昵称" style="color:#333333;padding:.3em;">
+				<input type="button" class="baocun" value="保存" onclick="submit_name('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">
+			</div>
+		</div>
+	</section>
+  
+</article>
+{% endblock %}
+
+<script src="{{static_url}}js/modify_user_info.js"></script>
+
+</body>
+
+{% endblock %}
