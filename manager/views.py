@@ -424,18 +424,7 @@ def consumer_is_dining(request):
 
 	info_list=[]
 	session_list = DiningSession.objects.filter(over_time__isnull=True)
-	for session in session_list:
-		cs_list = ConsumerSession.objects.filter(session=session)
-		consumer_list=[]
-		consumer_num=0
-		for cs in cs_list:
-			consumer_list.append(cs.consumer)
-			consumer_num +=1
-
-		info={'table':session.table, 'time':session.begin_time, 'consumer_num':consumer_num, 'consumer_list':consumer_list}
-		info_list.append(info)
-
-	return render_to_response("manager/consumer/consumer_is_dining.html",{'current_user':current_user, 'is_admin':is_admin, 'info_list':info_list})
+	return render_to_response("manager/consumer/consumer_is_dining.html",{'current_user':current_user, 'is_admin':is_admin, 'info_list':session_list})
 
 def consumer_detail(request):
 	open_id = request.GET.get('open_id')
