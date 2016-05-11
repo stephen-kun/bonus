@@ -24,6 +24,7 @@ REDIRECT_SBL_URL = 'http://%s/weixin/view_redirect_self_bonus_list'%(ADDRESS_IP)
 REDIRECT_RB_URL = 'http://%s/weixin/view_redirect_random_bonus'%(ADDRESS_IP)
 REDIRECT_CB_URL = 'http://%s/weixin/view_redirect_common_bonus'%(ADDRESS_IP)
 REDIRECT_SA_URL = 'http://%s/weixin/view_redirect_settle_account'%(ADDRESS_IP)
+REDIRECT_QF_URL = 'http://%s/weixin/view_redirect_qubaba_forum'%(ADDRESS_IP)
 REDIRECT_UA_URL = 'http://%s/weixin/view_redirect_user_account'%(ADDRESS_IP)
 REDIRECT_BS_URL = 'http://%s/weixin/view_redirect_bonus_snd'%(ADDRESS_IP)
 REDIRECT_BR_URL = 'http://%s/weixin/view_redirect_bonus_rcv'%(ADDRESS_IP)
@@ -37,6 +38,7 @@ AJAX_REQUEST_POST_URL = 'http://%s/weixin/view_ajax_request'%(ADDRESS_IP)
 GETED_BONUS_URL = 'http://%s/weixin/view_geted_bonus'%(ADDRESS_IP)
 GET_BONUS_URL ='http://%s/weixin/view_rcv_bonus'%(ADDRESS_IP)
 SND_BONUS_URL ='http://%s/weixin/view_snd_bonus'%(ADDRESS_IP)
+QUBABA_FORUM_URL = 'http://%s/weixin/view_qubaba_forum'%(ADDRESS_IP)
 CREATE_COMMON_BONUS_URL = 'http://%s/weixin/view_common_bonus'%(ADDRESS_IP)
 CREATE_RANDOM_BONUS_URL = 'http://%s/weixin/view_random_bonus'%(ADDRESS_IP)
 SELF_RCV_BONUS_URL = 'http://%s/weixin/view_self_rcv_bonus'%(ADDRESS_IP)
@@ -54,7 +56,7 @@ class _MenuUrl():
 	get_bonus_url = GET_BONUS_URL
 	snd_bonus_url = SND_BONUS_URL
 	settle_accounts_url = SETTLE_ACCOUNTS_URL
-	forum_url = ''
+	forum_url = QUBABA_FORUM_URL
 	user_account_url = USER_ACCOUNT_URL
 	user_info_url = USER_INFO_URL
 	user_ticket_url = USER_TICKET_URL
@@ -82,7 +84,7 @@ def view_user_phone(request):
 		user_info_url = USER_INFO_URL
 		return render_to_response("user_info_phone.html", locals())		
 	except:
-		log_print(view_user_info_phone)
+		log_print(view_user_phone)
 		return HttpResponseBadRequest('error')
 		
 @csrf_exempt
@@ -95,7 +97,7 @@ def view_user_name(request):
 		user_info_url = USER_INFO_URL
 		return render_to_response("user_info_name.html", locals())		
 	except:
-		log_print(view_user_info_name)
+		log_print(view_user_name)
 		return HttpResponseBadRequest('error')
 		
 @csrf_exempt
@@ -108,7 +110,7 @@ def view_user_address(request):
 		user_info_url = USER_INFO_URL
 		return render_to_response("user_info_address.html", locals())		
 	except:
-		log_print(view_user_info_address)
+		log_print(view_user_address)
 		return HttpResponseBadRequest('error')
 
 @csrf_exempt
@@ -121,7 +123,7 @@ def view_user_email(request):
 		user_info_url = USER_INFO_URL
 		return render_to_response("user_info_email.html", locals())		
 	except:
-		log_print(view_user_info_email)
+		log_print(view_user_email)
 		return HttpResponseBadRequest('error')
 
 @csrf_exempt
@@ -130,11 +132,12 @@ def view_user_sex(request):
 		openid = request.session['openid']
 		title = '修改性别'
 		static_url = settings.STATIC_URL
+		consumer = Consumer.objects.get(open_id=openid)
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		user_info_url = USER_INFO_URL
 		return render_to_response("user_info_sex.html", locals())		
 	except:
-		log_print(view_user_info_sex)
+		log_print(view_user_sex)
 		return HttpResponseBadRequest('error')		
 
 
@@ -214,12 +217,27 @@ def view_rcv_bonus(request):
 def view_settle_account(request):	
 	#print('---**view_settle_account**---\n')
 	return view_redirect_func(REDIRECT_SA_URL)
+	
+#论坛界面
+@csrf_exempt
+def view_qubaba_forum(request):
+	return view_redirect_func(REDIRECT_QF_URL)
+	
+#论坛界面重定向
+@csrf_exempt
+def view_redirect_qubaba_forum(request):
+	openid = get_user_openid(request, ACCESS_TOKEN_URL)
+	request.session['openid'] = openid
+	return display_qubaba_forum_views(openid, request)	
+	
+def display_qubaba_forum_views(open_id, request):
+	#url = 'http://www.jinfuture.com:9999/wx/?open_id=%s'%(open_id)
+	url = 'http://www.jinfuture.com:9999/wx/?open_id=ccccc'
+	return HttpResponseRedirect(url)
 
 #******************************************************************************	
 
 def check_session_openid(request, redirect_uri, redirect_func):
-	#request.session['openid'] = 'oJvvJwrakNQy8hA6CKLD5OcbQMH4'
-	#return redirect_func(openid, request)
 	if 'openid' in request.session:
 		openid = request.session['openid']
 		return redirect_func(openid, request)
