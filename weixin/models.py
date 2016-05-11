@@ -41,7 +41,7 @@ class DiningSession(models.Model):
 	table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)			#就餐桌台
 
 	def __unicode__(self):
-		return "Dining Session %d"%(self.table.index_table)
+		return "Dining Session %s"%(self.table.index_table)
 
 #消费者数据表
 class Consumer(models.Model):
