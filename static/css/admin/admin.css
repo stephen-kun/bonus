@@ -1007,4 +1007,20 @@ background: -o-linear-gradient(top, #ddf8aa, #b0d067);  /*Opera 11.10+*/}
 	color:#C30;
 	font-size:.8em;
 }
-/*=============月报表===结束========*
+/*=============月报表===结束========*/
+/*=============顾客列表===开始========*/
+table tr td span.table_new_head {
+	display: inline-block;
+	margin-right:.5em;
+}
+table tr td span.table_new_head img {
+	width:30px;
+	height:30px;
+	overflow:hidden;
+	border-radius:40px;
+	box-shadow:#CCC 2px 2px 2px;
+	border:1px solid #ffffff;
+}
+/*=============顾客列表===开始========*/
+
+

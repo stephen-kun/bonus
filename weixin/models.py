@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 def create_primary_key(length=12):
     a = list(string.digits)
-    random.shuffle(a)   
+    random.shuffle(a)
     primary = ''.join(a[:length])
     return primary
 
@@ -26,7 +26,7 @@ class DiningTable(models.Model):
 	status = models.BooleanField(default=False)			#桌台状态
 	seats = models.IntegerField(default=4)					#桌台人数
 	is_private = models.BooleanField(default=False)		#是否是包厢
-	
+
 	def __unicode__(self):
 		return "table %s"%(self.index_table)
 
@@ -39,11 +39,11 @@ class DiningSession(models.Model):
 	total_bonus	= models.IntegerField(default=0)							#抢到的红包总个数
 	total_number = models.IntegerField(default=0)							#抢到的串串总个数
 	table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)			#就餐桌台
-	
+
 	def __unicode__(self):
-		return "Dining Session %d"%(self.table.index_table)			
-		
-#消费者数据表		
+		return "Dining Session %d"%(self.table.index_table)
+
+#消费者数据表
 class Consumer(models.Model):
 	open_id = models.CharField(max_length=30, unique=True)	#微信openId
 	is_admin = models.BooleanField(default=False)
@@ -131,7 +131,7 @@ class Consumer(models.Model):
 		valid_wallets=self.wallet_set.filter(is_used=False,is_send=False, money=good)
 		return valid_wallets
 
-	def send_bonus(self,counter, good_contents, title="", message=""):
+	def send_sys_bonus(self, counter, good_contents, title="", message=""):
 		bonus=SndBonus.objects.create(id_bonus=create_primary_key(), consumer=self, bonus_type=2, to_message=message, title=title, bonus_num=counter, bonus_remain=counter)
 		for name,number in good_contents.items():
 			for c in self.valid_goods:
@@ -189,7 +189,7 @@ class Ticket(models.Model):
 	is_consume = models.BooleanField(default=False)                             #是否被使用
 	consume_time = models.DateTimeField(null=True, blank=True)					#消费使用时间
 	consumer = models.ForeignKey(Consumer, null=True,related_name='ticket_set', on_delete=models.CASCADE)	#消费券拥有着
-	
+
 	def __unicode__(self):
 		if self.consumer:
 			return '%s ticket id %s'%(self.consumer.name, self.id_ticket)
@@ -225,7 +225,7 @@ class SndBonus(models.Model):
 	over_time = models.DateTimeField(null=True, blank=True)		#抢完时间
 	user_time = models.DateTimeField(null=True, blank=True)		#抢完花费时间
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#发送红包者
-	session = models.ForeignKey(DiningSession, on_delete=models.CASCADE)	#就餐会话
+	session = models.ForeignKey(DiningSession, null=True, on_delete=models.CASCADE)	#就餐会话
 
 	def __unicode__(self):
 		return '%s SndBonus %s'%(self.consumer.name, self.id_bonus)
@@ -246,7 +246,7 @@ class RcvBonus(models.Model):
 	snd_bonus = models.ForeignKey(SndBonus, on_delete=models.CASCADE)		#红包的唯一id
 	consumer = models.ForeignKey(Consumer, null=True, blank=True, on_delete=models.CASCADE)		#消费者的唯一id
 	record_rcv_bonus = models.ForeignKey(RecordRcvBonus, null=True, blank=True, on_delete=models.CASCADE)	#抢红包记录
-	session = models.ForeignKey(DiningSession, null=True, blank=True, on_delete=models.CASCADE)	#就餐会话	
+	session = models.ForeignKey(DiningSession, null=True, blank=True, on_delete=models.CASCADE)	#就餐会话
 
 	def __unicode__(self):
 		if self.consumer:
@@ -276,5 +276,5 @@ class WalletMoney(models.Model):
 		if self.consumer:
 			return '%s WalletMoney %s'%(self.consumer.name, self.id_money)
 		else:
-			return 'WalletMoney %s'%(self.id_money)		
+			return 'WalletMoney %s'%(self.id_money)
 

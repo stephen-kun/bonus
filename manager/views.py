@@ -92,7 +92,7 @@ def create_bonus_action(request):
 	if( not success):
 		return _response_json(1, err)
 	else:
-		get_admin_account().send_bonus(counter=counter, good_contents=good_contents, title=title, message=message)
+		get_admin_account().send_sys_bonus(counter=counter, good_contents=good_contents, title=title, message=message)
 		return _response_json(0, u"红包发送成功!")
 
 
