@@ -36,31 +36,29 @@ class VirtualMoney(models.Model):
 
 #桌台表，维护桌台状态
 class DiningTable(models.Model):
-    index_table = models.CharField(primary_key=True, max_length=3)	#桌台编号
-    status = models.BooleanField(default=False)			#桌台状态
-    seats = models.IntegerField(default=0)					#桌台人数
-    is_private = models.BooleanField(default=False)		#是否是包厢
-
-    def __unicode__(self):
-        return "table %s"%(self.index_table)
+	index_table = models.CharField(primary_key=True, max_length=3)	#桌台编号
+	status = models.BooleanField(default=False)			#桌台状态
+	seats = models.IntegerField(default=4)					#桌台人数
+	is_private = models.BooleanField(default=False)		#是否是包厢
+	
+	def __unicode__(self):
+		return "table %s"%(self.index_table)
 
 #就餐会话
 class DiningSession(models.Model):
-    id_session = models.IntegerField(primary_key=True)						#就餐会话唯一id
-    person_num	= models.IntegerField(default=0)							#就餐人数
-    begin_time = models.DateTimeField(default=timezone.now) 				#开始就餐时间
-    over_time = models.DateTimeField(null=True, blank=True)					#结束就餐时间
-    consumers = models.CharField(max_length=200, null=True, blank=True)		#一起就餐的消费者
-    snd_bonus = models.TextField(max_length=400,null=True, blank=True)		#所有发送的红包
-    rcv_bonus = models.TextField(max_length=400,null=True, blank=True)		#所有接收的红包
-    total_money = models.FloatField(default=0.0)							#抢到的红包总额
-    total_bonus	= models.IntegerField(default=0)							#抢到的红包总个数
-    table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)			#就餐桌台
-
-    def __unicode__(self):
-        return "Dining Session %d"%(self.id_session)
-
-#消费者数据表
+	id_session = models.IntegerField(primary_key=True)						#就餐会话唯一id
+	person_num	= models.IntegerField(default=0)							#就餐人数
+	begin_time = models.DateTimeField(default=timezone.now) 				#开始就餐时间
+	over_time = models.DateTimeField(null=True, blank=True)				#结束就餐时间
+	total_money = models.FloatField(default=0.0)							#抢到的红包总额
+	total_bonus	= models.IntegerField(default=0)							#抢到的红包总个数
+	total_number = models.IntegerField(default=0)							#抢到的串串总个数
+	table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)			#就餐桌台
+	
+	def __unicode__(self):
+		return "Dining Session %d"%(self.id_session)			
+		
+#消费者数据表		
 class Consumer(models.Model):
     open_id = models.CharField(max_length=30, primary_key=True)	#微信openId
     is_admin = models.BooleanField(default=False)
@@ -68,18 +66,20 @@ class Consumer(models.Model):
     sex = models.CharField(max_length=1, default='0')						#性别
     phone_num = models.CharField(max_length=20, null=True, blank=True)		#电话
     address = models.CharField(max_length=30, null=True, blank=True)			#地址
-    picture = models.URLField(max_length=200, null=True, blank=True)			#头像地址
+	email = models.EmailField(null=True, blank=True)							#邮箱
+	picture = models.URLField(null=True, blank=True)							#头像地址
     bonus_range = models.IntegerField(default=0)					#排行榜名次
     snd_bonus_num = models.IntegerField(default=0)					#发红包总数
     rcv_bonus_num = models.IntegerField(default=0)					#收红包总数
     snd_bonus_value = models.IntegerField(default=0)				#发红包金额
     own_bonus_value = models.IntegerField(default=0)				#可用红包金额
-    own_bonus_detail = models.CharField(max_length=100, default="123456")				#可用红包明细
+	own_bonus_detail = models.CharField(max_length=300, null=True, blank=True)	#可用红包明细
+	own_ticket_num = models.IntegerField(default=0)				#可用券数量
     own_ticket_value = models.IntegerField(default=0)				#可用礼券金额
     create_time = models.DateTimeField(default=timezone.now)		#首次关注时间
     subscribe = models.BooleanField(default=True)					#是否关注
-    on_table = models.ForeignKey(DiningTable, null=True, on_delete=models.CASCADE)	#就餐桌台
-    session = models.ForeignKey(DiningSession, null=True, on_delete=models.CASCADE)	#就餐会话
+	on_table = models.ForeignKey(DiningTable, null=True, blank=True, on_delete=models.CASCADE)	#就餐桌台
+	session = models.ForeignKey(DiningSession, null=True, blank=True, on_delete=models.CASCADE)	#就餐会话
     latest_time = models.DateTimeField(default=timezone.now)		#最近到店时间
 
     def __unicode__(self):
@@ -205,16 +205,19 @@ class Ticket(models.Model):
     is_consume = models.BooleanField(default=False)                             #是否被使用
     consume_time = models.DateTimeField(null=True, blank=True)					#消费使用时间
     consumer = models.ForeignKey(Consumer, null=True,related_name='ticket_set', on_delete=models.CASCADE)	#消费券拥有着
-
-    def __unicode__(self):
-        return '%s ticket id%d'%(self.consumer.name, self.id_ticket)
+	
+	def __unicode__(self):
+		if self.consumer:
+			return '%s ticket id%d'%(self.consumer.name, self.id_ticket)
+		else:
+			return 'ticket id%d'%(self.id_ticket)
 
 #接收红包记录
 class RecordRcvBonus(models.Model):
 	id_record = models.IntegerField(primary_key=True)				#收红包记录的唯一id
 	bonus_num = models.IntegerField(default=0)						#收到的红包个数
 	record_time = models.DateTimeField(default=timezone.now)		#记录时间
-	consumer = models.ForeignKey(Consumer, null=True, on_delete=models.CASCADE) #具体红包
+	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE) #具体红包
 
 	def __unicode__(self):
 		return '%s RecordRcvBonus %d'%(self.consumer.name, self.id_record)
@@ -256,30 +259,20 @@ class RcvBonus(models.Model):
 	number = models.IntegerField(default=0)								#串串个数
 	total_money = models.FloatField(default=0)								#总金额
 	is_best = models.BooleanField(default=False)							#是否手气最佳
-	snd_bonus = models.ForeignKey(SndBonus, null=True, on_delete=models.CASCADE)		#红包的唯一id
-	consumer = models.ForeignKey(Consumer, null=True, on_delete=models.CASCADE)		#消费者的唯一id
-	table = models.ForeignKey(DiningTable, on_delete=models.CASCADE)		#桌台号
-	record_rcv_bonus = models.ForeignKey(RecordRcvBonus, null=True, on_delete=models.CASCADE)	#抢红包记录
-	session = models.ForeignKey(DiningSession, null=True, on_delete=models.CASCADE)	#就餐会话
+	snd_bonus = models.ForeignKey(SndBonus, on_delete=models.CASCADE)		#红包的唯一id
+	consumer = models.ForeignKey(Consumer, null=True, blank=True, on_delete=models.CASCADE)		#消费者的唯一id
+	record_rcv_bonus = models.ForeignKey(RecordRcvBonus, null=True, blank=True, on_delete=models.CASCADE)	#抢红包记录
+	session = models.ForeignKey(DiningSession, null=True, blank=True, on_delete=models.CASCADE)	#就餐会话	
 
 	def __unicode__(self):
-		return '%s RcvBonus %d'%(self.consumer.name, self.id_bonus)
+		if self.consumer:
+			return '%s RcvBonus %d'%(self.consumer.name, self.id_bonus)
+		else:
+			return '未领取 RcvBonus %d'%(self.id_bonus)
 
 
-#红包留言
-class BonusMessage(models.Model):
-	id_message = models.IntegerField(primary_key=True)						#红包留言唯一id
-	message = models.CharField(max_length=140, null=True, blank=True)							#留言内容
-	rcv_bonus = models.OneToOneField(RcvBonus, on_delete=models.CASCADE)	#接收的红包唯一id
-	consumer = models.ForeignKey(Consumer, null=True, on_delete=models.CASCADE)		#留言者唯一id
-
-	def __unicode__(self):
-		return '%s BonusMessage %d'%(self.consumer.name, self.id_message)
 
 
-#虚拟货币
-	def __unicode__(self):
-		return self.name
 
 # 钱包
 class WalletMoney(models.Model):
@@ -289,12 +282,15 @@ class WalletMoney(models.Model):
 	consumer = models.ForeignKey(Consumer, null=True, related_name="wallet_set", on_delete=models.CASCADE)		#钱包拥有着
 	snd_bonus = models.ForeignKey(SndBonus, null=True, on_delete=models.CASCADE)		#红包唯一id
 	is_send = models.BooleanField(default=False)							#是否已发做红包
-	ticket = models.ForeignKey(Ticket, null=True, on_delete=models.CASCADE)			#消费券唯一id
+	ticket = models.ForeignKey(Ticket, null=True, blank=True, on_delete=models.CASCADE)			#消费券唯一id
 	recharge = models.ForeignKey(Recharge, null=True, related_name='wallet_set', on_delete=models.CASCADE)	#充值记录id
-	rcv_bonus = models.ForeignKey(RcvBonus, null=True, on_delete=models.CASCADE)		#抢到的红包唯一id
+	rcv_bonus = models.ForeignKey(RcvBonus, null=True, blank=True, on_delete=models.CASCADE)		#抢到的红包唯一id
 	is_receive = models.BooleanField(default=False)						#是否已接收红包
 	money = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
 
 	def __unicode__(self):
-		return '%s WalletMoney %d'%(self.consumer.name, self.id_money)
+		if self.consumer:
+			return '%s WalletMoney %d'%(self.consumer.name, self.id_money)
+		else:
+			return 'WalletMoney %d'%(self.id_money)		
 

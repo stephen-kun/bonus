@@ -78,11 +78,11 @@ def check_consumer_code(request):
 		ticket = Ticket.objects.filter(id_ticket=id_ticket)
 		ticket_value = float(0)
 		response = {}
-		if len(ticket) and (ticket[0].is_used):
+		if len(ticket) and (ticket[0].is_consume):
 			response = dict(status=1, err_msg="该券已使用")
-		elif len(ticket) and (ticket[0].is_used == False):
+		elif len(ticket) and (ticket[0].is_consume == False):
 			ticket_value = ticket[0].ticket_value
-			ticket[0].is_used = True
+			ticket[0].is_consume = True
 			ticket[0].save()
 			response = dict(status=0, ticket_value=ticket_value)
 		else:
