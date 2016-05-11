@@ -10,7 +10,7 @@ import json
 from .wechat import PostResponse, wechat, TOKEN, APPID, APPSECRET
 from .utils import  action_get_bonus, is_consumer_dining, handle_ajax_request, get_user_openid, decode_bonus_detail,create_bonus_dict
 from .utils import check_geted_bonus, decode_choose_pay, get_bonus_type_str, get_record_openid, is_enough_pay, update_wallet_money, log_print
-from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
+from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
 

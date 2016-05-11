@@ -90,7 +90,7 @@ def update_or_create_session(table, consumer):
 		session = consumer_list[0].session
 	else:
 		#创建会话
-		session = DiningSession.objects.create(id_session=create_primary_key(), table=table)
+		session = DiningSession.objects.create(table=table)
 	consumer.on_table = table
 	consumer.session = session
 	consumer.save()

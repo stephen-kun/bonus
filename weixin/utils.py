@@ -3,7 +3,7 @@
 # Create your utils here.
 import random, string
 from django.core.exceptions import ObjectDoesNotExist 
-from .models import BonusCountDay,BonusCountMonth,DiningTable,Consumer,VirtualMoney, WalletMoney
+from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
 import re
@@ -180,11 +180,11 @@ def is_consumer_dining(openid):
 	
 	
 #主键生成方法
-def create_primary_key(key='1', length=9):
+def create_primary_key(length=12):
     a = list(string.digits)
     random.shuffle(a)   
-    primary = key + ''.join(a[:length])
-    return string.atoi(primary, 10)
+    primary = ''.join(a[:length])
+    return primary
 	
 #统计餐桌抢到的所有红包金额
 def count_total_money_on_table(openid):
@@ -300,12 +300,11 @@ def action_weixin_pay(data, session):
 			return "have pay!"
 			
 		#创建一条充值记录
-		recharge = Recharge.objects.create(id_recharge=create_primary_key())
+		openid = data['openid']
+		consumer = Consumer.objects.get(open_id=openid)		
+		recharge = Recharge.objects.create(recharge_person=consumer)
 		recharge.recharge_value = float(data['money'])
 		recharge.recharge_type = int(WEIXIN_PAY)
-		openid = data['openid']
-		consumer = Consumer.objects.get(open_id=openid)
-		recharge.recharge_person = consumer
 		
 		#创建一条发红包记录
 		new_snd_bonus = SndBonus.objects.create(id_bonus=create_primary_key(), consumer=consumer, session=consumer.session)
