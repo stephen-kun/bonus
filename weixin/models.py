@@ -7,7 +7,12 @@ import django.utils.timezone as timezone
 import string, random
 from django.core.exceptions import ObjectDoesNotExist
 
-from .utils import create_primary_key
+
+def create_primary_key(length=12):
+    a = list(string.digits)
+    random.shuffle(a)   
+    primary = ''.join(a[:length])
+    return primary
 
 class VirtualMoney(models.Model):
 	name = models.CharField(unique=True, max_length=40, default="串串")		#虚拟钱币的名字
