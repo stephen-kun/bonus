@@ -132,6 +132,7 @@ def view_user_sex(request):
 		openid = request.session['openid']
 		title = '修改性别'
 		static_url = settings.STATIC_URL
+		consumer = Consumer.objects.get(open_id=openid)
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		user_info_url = USER_INFO_URL
 		return render_to_response("user_info_sex.html", locals())		
@@ -237,8 +238,6 @@ def display_qubaba_forum_views(open_id, request):
 #******************************************************************************	
 
 def check_session_openid(request, redirect_uri, redirect_func):
-	#request.session['openid'] = 'oJvvJwrakNQy8hA6CKLD5OcbQMH4'
-	#return redirect_func(openid, request)
 	if 'openid' in request.session:
 		openid = request.session['openid']
 		return redirect_func(openid, request)
