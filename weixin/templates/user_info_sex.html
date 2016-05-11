@@ -1,4 +1,4 @@
-<!-- 我的信息 --电话 -->
+<!-- 我的信息 --性别 -->
 {% extends "_bonus_base.html" %}
 
 {% block body %}
@@ -9,15 +9,71 @@
 
 	<section>    
 		<div class="wo_xinxi wo_xinxi_mt">
-			<div class="wo_xinxi_edit">
-				<span class="lfloat">
-					<label><input type="radio" name="man" value="1" >男</label>
-					<label><input type="radio" name="man" value="2" >女</label>
-				</span>
+			<label>
+			<div class="wo_xinxi_edit" style="text-align:left; padding:.3em .2em; margin:0 .8em; border-bottom:#f0efef 1px solid;">			
+				<span class="rfloat" style="width:auto;">
+				{% ifequal consumer.sex '1' %}
+				<input type="radio" id="sex_man" name="check" value='1' checked onclick="submit_sex_man('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">
+				{% else %}
+				<input type="radio" id="sex_man" name="check" value="1" onclick="submit_sex_man('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">				
+				{% endifequal %}
+				</span>男
 			</div>
+			</label>
+			<label>
+			<div class="wo_xinxi_edit" style="text-align:left; padding:.3em .2em; margin:0 .8em; border-bottom:#f0efef 1px solid;">
+				<span class="rfloat" style="width:auto;">
+				{% ifequal consumer.sex '2' %}
+				<input type="radio" id="sex_woman" name="check" value="2"  checked onclick="submit_sex_woman('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">
+				{% else %}
+				<input type="radio" id="sex_woman" name="check" value="2" onclick="submit_sex_woman('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">				
+				{% endifequal %}				
+				</span>女
+			</div>
+			</label>
 		</div>
 	</section>
-  
+<style>
+input {
+  -webkit-appearance: none; /* remove default */
+  display: block;
+  margin: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  vertical-align: middle;
+  box-shadow: hsla(130,3%,74%,.15) 0 1px 1px, inset hsla(130,3%,74%,.5) 0 0 0 1px;
+  background-color: hsla(130,0%,90%,.2);
+  background-image: -webkit-radial-gradient( hsla(130,80%,60%,1) 0%, hsla(130,80%,60%,1) 15%, hsla(130,80%,60%,.3) 28%, hsla(130,80%,60%,0) 70% );
+  background-repeat: no-repeat;
+  -webkit-transition: background-position .15s cubic-bezier(.8, 0, 1, 1),
+    -webkit-transform .25s cubic-bezier(.8, 0, 1, 1);
+}
+input:checked {
+  -webkit-transition: background-position .2s .15s cubic-bezier(0, 0, .2, 1),
+    -webkit-transform .25s cubic-bezier(0, 0, .2, 1);
+}
+input:active {
+  -webkit-transform: scale(1.5);
+  -webkit-transition: -webkit-transform .1s cubic-bezier(0, 0, .2, 1);
+}
+
+/* The up/down direction logic */
+
+input,
+input:active {
+  background-position: 0 24px;
+}
+input:checked {
+  background-position: 0 0;
+}
+input:checked ~ input,
+input:checked ~ input:active {
+  background-position: 0 -24px;
+}
+</style>  
+
 </article>
 {% endblock %}
 

@@ -52,10 +52,10 @@ function submit_name(openid, url, back_url)
 }
 
 
-var flag_submit_sex = 1;
-function submit_sex(openid, url, back_url)
+var flag_submit_sex_woman = 1;
+function submit_sex_woman(openid, url, back_url)
 {
-	var sex = $('#sex').val();
+	var sex = $('#sex_woman').val();
 	var data = '{"action":"ACTION", "openid":"OPENID", "sex":"SEX"}';
 	var xmlhttp=new XMLHttpRequest();
 	
@@ -69,11 +69,11 @@ function submit_sex(openid, url, back_url)
 		}		
 	};
 	
-	if(flag_submit_sex)
+	if(flag_submit_sex_woman)
 	{
 		xmlhttp.open("POST", url, true);
 		xmlhttp.send(data);	
-		flag_submit_sex = 0;
+		flag_submit_sex_woman = 0;
 	}
 }
 
@@ -99,6 +99,32 @@ function submit_address(openid, url, back_url)
 		xmlhttp.open("POST", url, true);
 		xmlhttp.send(data);	
 		flag_submit_address = 0;
+	}
+}
+
+
+var flag_submit_sex = 1;
+function submit_sex_man(openid, url, back_url)
+{
+	var sex = $('#sex_man').val();
+	var data = '{"action":"ACTION", "openid":"OPENID", "sex":"SEX"}';
+	var xmlhttp=new XMLHttpRequest();
+	
+	data = data.replace(/ACTION/, 'ajax_modify_sex').replace(/OPENID/, openid).replace(/SEX/, sex);
+	  
+	xmlhttp.onreadystatechange=function()
+	{
+		if(xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			location.href=back_url;			
+		}		
+	};
+	
+	if(flag_submit_sex)
+	{
+		xmlhttp.open("POST", url, true);
+		xmlhttp.send(data);	
+		flag_submit_sex = 0;
 	}
 }
 
