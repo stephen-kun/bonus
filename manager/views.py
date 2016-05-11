@@ -51,15 +51,15 @@ def bonus_info(request):
     return render_to_response("manager/bonus/bonus_info.html", locals())
 
 def send_bonus_list(request):
-    bonus_list=SndBonus.objects.filter(consumer__isnull=False).order_by('create_time')
-    return render_to_response("manager/bonus/bonus_list.html", {'title':'发出的红包', 'bonus_list':bonus_list})
+    bonus_list=SndBonus.objects.filter(create_time__date=datetime.datetime.today()).order_by('create_time')
+    return render_to_response("manager/bonus/snd_bonus_list.html", {'title':'发出的红包', 'bonus_list':bonus_list})
 
 def recv_bonus_list(request):
-    bonus_list=RcvBonus.objects.all()
+    bonus_list=RcvBonus.objects.filter(datetime__date=datetime.datetime.today())
     return render_to_response("manager/bonus/recv_bonus_list.html", {'bonus_list':bonus_list})
 
 def flying_bonus_list(request):
-    bonus_list=SndBonus.objects.filter(is_exhausted=False).order_by('create_time')
+    bonus_list=SndBonus.objects.filter(is_exhausted=False, create_time__date=datetime.datetime.today()).order_by('create_time')
     return render_to_response("manager/bonus/flying_bonus_list.html", {'bonus_list':bonus_list})
 
 def create_bonus(request):

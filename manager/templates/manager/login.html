@@ -13,26 +13,25 @@
 <script type="text/javascript" src="/static/js/jquery.funkyUI.js"></script>
 </head>
 
-<body>
-<div class="admin_dl_box">
+<body class="admin_dl_box">
+<div>
     <div class="admin_dl_a">
         <div class="dl_box">
-            <p>请先登录查看！</p>
 		<form method="post" action="{% url 'login' %}">
 		{% csrf_token %}
 		<table>
 		<tr>
-		    <td class="admin_dl_y">{{ form.username.label_tag }}</td>
-		    <td class="admin_dl_y">{{ form.username }}</td>
+            <td class="admin_dl_y"><label for="id_username">帐号:</label></td>
+            <td><input id="id_username" maxlength="254" name="username" type="text" class="admin_dl dl_yh" /></td>
 		</tr>
 		<tr>
-		    <td class="admin_dl_y">{{ form.password.label_tag }}</td>
-		    <td>{{ form.password }}</td>
+            <td class="admin_dl_y"><label for="id_password">密码:</label></td>
+            <td><input id="id_password" name="password" type="password"  class="admin_dl dl_mm" /></td></td>
 		</tr>
 		<tr>
             <td class="admin_dl_y"></td>
 			<td align="center"> 
-                <input type="submit" class="admin_ru" value="login" />
+                <input type="submit" class="admin_ru" value="登录" />
 			    <input type="hidden" class="admin_fan" name="next" value="{{ next }}" /> 
             </td>
 		</tr>

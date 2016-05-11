@@ -9,19 +9,39 @@
             <div class="award_box_content">
                 <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
                   <tr>
-                    <th width="20%">发送者</th>
-                    <th width="20%">数量</th>
+                    <th width="20%">发送</th>
+                    <th width="15%">时间</th>
                     <th width="20%">类型</th>
-                    <th width="20%">目标</th>
+                    <th width="10%">数量</th>
+                    <th width="15%">目标</th>
                     <th width="20%">操作</th>
                   </tr>
 
                   {% for bonus in bonus_list %}
                   <tr class="table_new_h">
                       <td class="color_a"><span class="table_new_head"><img src="{{bonus.consumer.picture}}" align="absmiddle"></span>{{ bonus.consumer.name }}</td>
-                      <td class="color_b">{{ bonus.bonus_num }}</td>
+
                     <td class="color_b">普通红包</td>
+                    {% ifequal bonus.bonus_type 0 %}
+                    <td class="color_b">普通红包</td>
+                    {% else %}
+                    {% ifequal bonus.bonus_type 1 %}
+                    <td class="color_b">手气红包</td>
+                    {% else %}
+                    {% ifequal bonus.bonus_type 2 %}
+                    <td class="color_b">系统红包</td>
+                    {% endifequal %}
+                    {% endifequal %}
+                    {% endifequal %}
+
+                    <td class="color_b">{{ bonus.bonus_num }}</td>
+
+                    {% if bonus.to_table %}
                     <td class="color_b">{{ bonus.to_table }}</td>
+                    {% else %}
+                    <td class="color_b">所有人</td>
+                    {% endif %}
+
                     <td><img src="/static/images/admin/edit.png" align="absmiddle">
                         <a href="{% url 'bonus_detail' %}?type=send&bonus_id={{ bonus.id_bonus }}" class="color_a" target="mainFrame">查看详情</a>
                     </td>
