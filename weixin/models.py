@@ -344,6 +344,7 @@ class SndBonus(models.Model):
             if is_best and (rcv_bonus.bonus_type != COMMON_BONUS):
                 rcv_bonus.is_best = True
                 is_best = False
+            rcv_bonus.content=bonus_content_detail(bonus=rcv_bonus, type='rcv')
             rcv_bonus.save()
             total_number += account
 
@@ -356,7 +357,7 @@ class RcvBonus(models.Model):
     message = models.CharField(max_length=40, null=True, blank=True)		#留言内容
     is_receive = models.BooleanField(default=False)						#是否已被领取
     is_refuse = models.BooleanField(default=False)							#是否已拒绝
-    #content = models.CharField(max_length=300, null=True, blank=True)		#红包内容
+    content = models.CharField(max_length=300, null=True, blank=True)		#红包内容
     datetime = models.DateTimeField(default=timezone.now)					#接收时间
     number = models.IntegerField(default=0)								#串串个数
     total_money = models.FloatField(default=0)								#总金额
@@ -373,7 +374,7 @@ class RcvBonus(models.Model):
             return '未领取 RcvBonus %s'%(self.id_bonus)
 
     @property
-    def content(self):
+    def moeny_content(self):
         bonus_content_detail(bonus=self, type='rcv')
 
 
