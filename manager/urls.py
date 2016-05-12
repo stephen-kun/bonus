@@ -31,6 +31,7 @@ urlpatterns = [
 
 	url(r'^account/set_bonus_limit/$', views.set_bonus_limit, name='set_bonus_limit'),
 	url(r'^account/create_coupon/$', views.create_coupon, name='create_coupon'),
+	url(r'^account/send_coupon/$', views.send_coupon, name='send_coupon'),
 	url(r'^account/set_coupon_limit/$', views.set_coupon_limit, name='set_coupon_limit'),
 	url(r'^account/account_detail/$', views.sys_account_detail, name='sys_account'),
 
