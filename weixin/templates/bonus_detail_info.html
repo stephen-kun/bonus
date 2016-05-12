@@ -1,4 +1,4 @@
-<!-- 结算 -->
+<!-- 串串详细 -->
 {% extends "_bonus_base.html" %}
 
 {% block body %}
@@ -66,12 +66,12 @@
 				{% if bonus.is_refuse %}
 				<i>婉拒</i>
 				{% endif %}
-				<span class="chchshj"><br>{{bonus.datetime|date:"m-j P"}}</span></h3>
+				</h3>
                	<h5>
 					{% if bonus.is_best and snd_bonus.is_exhausted %}
 					<img src="{{static_url}}images/5_zanstanson.png" align="absmiddle">	
 					{% endif %}	
-					<span class="rfloat">{{bonus.number}}串</span>
+					<span class="rfloat">{{bonus.number}}串<br><font class="date_color">{{bonus.datetime|date:"m-j P"}}</font></span>
 				</h5>
 							
             </li>

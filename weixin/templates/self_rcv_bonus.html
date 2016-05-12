@@ -39,11 +39,11 @@
 		{% for bonus in rcv_bonus_list %}
             <li class="shdbai">
 				<a href="{{bonus_detail_url}}/?id_bonus={{bonus.snd_bonus.id_bonus}}" target="_parent">
-				{% if bonus.consumer.is_admin %}
+				{% ifequal bonus.bonus_type 2 %}
             	<h3>趣八八</h3>				
 				{% else %}
-				<h3>{{bonus.session.table.index_table}}号桌</h3>
-				{% endif %}
+				<h3>{{bonus.snd_bonus.session.table.index_table}}号桌</h3>
+				{% endifequal %}
 				{% if bonus.is_best %}
 				<h3><span class="rfloat"><img src="{{static_url}}images/5_zan.png" align="absmiddle"></span></h3>
 				{% endif %}
