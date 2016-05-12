@@ -18,13 +18,30 @@
                             {% endfor %}
                         </span></h4></li>
                     <li><h4><font class="font_admin_626261">可用礼券</font><span>
-                            {% for value,counter in consumer.valid_tickets.items %}
-                            {{ value }}元券x{{counter}}&nbsp
-                            {% endfor %}
+                            {{ consumer.valid_tickets }}
+                    </span></h4></li>
+
+                    <li><h4><font class="font_admin_626261">总共发红包</font><span>
+                            {{ consumer.snd_bonus.count }}个
                     </span></h4></li>
                 </ul>
                 <div class="clear"></div>
             </div>
+            </div>
+
+            <div class="admin_detailed_list">
+                <ul>
+                    {% for bonus in consumer.snd_bonus %}
+                	<li class="detailed_heiht">
+                    <h4>
+                        <p><font size="-1" color="#afacaa">{{ bonus.create_time|date:"Y-n-j H:i:s" }}</font></p>
+                        <p><font color='black'>发出{{bonus.bonus_num}}个</font></p>
+                        <p><font color='orange'>{{ bonus.good_contents }}</font></p>
+                    </h4>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="clear"></div>
             </div>
         </div>
     </section>    

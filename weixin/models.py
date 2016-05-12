@@ -8,6 +8,7 @@ import string, random
 from django.core.exceptions import ObjectDoesNotExist
 import json
 from manager.datatype import *
+import datetime
 
 COMMON_BONUS = 0
 RANDOM_BONUS = 1
@@ -224,10 +225,10 @@ class Consumer(models.Model):
 
     @property
     def valid_tickets(self):
-        ticket_vn={}
+        ticket_vn=Dict()
         tickets=self.ticket_set.filter(ticket_type=1,is_consume=False)
         for t in tickets:
-            if(ticket_vn.has_key(t.ticket_value)):
+            if(ticket_vn.has_key("%s元券"%t.ticket_value)):
                 ticket_vn[t.ticket_value] += 1
             else:
                 ticket_vn[t.ticket_value] = 1
@@ -254,6 +255,12 @@ class Consumer(models.Model):
             total_good_num += number
 
         bonus.split_to_rcv_bonus(total_good_num)
+
+    def today_snd_bonus(self):
+        return self.snd_bonus_set.filter(create_time__date=datetime.datetime.today()).order_by('create_time')
+
+    def snd_bonus(self):
+        return self.snd_bonus_set.all().order_by('create_time')
 
 class ConsumerAccountGoods(models.Model):
     good = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
@@ -334,7 +341,7 @@ class SndBonus(models.Model):
     create_time = models.DateTimeField(default=timezone.now)		#发送时间
     over_time = models.DateTimeField(null=True, blank=True)		#抢完时间
     user_time = models.DateTimeField(null=True, blank=True)		#抢完花费时间
-    consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#发送红包者
+    consumer = models.ForeignKey(Consumer, related_name="snd_bonus_set", on_delete=models.CASCADE)	#发送红包者
     session = models.ForeignKey(DiningSession, null=True, on_delete=models.CASCADE)	#就餐会话
 
     def __unicode__(self):
@@ -404,7 +411,7 @@ class RcvBonus(models.Model):
     total_money = models.FloatField(default=0)								#总金额
     is_best = models.BooleanField(default=False)							#是否手气最佳
     snd_bonus = models.ForeignKey(SndBonus, on_delete=models.CASCADE)		#红包的唯一id
-    consumer = models.ForeignKey(Consumer, null=True, blank=True, on_delete=models.CASCADE)		#消费者的唯一id
+    consumer = models.ForeignKey(Consumer, null=True, blank=True, related_name="rcv_bonus_set", on_delete=models.CASCADE)		#消费者的唯一id
     record_rcv_bonus = models.ForeignKey(RecordRcvBonus, null=True, blank=True, on_delete=models.CASCADE)	#抢红包记录
     session = models.ForeignKey(DiningSession, null=True, blank=True, related_name="rcv_bonus_set", on_delete=models.CASCADE)	#就餐会话
 
