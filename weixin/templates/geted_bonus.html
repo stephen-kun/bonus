@@ -10,9 +10,11 @@
 {% for bonus in system_bonus %}
     <div class="head">
 		<h2><img src={{bonus.picture}}></h2>
-		<h4>{{bonus.name}}的红包</h4>
+		<h4>{{bonus.name}}</h4>
         <h5>{{bonus.message}}</h5>
-		<h6>{{bonus.title}}</h6>
+		{% if bonus.title %}
+		<h6>由{{bonus.title}}赞助</h6>
+		{% endif %}
 	</div>
     <div class="box-food qbbaise headmarg">
 		<ul>
