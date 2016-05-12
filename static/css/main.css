@@ -1049,11 +1049,11 @@ input.code {
 
 .chch-list ul li h5 {
 	float:right;
-	margin:1em 0 0 0;
+	margin:.1em 0 0 0;
 	font-size:1.4em;
 	font-weight:normal;
 	padding:0 0 0 0;
-	text-align:center;
+	text-align:right;
 }
 .chch-list ul li h5 img {
 	width:22px;
@@ -1064,6 +1064,9 @@ input.code {
 	margin:0em 0 0 .5em;
 	width:6em;
 	overflow:hidden;
+}
+.chch-list ul li h5 span font.date_color{
+	color:#c5c6c7;
 }/*====串串详细=====结束=====*/
 
 /*
@@ -2664,11 +2667,11 @@ input.code {
 
 .chch-list ul li h5 {
 	float:right;
-	margin:.9em 0 0 0;
+	margin:.1em 0 0 0;
 	font-size:1.4em;
 	font-weight:normal;
 	padding:0 0 0 0;
-	text-align:center;
+	text-align: right;
 }
 .chch-list ul li h5 img {
 	width:22px;
@@ -2679,6 +2682,9 @@ input.code {
 	margin:0em 0 0 .5em;
 	width:6em;
 	overflow:hidden;
+}
+.chch-list ul li h5 span font.date_color{
+	color:#c5c6c7;
 }/*====串串详细=====结束=====*/
 
 /*
@@ -4268,11 +4274,11 @@ input.code {
 
 .chch-list ul li h5 {
 	float:right;
-	margin:.8em 0 0 0;
+	margin:.1em 0 0 0;
 	font-size:.85em;
 	font-weight:normal;
 	padding:0 0 0 0;
-	text-align:center;
+	text-align: right;
 }
 .chch-list ul li h5 img {
 	width:15px;
@@ -4283,6 +4289,9 @@ input.code {
 	margin:0em 0 0 .5em;
 	width:90px;
 	overflow:hidden;
+}
+.chch-list ul li h5 span font.date_color{
+	color:#c5c6c7;
 }/*====串串详细=====结束=====*/
 
 /*
@@ -5971,11 +5980,11 @@ input.code {
 
 .chch-list ul li h5 {
 	float:right;
-	margin:.8em 0 0 0;
+	margin:.1em 0 0 0;
 	font-size:.85em;
 	font-weight:normal;
 	padding:0 0 0 0;
-	text-align:center;
+	text-align: right;
 }
 .chch-list ul li h5 img {
 	width:13px;
@@ -5986,6 +5995,9 @@ input.code {
 	margin:0em 0 0 .5em;
 	width:70px;
 	overflow:hidden;
+}
+.chch-list ul li h5 span font.date_color{
+	color:#c5c6c7;
 }/*====串串详细=====结束=====*/
 /*
 ==结束====stanson================
