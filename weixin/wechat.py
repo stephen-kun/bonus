@@ -1,30 +1,41 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # wechat.py
 # Create your wechat here.
-from django.http.response import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect
 from wechat_sdk import WechatConf
 from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
 
-from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
-from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
+if __name__ != '__main__':
+	from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
+	from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
+	from .utils import create_primary_key
 
-from .utils import create_primary_key
-
+from django.http.response import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist 
-import pytz
 from django.utils import timezone
-import re
 
+import re
+import pytz
 import urllib
 import urllib2
 import urlparse
 import json
 
+
+
+STEPHEN_APPID = 'wxc32d7686c0827f2a'
+STEPHEN_APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
+
+KOOVOX_APPID = 'wxd4dd9f440f125088'
+KOOVOX_APPSECRET = '8405baf42ccb5b066393bc93b92a1efd'
+
+QUBABA_APPID = 'wx966e11eecf374549'
+QUBABA_APPSECRET = 'b60c602d3af0375af596eaf329319e8b'
+
 TOKEN = 'token'
-APPID = 'wxc32d7686c0827f2a'
-APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
+APPID = KOOVOX_APPID
+APPSECRET = KOOVOX_APPSECRET
 ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=CODE&grant_type=authorization_code'%(APPID,APPSECRET)
 OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_base&state=1#wechat_redirect"%(APPID)
 USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN"
@@ -193,5 +204,113 @@ class PostResponse():
 				response = self._view_jump()
 		
 		return HttpResponse(response, content_type='application/xml')
+		
+def create_qrcode(qrcode, filename):
+	ticket = wechat.create_qrcode(qrcode)['ticket']
+	result = wechat.show_qrcode(ticket)
+	with open(filename, 'wb') as fd:
+		for chunk in result.iter_content(1024):
+			fd.write(chunk)
+	print('create qrcode suc!\n')
+
+
+def create_menu(menu):
+	wechat.create_menu(menu)
+	print('create menu suc!\n')
+
+
+if __name__ == '__main__':
+	qrcode = {
+		"action_name": "QR_LIMIT_SCENE", 
+		"action_info": {
+			"scene": {
+				"scene_id": 1
+			}
+		}
+	}
+
+
+	menu_hongkong = {
+		'button':[
+			{
+				'name': '红包',
+				'sub_button': [
+					{
+						'type': 'view',
+						'name': '发红包',
+						'url': 'http://wx.tonki.com.cn/weixin/view_snd_bonus'
+					},
+					{
+						'type': 'view',
+						'name': '抢红包',
+						'url': 'http://wx.tonki.com.cn/weixin/view_rcv_bonus'
+					}
+				]
+			},        
+			{
+				'type': 'view',
+				'name': '结算',
+				'url': 'http://wx.tonki.com.cn/weixin/view_settle_account'
+			},
+			{
+				'name': '更多',
+				'sub_button': [
+					{
+						'type': 'view',
+						'name': '我',
+						'url': 'http://wx.tonki.com.cn/weixin/view_user_account'
+					},
+					{
+						'type': 'view',
+						'name': '论坛',
+						'url': 'http://wx.tonki.com.cn/weixin/view_qubaba_forum'
+					}
+				]
+			}
+		]
+	}
+
+	menu_aliyun = {
+		'button':[
+			{
+				'name': '红包',
+				'sub_button': [
+					{
+						'type': 'view',
+						'name': '发红包',
+						'url': 'http://120.76.122.53/weixin/view_snd_bonus'
+					},
+					{
+						'type': 'view',
+						'name': '抢红包',
+						'url': 'http://120.76.122.53/weixin/view_rcv_bonus'
+					}
+				]
+			},        
+			{
+				'type': 'view',
+				'name': '结算',
+				'url': 'http://120.76.122.53/weixin/view_settle_account'
+			},
+			{
+				'name': '更多',
+				'sub_button': [
+					{
+						'type': 'view',
+						'name': '我',
+						'url': 'http://120.76.122.53/weixin/view_user_account'
+					},
+					{
+						'type': 'view',
+						'name': '论坛',
+						'url': 'http://120.76.122.53/weixin/view_qubaba_forum'
+					}
+				]
+			}
+		]
+	}
+
+	create_qrcode(qrcode, 'koovox_table_01.jpg')
+	create_menu(menu_hongkong)
 			
 		

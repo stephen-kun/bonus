@@ -68,13 +68,15 @@ class _BonusContent():
 		self.number = number	
 		
 #日志存储
-def log_print(back_func, log_level=3):
+def log_print(back_func, log_level=3, message=None):
+	path = './log/FILE.txt'.replace('FILE', back_func.__name__)
+	f = open(path, 'a')
 	if log_level >= 3:
-		path = './log/FILE.txt'.replace('FILE', back_func.__name__)
-		f = open(path, 'a')
 		traceback.print_exc(file=f)
-		f.flush()
-		f.close()	
+	else:
+		f.write(message)
+	f.flush()
+	f.close()	
 		
 #VirtualMoney 转换为红包内容
 def virtual_money_to_bonus_content():
@@ -180,7 +182,7 @@ def is_consumer_dining(openid):
 	
 	
 #主键生成方法
-def create_primary_key(length=12):
+def create_primary_key(length=10):
 	a = list(string.digits)
 	random.shuffle(a)   
 	primary = ''.join(a[:length])
@@ -229,6 +231,7 @@ def get_bonus_type_str(bonus_type):
 def action_bonus_message(data):
 	id_bonus = data["id_bonus"]
 	message = data["message"]
+	log_print(back_func=action_bonus_message, log_level=1, message='id-%s msg-%s'%(id_bonus, message))
 	rcv_bonus = RcvBonus.objects.get(id_bonus=id_bonus)
 	rcv_bonus.message = message
 	rcv_bonus.is_message = True

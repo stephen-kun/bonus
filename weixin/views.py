@@ -15,8 +15,8 @@ from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvB
 
 
 #ADDRESS_IP = '127.0.0.1:8000'
-ADDRESS_IP = 'wx.tonki.com.cn'
-#ADDRESS_IP = '120.76.122.53'
+#ADDRESS_IP = 'wx.tonki.com.cn'
+ADDRESS_IP = '120.76.122.53'
 
 REDIRECT_SSB_URL = 'http://%s/weixin/view_redirect_self_snd_bonus'%(ADDRESS_IP)
 REDIRECT_SRB_URL = 'http://%s/weixin/view_redirect_self_rcv_bonus'%(ADDRESS_IP)
@@ -545,7 +545,7 @@ def display_self_bonus_list(open_id, request):
 	openid = open_id
 	try:
 		bonus_range = 1
-		consumer_list = Consumer.objects.all().order_by("rcv_bonus_num").reverse()
+		consumer_list = Consumer.objects.filter(is_admin=False).order_by("rcv_bonus_num").reverse()
 		for consumer in consumer_list:
 			consumer.bonus_range = bonus_range
 			bonus_range += 1
