@@ -425,9 +425,22 @@ def consumer_is_dining(request):
 	else:
 		is_admin = False
 
-	info_list=[]
 	session_list = DiningSession.objects.filter(over_time__isnull=True)
-	return render_to_response("manager/consumer/consumer_is_dining.html",{'current_user':current_user, 'is_admin':is_admin, 'info_list':session_list})
+	print session_list
+	return render_to_response("manager/consumer/consumer_is_dining.html",{'current_user':current_user, 'is_admin':is_admin, 'session_list':session_list})
+
+def dining_session_detail(request):
+	current_user = request.user
+	if(current_user.username == "admin"):
+		print('admin')
+		is_admin = True
+	else:
+		is_admin = False
+
+	index_table = request.GET.get('table_index')
+	table=DiningTable.objects.get(index_table=index_table)
+	session = DiningSession.objects.filter(table=table).latest('begin_time')
+	return render_to_response("manager/consumer/dining_session_detail.html",{'current_user':current_user, 'is_admin':is_admin, 'session':session})
 
 def consumer_detail(request):
 	open_id = request.GET.get('open_id')

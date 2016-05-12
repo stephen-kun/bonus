@@ -5,7 +5,7 @@
 <article>
     <section>
     	<div class="right_award_box">
-        <div class="clearing"><hr>结算</div>
+        <div class="clearing">结算</div>
 			<div class="right_award_box clearing_wtop">
         		<table cellspacing="2" class="clearing_w" cellpadding="0">
                   <tr class="tab-add-xls">
@@ -27,19 +27,19 @@
                     <td  align="center" class="color_a">{{ content.consume_number }}</td>
                     <td align="center" class="color_a">{{ content.consume_value }}</td>
                   </tr>
-                  <tr class="tab-add-xls-c">
+                  <tr class="tab-add-xls">
                       <td align="center" class="color_a"><font color='orange'>结余</font></td>
                     <td  align="center" class="color_a"><font color='orange'>{{ content.balance_number }}</font></td>
                     <td align="center" class="color_a"><font color='orange'>{{ content.balance_value }}</font></td>
                   </tr>
                   {% endfor %}
-                  <tr class="tab-add-xls-c">
+                  <tr class="tab-add-xls-g">
                       <th align="center" rowspan=2 class="color_a">合计</td>
                     <td align="center" class="color_a">充值</font></td>
                     <td  align="center" class="color_a">{{ daily_statistics.charge_value }}</font></td>
                     <td align="center" rowspan=2 class="color_a">{{ daily_statistics.balance }}</font></td>
                   </tr>
-                  <tr class="tab-add-xls-c">
+                  <tr class="tab-add-xls-g">
                     <td align="center" class="color_a">抵扣</font></td>
                     <td align="center" class="color_a">{{ daily_statistics.consume_value }}</font></td>
                   </tr>

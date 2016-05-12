@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+{% include 'header.html'%}
+<body class="admin_bj">
+<article class="admin_80">
+    <section>
+    	<div class="right_award_box">
+            <div class="award_box_title">{{ session.table.index_table }}号桌</div>
+            <div class="that">共收到 {{session.rcv_bonus.count}}个红包:&nbsp
+                {{ session.rcv_bonus_contents }}
+            </div>
+        	<div class="award_box_content">
+
+                <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
+                  <tr>
+                    <th width="30%">昵称</th>
+                    <th width="15%">时间</th>
+                    <th width="35%">内容</th>
+                  </tr>
+
+                {% for bonus in session.rcv_bonus %}
+                  <tr class="monthly_xls_hfont">
+                      <td class="color_a"><span class="new_head"><img src="{{ bonus.consumer.picture }}" align="absmiddle"></span>{{ bonus.consumer.name }}</td>
+                      <td class="color_b">{{bonus.datetime|date:"Y-n-j H:i:s"}}</td>
+                    <td class="color_g">{{bonus.good_contents}}</td>
+                  </tr>
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+    </section>    
+</article>
+<script language="JavaScript">
+var TbRow = document.getElementById("tab-color");
+
+if (TbRow != null)
+{
+for (var i=0;i<TbRow.rows.length ;i++ )
+{
+if (TbRow.rows[i].rowIndex%2==1)
+{
+TbRow.rows[i].style.backgroundColor="#ffffff";
+}
+else
+{
+TbRow.rows[i].style.backgroundColor="#f7f7f4";
+}
+}
+}
+
+var TdRow = document.getElementById("tab-colortwo");
+if (TdRow != null)
+{
+for (var i=0;i<TdRow.rows.length ;i++ )
+{
+if (TdRow.rows[i].rowIndex%2==1)
+{
+TdRow.rows[i].style.backgroundColor="#ffffff";
+}
+else
+{
+TdRow.rows[i].style.backgroundColor="#f7f7f4";
+}
+}
+}
+</script> 
+</body>
+</html>

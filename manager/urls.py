@@ -52,6 +52,7 @@ urlpatterns = [
 	url(r'^consumer/consumer_is_dining/$', views.consumer_is_dining, name='consumer_is_dining'),
 	url(r'^consumer/consumer_detail/$', views.consumer_detail, name='consumer_detail'),
 	url(r'^consumer/consumer_bonus_list/$', views.consumer_bonus_list, name='consumer_bonus_list'),
+	url(r'^consumer/dining_session_detail/$', views.dining_session_detail, name='session_detail'),
 
 	url(r'^statistics/index/$', views.statistics_index, name='statistics'),
 	url(r'^statistics/daily_statistics/$', views.daily_statistics, name='daily_statistics'),

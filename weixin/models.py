@@ -7,11 +7,20 @@ import django.utils.timezone as timezone
 import string, random
 from django.core.exceptions import ObjectDoesNotExist
 import json
+from manager.datatype import *
 
 COMMON_BONUS = 0
 RANDOM_BONUS = 1
 SYS_BONUS = 2
 LIST_KEY_ID = u'串串'
+
+#两个字典相加
+def union_dict(*objs):
+    _keys = set(sum([obj.keys() for obj in objs],[]))
+    _total = Dict()
+    for _key in _keys:
+        _total[_key] = sum([obj.get(_key,0) for obj in objs])
+    return _total
 
 #生成红包内容字符串
 def bonus_content_detail(bonus=None, consumer=None, type='rcv'):
@@ -130,6 +139,16 @@ class DiningSession(models.Model):
     @property
     def consumer_number(self):
         return self.consumer_set.all().count()
+
+    def rcv_bonus(self):
+        bonus_set = self.rcv_bonus_set.all()
+        return bonus_set
+
+    def rcv_bonus_contents(self):
+        contents = Dict()
+        for bonus in self.rcv_bonus():
+            contents = union_dict(contents, bonus.good_contents())
+        return contents
 
 #消费者数据表
 class Consumer(models.Model):
@@ -348,6 +367,28 @@ class SndBonus(models.Model):
             rcv_bonus.save()
             total_number += account
 
+    def good_contents(self):
+        wallets = self.wallet_set.all()
+        content = Dict()
+        for wallet in wallets:
+            if(content.has_key(wallet.money.name)):
+                content[wallet.money.name] += 1
+            else:
+                content[wallet.money.name] = 1
+        return content
+
+    def remain_good_contents(self):
+        wallets = self.wallet_set.filter(is_receive=False)
+        content = Dict()
+        for wallet in wallets:
+            if (content.has_key(wallet.money.name)):
+                content[wallet.money.name] += 1
+            else:
+                content[wallet.money.name] = 1
+        return content
+
+
+
 
 #接收的红包
 class RcvBonus(models.Model):
@@ -365,7 +406,7 @@ class RcvBonus(models.Model):
     snd_bonus = models.ForeignKey(SndBonus, on_delete=models.CASCADE)		#红包的唯一id
     consumer = models.ForeignKey(Consumer, null=True, blank=True, on_delete=models.CASCADE)		#消费者的唯一id
     record_rcv_bonus = models.ForeignKey(RecordRcvBonus, null=True, blank=True, on_delete=models.CASCADE)	#抢红包记录
-    session = models.ForeignKey(DiningSession, null=True, blank=True, on_delete=models.CASCADE)	#就餐会话
+    session = models.ForeignKey(DiningSession, null=True, blank=True, related_name="rcv_bonus_set", on_delete=models.CASCADE)	#就餐会话
 
     def __unicode__(self):
         if self.consumer:
@@ -377,10 +418,15 @@ class RcvBonus(models.Model):
     def moeny_content(self):
         bonus_content_detail(bonus=self, type='rcv')
 
-
-
-
-
+    def good_contents(self):
+        wallets = self.wallet_set.all()
+        content = Dict()
+        for wallet in wallets:
+            if (content.has_key(wallet.money.name)):
+                content[wallet.money.name] += 1
+            else:
+                content[wallet.money.name] = 1
+        return content
 
 
 # 钱包
@@ -389,7 +435,7 @@ class WalletMoney(models.Model):
     is_valid = models.BooleanField(default=True)					#是否有效
     is_used = models.BooleanField(default=False)					#是否已用
     consumer = models.ForeignKey(Consumer, null=True, related_name="wallet_set", on_delete=models.CASCADE)		#钱包拥有着
-    snd_bonus = models.ForeignKey(SndBonus, null=True, on_delete=models.CASCADE)		#红包唯一id
+    snd_bonus = models.ForeignKey(SndBonus, null=True, related_name="wallet_set", on_delete=models.CASCADE)		#红包唯一id
     is_send = models.BooleanField(default=False)							#是否已发做红包
     ticket = models.ForeignKey(Ticket, null=True, blank=True, on_delete=models.CASCADE)			#消费券唯一id
     recharge = models.ForeignKey(Recharge, null=True, related_name='wallet_set', on_delete=models.CASCADE)	#充值记录id
