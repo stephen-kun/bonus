@@ -66,7 +66,7 @@
 				{% if bonus.is_refuse %}
 				<i>婉拒</i>
 				{% endif %}
-				<span class="chchshj"><br>{{bonus.datetime|date:"m-j"}}</span></h3>
+				<span class="chchshj"><br>{{bonus.datetime|date:"m-j P"}}</span></h3>
                	<h5>
 					{% if bonus.is_best and snd_bonus.is_exhausted %}
 					<img src="{{static_url}}images/5_zanstanson.png" align="absmiddle">	
