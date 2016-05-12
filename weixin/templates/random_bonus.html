@@ -17,11 +17,11 @@
     	<ul>
 		{% for key, value in good_list.items %}		
         	<li>
-            	<h4><span class="rfloat"><input type="number" name="{{value.name}}" class="kongbai">{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
+            	<h4><span class="rfloat"><input type="number" name="{{value.name}}" msg="{{value.unit}}" class="kongbai">{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
             </li>
 		{% endfor %}
 			<li>
-				<h4><span class="rfloat"><input type="number" name="bonus_num" class="kongbai">个</span>红包个数</h4>			
+				<h4><span class="rfloat"><input type="number" name="bonus_num" msg="红包" class="kongbai">个</span>红包个数</h4>			
 			</li>
         </ul>
     </div>	
@@ -30,7 +30,7 @@
     	<h4><span class="rfloat"><input type="text" name="message" value="恭喜发财，大吉大利！" class="liuyan liuyan_zs"></span>留言</h4>
     </div>	
 </section>
-
+<script type="text/javascript" src="{{static_url}}js/verification.js"></script>
 <section>
    	<div class="fei_box">
         <div class="blades">
