@@ -412,9 +412,30 @@ def consumer_list(request):
 		is_admin = True
 	else:
 		is_admin = False
+	date_str = request.GET.get("date")
+	if(date_str):
+		time=datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+	else:
+		time = datetime.datetime.today()
+	consumer_list = Consumer.get_consumers_by_dining_date(time)
+	return render_to_response("manager/consumer/consumer_list.html",{'current_user':current_user, 'is_admin':is_admin, 'time':time, 'consumer_list':consumer_list})
 
-	consumer_list = Consumer.objects.exclude(open_id='0001')
-	return render_to_response("manager/consumer/consumer_list.html",{'current_user':current_user, 'is_admin':is_admin, 'consumer_list':consumer_list})
+def dining_list(request):
+    current_user = request.user
+    if (current_user.username == "admin"):
+        print('admin')
+        is_admin = True
+    else:
+        is_admin = False
+    date_str = request.GET.get("date")
+    if (date_str):
+        time = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+    else:
+        time = datetime.datetime.today()
+    session_set = DiningSession.get_sessions_by_dining_date(time)
+    print session_set
+    return render_to_response("manager/consumer/dining_list.html",{'current_user': current_user, 'is_admin': is_admin,'time':time, 'sessions': session_set})
+
 
 @login_required(login_url='/manager/login/')
 def consumer_is_dining(request):

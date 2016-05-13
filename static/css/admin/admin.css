@@ -62,6 +62,18 @@ input.admin_save {
 	color:#ffffff;
 	cursor:pointer;
 }
+input.chazhao {
+	background:#b6d554;
+	font-weight:normal;
+	font-size:.8em;
+	height:1.8em;
+	border:0px #e3ecf2 solid;
+	border-radius:4px;
+	width:4em;
+	color:#ffffff;
+	cursor:pointer;
+	text-align:center;
+}
 
 input.admin_delete {
 	background:#e00a22;
@@ -94,6 +106,7 @@ input.datebk {
 	cursor:pointer;
 }
 /*=============按钮组====结束=======*/
+@font-face{font-family:lato;src:url(../../fonts/lato-light2.eot);src:url(../../fonts/lato-light2.eot?#font-spider)format("embedded-opentype"),url(../../fonts/lato-light2.woff)format("woff"),url(fonts/lato-light2.ttf)format("truetype"),url(../../fonts/lato-light2.svg)format("svg");font-weight:400;font-style:normal}
 .admin_bj {
 	background:url('../../images/admin/admin_bj.jpg') center top;
 	background-repeat: no-repeat;
@@ -164,6 +177,11 @@ font.redse {
 	margin:0;
 	line-height:47px;
 }
+.navlist ul li a.active {
+	background:#97b734;
+	display:block;
+	text-align:center;
+}
 .navlist ul li span {
 	background:#97b734;
 	display:block;
@@ -173,7 +191,7 @@ font.redse {
 	color:#ffffff;
 	display:block;
 	height:46px;
-	padding:0 .8em 0 1.3em;
+	padding:0 1.5em 0 1.5em;
 	margin:0;
 	font-size:.875em;
 }
@@ -1069,3 +1087,188 @@ table tr td span.table_new_head img {
 	font-family:"Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif;
 }
 /*==多少号桌抢到和发出的串串====结束===*/
+/*=============管理员===开始========*/
+.admin_guanli {
+	border:#eff9ea 1px solid;
+	margin:40px auto 0 auto;
+	height:260px;
+	width:950px;
+}
+.admin_guanli_left {
+	float:left;
+	background:#fcfff1;
+	width:168px;
+	height:259px;
+}
+.admin_guanli_left h2 {
+	padding:55px 0 0 0;
+	margin:0;
+	text-align:center;
+}
+.admin_guanli_left h2 img {
+	width:80px;
+	height:80px;
+	border-radius:80px;
+	overflow:hidden;
+}
+.admin_guanli_left h4 {
+	padding:0 0 0 0;
+	margin:0;
+	text-align:center;
+	color:#97b734;
+	font-size:16px;
+	font-weight:normal;
+	line-height:16px;
+}
+
+.admin_guanli_right {
+	float:left;
+	width:781px;
+	height:259px;
+}
+.admin_guanli_number {
+	height:98px;
+	text-align:center;
+	padding:30px 0 0 0;
+	font-size:16px;
+}
+.admin_guanli_number span {
+	font-family:lato;
+	font-size:2em;
+	color:#f0880e;
+	padding:0 .8em;
+}
+.admin_guanli_String {
+	width:781px;
+	background:#e0ecb8;
+	height:66px;
+	text-align:center;
+	line-height:66px;
+	font-size:16px;
+}
+.admin_guanli_String span {
+	color:#7a9d0d;
+} 
+.admin_guanli_white {
+	background:#ffffff;
+}
+
+.admin_guanli_list {
+	background:#fcfff1;
+	margin:15px auto 0 auto;
+	width:950px;
+	
+}
+.admin_guanli_list_tit {
+	height:44px;
+	
+	background:#e0ecb8;
+}
+.admin_guanli_list_tit ul li {
+	float:left;
+	width:190px;
+	height:44px;
+	text-align:center;
+	line-height:44px;
+	border-right:#ffffff 1px solid;
+	font-size:16px;
+}
+.admin_guanli_list_tit ul li:last-child {
+	border-right:#ffffff 0px solid;
+}
+.admin_guanli_list_tit ul li.admin_guanli_w460 {
+	width:460px;
+}
+.admin_guanli_list_tit ul li.admin_guanli_w106 {
+	width:106px;
+}
+
+.admin_guanli_list_content ul li {
+	font-size:16px;
+	float:left;
+	
+	height:48px;
+	line-height:48px;
+	text-align:center;
+	border-bottom:#e0ecb8 1px solid;
+	border-right:#e0ecb8 1px solid;
+	border-left:#e0ecb8 1px solid;
+}
+.admin_guanli_list_content ul li:last-child {
+	border-right:#ffffff 0px solid;
+}
+.admin_guanli_list_content ul li time,.admin_guanli_list_content ul li h4,.admin_guanli_list_content ul li p {
+	padding:0;
+	margin:0;
+	width:190px;
+	border-right:#e0ecb8 1px solid;
+	float:left;
+	font-weight:normal;
+}
+.admin_guanli_list_content ul li time {
+	font-size:14px;
+	color:#818182;
+}
+
+.admin_guanli_list_content ul li p {
+	width:460px;
+	color:#f0880e;
+}
+.admin_guanli_list_content ul li span {
+	width:105px;
+	float:left;
+}
+/*=============管理员===结束========*/
+/*=============正在消费的顾客===开始========*/
+.admin_guanli_w1000 {
+	width:1000px;
+}
+.admin_guanli_list_tit ul li.admin_guanli_w130 {
+	width:130px;
+}
+.admin_guanli_list_content ul li time.w106,.admin_guanli_list_content ul li h4.w106 {
+	width:105px;
+}
+.admin_guanli_list_content ul li p.w461 {
+	width:461px;
+	overflow:hidden;
+	text-align:center;
+}
+.admin_guanli_list_content ul li p.w461 span.table_new_head_t2 {
+	display: inline-block;
+	margin:.5em 0em 0 .5em;
+	width:auto;
+}
+.admin_guanli_list_content ul li p.w461 span.table_new_head_t2 img {
+	width:30px;
+	height:30px;
+	overflow:hidden;
+	border-radius:40px;
+	box-shadow:#CCC 1px 1px 1px;
+	border:1px solid #ffffff;
+}
+.admin_guanli_list_content ul li span.w133 {
+	width:133px;
+}
+.admin_guanli_w760 {
+	width:760px;
+}
+
+.admin_guanli_list_content ul li time.fontgk {
+	text-align:left;
+	color:#666666;
+}
+.admin_guanli_list_content ul li time span.table_new_head_t3 {
+	display: inline-block;
+	margin:.5em .5em 0 .5em;
+	width:auto;
+}
+.admin_guanli_list_content ul li time span.table_new_head_t3 img {
+	width:30px;
+	height:30px;
+	overflow:hidden;
+	border-radius:40px;
+	box-shadow:#CCC 1px 1px 1px;
+	border:1px solid #ffffff;
+}
+/*=============正在消费的顾客===结束========*/

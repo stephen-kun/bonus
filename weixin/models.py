@@ -122,6 +122,13 @@ class DiningTable(models.Model):
 
 #就餐会话
 class DiningSession(models.Model):
+    @classmethod
+    def get_sessions_by_dining_date(cls, time):
+        sessions=set()
+        for s in ConsumerSession.objects.filter(time__date=time).select_related('session'):
+            sessions.add(s.session)
+        return sessions
+
     person_num	= models.IntegerField(default=0)							#就餐人数
     begin_time = models.DateTimeField(default=timezone.now) 				#开始就餐时间
     over_time = models.DateTimeField(null=True, blank=True)				#结束就餐时间
@@ -135,11 +142,14 @@ class DiningSession(models.Model):
 
     @property
     def consumers(self):
-        return self.consumer_set.all()
+        consumers = set()
+        for s in self.session_record_set.select_related('consumer'):
+            consumers.add(s.consumer)
+        return consumers
 
     @property
     def consumer_number(self):
-        return self.consumer_set.all().count()
+        return len(self.consumers)
 
     def rcv_bonus(self):
         bonus_set = self.rcv_bonus_set.all()
@@ -153,6 +163,13 @@ class DiningSession(models.Model):
 
 #消费者数据表
 class Consumer(models.Model):
+    @classmethod
+    def get_consumers_by_dining_date(cls, time):
+        consumers=set()
+        for s in ConsumerSession.objects.filter(time__date=time).select_related('consumer'):
+            consumers.add(s.consumer)
+        return consumers
+
     open_id = models.CharField(max_length=30, unique=True)	#微信openId
     is_admin = models.BooleanField(default=False)
     name = models.CharField(max_length=30, default='小明')							#用户名
@@ -177,6 +194,10 @@ class Consumer(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def lastest_session(self):
+        session=self.session_set.latest('time')
+        return session
 
     @property
     def recharges(self):
@@ -270,8 +291,8 @@ class ConsumerAccountGoods(models.Model):
 
 #Consumer 就餐记录
 class ConsumerSession(models.Model):
-    session = models.ForeignKey(DiningSession, null=True, on_delete=models.CASCADE)	#就餐会话
-    consumer = models.ForeignKey(Consumer, null=True, on_delete=models.CASCADE)		#就餐的消费者
+    session = models.ForeignKey(DiningSession, null=True, related_name="session_record_set", on_delete=models.CASCADE)	#就餐会话
+    consumer = models.ForeignKey(Consumer, null=True, related_name="session_record_set", on_delete=models.CASCADE)		#就餐的消费者
     time = models.DateTimeField(default=timezone.now) 				#记录时间
 
 #充值记录

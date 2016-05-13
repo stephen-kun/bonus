@@ -5,8 +5,12 @@
 <article>
     <section>
     	<div class="right_award_box">
-        	<div class="award_box_title">顾客列表</div>
-            <div class="award_box_content">
+            <div class="award_box_title">
+                <input id="date" type="date" name="date" value="{{ time|date:'Y-m-d' }}" style="float:left; margin-left:.5em; background:none; text-align:center;">
+                <input onclick="change()" class="chazhao" value="查找" style="float:left;">
+                顾客列表
+            </div>
+            <!--<div class="award_box_content">
                 <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
                   <tr>
                     <th width="30%">顾客</th>
@@ -25,26 +29,36 @@
                   {% endfor %}
 
                 </table>
+            </div>-->
+            <div class="admin_guanli_list admin_guanli_w760">
+            	<div class="admin_guanli_list_tit">
+                	<ul>
+                    	<li>顾客</li>
+                        <li class="admin_guanli_w460">时间</li>
+                        <li class="admin_guanli_w106">查看</li>
+                    </ul>
+                </div>
+                <div class="admin_guanli_list_content">
+                	<ul>
+                    	{% for consumer in consumer_list %}
+                    	<li>
+                        	<time class="fontgk"><span class="table_new_head_t3"><img src="{{ consumer.picture }}" align="absmiddle"></span>{{ consumer.name }}</time>
+                            <p>{{ consumer.latest_time|date:"Y-n-j H:i" }}</p>
+                            <span><a href="{% url 'consumer_detail' %}?open_id={{ consumer.open_id }}" target="mainFrame">帐号详情</a></span>
+                        </li>
+                        {% endfor %}
+                        <div class="clear"></div>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
 <script language="JavaScript">
-var TbRow = document.getElementById("tab-color");
-if (TbRow != null)
-{
-for (var i=0;i<TbRow.rows.length ;i++ )
-{
-if (TbRow.rows[i].rowIndex%2==1)
-{
-TbRow.rows[i].style.backgroundColor="#ffffff";
+function change(){
+    var x = document.getElementById("date").value
+    window.location.href="{% url 'consumer_list'%}?date="+x;
 }
-else
-{
-TbRow.rows[i].style.backgroundColor="#f7f7f4";
-}
-}
-}
-</script>    
+</script>
 </article>
 </body>
 

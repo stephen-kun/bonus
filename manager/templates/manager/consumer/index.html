@@ -6,15 +6,14 @@
         	<div class="left-f-title">顾客信息</div>
             <div class="left-f-content">
                 <ul id="menu">
-                    <li><span class="menu-list"><img src="/static/images/admin/admin_01.png" align="absmiddle">顾客列表</span>
-                    <ul class="menu-undis">
-                        <li><span class="menu-l-s"><a href="{% url 'consumer_is_dining' %}" target="mainFrame">正在消费</a></span></li>
-                        <li><span class="menu-l-s"><a href="{% url 'consumer_list' %}" target="mainFrame">今日在店</a></span></li>
-                        <li><span class="menu-l-s"><a href="{% url 'consumer_list' %}" target="mainFrame">一周以内</a></span></li>
-                        <li><span class="menu-l-s"><a href="{% url 'consumer_list' %}" target="mainFrame">一月以内</a></span></li>
-                        <li><span class="menu-l-s"><a href="{% url 'consumer_list' %}" target="mainFrame">按月显示</a></span></li>
-                        <li><span class="menu-l-s"><a href="{% url 'consumer_list' %}" target="mainFrame">全部</a></span></li>
-                    </ul>
+                    <li><span class="menu-list"><img src="/static/images/admin/admin_01.png" align="absmiddle">
+                        <a href="{% url 'consumer_is_dining' %}" target="mainFrame">正在消费</a></span>
+
+                    <li><span class="menu-list"><img src="/static/images/admin/admin_01.png" align="absmiddle">
+                        <a href="{% url 'consumer_list' %}" target="mainFrame">顾客列表</a></span>
+
+                    <li><span class="menu-list"><img src="/static/images/admin/admin_01.png" align="absmiddle">
+                        <a href="{% url 'dining_list' %}" target="mainFrame">就餐记录</a></span>
                 </ul>
             </div>
         </div>
