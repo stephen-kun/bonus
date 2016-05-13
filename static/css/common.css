@@ -375,7 +375,7 @@ input {
 .bottom_40 {
 	margin:0 0 40px 0;
 }
-#indexmenu{position:fixed;bottom:0px;width:100%;height:44px; overflow:hidden;line-height:44px;z-index:999;background:url(../images/menubg.png) repeat-x;}
+#indexmenu{position:fixed;bottom:0px;width:100%;height:44px;line-height:44px;z-index:999;background:url(../images/menubg.png) repeat-x;}
 #indexmenu ul{margin:0 auto;list-style-type:none;width:100%;max-width:500px;height:100%;}
 #indexmenu ul li{float:left;width:25%;height:100%;text-align:center;position:relative;font-size:15px;}
 #indexmenu ul li .line{position:absolute;top:1px;right:0px;z-index:30;}
