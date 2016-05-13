@@ -6,7 +6,7 @@
 
 {% block content %}
 <article>
-<form action="{{choose_pay_url}}" method="get">  
+ 
 <section>
   	<div class="box-duixiang zhongse">
     	<h4><span class="rfloat"><input hidden type="number" name="table" class="liuyan liuyan_zs" value="-1">所有桌台</span>发送对象
@@ -17,38 +17,37 @@
     	<ul>
 		{% for key, value in good_list.items %}		
         	<li>
-            	<h4><span class="rfloat"><input type="number" name="{{value.name}}" msg="{{value.unit}}" class="kongbai">{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
+            	<h4><span class="rfloat"><input type="number" name="{{value.name}}" placeholder="0" class="kongbai">{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
             </li>
 		{% endfor %}
 			<li>
-				<h4><span class="rfloat"><input type="number" name="bonus_num" msg="红包" class="kongbai">个</span>红包个数</h4>			
+				<h4><span class="rfloat"><input type="number" name="bonus_num"  class="kongbai">个</span>红包个数</h4>			
 			</li>
         </ul>
     </div>	
 	
     <div class="box-duixiang liuyanbj zhongse">
-    	<h4><span class="rfloat"><input type="text" name="message" value="恭喜发财，大吉大利！" class="liuyan liuyan_zs"></span>留言</h4>
+    	<h4><span class="rfloat"><input type="text" name="message" placeholder="恭喜发财，大吉大利！" class="liuyan liuyan_zs"></span>留言</h4>
     </div>	
 </section>
-<script type="text/javascript" src="{{static_url}}js/verification.js"></script>
+
 <section>
    	<div class="fei_box">
         <div class="blades">
 			<div class="blade3 bladep-shq"></div>
-		</div>
-		<input hidden name="openid" value="{{openid}}">
-		<input hidden name="bonus_type" type="number" value=1>			
-        <h4><input type="submit" class="subf" value=""></h4>
+		</div>		
+        <h4><input type="button" class="subf" name="order" value="" onclick="unified_order('{{ajax_request_url}}', '{{choose_pay_url}}','{{openid}}', '1')"></h4>
     </div>
 </section>
-</form>
 
+<script type="text/javascript" src="{{static_url}}js/unified_order.js"></script>
 <style type="text/css">
 	.blades{animation: spin 100s linear infinite;}
 </style>
-
 </article>
 {% endblock %}
+
+
 
 {% block menu %}
 {% include '_menu.html' %}
