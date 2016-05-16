@@ -411,6 +411,7 @@ def display_common_bonus_views(open_id, request):
 		title = '普通红包'
 		static_url = settings.STATIC_URL
 		good_list = create_bonus_dict(request)
+		ajax_request_url = AJAX_REQUEST_POST_URL
 		choose_pay_url = CHOOSE_PAY_URL
 		openid = open_id
 		menu = _MenuUrl()
@@ -438,6 +439,7 @@ def display_random_bonus_views(open_id, request):
 		static_url = settings.STATIC_URL	
 		good_list = create_bonus_dict(request)
 		choose_pay_url = CHOOSE_PAY_URL
+		ajax_request_url = AJAX_REQUEST_POST_URL
 		openid = open_id
 		menu = _MenuUrl()
 		return render_to_response('random_bonus.html', locals())	
@@ -545,7 +547,7 @@ def display_self_bonus_list(open_id, request):
 	openid = open_id
 	try:
 		bonus_range = 1
-		consumer_list = Consumer.objects.all().order_by("rcv_bonus_num").reverse()
+		consumer_list = Consumer.objects.filter(is_admin=False).order_by("rcv_bonus_num").reverse()
 		for consumer in consumer_list:
 			consumer.bonus_range = bonus_range
 			bonus_range += 1
@@ -574,14 +576,14 @@ def view_self_bonus_list(request):
 @csrf_exempt
 def view_ajax_request(request):	
 	#print('***view_ajax_request body: ****\n')
+	log_print(view_ajax_request, log_level=1, message="%s"%(request.body))
 	try:
 		data = json.loads(request.body)
-		session = request.session
 		action = data['action']
 		#for key, value in data.items():
 			#print('%s ==> %s'%(key, value))	
 		#实现ajax请求处理函数
-		response = handle_ajax_request(action, data, session)
+		response = handle_ajax_request(action, data, request)
 
 		return HttpResponse(response)
 	except:
@@ -616,21 +618,18 @@ def view_geted_bonus(request):
 #支付页面
 @csrf_exempt	
 def view_choose_pay(request):
-	#print("+++view_choose_pay +++\n")
-	#for key ,value in request.GET.items():
-		#print("%s ==> %s"%(key, value))
 	try:
-		openid = request.GET.get('openid')	
-		if 'openid' in request.session == False:
-			request.session['openid'] = openid
+		openid = request.session['openid']
 		consumer = Consumer.objects.get(open_id=openid)
 		title = '支付'
 		body_class = 'qubaba_hsbj'
 		static_url = settings.STATIC_URL
-		result_dir = decode_choose_pay(request, request.GET)
+		data_dict = request.session['consumer_order']
+		result_dir = decode_choose_pay(request, data_dict)
 		good_list = result_dir['good_list']
 		total_money = result_dir['total_money']
 		enough_money = is_enough_pay(consumer, request.GET)
+		snd_bonus_url = SND_BONUS_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		menu = _MenuUrl()
 		return render_to_response('weixin_pay.html', locals())

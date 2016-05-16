@@ -12,71 +12,64 @@ function action_create_ticket(openid, total_money, url){
 	var auth_code ;
 	auth_code = document.getElementById("auth_code").value;
 	ticket_value = document.getElementById("ticket_value").value;
-	if(ticket_value){
-		if(auth_code){
-			if(flag_close_account){
-				flag_close_account = 0;	
-				var user_wallet, action;
-				var xmlhttp;
-				user_wallet = document.getElementById("user_wallet").value;
-				auth_code = document.getElementById("auth_code").value;
-				action = 'ajax_create_ticket';
-				var data = '{"openid":"OPENID", "action":"ACTION", "user_wallet":"USER_WALLET", "total_money":"TOTAL_MONEY","ticket_value":"TICKET_VALUE","auth_code":"AUTH_CODE"}';
-				data = data.replace(/OPENID/, openid).replace(/ACTION/, action).replace(/USER_WALLET/, user_wallet).replace(/TOTAL_MONEY/,total_money).replace(/TICKET_VALUE/,ticket_value).replace(/AUTH_CODE/, auth_code);
-
-				if (window.XMLHttpRequest)
-				  {// code for IE7+, Firefox, Chrome, Opera, Safari
-				  xmlhttp=new XMLHttpRequest();
-				  }
-				else
-				  {// code for IE6, IE5
-				  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-				  }
-				  
-				xmlhttp.onreadystatechange=function()
-				{
-					if(xmlhttp.readyState==4 && xmlhttp.status==200)
-					{
-						var JSONObject = JSON.parse(xmlhttp.responseText);
-						var html = '<p>PART1</p><p>PART2</p><p>PART3</p>';
-						if(JSONObject.status)
-						{
-							alert(JSONObject.error_message);								
-						}
-						else
-						{					
-							var a=document.getElementById("create_ticket");					
-							a.style.backgroundColor="#bdbec0";
-							a.value = '查看券';			
-							document.getElementById("ticket_code").innerHTML = html.replace(/PART1/,JSONObject.part1).replace(/PART2/,JSONObject.part2).replace(/PART3/,JSONObject.part3);
-							document.getElementById("value").innerHTML = JSONObject.ticket_value;	
-
-							var modalLocation = $("#create_ticket").attr('data-reveal-id');
-							$('#'+modalLocation).reveal($(this).data());								
-						}
-
-					}
-				}
-				xmlhttp.open("POST", url, true);
-				xmlhttp.send(data);	
-			}
-			else
-			{
-				$('input[data-reveal-id]').live('click', function(e) {
-					e.preventDefault();
-					var modalLocation = $(this).attr('data-reveal-id');
-					$('#'+modalLocation).reveal($(this).data());			
-
-				});			
-			}	
-		}
-		else{
-			alert("请输入验证码！");
-		}		
-	}
-	else{
+	
+	if(!ticket_value){
 		alert("请设置券面值！");
+		return;
 	}
+	
+	if(!auth_code){
+		alert("请输入验证码！");
+		return;
+	}
+
+
+	if(flag_close_account){
+		flag_close_account = 0;	
+		var user_wallet, action;
+		var xmlhttp = new XMLHttpRequest();
+		user_wallet = document.getElementById("user_wallet").value;
+		auth_code = document.getElementById("auth_code").value;
+		action = 'ajax_create_ticket';
+		var data = '{"openid":"OPENID", "action":"ACTION", "user_wallet":"USER_WALLET", "total_money":"TOTAL_MONEY","ticket_value":"TICKET_VALUE","auth_code":"AUTH_CODE"}';
+		data = data.replace(/OPENID/, openid).replace(/ACTION/, action).replace(/USER_WALLET/, user_wallet).replace(/TOTAL_MONEY/,total_money).replace(/TICKET_VALUE/,ticket_value).replace(/AUTH_CODE/, auth_code);
+
+		xmlhttp.onreadystatechange=function()
+		{
+			if(xmlhttp.readyState==4 && xmlhttp.status==200)
+			{
+				var JSONObject = JSON.parse(xmlhttp.responseText);
+				var html = '<p>PART1</p><p>PART2</p><p>PART3</p>';
+				if(JSONObject.status)
+				{
+					alert(JSONObject.error_message);								
+				}
+				else
+				{					
+					var a=document.getElementById("create_ticket");					
+					a.style.backgroundColor="#bdbec0";
+					a.value = '查看券';			
+					document.getElementById("ticket_code").innerHTML = html.replace(/PART1/,JSONObject.part1).replace(/PART2/,JSONObject.part2).replace(/PART3/,JSONObject.part3);
+					document.getElementById("value").innerHTML = JSONObject.ticket_value;	
+
+					var modalLocation = $("#create_ticket").attr('data-reveal-id');
+					$('#'+modalLocation).reveal($(this).data());								
+				}
+
+			}
+		}
+		xmlhttp.open("POST", url, true);
+		xmlhttp.send(data);	
+	}
+	else
+	{
+		$('input[data-reveal-id]').live('click', function(e) {
+			e.preventDefault();
+			var modalLocation = $(this).attr('data-reveal-id');
+			$('#'+modalLocation).reveal($(this).data());			
+
+		});			
+	}	
 
 }
 

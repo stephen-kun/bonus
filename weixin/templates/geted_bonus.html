@@ -10,9 +10,11 @@
 {% for bonus in system_bonus %}
     <div class="head">
 		<h2><img src={{bonus.picture}}></h2>
-		<h4>{{bonus.name}}的红包</h4>
+		<h4>{{bonus.name}}</h4>
         <h5>{{bonus.message}}</h5>
-		<h6>{{bonus.title}}</h6>
+		{% if bonus.title %}
+		<h6>由{{bonus.title}}赞助</h6>
+		{% endif %}
 	</div>
     <div class="box-food qbbaise headmarg">
 		<ul>
@@ -24,15 +26,15 @@
 		</ul>
 	</div>	
 	<div class="box-dongqi">
-		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="message('{{bonus.openid}}', '{{bonus.id_bonus}}')">留言</span></h6>
-		<h6>{{bonus.datetime|date:"F-j-Y"}}</h6>
+		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="message('{{bonus.id_bonus}}')">留言</span></h6>
+		<h6>{{bonus.datetime|date:"m-j"}}</h6>
 	</div>
 {% endfor %}
 
 {% for bonus in random_bonus %}
     <div class="head">
 		<h2><img src={{bonus.picture}}></h2>
-		<h4>{{bonus.name}}的红包</h4>
+		<h4>{{bonus.name}}</h4>
         <h5>{{bonus.message}}</h5>
 	</div>
     <div class="box-food qbbaise headmarg">
@@ -46,7 +48,7 @@
 	</div>	
 	<div class="box-dongqi">
 		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="message('{{bonus.id_bonus}}')">留言</span></h6>
-		<h6>{{bonus.datetime|date:"F-j-Y"}}</h6>
+		<h6>{{bonus.datetime|date:"m-j"}}</h6>
 	</div>
 {% endfor %}
 
@@ -67,7 +69,7 @@
 	</div>	
 	<div class="box-dongqi">
 		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="message('{{bonus.id_bonus}}')">留言</span></h6>
-		<h6>{{bonus.datetime|date:"F-j-Y"}}</h6>
+		<h6>{{bonus.datetime|date:"m-j"}}</h6>
         <h2 id="h{{bonus.id_bonus}}"><input type="button" id="refuse" class="red" value="婉拒" onClick="refuse_bonus('{{bonus.id_bonus}}', '{{ajax_request_url}}')"></h2>
         <span class="wj"><a href="{{common_bonus_url}}" target="_blank">回赠</a></span>	
 	</div>	
