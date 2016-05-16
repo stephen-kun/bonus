@@ -572,6 +572,18 @@ input.code {
 	text-align:center;
 	color:#b6d554;
 }
+.head h6 {
+	margin: 0 auto 0 auto;
+	font-size:1em;
+	font-weight:normal;
+	text-align:left;
+	color:#227fd5;
+	background: transparent;
+	background-color: rgba(255,255,255,0.3);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=#30fffff,endColorstr=#30ffffff);
+  	zoom: 1;
+	padding:.5em;
+}
 .headmarg {
 	margin-bottom:0;
 }
@@ -1037,11 +1049,11 @@ input.code {
 
 .chch-list ul li h5 {
 	float:right;
-	margin:1em 0 0 0;
+	margin:.1em 0 0 0;
 	font-size:1.4em;
 	font-weight:normal;
 	padding:0 0 0 0;
-	text-align:center;
+	text-align:right;
 }
 .chch-list ul li h5 img {
 	width:22px;
@@ -1052,6 +1064,9 @@ input.code {
 	margin:0em 0 0 .5em;
 	width:6em;
 	overflow:hidden;
+}
+.chch-list ul li h5 span font.date_color{
+	color:#c5c6c7;
 }/*====串串详细=====结束=====*/
 
 /*
@@ -1529,7 +1544,7 @@ input.code {
 }
 .wo_xinxi ul li h4 span {
 	color:#b8b8b7;
-	font-size:.8em;
+	font-size:.9em;
 }
 .wo_xinxi li:last-child {
 	border-bottom:0;
@@ -2176,6 +2191,18 @@ input.code {
 	text-align:center;
 	color:#b6d554;
 }
+.head h6 {
+	margin: 0 auto 0 auto;
+	font-size:.9em;
+	font-weight:normal;
+	text-align:left;
+	color:#227fd5;
+	background: transparent;
+	background-color: rgba(255,255,255,0.3);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=#30fffff,endColorstr=#30ffffff);
+  	zoom: 1;
+	padding:.5em;
+}
 .headmarg {
 	margin-bottom:0;
 }
@@ -2640,11 +2667,11 @@ input.code {
 
 .chch-list ul li h5 {
 	float:right;
-	margin:.9em 0 0 0;
+	margin:.1em 0 0 0;
 	font-size:1.4em;
 	font-weight:normal;
 	padding:0 0 0 0;
-	text-align:center;
+	text-align: right;
 }
 .chch-list ul li h5 img {
 	width:22px;
@@ -2655,6 +2682,9 @@ input.code {
 	margin:0em 0 0 .5em;
 	width:6em;
 	overflow:hidden;
+}
+.chch-list ul li h5 span font.date_color{
+	color:#c5c6c7;
 }/*====串串详细=====结束=====*/
 
 /*
@@ -3125,7 +3155,7 @@ input.code {
 }
 .wo_xinxi ul li h4 span {
 	color:#b8b8b7;
-	font-size:.8em;
+	font-size:.9em;
 }
 .wo_xinxi li:last-child {
 	border-bottom:0;
@@ -3763,6 +3793,18 @@ input.code {
 	text-align:center;
 	color:#b6d554;
 }
+.head h6 {
+	margin: 0 auto 0 auto;
+	font-size:.8em;
+	font-weight:normal;
+	text-align:left;
+	color:#227fd5;
+	background: transparent;
+	background-color: rgba(255,255,255,0.3);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=#30fffff,endColorstr=#30ffffff);
+  	zoom: 1;
+	padding:.5em;
+}
 .headmarg {
 	margin-bottom:0;
 }
@@ -4232,11 +4274,11 @@ input.code {
 
 .chch-list ul li h5 {
 	float:right;
-	margin:.8em 0 0 0;
+	margin:.1em 0 0 0;
 	font-size:.85em;
 	font-weight:normal;
 	padding:0 0 0 0;
-	text-align:center;
+	text-align: right;
 }
 .chch-list ul li h5 img {
 	width:15px;
@@ -4247,6 +4289,9 @@ input.code {
 	margin:0em 0 0 .5em;
 	width:90px;
 	overflow:hidden;
+}
+.chch-list ul li h5 span font.date_color{
+	color:#c5c6c7;
 }/*====串串详细=====结束=====*/
 
 /*
@@ -4754,7 +4799,7 @@ input.code {
 }
 .wo_xinxi ul li h4 span {
 	color:#b8b8b7;
-	font-size:.8em;
+	font-size:.9em;
 }
 .wo_xinxi li:last-child {
 	border-bottom:0;
@@ -5425,6 +5470,18 @@ input.code {
 	text-align:center;
 	color:#b6d554;
 }
+.head h6 {
+	margin: 0 auto 0 auto;
+	font-size:.8em;
+	font-weight:normal;
+	text-align:left;
+	color:#227fd5;
+	background: transparent;
+	background-color: rgba(255,255,255,0.3);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=#30fffff,endColorstr=#30ffffff);
+  	zoom: 1;
+	padding:.5em;
+}
 .headmarg {
 	margin-bottom:0;
 }
@@ -5923,11 +5980,11 @@ input.code {
 
 .chch-list ul li h5 {
 	float:right;
-	margin:.8em 0 0 0;
+	margin:.1em 0 0 0;
 	font-size:.85em;
 	font-weight:normal;
 	padding:0 0 0 0;
-	text-align:center;
+	text-align: right;
 }
 .chch-list ul li h5 img {
 	width:13px;
@@ -5938,6 +5995,9 @@ input.code {
 	margin:0em 0 0 .5em;
 	width:70px;
 	overflow:hidden;
+}
+.chch-list ul li h5 span font.date_color{
+	color:#c5c6c7;
 }/*====串串详细=====结束=====*/
 /*
 ==结束====stanson================
@@ -6424,11 +6484,11 @@ input.code {
 .wo_xinxi ul li h4 {
 	font-weight:normal;
 	padding:.2em 0;
-	font-size:.8em;
+	font-size:.9em;
 }
 .wo_xinxi ul li h4 span {
 	color:#b8b8b7;
-	font-size:.8em;
+	font-size:.9em;
 }
 .wo_xinxi li:last-child {
 	border-bottom:0;

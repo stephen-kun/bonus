@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
+import time
 import re
 import urllib2
 import json
@@ -31,6 +32,7 @@ AJAX_MODIFY_NAME = 'ajax_modify_name'
 AJAX_MODIFY_ADDRESS = 'ajax_modify_address'
 AJAX_MODIFY_EMAIL = 'ajax_modify_email'
 AJAX_MODIFY_SEX = 'ajax_modify_sex'
+AJAX_WEIXIN_ORDER = 'ajax_weixin_order'
 
 AUTH_CODE = '888888'
 LIST_KEY_ID	= u'串串'
@@ -68,13 +70,17 @@ class _BonusContent():
 		self.number = number	
 		
 #日志存储
-def log_print(back_func, log_level=3):
+def log_print(back_func, log_level=3, message=None):
+	path = './log/FILE.txt'.replace('FILE', back_func.__name__)
+	f = open(path, 'a')
+	f.write(time.strftime('===============%Y-%m-%d %H:%M============\n', time.localtime(time.time())))	
 	if log_level >= 3:
-		path = './log/FILE.txt'.replace('FILE', back_func.__name__)
-		f = open(path, 'a')
 		traceback.print_exc(file=f)
-		f.flush()
-		f.close()	
+	else:
+		f.write(message)
+		f.write('\n')
+	f.flush()
+	f.close()	
 		
 #VirtualMoney 转换为红包内容
 def virtual_money_to_bonus_content():
@@ -180,7 +186,7 @@ def is_consumer_dining(openid):
 	
 	
 #主键生成方法
-def create_primary_key(length=12):
+def create_primary_key(length=10):
 	a = list(string.digits)
 	random.shuffle(a)   
 	primary = ''.join(a[:length])
@@ -229,6 +235,7 @@ def get_bonus_type_str(bonus_type):
 def action_bonus_message(data):
 	id_bonus = data["id_bonus"]
 	message = data["message"]
+	log_print(back_func=action_bonus_message, log_level=1, message='id-%s msg-%s'%(id_bonus, message))
 	rcv_bonus = RcvBonus.objects.get(id_bonus=id_bonus)
 	rcv_bonus.message = message
 	rcv_bonus.is_message = True
@@ -292,10 +299,10 @@ def snd_bonus_random_rcv_bonus(snd_bonus, number_list):
 	snd_bonus.consumer.save()
 
 #微信支付
-def action_weixin_pay(data, session):
+def action_weixin_pay(data, request):
 	if data["method"] == WEIXIN_PAY:
 		#防止重复支付
-		bonus = snd_bonus_from_session(session)
+		bonus = snd_bonus_from_session(request.session)
 		if bonus is None:
 			return "have pay!"
 			
@@ -337,7 +344,7 @@ def action_weixin_pay(data, session):
 		snd_bonus_random_rcv_bonus(new_snd_bonus, number_list)	
 	else:
 		pass
-	del session['snd_bonus']
+	del request.session['snd_bonus']
 	return 'pay suc!'
 	
 #更新用户钱包余额
@@ -589,7 +596,7 @@ def get_bonus(consumer, session, record_rcv_bonus, bonus_list, param_tuple):
 	return [bonus_num, total_money, total_number]
 	
 #抢红包事件
-def action_get_bonus(openid, session):
+def action_get_bonus(openid, request):
 
 	#返回抢到的红包个数
 	bonus_num = 0			#统计抢到的红包个数
@@ -629,7 +636,7 @@ def action_get_bonus(openid, session):
 		record_rcv_bonus.save()
 		
 		#存储django session
-		session['id_record'] = record_rcv_bonus.id_record
+		request.session['id_record'] = record_rcv_bonus.id_record
 			
 	response = dict(status=0, number=bonus_num)
 	return json.dumps(response)
@@ -741,19 +748,26 @@ def action_modify_sex(data):
 	Consumer.objects.filter(open_id=openid).update(sex=sex)
 	return ''
 	
+def action_weixin_order(data, request):
+	request.session['consumer_order'] = data
+	# 调用微信统一下单接口
+	return ''
+	
 #ajax请求处理函数
-def handle_ajax_request(action, data, session):
+def handle_ajax_request(action, data, request):
 	if isinstance(data, (dict,)):	
 		if action == AJAX_GET_BONUS:
-			return action_get_bonus(data['openid'], session)
+			return action_get_bonus(data['openid'], request)
 		elif action == AJAX_CREATE_TICKET:
 			#清django session
-			if 'openid' in session:
-				del session['openid']
+			if 'openid' in request.session:
+				del request.session['openid']
 			response = action_create_ticket(data)
 			return json.dumps(response)
+		elif action == AJAX_WEIXIN_ORDER:
+			return action_weixin_order(data, request)
 		elif action == AJAX_WEIXIN_PAY:
-			return action_weixin_pay(data, session)
+			return action_weixin_pay(data, request)
 		elif action == AJAX_BONUS_MESSAGE:
 			return action_bonus_message(data)
 		elif action == AJAX_BONUS_REFUSE:

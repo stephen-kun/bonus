@@ -96,7 +96,7 @@ def bonus_content_models_to_json(models_list):
 	return json.dumps(dict(zip(l_name, l_bonus)))
 
 #将红包分拆
-def create_primary_key(length=12):
+def create_primary_key(length=10):
     a = list(string.digits)
     random.shuffle(a)
     primary = ''.join(a[:length])
