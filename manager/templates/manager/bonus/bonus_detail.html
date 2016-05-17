@@ -3,7 +3,7 @@
 {% include "header.html" %}
 
 <body>
-<article>
+<article class="admin_80">
     <section>
     	<div class="right_award_box">
         	<div class="admin_detailed_tit">
@@ -17,16 +17,32 @@
                 <p>{{ bonus.to_message }}</p>
             </div>
             <div class="admin_detailed_list">
-                <p>发出{{ bonus.bonus_num }}个({{ content }})，剩下{{ bonus.bonus_remain }}个({{ remain_content }})</p>
+                <p>发出{{ bonus.bonus_num }}个(
+                    {% for name,num in bonus.good_contents.items %}
+                    {{num}}x{{name}} {% if not forloop.last%},{% endif %}
+                    {% endfor %}
+                )&nbsp剩余{{ bonus.bonus_remain }}个(
+                    {% for name,num in bonus.remain_good_contents.items %}
+                    {{num}}x{{name}} {% if not forloop.last%},{% endif %}
+                    {% endfor %}
+                )</p>
                 <ul>
                     {% for recv_bonus in recv_bonus_list %}
-                	<li>
-                    <h4><span class="rfloat">{{recv_bonus.number}}</span>
-                        <img src="{{ recv_bonus.consumer.picture }}" align="absmiddle">
+                   
+                	<li class="detailed_heiht">
+                    <h4>
+                    
+                   		<p style="text-align:left;">
+                   		<img src="{{ recv_bonus.consumer.picture }}" align="absmiddle">
                         <span>{{ recv_bonus.consumer.name }}</span>
+                        </p>
+                        <p><font size="-1" color="#afacaa">{{ bonus.create_time|date:"Y-n-j H:i:s" }}</font></p>
+                        <p>串串<font color="orange">{{bonus.number}}</font>个&nbsp&nbsp<font size=2>({{ bonus.good_contents }})</font></p>
+                         
                     </h4>
                     </li>
                     {% endfor %}
+                    
                 </ul>
                 <div class="clear"></div>
             </div>

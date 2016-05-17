@@ -94,21 +94,32 @@ input.datebk {
 	cursor:pointer;
 }
 /*=============按钮组====结束=======*/
-
+.admin_bj {
+	background:url('../../images/admin/admin_bj.jpg') center top;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-attachment:fixed;
+}
+.admin_bj_two {
+	background:url('../../images/admin/admin_bj_two.jpg') center top;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-attachment:fixed;
+}
 /*========后台管理样式=====头部样式开始===========*/
 .admin_top {
-	background:url(../../images/admin/top.png) center repeat-x;
-	height:120px;
+	background:url(../../images/admin/top.jpg) center top repeat-x;
+	height:100px;
 }
 .admin_top h4 {
 	font-weight:normal;
 	font-size:.7em;
 	padding:.5em 1em 0 0;
 	text-align:right;
-	color:#3b86d3;
+	color:#a97b50;
 }
 .admin_top h4 a {
-	color:#3b86d3;
+	color:#a97b50;
 }
 .admin_top h4 a:hover {
 	color:#e93f19;
@@ -121,13 +132,13 @@ font.redse {
 
 /*=============导航样式====开始=======*/
 .navlist {
-	height:47px;
-	background:#62a3d1;
+	height:44px;
+	background:#b6d554;
 	/*text-align: left;*/
 	color:#ffffff;
 	line-height:47px;
 	font-size:.875em;
-	border-bottom:#3b86d3 2px solid;
+	border-bottom:#97b734 2px solid;
 	width:100%;
 }/*
 .navc {
@@ -153,17 +164,22 @@ font.redse {
 	margin:0;
 	line-height:47px;
 }
+.navlist ul li span {
+	background:#97b734;
+	display:block;
+	text-align:center;
+}
 .navlist ul li a {
 	color:#ffffff;
 	display:block;
-	height:47px;
-	padding:0 1.5em;
+	height:46px;
+	padding:0 .8em 0 1.3em;
 	margin:0;
 	font-size:.875em;
 }
 .navlist ul li a:hover {
 	color:#ffffff;
-	background:#3b86d3;
+	background:#97b734;
 	text-decoration:none;
 }
 /*=============导航样式===结束========*/
@@ -171,16 +187,15 @@ font.redse {
 /*=============左侧导航====开始=======*/
 .left-frame {
 	position: absolute;
-	top:9.207em;
+	top:7.307em;
 	left:0em;
-	width:8.3125em;
+	width:9.0125em;
 	bottom:0;
-	border-radius:0 10px 0 0;
-	border:#a3b0b8 1px solid;
-	border-bottom:#a3b0b8 0px solid;
-	border-left:#a3b0b8 0px solid;
+	/*border-radius:0 10px 0 0;*/
+	/*border-right:#cad2b0 1px solid;*/
 	overflow:hidden;
-	background: url(../../images/admin/tit.png) right top no-repeat #fdfeff;
+	background:#f1faed;
+	/*background: url(../../images/admin/tit.png) right top no-repeat #fdfeff;*/
  	height:expression(document.body.offsetHeight - 88 + 'px');
 }
 .left-f-title {
@@ -188,9 +203,10 @@ font.redse {
 	padding:.125em 0 0 2.5em;
 	font-weight: normal;
 	font-size:.795em;
+	display:none;
 }
 .left-f-content {
-	padding:30px 0 0 10px;
+	padding:10px 0 0 10px;
 }
 /*
 .left-f-content ul li {
@@ -253,42 +269,41 @@ span.menu-l-n-s {
 /*=============右侧内容===开始========*/
 .right-frame {
 	position:absolute;
-	border-radius:10px 0 0 0;
-	border:#a3b0b8 1px solid;
-	border-bottom:#a3b0b8 0px solid;
-	border-right:#a3b0b8 0px solid;
-	top:9.207em;
-	left:9.15em;
+	/*border-radius:10px 0 0 0;*/
+	border-left:#cad2b0 1px solid;
+	top:7.307em;
+	left:8.15em;
 	bottom:0;
 	right:0px;
 	z-index:4;
-	background:url(../../images/admin/tit_c.png) left top repeat-x;
+	/*background:url(../../images/admin/tit_c.png) left top repeat-x;*/
 }
 .right-f-title {
 	padding:5px 0 0 35px;
 	height:36px;
 	font-size:.7375em;
 	font-family:"宋体";
+	display:none;
 }
 #mainFrame {
 	width:99%;
 _width:expression(document.body.offsetWidth - 168 + 'px');
-	height:94%;
-*height:expression(document.body.offsetHeight - 123 + 'px');
+	height:99.5%;
+*height:expression(document.body.offsetHeight - 144 + 'px');
 	z-index:5;
 	margin-left:1px;
 }
 /*=============右侧内容===结束========*/
 /*=============发出的红包===开始========*/
 .right_award_box {
-	border:#c7e8f3 1px solid;
+	border:#b6d554 1px solid;
 	background:url(../../images/admin/admin_bj.png) left top repeat-x #ffffff;
 	margin:.5em 0 0 .8em;
 	padding:0 0 .8em 0;
 }
 .award_box_title {
 	text-align:center;
-	color:#1686af;
+	color:#a97b50;
 	padding:.5em 0 .5em 0;
 }
 .award_box_title span {
@@ -322,7 +337,7 @@ _width:expression(document.body.offsetWidth - 168 + 'px');
 	lie-height:30px;
 }
 .color_a {
-	color:#1686af;
+	color:#4da413;
 	padding:0 .8em;
 	font:.925em STHeiti,"Microsoft YaHei",Arial,SimSun,"微软雅黑";
 	font-weight:normal;
@@ -335,6 +350,12 @@ _width:expression(document.body.offsetWidth - 168 + 'px');
 }
 .color_c {
 	color:#de3a08;
+	padding:0 .8em;
+	font:.925em STHeiti,"Microsoft YaHei",Arial,SimSun,"微软雅黑";
+	font-weight:normal;
+}
+.color_g {
+	color:#b6d554;
 	padding:0 .8em;
 	font:.925em STHeiti,"Microsoft YaHei",Arial,SimSun,"微软雅黑";
 	font-weight:normal;
@@ -984,6 +1005,9 @@ background: -o-linear-gradient(top, #ddf8aa, #b0d067);  /*Opera 11.10+*/}
 .tab-add-xls-c{
 	background:#fcfff3;
 }
+.tab-add-xls-g{
+	background:#cede9d;
+}
 .tab-add-xls-c td {
 	padding:.2em .3em;
 	font-size:.705em;
@@ -1021,6 +1045,27 @@ table tr td span.table_new_head img {
 	box-shadow:#CCC 2px 2px 2px;
 	border:1px solid #ffffff;
 }
-/*=============顾客列表===开始========*/
+/*=============顾客列表===结束========*/
 
-
+/*=============多少号桌抢到和发出的串串===开始========*/
+.that {
+	background:#b6d554;
+	font-size:.9em;
+	text-align:left;
+	color:#ffffff;
+	padding:.5em .5em .5em 1em;
+	margin-top:1em;
+}
+.that_tit {
+	text-align:center;
+	font-size:.8em;
+	color:#a9a9a8;
+}
+.that_tit span {
+	text-align:center;
+	font-size:1.2em;
+	color:#e6770f;
+	padding:0 .5em;
+	font-family:"Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif;
+}
+/*==多少号桌抢到和发出的串串====结束===*/

@@ -1,7 +1,7 @@
 <html>
 {% include "header.html" %}
 
-<body>
+<body class="admin_bj">
 <article>
     <section>
     	<div class="right_award_box">
@@ -21,7 +21,8 @@
                   <tr class="table_new_h">
                       <td class="color_a"><span class="table_new_head"><img src="{{bonus.consumer.picture}}" align="absmiddle"></span>{{ bonus.consumer.name }}</td>
 
-                    <td class="color_b">普通红包</td>
+                    <td class="color_b">{{ bonus.create_time|date:"Y-n-j H:i:s" }}</td>
+
                     {% ifequal bonus.bonus_type 0 %}
                     <td class="color_b">普通红包</td>
                     {% else %}
@@ -54,8 +55,8 @@
         </div>
     </section>
      <div class="award_page">
-            	<a href="#" target="_self" class="lfloat" target="mainFrame">上一页</a>
-            	<a href="#" target="_self" class="rfloat" target="mainFrame">下一页</a>
+         <!--<a href="#" target="_self" class="lfloat" target="mainFrame">上一页</a>
+         <a href="#" target="_self" class="rfloat" target="mainFrame">下一页</a>-->
             </div>
 <script language="JavaScript">
 var TbRow = document.getElementById("tab-color");

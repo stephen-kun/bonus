@@ -1,0 +1,1388 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-05 11:01+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: .\category\apps.py:11
+msgid "JoyForum Category"
+msgstr ""
+
+#: .\category\models.py:19
+msgid "parent category"
+msgstr ""
+
+#: .\category\models.py:20
+msgid "show image"
+msgstr ""
+
+#: .\category\models.py:22 .\topic\models.py:17
+msgid "title"
+msgstr ""
+
+#: .\category\models.py:24
+msgid "description"
+msgstr ""
+
+#: .\category\models.py:25
+msgid "global"
+msgstr ""
+
+#: .\category\models.py:26
+msgid "whether the topics will be displayed in the all-categories list."
+msgstr ""
+
+#: .\category\models.py:28 .\topic\models.py:26
+msgid "closed"
+msgstr ""
+
+#: .\category\models.py:29
+msgid "removed"
+msgstr ""
+
+#: .\category\models.py:38 .\topic\models.py:18
+msgid "category"
+msgstr ""
+
+#: .\category\models.py:39
+msgid "categories"
+msgstr ""
+
+#: .\comment\apps.py:11
+msgid "JoyForum Comment"
+msgstr ""
+
+#: .\comment\bookmark\apps.py:11
+msgid "JoyForum Comment Bookmark"
+msgstr ""
+
+#: .\comment\bookmark\models.py:23
+msgid "comment bookmark"
+msgstr ""
+
+#: .\comment\bookmark\models.py:24
+msgid "comments bookmarks"
+msgstr ""
+
+#: .\comment\forms.py:32
+msgid "Write comment..."
+msgstr ""
+
+#: .\comment\forms.py:103
+#, python-format
+msgid "Unsupported file format. Supported formats are %s."
+msgstr ""
+
+#: .\comment\history\apps.py:11
+msgid "JoyForum Comment History"
+msgstr ""
+
+#: .\comment\history\models.py:13
+msgid "original comment"
+msgstr ""
+
+#: .\comment\history\models.py:15 .\comment\models.py:33
+msgid "comment html"
+msgstr ""
+
+#: .\comment\history\models.py:20
+msgid "comment history"
+msgstr ""
+
+#: .\comment\history\models.py:21
+msgid "comments history"
+msgstr ""
+
+#: .\comment\like\apps.py:11
+msgid "JoyForum Comment Like"
+msgstr ""
+
+#: .\comment\like\forms.py:30
+msgid "This like already exists"
+msgstr ""
+
+#: .\comment\like\models.py:22 .\templates\forum\comment\_render_list.html:61
+#: .\templates\forum\comment\_render_list.html:139
+msgid "like"
+msgstr ""
+
+#: .\comment\like\models.py:23 .\templates\forum\user\profile_likes.html:5
+msgid "likes"
+msgstr ""
+
+#: .\comment\models.py:18 .\comment\models.py:32 .\comment\models.py:47
+msgid "comment"
+msgstr ""
+
+#: .\comment\models.py:20
+msgid "topic closed"
+msgstr ""
+
+#: .\comment\models.py:21
+msgid "topic unclosed"
+msgstr ""
+
+#: .\comment\models.py:22
+msgid "topic pinned"
+msgstr ""
+
+#: .\comment\models.py:23
+msgid "topic unpinned"
+msgstr ""
+
+#: .\comment\models.py:34
+msgid "action"
+msgstr ""
+
+#: .\comment\models.py:40
+msgid "modified count"
+msgstr ""
+
+#: .\comment\models.py:41
+msgid "likes count"
+msgstr ""
+
+#: .\comment\models.py:48 .\templates\forum\user\profile_comments.html:5
+msgid "comments"
+msgstr ""
+
+#: .\comment\tags.py:22
+msgid "This topic has been moved"
+msgstr ""
+
+#: .\comment\tags.py:24
+msgid "This topic has been closed"
+msgstr ""
+
+#: .\comment\tags.py:26
+msgid "This topic has been unclosed"
+msgstr ""
+
+#: .\comment\tags.py:28
+msgid "This topic has been pinned"
+msgstr ""
+
+#: .\comment\tags.py:30
+msgid "This topic has been unpinned"
+msgstr ""
+
+#: .\comment\tags.py:32
+msgid "Unknown topic moderation action"
+msgstr ""
+
+#: .\core\tags\time.py:33
+msgid "now"
+msgstr ""
+
+#: .\core\tags\time.py:37
+#, python-format
+msgid "%(count)ss"
+msgstr ""
+
+#: .\core\tags\time.py:41
+#, python-format
+msgid "%(count)sm"
+msgstr ""
+
+#: .\core\tags\time.py:44
+#, python-format
+msgid "%(count)sh"
+msgstr ""
+
+#: .\core\utils\markdown\utils\quote.py:36
+#, python-format
+msgid "@%(username)s said:"
+msgstr ""
+
+#: .\core\utils\ratelimit\decorators.py:25
+#, python-format
+msgid "Too many submissions, wait %(time)s."
+msgstr ""
+
+#: .\core\utils\timezone.py:9
+msgid "(GMT -12:00) Eniwetok, Kwajalein"
+msgstr ""
+
+#: .\core\utils\timezone.py:10
+msgid "(GMT -11:00) Midway Island, Samoa"
+msgstr ""
+
+#: .\core\utils\timezone.py:11
+msgid "(GMT -10:00) Hawaii"
+msgstr ""
+
+#: .\core\utils\timezone.py:12
+msgid "(GMT -9:30) Marquesas Islands"
+msgstr ""
+
+#: .\core\utils\timezone.py:13
+msgid "(GMT -9:00) Alaska"
+msgstr ""
+
+#: .\core\utils\timezone.py:14
+msgid "(GMT -8:00) Pacific Time (US & Canada)"
+msgstr ""
+
+#: .\core\utils\timezone.py:15
+msgid "(GMT -7:00) Mountain Time (US & Canada)"
+msgstr ""
+
+#: .\core\utils\timezone.py:16
+msgid "(GMT -6:00) Central Time (US & Canada), Mexico City"
+msgstr ""
+
+#: .\core\utils\timezone.py:17
+msgid "(GMT -5:00) Eastern Time (US & Canada), Bogota, Lima"
+msgstr ""
+
+#: .\core\utils\timezone.py:18
+msgid "(GMT -4:30) Venezuela"
+msgstr ""
+
+#: .\core\utils\timezone.py:19
+msgid "(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz"
+msgstr ""
+
+#: .\core\utils\timezone.py:20
+msgid "(GMT -3:00) Brazil, Buenos Aires, Georgetown"
+msgstr ""
+
+#: .\core\utils\timezone.py:21
+msgid "(GMT -2:00) Mid-Atlantic"
+msgstr ""
+
+#: .\core\utils\timezone.py:22
+msgid "(GMT -1:00) Azores, Cape Verde Islands"
+msgstr ""
+
+#: .\core\utils\timezone.py:23
+msgid "(GMT) Western Europe Time, London, Lisbon, Casablanca"
+msgstr ""
+
+#: .\core\utils\timezone.py:24
+msgid "(GMT +1:00) Brussels, Copenhagen, Madrid, Paris"
+msgstr ""
+
+#: .\core\utils\timezone.py:25
+msgid "(GMT +2:00) Kaliningrad, South Africa"
+msgstr ""
+
+#: .\core\utils\timezone.py:26
+msgid "(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg"
+msgstr ""
+
+#: .\core\utils\timezone.py:27
+msgid "(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi"
+msgstr ""
+
+#: .\core\utils\timezone.py:28
+msgid "(GMT +4:30) Afghanistan"
+msgstr ""
+
+#: .\core\utils\timezone.py:29
+msgid "(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent"
+msgstr ""
+
+#: .\core\utils\timezone.py:30
+msgid "(GMT +5:30) India, Sri Lanka"
+msgstr ""
+
+#: .\core\utils\timezone.py:31
+msgid "(GMT +5:45) Nepal"
+msgstr ""
+
+#: .\core\utils\timezone.py:32
+msgid "(GMT +6:00) Almaty, Dhaka, Colombo"
+msgstr ""
+
+#: .\core\utils\timezone.py:33
+msgid "(GMT +6:30) Cocos Islands, Myanmar"
+msgstr ""
+
+#: .\core\utils\timezone.py:34
+msgid "(GMT +7:00) Bangkok, Hanoi, Jakarta"
+msgstr ""
+
+#: .\core\utils\timezone.py:35
+msgid "(GMT +8:00) Beijing, Perth, Singapore, Hong Kong"
+msgstr ""
+
+#: .\core\utils\timezone.py:36
+msgid "(GMT +8:45) Australia (Eucla)"
+msgstr ""
+
+#: .\core\utils\timezone.py:37
+msgid "(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk"
+msgstr ""
+
+#: .\core\utils\timezone.py:38
+msgid "(GMT +9:30) Australia (Northern Territory)"
+msgstr ""
+
+#: .\core\utils\timezone.py:39
+msgid "(GMT +10:00) Eastern Australia, Guam, Vladivostok"
+msgstr ""
+
+#: .\core\utils\timezone.py:40
+msgid "(GMT +11:00) Magadan, Solomon Islands, New Caledonia"
+msgstr ""
+
+#: .\core\utils\timezone.py:41
+msgid "(GMT +11:30) Norfolk Island"
+msgstr ""
+
+#: .\core\utils\timezone.py:42
+msgid "(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka"
+msgstr ""
+
+#: .\flat\templates\admin\base_site.html:3
+msgid "Django site admin"
+msgstr ""
+
+#: .\flat\templates\admin\base_site.html:6
+msgid "Django administration"
+msgstr ""
+
+#: .\flat\templates\admin\edit_inline\tabular.html:17
+msgid "Delete?"
+msgstr ""
+
+#: .\flat\templates\admin\edit_inline\tabular.html:31
+#: .\flat\templates\admin\related_widget_wrapper.html:9
+msgid "Change"
+msgstr ""
+
+#: .\flat\templates\admin\edit_inline\tabular.html:33
+msgid "View on site"
+msgstr ""
+
+#: .\flat\templates\admin\edit_inline\tabular.html:79
+#, python-format
+msgid "Add another %(verbose_name)s"
+msgstr ""
+
+#: .\flat\templates\admin\edit_inline\tabular.html:80
+msgid "Remove"
+msgstr ""
+
+#: .\flat\templates\admin\related_widget_wrapper.html:8
+#, python-format
+msgid "Change selected %(model)s"
+msgstr ""
+
+#: .\flat\templates\admin\related_widget_wrapper.html:15
+#, python-format
+msgid "Add another %(model)s"
+msgstr ""
+
+#: .\flat\templates\admin\related_widget_wrapper.html:16
+msgid "Add"
+msgstr ""
+
+#: .\flat\templates\admin\related_widget_wrapper.html:22
+#, python-format
+msgid "Delete selected %(model)s"
+msgstr ""
+
+#: .\flat\templates\admin\related_widget_wrapper.html:23
+msgid "Delete"
+msgstr ""
+
+#: .\flat\templates\admin\search_form.html:7
+msgid "Search"
+msgstr ""
+
+#: .\flat\templates\admin\search_form.html:9
+#, python-format
+msgid "%(counter)s result"
+msgid_plural "%(counter)s results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\flat\templates\admin\search_form.html:9
+#, python-format
+msgid "%(full_result_count)s total"
+msgstr ""
+
+#: .\flat\templates\admin\search_form.html:9 .\templates\forum\_base.html:40
+msgid "Show all"
+msgstr ""
+
+#: .\flat\templates\gis\admin\openlayers.html:35
+#: .\flat\templates\gis\openlayers.html:18
+msgid "Delete all Features"
+msgstr ""
+
+#: .\flat\templates\gis\admin\openlayers.html:37
+msgid "WKT debugging window:"
+msgstr ""
+
+#: .\flat\templates\gis\openlayers.html:19
+msgid "Debugging window (serialized value)"
+msgstr ""
+
+#: .\templates\403.html:10
+msgid "You do not have sufficient permissions to access this page"
+msgstr ""
+
+#: .\templates\404.html:10
+msgid "what you are looking for is gone..."
+msgstr ""
+
+#: .\templates\forum\_base.html:38
+#, python-brace-format
+msgid "{user} has mention you on {topic}"
+msgstr ""
+
+#: .\templates\forum\_base.html:39
+#, python-brace-format
+msgid "{user} has commented on {topic}"
+msgstr ""
+
+#: .\templates\forum\_base.html:41
+msgid "No new notifications, yet"
+msgstr ""
+
+#: .\templates\forum\_base.html:42
+#: .\templates\forum\topic\notification\_render_list.html:17
+msgid "unread"
+msgstr ""
+
+#: .\templates\forum\_header.html:21 .\templates\forum\user\menu.html:14
+msgid "Profile"
+msgstr ""
+
+#: .\templates\forum\_header.html:22 .\templates\forum\user\_profile.html:47
+#: .\templates\forum\user\menu.html:15
+msgid "Topics"
+msgstr ""
+
+#: .\templates\forum\_header.html:23 .\templates\forum\user\menu.html:16
+msgid "Unread topics"
+msgstr ""
+
+#: .\templates\forum\_header.html:26 .\templates\forum\user\menu.html:20
+msgid "Admin"
+msgstr ""
+
+#: .\templates\forum\_header.html:29 .\templates\forum\user\auth\logout.html:5
+#: .\templates\forum\user\auth\logout.html:15
+#: .\templates\forum\user\menu.html:23
+msgid "Log out"
+msgstr ""
+
+#: .\templates\forum\_header.html:42
+msgid "Log in"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:6
+msgid "Bold"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:7
+msgid "Italic"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:8
+#: .\templates\forum\user\admin\_tabs.html:4
+msgid "List"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:9
+msgid "URL"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:10
+msgid "Image"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:11
+msgid "Poll"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:12
+msgid "Preview"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:32
+#, python-brace-format
+msgid "uploading {image_name}"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:35
+msgid "bolded text"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:36
+msgid "italicised text"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:37
+msgid "list item"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:38
+msgid "link text"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:39
+msgid "link url"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:40
+msgid "image text"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:41
+msgid "image url"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:42
+msgid "Title"
+msgstr ""
+
+#: .\templates\forum\comment\_editor.html:43
+msgid "Description"
+msgstr ""
+
+#: .\templates\forum\comment\_form.html:17
+#: .\templates\forum\comment\publish.html:18
+#: .\templates\forum\comment\update.html:18
+#: .\templates\forum\topic\publish.html:37
+msgid "Publish"
+msgstr ""
+
+#: .\templates\forum\comment\_render_list.html:48
+msgid "delete"
+msgstr ""
+
+#: .\templates\forum\comment\_render_list.html:54
+msgid "share"
+msgstr ""
+
+#: .\templates\forum\comment\_render_list.html:58
+#: .\templates\forum\comment\_render_list.html:140
+msgid "remove like"
+msgstr ""
+
+#: .\templates\forum\comment\_render_list.html:68
+#: .\templates\forum\topic\detail.html:30
+#: .\templates\forum\topic\detail.html:32
+#: .\templates\forum\user\admin\_list.html:9
+msgid "edit"
+msgstr ""
+
+#: .\templates\forum\comment\_render_list.html:72
+msgid "quote"
+msgstr ""
+
+#: .\templates\forum\comment\_render_list.html:73
+msgid "reply"
+msgstr ""
+
+#: .\templates\forum\comment\_render_list.html:80
+msgid "close"
+msgstr ""
+
+#: .\templates\forum\comment\_render_list.html:111
+msgid "This comment was deleted"
+msgstr ""
+
+#: .\templates\forum\comment\_render_list.html:119
+msgid "undelete"
+msgstr ""
+
+#: .\templates\forum\comment\history\detail.html:5
+#: .\templates\forum\comment\history\detail.html:11
+msgid "Comment history"
+msgstr ""
+
+#: .\templates\forum\comment\like\create.html:5
+#: .\templates\forum\comment\like\create.html:14
+msgid "Like"
+msgstr ""
+
+#: .\templates\forum\comment\like\create.html:9
+#, python-format
+msgid "Like %(username)s's comment"
+msgstr ""
+
+#: .\templates\forum\comment\like\delete.html:5
+#: .\templates\forum\comment\like\delete.html:13
+msgid "Remove like"
+msgstr ""
+
+#: .\templates\forum\comment\like\delete.html:9
+#, python-format
+msgid "Remove %(username)s's comment like"
+msgstr ""
+
+#: .\templates\forum\comment\moderate.html:5
+#: .\templates\forum\comment\moderate.html:9
+msgid "Moderate comment"
+msgstr ""
+
+#: .\templates\forum\comment\moderate.html:14
+#: .\templates\forum\topic\moderate.html:14
+msgid "Apply"
+msgstr ""
+
+#: .\templates\forum\comment\publish.html:5
+msgid "Publish comment"
+msgstr ""
+
+#: .\templates\forum\comment\publish.html:9
+msgid "Publishing comment on"
+msgstr ""
+
+#: .\templates\forum\comment\update.html:5
+#: .\templates\forum\comment\update.html:9
+msgid "Edit comment"
+msgstr ""
+
+#: .\templates\forum\topic\_render_list.html:38
+#: .\templates\joyforum\categorylist.html:118
+msgid "There are no topics here, yet"
+msgstr ""
+
+#: .\templates\forum\topic\_top_bar.html:8
+#: .\templates\forum\topic\_top_bar.html:19
+msgid "All Categories"
+msgstr ""
+
+#: .\templates\forum\topic\_top_bar.html:17
+msgid "All Subcategories"
+msgstr ""
+
+#: .\templates\forum\topic\_top_bar.html:27
+#: .\templates\forum\topic\_top_bar.html:29
+msgid "Create Topic"
+msgstr ""
+
+#: .\templates\forum\topic\active.html:5
+msgid "Latest active topics"
+msgstr ""
+
+#: .\templates\forum\topic\detail.html:10
+msgid "Main"
+msgstr ""
+
+#: .\templates\forum\topic\detail.html:42
+msgid "Select comments to move"
+msgstr ""
+
+#: .\templates\forum\topic\detail.html:45
+msgid "Undelete topic"
+msgstr ""
+
+#: .\templates\forum\topic\detail.html:47
+msgid "Delete topic"
+msgstr ""
+
+#: .\templates\forum\topic\detail.html:51
+msgid "Open topic"
+msgstr ""
+
+#: .\templates\forum\topic\detail.html:53
+msgid "Close topic"
+msgstr ""
+
+#: .\templates\forum\topic\detail.html:57
+msgid "Unpin topic"
+msgstr ""
+
+#: .\templates\forum\topic\detail.html:59
+msgid "Pin topic"
+msgstr ""
+
+#: .\templates\forum\topic\detail.html:63
+msgid "Unpin topic globally"
+msgstr ""
+
+#: .\templates\forum\topic\detail.html:65
+msgid "Pin topic globally"
+msgstr ""
+
+#: .\templates\forum\topic\detail.html:74
+msgid "Topic id"
+msgstr ""
+
+#: .\templates\forum\topic\detail.html:76
+msgid "Move"
+msgstr ""
+
+#: .\templates\forum\topic\detail.html:90
+msgid "Reply"
+msgstr ""
+
+#: .\templates\forum\topic\moderate.html:5
+#: .\templates\forum\topic\moderate.html:9
+msgid "Moderate topic"
+msgstr ""
+
+#: .\templates\forum\topic\notification\_form.html:12
+msgid "Unnotify Me"
+msgstr ""
+
+#: .\templates\forum\topic\notification\_form.html:14
+msgid "Notify Me"
+msgstr ""
+
+#: .\templates\forum\topic\notification\_render_list.html:9
+#, python-format
+msgid ""
+"<a href=\"%(url_profile)s\">%(username)s</a> has commented on <a href="
+"\"%(url_topic)s\">%(topic_title)s</a>"
+msgstr ""
+
+#: .\templates\forum\topic\notification\_render_list.html:11
+#, python-format
+msgid ""
+"<a href=\"%(url_profile)s\">%(username)s</a> has mention you on <a href="
+"\"%(url_topic)s\">%(topic_title)s</a>"
+msgstr ""
+
+#: .\templates\forum\topic\notification\_render_list.html:21
+msgid "There are no notifications, yet"
+msgstr ""
+
+#: .\templates\forum\topic\notification\index.html:5
+#: .\templates\forum\topic\notification\index.html:9
+msgid "Notifications"
+msgstr ""
+
+#: .\templates\forum\topic\notification\index_unread.html:5
+#: .\templates\forum\topic\notification\index_unread.html:9
+msgid "Unread notifications"
+msgstr ""
+
+#: .\templates\forum\topic\notification\index_unread.html:15
+msgid "There are no new notifications"
+msgstr ""
+
+#: .\templates\forum\topic\notification\index_unread.html:22
+#: .\templates\forum\topic\unread\index.html:15
+msgid "Next"
+msgstr ""
+
+#: .\templates\forum\topic\publish.html:5
+#: .\templates\forum\topic\publish.html:21
+msgid "Publish topic"
+msgstr ""
+
+#: .\templates\forum\topic\unread\index.html:5
+#: .\templates\forum\topic\unread\index.html:9
+msgid "Unread topics replies"
+msgstr ""
+
+#: .\templates\forum\topic\update.html:5 .\templates\forum\topic\update.html:9
+msgid "Update topic"
+msgstr ""
+
+#: .\templates\forum\topic\update.html:15
+msgid "Update"
+msgstr ""
+
+#: .\templates\forum\user\_profile.html:12
+msgid "Joined at"
+msgstr ""
+
+#: .\templates\forum\user\_profile.html:16
+msgid "Sen"
+msgstr ""
+
+#: .\templates\forum\user\_profile.html:22
+msgid "Last IP"
+msgstr ""
+
+#: .\templates\forum\user\_profile.html:31
+#: .\templates\forum\user\profile_update.html:5
+#: .\templates\forum\user\profile_update.html:9
+msgid "Preferences"
+msgstr ""
+
+#: .\templates\forum\user\_profile.html:46
+msgid "Comments"
+msgstr ""
+
+#: .\templates\forum\user\_profile.html:48
+msgid "Likes"
+msgstr ""
+
+#: .\templates\forum\user\_render_comments_list.html:36
+msgid "There are no comments here, yet"
+msgstr ""
+
+#: .\templates\forum\user\activation_email.html:2
+#, python-format
+msgid "You're receiving this email because you registered at %(site_name)s."
+msgstr ""
+
+#: .\templates\forum\user\activation_email.html:4
+msgid "Please go to the following link to activate your account:"
+msgstr ""
+
+#: .\templates\forum\user\activation_email.html:8
+#: .\templates\forum\user\auth\password_reset_email.html:9
+#: .\templates\forum\user\email_change_email.html:8
+msgid "Thanks for using our site!"
+msgstr ""
+
+#: .\templates\forum\user\admin\_tabs.html:5
+#: .\templates\forum\user\admin\admins.html:5
+#: .\templates\forum\user\admin\admins.html:11
+msgid "Admins"
+msgstr ""
+
+#: .\templates\forum\user\admin\_tabs.html:6
+#: .\templates\forum\user\admin\mods.html:5
+#: .\templates\forum\user\admin\mods.html:11
+msgid "Mods"
+msgstr ""
+
+#: .\templates\forum\user\admin\_tabs.html:7
+msgid "Unactive"
+msgstr ""
+
+#: .\templates\forum\user\admin\edit.html:5
+#: .\templates\forum\user\admin\edit.html:9
+msgid "Edit user"
+msgstr ""
+
+#: .\templates\forum\user\admin\edit.html:16
+#: .\templates\forum\user\auth\password_reset_confirm.html:16
+#: .\templates\forum\user\profile_update.html:28
+msgid "Save"
+msgstr ""
+
+#: .\templates\forum\user\admin\index.html:5
+#: .\templates\forum\user\admin\index.html:11
+msgid "User list"
+msgstr ""
+
+#: .\templates\forum\user\admin\unactive.html:5
+#: .\templates\forum\user\admin\unactive.html:11
+msgid "Unactive Users"
+msgstr ""
+
+#: .\templates\forum\user\auth\activation_resend.html:5
+#: .\templates\forum\user\auth\activation_resend.html:9
+#: .\templates\forum\user\auth\login.html:23
+msgid "Resend activation email"
+msgstr ""
+
+#: .\templates\forum\user\auth\activation_resend.html:16
+msgid "Resend email"
+msgstr ""
+
+#: .\templates\forum\user\auth\login.html:5
+#: .\templates\forum\user\auth\login.html:9
+#: .\templates\forum\user\auth\login.html:16
+msgid "Login"
+msgstr ""
+
+#: .\templates\forum\user\auth\login.html:21
+msgid "Create an account"
+msgstr ""
+
+#: .\templates\forum\user\auth\login.html:22
+msgid "I don't know my password"
+msgstr ""
+
+#: .\templates\forum\user\auth\logout.html:9
+msgid "Are you sure you want to log out?"
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_complete.html:7
+#: .\templates\forum\user\auth\password_reset_complete.html:11
+msgid "Password change successful"
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_complete.html:13
+msgid "Continue to login"
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_confirm.html:5
+msgid "Password reset confirmation"
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_confirm.html:11
+msgid "Enter new password"
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_confirm.html:21
+msgid "Password reset unsuccessful"
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_confirm.html:23
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used. Please request a new password reset."
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_done.html:5
+#: .\templates\forum\user\auth\password_reset_done.html:9
+msgid "Password reset successful"
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_done.html:11
+msgid ""
+"We've emailed you instructions for setting your password. You should be "
+"receiving them shortly."
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_done.html:12
+#: .\user\auth\views.py:113
+msgid ""
+"If you don't receive an email, please make sure you've entered the address "
+"you registered with, and check your spam folder."
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_email.html:2
+#, python-format
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_email.html:4
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_email.html:11
+#, python-format
+msgid "The %(site_name)s team"
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_form.html:5
+#: .\templates\forum\user\auth\password_reset_form.html:9
+msgid "Password reset"
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_form.html:15
+msgid "Reset my password"
+msgstr ""
+
+#: .\templates\forum\user\auth\password_reset_subject.txt:2
+#, python-format
+msgid "Password reset on %(site_name)s"
+msgstr ""
+
+#: .\templates\forum\user\auth\register.html:5
+#: .\templates\forum\user\auth\register.html:22
+#: .\templates\forum\user\auth\register.html:28
+msgid "Register"
+msgstr ""
+
+#: .\templates\forum\user\email_change_email.html:2
+#, python-format
+msgid ""
+"You're receiving this because you changed your user email at %(site_name)s."
+msgstr ""
+
+#: .\templates\forum\user\email_change_email.html:4
+msgid "Please go to the following link to confirm your email change:"
+msgstr ""
+
+#: .\templates\forum\user\menu.html:7
+msgid "User menu"
+msgstr ""
+
+#: .\templates\forum\user\menu.html:11
+msgid "Menu"
+msgstr ""
+
+#: .\templates\forum\user\menu.html:17
+msgid "Private topics"
+msgstr ""
+
+#: .\templates\forum\user\notification_email.html:2
+#, python-format
+msgid "You have a new notification at %(site_name)s."
+msgstr ""
+
+#: .\templates\forum\user\notification_email.html:4
+msgid "Please go to the following link to read the comment:"
+msgstr ""
+
+#: .\templates\forum\user\notification_email.html:8
+msgid ""
+"If you don't want to keep receiving notifications, you can deactivate them "
+"on your profile preferences."
+msgstr ""
+
+#: .\templates\forum\user\profile_email_change.html:5
+#: .\templates\forum\user\profile_email_change.html:9 .\user\tests.py:421
+#: .\user\tests.py:680 .\user\utils\email.py:58
+msgid "Email change"
+msgstr ""
+
+#: .\templates\forum\user\profile_email_change.html:15
+msgid "Change my email"
+msgstr ""
+
+#: .\templates\forum\user\profile_password_change.html:5
+#: .\templates\forum\user\profile_password_change.html:9
+msgid "Password change"
+msgstr ""
+
+#: .\templates\forum\user\profile_password_change.html:15
+msgid "Change my password"
+msgstr ""
+
+#: .\templates\forum\user\profile_topics.html:5 .\topic\models.py:37
+msgid "topics"
+msgstr ""
+
+#: .\templates\forum\user\profile_update.html:12 .\user\auth\forms.py:125
+#: .\user\forms.py:43 .\user\forms.py:48
+msgid "Email"
+msgstr ""
+
+#: .\templates\forum\user\profile_update.html:15 .\user\auth\forms.py:25
+#: .\user\forms.py:49
+msgid "Password"
+msgstr ""
+
+#: .\templates\forum\user\profile_update.html:16
+msgid "Change password"
+msgstr ""
+
+#: .\templates\forum\user\profile_update.html:18
+msgid "Avatar"
+msgstr ""
+
+#: .\templates\forum\user\profile_update.html:19
+msgid "Change avatar"
+msgstr ""
+
+#: .\templates\forum\user\profile_update.html:20
+msgid "Go to gravatar.com and use your current email to change it"
+msgstr ""
+
+#: .\templates\forum\utils\paginator\_paginator.html:4
+#, python-format
+msgid "Page %(number)s of %(num_pages)s"
+msgstr ""
+
+#: .\templates\forum\utils\paginator\_paginator.html:8
+msgid "Last"
+msgstr ""
+
+#: .\templates\forum\utils\paginator\_paginator.html:10
+msgid "First"
+msgstr ""
+
+#: .\templates\forum\utils\paginator\_yt_paginator.html:5
+msgid "Page 1 of 1"
+msgstr ""
+
+#: .\topic\forms.py:27
+msgid "Category"
+msgstr ""
+
+#: .\topic\forms.py:28
+msgid "Chose a category"
+msgstr ""
+
+#: .\topic\forms.py:41
+msgid "site name"
+msgstr ""
+
+#: .\topic\forms.py:42
+msgid "site description"
+msgstr ""
+
+#: .\topic\forms.py:43
+msgid "footer snippet"
+msgstr ""
+
+#: .\topic\forms.py:45
+msgid "This gets rendered just before the footer in your template."
+msgstr ""
+
+#: .\topic\forms.py:46
+msgid "comments per page"
+msgstr ""
+
+#: .\topic\forms.py:47
+msgid "topics per page"
+msgstr ""
+
+#: .\topic\gift\apps.py:11
+msgid "JoyForum Gift"
+msgstr ""
+
+#: .\topic\models.py:21
+msgid "date"
+msgstr ""
+
+#: .\topic\models.py:22
+msgid "last active"
+msgstr ""
+
+#: .\topic\models.py:24
+msgid "pinned"
+msgstr ""
+
+#: .\topic\models.py:25
+msgid "globally pinned"
+msgstr ""
+
+#: .\topic\models.py:29
+msgid "views count"
+msgstr ""
+
+#: .\topic\models.py:30 .\user\models.py:63
+msgid "comment count"
+msgstr ""
+
+#: .\topic\models.py:36
+msgid "topic"
+msgstr ""
+
+#: .\topic\models.py:110
+msgid "upload slide image"
+msgstr ""
+
+#: .\topic\models.py:111
+msgid "enabled"
+msgstr ""
+
+#: .\topic\models.py:112
+msgid "image note"
+msgstr ""
+
+#: .\topic\notification\apps.py:11
+msgid "JoyForum Topic Notification"
+msgstr ""
+
+#: .\topic\notification\forms.py:37
+msgid "This notification already exists"
+msgstr ""
+
+#: .\topic\notification\forms.py:43
+msgid "You can't subscribe to a topic with no comments"
+msgstr ""
+
+#: .\topic\notification\models.py:17
+msgid "Undefined"
+msgstr ""
+
+#: .\topic\notification\models.py:18
+msgid "Mention"
+msgstr ""
+
+#: .\topic\notification\models.py:19
+msgid "Comment"
+msgstr ""
+
+#: .\topic\notification\models.py:39
+msgid "topic notification"
+msgstr ""
+
+#: .\topic\notification\models.py:40
+msgid "topics notification"
+msgstr ""
+
+#: .\topic\templates\admin\topic\change_form.html:7
+#: .\topic\templates\admin\topic\manage_form.html:10
+msgid "Manage"
+msgstr ""
+
+#: .\topic\templates\admin\topic\manage_form.html:7
+msgid "Home"
+msgstr ""
+
+#: .\topic\unread\apps.py:11
+msgid "JoyForum Topic Unread"
+msgstr ""
+
+#: .\topic\unread\models.py:22
+msgid "topic unread"
+msgstr ""
+
+#: .\topic\unread\models.py:23
+msgid "topics unread"
+msgstr ""
+
+#: .\user\admin\apps.py:11
+msgid "JoyForum User Admin"
+msgstr ""
+
+#: .\user\admin\views.py:30
+msgid "This profile has been updated!"
+msgstr ""
+
+#: .\user\auth\apps.py:11
+msgid "JoyForum User Auth"
+msgstr ""
+
+#: .\user\auth\forms.py:19
+msgid "Email confirmation"
+msgstr ""
+
+#: .\user\auth\forms.py:22
+msgid "Enter the same email as above, for verification."
+msgstr ""
+
+#: .\user\auth\forms.py:26
+msgid "Leave blank"
+msgstr ""
+
+#: .\user\auth\forms.py:41
+msgid "Do not fill this field."
+msgstr ""
+
+#: .\user\auth\forms.py:53
+msgid "The username is taken."
+msgstr ""
+
+#: .\user\auth\forms.py:66
+msgid "The two email fields didn't match."
+msgstr ""
+
+#: .\user\auth\forms.py:79
+msgid "Username or Email"
+msgstr ""
+
+#: .\user\auth\forms.py:83
+msgid "The password is not valid."
+msgstr ""
+
+#: .\user\auth\forms.py:115
+#, python-format
+msgid "No account matches %(username)s."
+msgstr ""
+
+#: .\user\auth\forms.py:138
+msgid "The provided email does not exists."
+msgstr ""
+
+#: .\user\auth\forms.py:146
+msgid "This account is verified, try logging-in."
+msgstr ""
+
+#: .\user\auth\tests\tests.py:91 .\user\auth\tests\tests.py:224
+#: .\user\tests.py:644 .\user\utils\email.py:50
+msgid "User activation"
+msgstr ""
+
+#: .\user\auth\views.py:66
+#, python-format
+msgid ""
+"We have sent you an email to %(email)s so you can activate your account!"
+msgstr ""
+
+#: .\user\auth\views.py:94
+msgid "Your account has been activated!"
+msgstr ""
+
+#: .\user\forms.py:33
+msgid "The email is taken."
+msgstr ""
+
+#: .\user\forms.py:59
+msgid "The provided password is incorrect."
+msgstr ""
+
+#: .\user\forms.py:80
+#, python-format
+msgid "Current time is: %(date)s %(time)s"
+msgstr ""
+
+#: .\user\models.py:48
+msgid "profile"
+msgstr ""
+
+#: .\user\models.py:51
+msgid "location"
+msgstr ""
+
+#: .\user\models.py:52
+msgid "last seen"
+msgstr ""
+
+#: .\user\models.py:53
+msgid "last ip"
+msgstr ""
+
+#: .\user\models.py:54
+msgid "time zone"
+msgstr ""
+
+#: .\user\models.py:55
+msgid "administrator status"
+msgstr ""
+
+#: .\user\models.py:56
+msgid "moderator status"
+msgstr ""
+
+#: .\user\models.py:57
+msgid "verified"
+msgstr ""
+
+#: .\user\models.py:58
+msgid ""
+"Designates whether the user has verified his account by email or by other "
+"means. Un-select this to let the user activate his account."
+msgstr ""
+
+#: .\user\models.py:62
+msgid "topic count"
+msgstr ""
+
+#: .\user\models.py:83
+msgid "forum profile"
+msgstr ""
+
+#: .\user\models.py:84
+msgid "forum profiles"
+msgstr ""
+
+#: .\user\models.py:105
+msgid "user"
+msgstr ""
+
+#: .\user\models.py:106
+msgid "users"
+msgstr ""
+
+#: .\user\utils\email.py:67
+#, python-format
+msgid "New notification: %(topic_name)s"
+msgstr ""
+
+#: .\user\views.py:35
+msgid "Your profile has been updated!"
+msgstr ""
+
+#: .\user\views.py:57
+msgid "Your password has been changed!"
+msgstr ""
+
+#: .\user\views.py:74
+msgid "We have sent you an email so you can confirm the change!"
+msgstr ""
+
+#: .\user\views.py:96
+msgid "Your email has been changed!"
+msgstr ""
+
+#: .\user\views.py:99
+msgid "Sorry, we were not able to change your email."
+msgstr ""

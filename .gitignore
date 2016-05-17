@@ -1,2 +1,6 @@
 *.pyc
 *.idea
+*.xml
+db.sqlite*
+uwsgi.log
+/log

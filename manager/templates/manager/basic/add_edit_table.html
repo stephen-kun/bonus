@@ -77,7 +77,7 @@
             is_vip = i;
     }
 
-    if( table_num!="" && (/(^[1-9]\d*$)/.test(capacity) ))
+    if( table_num!="" )
     {
     $.post("{% url 'table_action' %}", {'action': action, "table_num":table_num, "capacity": capacity, "is_vip": is_vip },function(data){
         if(data.state==0){

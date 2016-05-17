@@ -9,24 +9,31 @@
             <div class="award_box_content">
                 <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
                   <tr>
-                    <th width="10%">桌号</th>
+                    <th width="5%">桌号</th>
                     <th width="15%">开始时间</th>
-                    <th width="60%">顾客</th>
-                    <th width="10%">人数</th>
+                    <th width="5%">人数</th>
+                    <th width="50%">顾客</th>
+                    <th width="25%">收到红包</th>
                   </tr>
 
-                  {% for info in info_list %}
+                  {% for session in session_list %}
                   <tr class="table_new_h">
-                    <td class="color_b">{{ info.table.index_table }}号桌</td>
-                    <td class="color_b">{{ info.time|date:"Y-n-j H:i" }}</td>
+                    <td class="color_b">{{ session.table.index_table }}</td>
+                    <td class="color_b">{{ session.begin_time|date:"Y-n-j H:i" }}</td>
+                    <td class="color_b">{{ session.consumer_number }}</td>
                     <td class="color_a">
-                        {% for consumer in  info.consumers %}
+                        {% for consumer in  session.consumers %}
                         <a href="{% url 'consumer_detail' %}?open_id={{ consumer.open_id }}" target="mainFrame">
                         <span class="table_new_head"><img src="{{ consumer.picture }}" align="absmiddle"></span>
                         </a>
                         {% endfor %}
                     </td>
-                    <td class="color_b">{{ info.consumer_number }}</td>
+                    <td class="color_a">
+                        {{session.rcv_bonus.count}}个&nbsp
+                        <a href="{% url 'session_detail' %}?table_index={{ session.table.index_table }}" target="mainFrame">
+                            <font size=3.2  color='gray'>查看</font>
+                        </a>
+                    </td>
                   </tr>
                   {% endfor %}
 

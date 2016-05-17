@@ -1,0 +1,15 @@
+{% extends "forum/_base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "User list" %}{% endblock %}
+
+{% block content %}
+
+    {% include "forum/admin/_side_menu.html" with active="users" %}
+
+    <h1 class="headline">{% trans "User list" %}</h1>
+
+    {% include "forum/user/admin/_list.html" with active_tab="list" %}
+
+{% endblock %}

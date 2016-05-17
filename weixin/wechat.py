@@ -15,6 +15,9 @@ from django.http.response import HttpResponse, HttpResponseBadRequest,HttpRespon
 from django.core.exceptions import ObjectDoesNotExist 
 from django.utils import timezone
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 import re
 import pytz
 import urllib
@@ -88,7 +91,8 @@ def user_subscribe(openid):
 		name = user_info.get_name()
 		sex = user_info.get_sex()
 		headimgurl = user_info.get_headimgurl()
-		consumer = Consumer(open_id=openid, name=name, sex=sex, picture=headimgurl)	
+	        user = User.objects.create(username=name, email="xxxx@xxx", is_staff=False)	
+		consumer = Consumer(open_id=openid, user=user, name=name, sex=sex, picture=headimgurl)	
 		consumer.subscribe = True
 	consumer.save()
 	return consumer

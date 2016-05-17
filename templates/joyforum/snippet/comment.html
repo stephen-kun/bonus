@@ -1,0 +1,38 @@
+{% load static %}
+{% load forum_tags i18n %}
+{% load wxwraper %}
+{% load emoji_tags %}
+
+{% for comment in comments %}
+<li>
+{#    <a name="c{{ forloop.counter0|add:comments.start_index }}"#}
+{#       id="c{{ forloop.counter0|add:comments.start_index }}"#}
+{#       data-number="{{ forloop.counter0|add:comments.start_index }}" data-pk="{{ comment.pk }}"></a>#}
+
+    <div class="item-content comment-item">
+        <div class="item-media facebook-avatar"><img
+                src="{{ comment.user.jf.picture }}" class="img-circle"
+                width="34"></div>
+        <div class="item-inner">
+            <div class="item-title-row">
+                <div class="facebook-name">{{ user.jf.name }}</div>
+                <div class="facebook-date">
+                    <small><time title="{{ comment.date }}" datetime="{{ comment.date|date:"c" }}" class="timeago"></time></small>
+                    &nbsp;&nbsp;
+                    <small><i class="icon iconfont icon-presentfill
+                                        present presoneto_{{ comment.user.jf.open_id }}"></i></small>
+                </div>
+            </div>
+            <div class="item-text">{{ comment.comment_html|safe|emoji_replace }}</div>
+        </div>
+    </div>
+</li>
+{% endfor %}
+{% if comments|length > 0 %}
+    <script>
+    jQuery(".imagelist li img").each(function (index, value) {
+                $(value).height($(value).width());
+            });
+    jQuery("time.timeago").timeago();
+    </script>
+{% endif %}

@@ -1,0 +1,15 @@
+{% extends "forum/_base.html" %}
+
+{% load forum_tags i18n %}
+
+{% block title %}{{ p_user.username }} {% trans "topics" %}{% endblock %}
+
+{% block content %}
+
+    {% include "forum/user/_profile.html" with active_tab=1 %}
+
+    {% include "forum/topic/_render_list.html" %}
+
+    {% render_paginator topics %}
+
+{% endblock %}

@@ -9,15 +9,18 @@
             <div class="award_box_content">
                 <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
                   <tr>
-                    <th width="20%">顾客</th>
+                    <th width="20%">时间</th>
+                    <th width="15%">顾客</th>
                     <th width="20%">类型</th>
-                    <th width="20%">红包</th>
-                    <th width="20%">状态</th>
+                    <th width="15%">红包</th>
+                    <th width="10%">状态</th>
                     <th width="20%">操作</th>
                   </tr>
 
                   {% for bonus in bonus_list %}
                   <tr class="table_new_h">
+                    <td class="color_b">{{ bonus.datetime|date:"Y-n-j H:i:s" }}</td>
+
                       <td class="color_a"><span class="table_new_head"><img src="{{bonus.consumer.picture}}" align="absmiddle"></span>{{ bonus.consumer.name }}</td>
                       {% ifequal bonus.bonus_type 0 %}
                       <td class="color_b">普通红包</td>

@@ -1,0 +1,26 @@
+{# todo: remove this, use :target on menu #}
+
+{% extends "forum/_base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "User menu" %}{% endblock %}
+
+{% block content %}
+
+    <h1 class="headline">{% trans "Menu" %}</h1>
+
+    <ul class="menu">
+         <li><a class="menu-link" href="{% url "user:detail" pk=user.pk slug=user.jf.slug %}">{% trans "Profile" %}</a></li>
+         <li><a class="menu-link" href="{% url "topic:index-active" %}">{% trans "Topics" %}</a></li>
+         <li><a class="menu-link" href="{% url "topic:unread:index" %}">{% trans "Unread topics" %}</a></li>
+         <li><a class="menu-link" href="{% url "topic:private:index" %}">{% trans "Private topics" %}</a></li>
+
+        {% if user.jf.is_administrator %}
+            <li><a class="menu-link" href="{% url "admin:index" %}">{% trans "Admin" %}</a></li>
+        {% endif %}
+
+         <li><a class="menu-link js-post" href="{% url "user:auth:logout" %}">{% trans "Log out" %}</a></li>
+    </ul>
+
+{% endblock %}
