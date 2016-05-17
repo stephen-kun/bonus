@@ -8,7 +8,11 @@ import string, random
 from django.core.exceptions import ObjectDoesNotExist
 import json
 from manager.datatype import *
-import datetime
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import AbstractUser
+from core.utils.timezone import TIMEZONE_CHOICES
+from core.utils.models import AutoSlugField
+from django.core.urlresolvers import reverse
 
 COMMON_BONUS = 0
 RANDOM_BONUS = 1
@@ -122,13 +126,6 @@ class DiningTable(models.Model):
 
 #就餐会话
 class DiningSession(models.Model):
-    @classmethod
-    def get_sessions_by_dining_date(cls, time):
-        sessions=set()
-        for s in ConsumerSession.objects.filter(time__date=time).select_related('session'):
-            sessions.add(s.session)
-        return sessions
-
     person_num	= models.IntegerField(default=0)							#就餐人数
     begin_time = models.DateTimeField(default=timezone.now) 				#开始就餐时间
     over_time = models.DateTimeField(null=True, blank=True)				#结束就餐时间
@@ -142,14 +139,11 @@ class DiningSession(models.Model):
 
     @property
     def consumers(self):
-        consumers = set()
-        for s in self.session_record_set.select_related('consumer'):
-            consumers.add(s.consumer)
-        return consumers
+        return self.consumer_set.all()
 
     @property
     def consumer_number(self):
-        return len(self.consumers)
+        return self.consumer_set.all().count()
 
     def rcv_bonus(self):
         bonus_set = self.rcv_bonus_set.all()
@@ -163,41 +157,69 @@ class DiningSession(models.Model):
 
 #消费者数据表
 class Consumer(models.Model):
-    @classmethod
-    def get_consumers_by_dining_date(cls, time):
-        consumers=set()
-        for s in ConsumerSession.objects.filter(time__date=time).select_related('consumer'):
-            consumers.add(s.consumer)
-        return consumers
+    open_id = models.CharField(max_length=30,unique=True)  # 微信openId
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=_("profile"), related_name='jf')
 
-    open_id = models.CharField(max_length=30, unique=True)	#微信openId
+    slug = AutoSlugField(populate_from="user.username", db_index=False, blank=True)
+    location = models.CharField(_("location"), max_length=75, blank=True)
+    last_seen = models.DateTimeField(_("last seen"), auto_now=True)
+    last_ip = models.GenericIPAddressField(_("last ip"), blank=True, null=True)
+    localtimezone = models.CharField(_("time zone"), max_length=32, choices=TIMEZONE_CHOICES, default='UTC')
+    is_administrator = models.BooleanField(_('administrator status'), default=False)
+    is_moderator = models.BooleanField(_('moderator status'), default=False)
+    is_verified = models.BooleanField(_('verified'), default=False,
+                                      help_text=_('Designates whether the user has verified his '
+                                                  'account by email or by other means. Un-select this '
+                                                  'to let the user activate his account.'))
+
+    topic_count = models.PositiveIntegerField(_("topic count"), default=0)
+    comment_count = models.PositiveIntegerField(_("comment count"), default=0)
+
+    name = models.CharField(max_length=30, default='小明')  # 用户名
+    sex = models.CharField(max_length=1, default='0')  # 性别
+    phone_num = models.CharField(max_length=20, null=True, blank=True)  # 电话
+    address = models.CharField(max_length=30, null=True, blank=True)  # 地址
+    picture = models.URLField(max_length=200, null=True, blank=True)  # 头像地址
+    bonus_range = models.IntegerField(default=0)  # 排行榜名次
+    snd_bonus_num = models.IntegerField(default=0)  # 发红包总数
+    rcv_bonus_num = models.IntegerField(default=0)  # 收红包总数
+    snd_bonus_value = models.IntegerField(default=0)  # 发红包金额
+    own_bonus_value = models.IntegerField(default=0)  # 可用红包金额
+    own_bonus_detail = models.CharField(max_length=100, null=True, blank=True)  # 可用红包明细
+    own_ticket_value = models.IntegerField(default=0)  # 可用礼券金额
+    create_time = models.DateTimeField(default=timezone.now())  # 首次关注时间
+    subscribe = models.BooleanField(default=True)  # 是否关注
+    dining_time = models.DateTimeField(default=timezone.now())  # 就餐时间
+    on_table = models.ForeignKey(DiningTable, on_delete=models.CASCADE,null=True,blank=True)  # 就餐桌台
+    session = models.ForeignKey(DiningSession, null=True, blank=True, related_name="consumer_set", on_delete=models.CASCADE)
     is_admin = models.BooleanField(default=False)
-    name = models.CharField(max_length=30, default='小明')							#用户名
-    sex = models.CharField(max_length=1, default='0')						#性别
-    phone_num = models.CharField(max_length=20, null=True, blank=True)		#电话
-    address = models.CharField(max_length=30, null=True, blank=True)			#地址
-    email = models.EmailField(null=True, blank=True)							#邮箱
-    picture = models.URLField(null=True, blank=True)							#头像地址
-    bonus_range = models.IntegerField(default=0)					#排行榜名次
-    snd_bonus_num = models.IntegerField(default=0)					#发红包总数
-    rcv_bonus_num = models.IntegerField(default=0)					#收红包总数
-    snd_bonus_value = models.IntegerField(default=0)				#发红包金额
-    own_bonus_value = models.IntegerField(default=0)				#可用红包金额
-    own_bonus_detail = models.CharField(max_length=300, null=True, blank=True)	#可用红包明细
-    own_ticket_num = models.IntegerField(default=0)				#可用券数量
-    own_ticket_value = models.IntegerField(default=0)				#可用礼券金额
-    create_time = models.DateTimeField(default=timezone.now)		#首次关注时间
-    subscribe = models.BooleanField(default=True)					#是否关注
-    on_table = models.ForeignKey(DiningTable, null=True, blank=True, on_delete=models.CASCADE)	#就餐桌台
-    session = models.ForeignKey(DiningSession, null=True, blank=True, related_name="consumer_set", on_delete=models.CASCADE)	#就餐会话
     latest_time = models.DateTimeField(default=timezone.now)		#最近到店时间
+
+    class Meta:
+        verbose_name = _("forum profile")
+        verbose_name_plural = _("forum profiles")
+
+    def save(self, *args, **kwargs):
+        try:
+            existing = Consumer.objects.get(user=self.user)
+            self.id = existing.id #force update instead of insert
+        except Consumer.DoesNotExist:
+            pass
+
+        if self.user.is_superuser:
+            self.is_administrator = True
+
+        if self.is_administrator:
+            self.is_moderator = True
+
+        models.Model.save(self, *args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('user:detail', kwargs={'pk': self.user.pk, 'slug': self.slug})
+
 
     def __unicode__(self):
         return self.name
-
-    def lastest_session(self):
-        session=self.session_set.latest('time')
-        return session
 
     @property
     def recharges(self):
@@ -246,10 +268,10 @@ class Consumer(models.Model):
 
     @property
     def valid_tickets(self):
-        ticket_vn=Dict()
+        ticket_vn={}
         tickets=self.ticket_set.filter(ticket_type=1,is_consume=False)
         for t in tickets:
-            if(ticket_vn.has_key("%s元券"%t.ticket_value)):
+            if(ticket_vn.has_key(t.ticket_value)):
                 ticket_vn[t.ticket_value] += 1
             else:
                 ticket_vn[t.ticket_value] = 1
@@ -277,12 +299,6 @@ class Consumer(models.Model):
 
         bonus.split_to_rcv_bonus(total_good_num)
 
-    def today_snd_bonus(self):
-        return self.snd_bonus_set.filter(create_time__date=datetime.datetime.today()).order_by('create_time')
-
-    def snd_bonus(self):
-        return self.snd_bonus_set.all().order_by('create_time')
-
 class ConsumerAccountGoods(models.Model):
     good = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
     consumer = models.ForeignKey(Consumer, null=True,related_name='consumer_goods', on_delete=models.CASCADE)		#就餐的消费者
@@ -291,8 +307,8 @@ class ConsumerAccountGoods(models.Model):
 
 #Consumer 就餐记录
 class ConsumerSession(models.Model):
-    session = models.ForeignKey(DiningSession, null=True, related_name="session_record_set", on_delete=models.CASCADE)	#就餐会话
-    consumer = models.ForeignKey(Consumer, null=True, related_name="session_record_set", on_delete=models.CASCADE)		#就餐的消费者
+    session = models.ForeignKey(DiningSession, null=True, on_delete=models.CASCADE)	#就餐会话
+    consumer = models.ForeignKey(Consumer, null=True, on_delete=models.CASCADE)		#就餐的消费者
     time = models.DateTimeField(default=timezone.now) 				#记录时间
 
 #充值记录
@@ -362,7 +378,7 @@ class SndBonus(models.Model):
     create_time = models.DateTimeField(default=timezone.now)		#发送时间
     over_time = models.DateTimeField(null=True, blank=True)		#抢完时间
     user_time = models.DateTimeField(null=True, blank=True)		#抢完花费时间
-    consumer = models.ForeignKey(Consumer, related_name="snd_bonus_set", on_delete=models.CASCADE)	#发送红包者
+    consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#发送红包者
     session = models.ForeignKey(DiningSession, null=True, on_delete=models.CASCADE)	#就餐会话
 
     def __unicode__(self):
@@ -432,7 +448,7 @@ class RcvBonus(models.Model):
     total_money = models.FloatField(default=0)								#总金额
     is_best = models.BooleanField(default=False)							#是否手气最佳
     snd_bonus = models.ForeignKey(SndBonus, on_delete=models.CASCADE)		#红包的唯一id
-    consumer = models.ForeignKey(Consumer, null=True, blank=True, related_name="rcv_bonus_set", on_delete=models.CASCADE)		#消费者的唯一id
+    consumer = models.ForeignKey(Consumer, null=True, blank=True, on_delete=models.CASCADE)		#消费者的唯一id
     record_rcv_bonus = models.ForeignKey(RecordRcvBonus, null=True, blank=True, on_delete=models.CASCADE)	#抢红包记录
     session = models.ForeignKey(DiningSession, null=True, blank=True, related_name="rcv_bonus_set", on_delete=models.CASCADE)	#就餐会话
 

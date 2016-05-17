@@ -1,0 +1,15 @@
+{% extends "forum/_base.html" %}
+
+{% load forum_tags i18n %}
+
+{% block title %}{{ category.title }}{% endblock %}
+
+{% block content %}
+
+    {% include "forum/topic/_top_bar.html" with category=category categories=subcategories %}
+
+    {% include "forum/topic/_render_list.html" with show_subcategory=True %}
+
+    {% render_paginator topics %}
+
+{% endblock %}

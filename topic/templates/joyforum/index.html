@@ -1,0 +1,333 @@
+{% extends "joyforum/base.html" %}
+{% load static %}
+{% load forum_tags i18n %}
+{% load wxwraper %}
+{% load emoji_tags %}
+{% emoji_load %}
+
+{% block title %}{% endblock %}
+
+{% block cssext %}
+    <style>
+        .avator {
+            width: 25px;
+            height: 25px;
+            margin-right: 10px;
+        }
+
+        .pull-to-refresh-content {
+         top: -2.2rem !important;
+        }
+
+        .home.swiper-container {
+            height: 180px;
+            width: 100%;
+            padding-bottom: 0px;
+        }
+
+        .card-header * {
+            vertical-align: middle;
+        }
+
+        .card-header .mytitle {
+            line-height: 30px;
+        }
+
+        .content-block-title {
+            margin: 0.75rem 0.75rem 0.5rem !important;
+        }
+
+        .imagelist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .imagelist li {
+            float: left;
+            width: 32%;
+            margin: 0.1rem;
+        }
+
+        .imagelist li img {
+            width: 100%;
+        }
+
+        .myswipe-pagination {
+            position: absolute;
+            text-align: center;
+            -webkit-transition: 300ms;
+            transition: 300ms;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            z-index: 10;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+        }
+
+    </style>
+{% endblock %}
+
+{% block contentclass %}pull-to-refresh-content infinite-scroll infinite-scroll-bottom data-distance="100"{% endblock %}
+
+{% block pullrefresh %}
+    <div class="pull-to-refresh-layer">
+        <div class="preloader"></div>
+        <div class="pull-to-refresh-arrow"></div>
+    </div>
+{% endblock %}
+
+{% block bodytop %}
+    <div class="swiper-container home" data-space-between='10'>
+        <div class="swiper-wrapper">
+            {% for image in sliderimages %}
+                <div class="swiper-slide"><img
+                        src="{% get_media_prefix %}{{ image.url }}" style="width: 100%;height: 100%;" alt=""></div>
+            {% endfor %}
+        </div>
+        {#            <div class="myswipe-pagination"></div>#}
+    </div>
+{% endblock %}
+
+{% block page %}
+
+    <div class="page-current" id="pageindex">
+        {% for topic in topics %}
+            <div class="card facebook-card">
+                <div class="card-header no-border">
+                    <div class="facebook-avatar"><img class="img-circle" src="{{ topic.user.jf.picture }}" width="40"
+                                                      height="40">
+                    </div>
+                    <div class="facebook-name"><a href="{{ topic.get_absolute_url|wxurl_wraper }}" class="external">{{ topic.title }}</a>
+                    </div>
+                    <div class="facebook-date"><span>{{ topic.user.jf.name }}</span>
+                        <time style="margin-left: 15px;" title="{{ topic.last_active }}" datetime="{{ topic.last_active|date:"c" }}" class="timeago"></time></div>
+                </div>
+                <div class="card-content clickable" href="{{ topic.get_absolute_url|wxurl_wraper }}">
+                    <div class="card-content-inner">
+                        <p>
+                            {{ topic.comment.comment|safe|slice:":140"|emoji_replace }}... <a
+                                href="{{ topic.get_absolute_url|wxurl_wraper }}"
+                                class="external">查看全文</a>
+                        </p>
+
+                        <ul class="imagelist">
+                            {% for image in topic.imagelist %}
+                                <li>
+                                    <img src="{{ image.imageurl }}">
+                                </li>
+                            {% endfor %}
+                            <div style="clear: both;"></div>
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url "wx:wx-comment-publish" topic_id=topic.id %}" class="link external"><i
+                            class="icon iconfont icon-mark">
+                        &nbsp;</i>{{ topic.comment_count|add:"-1" }}</a>
+
+                    {% with topic.comment as c %}
+                        {% if user.is_authenticated %}
+                            {% if c.like %}
+                                <a class="js-like external" href="javascript:void(0);"
+                                   data-href="{% url "wx:wx-comment-like-delete" c.like.pk %}"
+                                   data-count="{{ c.likes_count }}"><i class="icon iconfont icon-appreciatefill">
+                                </i>&nbsp;<span>{{ c.likes_count }}</span></a>
+                            {% else %}
+                                {% ifnotequal c.user user %}
+                                    <a class="js-like like external"
+                                       href="javascript:void(0);" data-href="{% url "wx:wx-comment-like-create" c.pk %}"
+                                       data-count="{{ c.likes_count }}"><i class="icon iconfont icon-appreciate">
+                                    </i>&nbsp;<span>{{ c.likes_count }}</span></a>
+                                {% else %}
+                                    <span href="javascript:void(0);"><i
+                                            class="icon iconfont icon-appreciate"></i>&nbsp;{{ c.likes_count }}</span>
+                                {% endifnotequal %}
+                            {% endif %}
+                        {% else %}
+                            <span href="javascript:void(0);"> <i
+                                    class="icon iconfont icon-appreciate"></i>&nbsp;{{ c.likes_count }}</span>
+                        {% endif %}
+                    {% endwith %}
+                    <a href="#" class="link"><i class="icon iconfont icon-presentfill">&nbsp;</i>{% if topic.liquan %}{{ topic.liquan }}{% else %}0{% endif %}</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>{% trans "There are no topics here, yet" %}</p>
+        {% endfor %}
+
+    </div>
+    <div class="infinite-scroll-preloader loading">
+        <div class="preloader"></div>
+    </div>
+    <div class="infinite-scroll-preloader endnote" style="display: none;">
+        <div><span>没有更多了......</span></div>
+    </div>
+
+
+    <div id="cacheelements" style="display: none;">
+
+    </div>
+
+{% endblock %}
+
+{% block navbar %}
+    <nav class="bar bar-tab">
+        <a class="tab-item external active" href="#">
+            <span class="icon iconfont icon-shouye"></span>
+            <span class="tab-label">首页</span>
+        </a>
+        <a class="tab-item external" href="{% url "wx:wx-newtopic" %}">
+            <span class="icon iconfont icon-zengjia"></span>
+            <span class="tab-label">发布主题</span>
+
+        </a>
+        <a class="tab-item external" href="{% url "wx:wx-notification" %}">
+            <span class="icon iconfont icon-xiaoxi"></span>
+            <span class="tab-label">消息</span>
+            <span class="badge" id="unread" {% if not unread %}style="display:none"{% endif %}>{{ unread }}</span>
+        </a>
+    </nav>
+{% endblock %}
+
+{% block headerjs %}
+<script type='text/javascript' src='{% static "js/timeago/jquery.timeago.js" %}' charset='utf-8'></script>
+    <script type='text/javascript' src='{% static "js/timeago/locales/jquery.timeago.zh-CN.js" %}' charset='utf-8'></script>
+{% endblock %}
+
+{% block jsext %}
+    <script type='text/javascript' src='{% static "js/util.no-min.js" %}' charset='utf-8'></script>
+    <script type='text/javascript' src='{% static "js/like.no-min.js" %}' charset='utf-8'></script>
+    <script type="text/javascript">
+
+        var config = {};
+        config.curpage = {{ curpage }};
+        config.ctime = "{{ time }}";
+        config.ctime2 = "{{ time }}";
+        config.maxitems = {{ maxitems }};
+        config.showscroll = {{ showscroll|yesno:"1,0" }};
+
+        var loading = false;
+        var lastIndex = {{ topics|length }};
+
+        $(document).on('refresh', '.pull-to-refresh-content', function (e) {
+            config.type = "down";
+            $.post('{% url "wx:wx-index" %}',
+                    config,
+                    function (resp) {
+                        setTimeout(function () {
+                            $("#cacheelements").html(resp.html);
+                            $("#pageindex").prepend($("#cacheelements").html());
+                            $.pullToRefreshDone('.pull-to-refresh-content');
+                        }, 1500);
+                        config.ctime = resp.time;
+                        if(resp.unread>0){
+                            $("#unread").text(resp.unread);
+                            $("#unread").show();
+                        }
+                    });
+        });
+
+        $(document).on('infinite', '.infinite-scroll-bottom', function () {
+            if (loading) return;
+            loading = true;
+
+            config.type = "up";
+            if (lastIndex >= parseInt(config.maxitems)) {
+                $.detachInfiniteScroll($('.infinite-scroll'));
+                $('.infinite-scroll-preloader.loading').hide();
+                $('.infinite-scroll-preloader.endnote').show();
+                loading = false;
+                return;
+            }
+
+            config.page = parseInt(config.curpage) + 1;
+            console.log("page:" + config.page);
+
+
+            $.post('{% url "wx:wx-index" %}',
+                    config,
+                    function (resp) {
+                        loading = false;
+                        $("#cacheelements").html(resp.html);
+                        $("#pageindex").append($("#cacheelements").html());
+                        lastIndex = $("#pageindex .card").length;
+                        $.refreshScroller();
+
+                        config.curpage = parseInt(resp.curpage);;
+                        {#                        refreshcard();#}
+                        loading = false;
+                        console.log("curpage:" + config.curpage);
+
+                        if(resp.unread>0){
+                            $("#unread").text(resp.unread);
+                            $("#unread").show();
+                        }
+
+                    });
+
+        });
+
+        $(function () {
+
+            if(config.showscroll==0){
+                $.detachInfiniteScroll($('.infinite-scroll'));
+                $('.infinite-scroll-preloader.loading').hide();
+                $('.infinite-scroll-preloader.endnote').show();
+            }
+
+            $(".swiper-container").swiper({
+                speed: 300,
+                spaceBetween: 0,
+                autoHeight: true,
+                autoplay: 2500,
+                watchSlidesProgress: true,
+                pagination: '.myswiper-pagination',
+                paginationClickable: true
+            });
+
+            $(document).on("click", '.js-like', function (e) {
+                if (!jQuery(this).data('plugin_like')) {
+                    jQuery(this).like({
+                        csrfToken: "{{ csrf_token }}",
+                        likeText: '<i class="icon iconfont icon-appreciate"></i>&nbsp;<span>{count}</span>',
+                        removeLikeText: '<i class="icon iconfont icon-appreciatefill"></i>&nbsp;<span>{count}</span>'
+                    }).data('plugin_like').sendLike();
+                }
+                else {
+                    jQuery(this).data('plugin_like').sendLike();
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+            });
+            var photos = [];
+            $(document).on('click', '.imagelist', function () {
+                photos = [];
+                $(this).find("li img").each(function (index, value) {
+                    var imgobj = {url: $(value).attr("src")};
+                    photos.push(imgobj);
+                });
+                $.photoBrowser({
+                    photos: photos,
+                    theme: 'dark',
+                    type: 'standalone'
+                }).open();
+            });
+
+            jQuery(".imagelist li img").each(function (index, value) {
+                $(value).height($(value).width());
+            });
+
+{#            jQuery.timeago.settings.localeTitle='zh-CN';#}
+
+            jQuery("time.timeago").timeago();
+        });
+
+
+    </script>
+
+{% endblock %}
+

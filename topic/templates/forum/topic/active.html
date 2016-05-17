@@ -1,0 +1,15 @@
+{% extends "forum/_base.html" %}
+
+{% load forum_tags i18n %}
+
+{% block title %}{% trans "Latest active topics" %}{% endblock %}
+
+{% block content %}
+
+    {% include "forum/topic/_top_bar.html" with category=None categories=categories %}
+
+    {% include "forum/topic/_render_list.html" %}
+
+    {% render_paginator topics %}
+
+{% endblock %}

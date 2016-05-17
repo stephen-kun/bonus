@@ -233,7 +233,7 @@ def view_redirect_qubaba_forum(request):
 	
 def display_qubaba_forum_views(open_id, request):
 	#url = 'http://www.jinfuture.com:9999/wx/?open_id=%s'%(open_id)
-	url = 'http://www.jinfuture.com:9999/wx/?open_id=ccccc'
+	url = 'http://wx.tonki.com.cn/wx/?open_id=%s'%(open_id)
 	return HttpResponseRedirect(url)
 
 #******************************************************************************	

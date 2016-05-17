@@ -1,0 +1,69 @@
+{% load static %}
+{% load forum_tags i18n %}
+{% load wxwraper %}
+{% load emoji_tags %}
+
+{% for topic in topics %}
+<div class="card facebook-card">
+    <div class="card-header no-border">
+        <div class="facebook-avatar"><img class="img-circle" src="{{ topic.user.jf.picture }}" width="40" height="40">
+        </div>
+        <div class="facebook-name"><a href="{{ topic.get_absolute_url|wxurl_wraper }}"  class="external">{{ topic.title }}</a></div>
+        <div class="facebook-date"><span>{{ topic.user.jf.name }}</span>
+            <time style="margin-left: 15px;" title="{{ topic.last_active }}" datetime="{{ topic.last_active|date:"c" }}" class="timeago"></time></div>
+    </div>
+    <div class="card-content clickable" href="{{ topic.get_absolute_url|wxurl_wraper }}">
+        <div class="card-content-inner">
+            <p>
+                {{ topic.comment.comment|safe|slice:":140"|emoji_replace }}... <a href="{{ topic.get_absolute_url|wxurl_wraper }}"
+                                                                    class="external">查看全文</a>
+            </p>
+
+            <ul class="imagelist">
+                {% for image in topic.imagelist %}
+                    <li>
+                        <img src="{{ image.imageurl }}">
+                    </li>
+                {% endfor %}
+                <div style="clear: both;"></div>
+            </ul>
+
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="{% url "wx:wx-comment-publish" topic_id=topic.id %}" class="link external"><i class="icon iconfont icon-mark">
+            &nbsp;</i>{{ topic.comment_count|add:"-1" }}</a>
+
+        {% with topic.comment as c %}
+            {% if user.is_authenticated %}
+                {% if c.like %}
+                    <a class="js-like external" href="javascript:void(0);" data-href="{% url "wx:wx-comment-like-delete" c.like.pk %}"
+                       data-count="{{ c.likes_count }}"><i class="icon iconfont icon-appreciatefill">
+                    </i>&nbsp;<span>{{ c.likes_count }}</span></a>
+                {% else %}
+                    {% ifnotequal c.user user %}
+                        <a class="js-like like external"
+                           href="javascript:void(0);" data-href="{% url "wx:wx-comment-like-create" c.pk %}"
+                           data-count="{{ c.likes_count }}"><i class="icon iconfont icon-appreciate">
+                        </i>&nbsp;<span>{{ c.likes_count }}</span></a>
+                    {% else %}
+                        <span href="javascript:void(0);"><i
+                                class="icon iconfont icon-appreciate"></i>&nbsp;{{ c.likes_count }}</span>
+                    {% endifnotequal %}
+                {% endif %}
+            {% else %}
+                <span href="javascript:void(0);"> <i class="icon iconfont icon-appreciate"></i>&nbsp;{{ c.likes_count }}</span>
+            {% endif %}
+        {% endwith %}
+        <a href="#" class="link"><i class="icon iconfont icon-presentfill">&nbsp;</i>{% if topic.liquan %}{{ topic.liquan }}{% else %}0{% endif %}</a>
+    </div>
+</div>
+{% endfor %}
+{% if topics|length > 0 %}
+    <script>
+    jQuery(".imagelist li img").each(function (index, value) {
+                $(value).height($(value).width());
+            });
+    jQuery("time.timeago").timeago();
+    </script>
+{% endif %}

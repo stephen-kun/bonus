@@ -1,0 +1,244 @@
+{% extends "joyforum/base.html" %}
+{% load static %}
+{% load forum_tags i18n %}
+{% load wxwraper %}
+
+{% block title %}{% endblock %}
+
+{% block headerjs %}
+    <script type='text/javascript' src='{% static "js/timeago/jquery.timeago.js" %}' charset='utf-8'></script>
+    <script type='text/javascript' src='{% static "js/timeago/locales/jquery.timeago.zh-CN.js" %}'
+            charset='utf-8'></script>
+{% endblock %}
+
+{% block cssext %}
+    <style>
+        .avator {
+            width: 25px;
+            height: 25px;
+            margin-right: 10px;
+        }
+
+        .card-header * {
+            vertical-align: middle;
+        }
+
+        .card-header .mytitle {
+            line-height: 30px;
+        }
+
+        .content-block-title {
+            margin: 0.75rem 0.75rem 0.5rem !important;
+        }
+
+        .img-circle {
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+        }
+
+        .item-text {
+            height: inherit !important;
+        }
+
+        .icon-red {
+            width: 8px;
+            height: 8px;
+            background: red;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+        }
+
+    </style>
+{% endblock %}
+
+{% block barheader %}
+    <header class="bar bar-nav">
+        <h1 class="title">{% trans "Notifications" %}</h1>
+    </header>
+{% endblock %}
+
+{% block contentclass %}pull-to-refresh-content infinite-scroll infinite-scroll-bottom data-distance="100"{% endblock %}
+
+{% block pullrefresh %}
+    <div class="pull-to-refresh-layer">
+        <div class="preloader"></div>
+        <div class="pull-to-refresh-arrow"></div>
+    </div>
+{% endblock %}
+
+{% block page %}
+
+    <div class="page-current">
+        <div class="list-block media-list">
+            <ul id="pageindex">
+                {% for n in notifications %}
+                    {% url "wx:wx-comment-find" pk=n.comment.pk as url_topic %}
+                    <li class="item-content" data-href="{{ url_topic }}">
+                        {#                    {% url "wx:wx-user-detail" pk=n.comment.user.pk slug=n.comment.user.jf.slug as url_profile %}#}
+
+
+                        <div class="item-media"><img class="img-circle"
+                                                     src="{{ n.comment.user.jf.picture }}"
+                                                     width="35"></div>
+                        <div class="item-inner">
+                            <div class="item-title-row">
+                                <div class="item-title">
+                                    {% if n.is_comment %}
+                                        跟贴消息
+                                    {% elif n.is_mention %}
+                                        提到消息
+                                    {% else %}
+                                        消息
+                                    {% endif %}
+                                </div>
+                                <div class="item-after">
+
+                                    <small>
+                                        <time style="margin-left: 15px;" title="{{ n.date }}"
+                                              datetime="{{ n.date|date:"c" }}" class="timeago"></time>
+                                        {% if not n.is_read %}
+                                            <span class="row-unread">&nbsp;&nbsp;<i class="icon icon-red"></i> </span>
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="item-text">
+                                {% if n.is_comment %}
+                                    {% blocktrans trimmed with username=n.comment.user.jf.name topic_title=n.topic.title %}
+                                        <span href="{{ url_profile }}">{{ username }}</span> 评论了你的主题
+                                        <a href="{{ url_topic }}" class="external">{{ topic_title }}</a>{% endblocktrans %}
+                                {% elif n.is_mention %}
+                                    {% blocktrans trimmed with username=n.comment.user.jf.name topic_title=n.topic.title %}
+                                        <span href="{{ url_profile }}">{{ username }}</span> 在
+                                        <a href="{{ url_topic }}" class="external">{{ topic_title }}</a>中提到你。{% endblocktrans %}
+                                {% else %}
+                                    无
+                                {% endif %}
+                            </div>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li>{% trans "There are no notifications, yet" %}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    <div class="infinite-scroll-preloader loading">
+            <div class="preloader"></div>
+        </div>
+        <div class="infinite-scroll-preloader endnote" style="display: none;">
+            <div><span>没有更多了......</span></div>
+        </div>
+
+        <div id="cacheelements" style="display: none;">
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block navbar %}
+    <nav class="bar bar-tab">
+        <a class="tab-item external" href="{% url "wx:wx-index" %}">
+            <span class="icon iconfont icon-shouye"></span>
+            <span class="tab-label">首页</span>
+        </a>
+        <a class="tab-item external" href="{% url "wx:wx-newtopic" %}">
+            <span class="icon iconfont icon-zengjia"></span>
+            <span class="tab-label">发布主题</span>
+
+        </a>
+        <a class="tab-item external active" href="#">
+            <span class="icon iconfont icon-xiaoxi"></span>
+            <span class="tab-label">消息</span>
+            {% if unread %}<span class="badge" id="unread">{{ unread }}</span>{% endif %}
+        </a>
+    </nav>
+{% endblock %}
+
+{% block jsext %}
+    <script type='text/javascript' src='{% static "js/util.no-min.js" %}' charset='utf-8'></script>
+    <script type='text/javascript' src='{% static "js/like.no-min.js" %}' charset='utf-8'></script>
+    <script type="application/javascript">
+
+        var config = {};
+        config.curpage = {{ curpage }};
+        config.ctime = "{{ time }}";
+        config.ctime2 = "{{ time }}";
+        config.maxitems = {{ maxitems }};
+        config.showscroll = {{ showscroll|yesno:"1,0" }};
+
+        var loading = false;
+        var lastIndex = {{ comments|length }};
+
+        $(document).on('refresh', '.pull-to-refresh-content', function (e) {
+            config.type = "down";
+            $.post('{% url "wx:wx-notification" %}',
+                    config,
+                    function (resp) {
+                        setTimeout(function () {
+                            $("#cacheelements").html(resp.html);
+                            $("#pageindex").prepend($("#cacheelements").html());
+                            $.pullToRefreshDone('.pull-to-refresh-content');
+                        }, 1500);
+                        config.ctime = resp.time;
+                    });
+        });
+
+        $(document).on('infinite', '.infinite-scroll-bottom', function () {
+            if (loading) return;
+            loading = true;
+
+            config.type = "up";
+            if (lastIndex >= parseInt(config.maxitems)) {
+                $.detachInfiniteScroll($('.infinite-scroll'));
+                $('.infinite-scroll-preloader.loading').hide();
+                $('.infinite-scroll-preloader.endnote').show();
+                loading = false;
+                return;
+            }
+
+            config.page = parseInt(config.curpage) + 1;
+            console.log("page:" + config.page);
+
+
+            $.post('{% url "wx:wx-notification" %}',
+                    config,
+                    function (resp) {
+                        loading = false;
+                        $("#cacheelements").html(resp.html);
+                        $("#pageindex").append($("#cacheelements").html());
+                        lastIndex = $("#pageindex li").length;
+                        $.refreshScroller();
+
+                        config.curpage = parseInt(resp.curpage);
+                        loading = false;
+                        console.log("curpage:" + config.curpage);
+
+                    });
+
+        });
+
+        $(document).on("click", "li.item-content", function () {
+            var url = $(this).attr("data-href");
+            window.location.href = url;
+        });
+
+        $(function () {
+
+            if(config.showscroll==0){
+                $.detachInfiniteScroll($('.infinite-scroll'));
+                $('.infinite-scroll-preloader.loading').hide();
+                $('.infinite-scroll-preloader.endnote').show();
+            }
+
+            jQuery("time.timeago").timeago();
+
+
+        });
+
+    </script>
+
+{% endblock %}
+

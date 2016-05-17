@@ -13,11 +13,27 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.conf.urls import url,include
 from django.contrib import admin
+
+import category
+import comment
+import topic
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^weixin/', include('weixin.urls')),
     url(r'^manager/', include('manager.urls')),
+
+    url(r'^$', "topic.views.index_active", name='index'),
+    # url(r'^home/',include('topic.urls')),
+    url(r'^category/', include("category.urls", namespace='category')),
+    url(r'^topic/', include("topic.urls", namespace='topic')),
+    url(r'^comment/', include("comment.urls", namespace='comment')),
+    url(r'^user/',include("user.urls",namespace='user')),
+    url(r'^wx/',include("wx.urls",namespace='wx')),
+    url(r'^emoji/', include('emoji.urls',namespace='emoji')),
+
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT}),
 ]
