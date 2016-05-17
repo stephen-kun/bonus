@@ -1,0 +1,25 @@
+{% load static %}
+{% load wxwraper %}
+<ul>
+    {% for subcat in categories %}
+        <li>
+            <a href="{{ subcat.get_absolute_url|wxurl_wraper }}" class="external item-link item-content">
+                <div class="item-media"><img
+                        src="{% get_media_prefix %}{{ subcat.showimage }}"
+                        width="80"></div>
+                <div class="item-inner">
+                    <div class="item-title-row">
+                        <div class="item-title">{{ subcat.title }}</div>
+                        <div class="item-after">
+                            <small>今日话题:{{ subcat.get_today_count }}</small>
+                        </div>
+                    </div>
+                    <div class="item-text">
+                        <small>{{ subcat.description }}</small>
+                    </div>
+                </div>
+            </a>
+        </li>
+
+    {% endfor %}
+</ul>

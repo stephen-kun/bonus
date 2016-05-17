@@ -751,6 +751,7 @@ def action_modify_sex(data):
 def action_weixin_order(data, request):
 	request.session['consumer_order'] = data
 	# 调用微信统一下单接口
+	print data
 	return ''
 	
 #ajax请求处理函数

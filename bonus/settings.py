@@ -39,17 +39,39 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djconfig',
+    # 'haystack',
+    'core',
+    'topic',
+    'category',
+    'topic.notification',
+    'topic.gift',
+    'topic.unread',
+    'topic.moderate',
+    'comment',
+   # 'joymodel',
+    'comment.bookmark',
+    'comment.history',
+    'comment.like',
+    'user',
+    'user.auth',
+   # 'user.admin',
+    'wx',
+    'emoji',
+
 ]
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'djconfig.middleware.DjConfigMiddleware',
 ]
 
 ROOT_URLCONF = 'bonus.urls'
@@ -65,6 +87,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'djconfig.context_processors.config',
+                'django.core.context_processors.i18n',
             ],
         },
     },
@@ -106,7 +130,16 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+#LANGUAGE_CODE = 'zh-Hans' 
+
+LANGUAGES = (
+	('zh-Hans', 'Chinese'),
+	('en', 'English'),
+)
+
+LOCALE_PATHS = (
+	os.path.join(BASE_DIR, 'locale'),
+)
 
 TIME_ZONE = 'Asia/Shanghai'
 
@@ -128,3 +161,53 @@ STATICFILES_DIRS = [
 	('js', os.path.join(STATIC_ROOT, 'js')),
 	('images', os.path.join(STATIC_ROOT, 'images')),
 ]
+
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'media'
+
+COMMENT_MAX_LEN = 10240
+YT_PAGINATOR_PAGE_RANGE = 30
+
+JOY_TOPIC_PRIVATE_CATEGORY_PK=1
+JOY_UNICODE_SLUGS = False
+
+RATELIMIT_ENABLE = True
+RATELIMIT_CACHE_PREFIX = 'joy'
+RATELIMIT_CACHE = 'default'
+
+LOGIN_URL = 'user:auth:login'
+LOGIN_REDIRECT_URL = 'user:update'
+
+AUTHENTICATION_BACKENDS = [
+    'topic.auth.AuthBackend',
+    'user.auth.backends.UsernameAuthBackend',
+    'user.auth.backends.EmailAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+ALLOWED_UPLOAD_IMAGE_FORMAT = ('jpeg', 'png', 'gif')
+
+
+NOTIFICATIONS_PER_PAGE = 20
+
+
+MENTIONS_PER_COMMENT = 30
+
+USER_LAST_SEEN_THRESHOLD_MINUTES = 1
+
+
+ALLOWED_URL_PROTOCOLS = {
+    'http', 'https', 'mailto', 'ftp', 'ftps',
+    'git', 'svn', 'magnet', 'irc', 'ircs'}
+
+
+UNIQUE_EMAILS = True
+CASE_INSENSITIVE_EMAILS = True
+
+# SESSION_COOKIE_AGE=60*30
+# SESSION_EXPIRE_AT_BROWSER_CLOSE=False
+# SESSION_COOKIE_DOMAIN = ['*',]
+
+TICKET_URL = "wx.tonki.com.cn/manager/account/send_coupon/"

@@ -8,6 +8,11 @@ import string, random
 from django.core.exceptions import ObjectDoesNotExist
 import json
 from manager.datatype import *
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import AbstractUser
+from core.utils.timezone import TIMEZONE_CHOICES
+from core.utils.models import AutoSlugField
+from django.core.urlresolvers import reverse
 
 COMMON_BONUS = 0
 RANDOM_BONUS = 1
@@ -152,27 +157,66 @@ class DiningSession(models.Model):
 
 #消费者数据表
 class Consumer(models.Model):
-    open_id = models.CharField(max_length=30, unique=True)	#微信openId
+    open_id = models.CharField(max_length=30,unique=True)  # 微信openId
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=_("profile"), related_name='jf')
+
+    slug = AutoSlugField(populate_from="user.username", db_index=False, blank=True)
+    location = models.CharField(_("location"), max_length=75, blank=True)
+    last_seen = models.DateTimeField(_("last seen"), auto_now=True)
+    last_ip = models.GenericIPAddressField(_("last ip"), blank=True, null=True)
+    localtimezone = models.CharField(_("time zone"), max_length=32, choices=TIMEZONE_CHOICES, default='UTC')
+    is_administrator = models.BooleanField(_('administrator status'), default=False)
+    is_moderator = models.BooleanField(_('moderator status'), default=False)
+    is_verified = models.BooleanField(_('verified'), default=False,
+                                      help_text=_('Designates whether the user has verified his '
+                                                  'account by email or by other means. Un-select this '
+                                                  'to let the user activate his account.'))
+
+    topic_count = models.PositiveIntegerField(_("topic count"), default=0)
+    comment_count = models.PositiveIntegerField(_("comment count"), default=0)
+
+    name = models.CharField(max_length=30, default='小明')  # 用户名
+    sex = models.CharField(max_length=1, default='0')  # 性别
+    phone_num = models.CharField(max_length=20, null=True, blank=True)  # 电话
+    address = models.CharField(max_length=30, null=True, blank=True)  # 地址
+    picture = models.URLField(max_length=200, null=True, blank=True)  # 头像地址
+    bonus_range = models.IntegerField(default=0)  # 排行榜名次
+    snd_bonus_num = models.IntegerField(default=0)  # 发红包总数
+    rcv_bonus_num = models.IntegerField(default=0)  # 收红包总数
+    snd_bonus_value = models.IntegerField(default=0)  # 发红包金额
+    own_bonus_value = models.IntegerField(default=0)  # 可用红包金额
+    own_bonus_detail = models.CharField(max_length=100, null=True, blank=True)  # 可用红包明细
+    own_ticket_value = models.IntegerField(default=0)  # 可用礼券金额
+    create_time = models.DateTimeField(default=timezone.now())  # 首次关注时间
+    subscribe = models.BooleanField(default=True)  # 是否关注
+    dining_time = models.DateTimeField(default=timezone.now())  # 就餐时间
+    on_table = models.ForeignKey(DiningTable, on_delete=models.CASCADE,null=True,blank=True)  # 就餐桌台
+    session = models.ForeignKey(DiningSession, null=True, blank=True, related_name="consumer_set", on_delete=models.CASCADE)
     is_admin = models.BooleanField(default=False)
-    name = models.CharField(max_length=30, default='小明')							#用户名
-    sex = models.CharField(max_length=1, default='0')						#性别
-    phone_num = models.CharField(max_length=20, null=True, blank=True)		#电话
-    address = models.CharField(max_length=30, null=True, blank=True)			#地址
-    email = models.EmailField(null=True, blank=True)							#邮箱
-    picture = models.URLField(null=True, blank=True)							#头像地址
-    bonus_range = models.IntegerField(default=0)					#排行榜名次
-    snd_bonus_num = models.IntegerField(default=0)					#发红包总数
-    rcv_bonus_num = models.IntegerField(default=0)					#收红包总数
-    snd_bonus_value = models.IntegerField(default=0)				#发红包金额
-    own_bonus_value = models.IntegerField(default=0)				#可用红包金额
-    own_bonus_detail = models.CharField(max_length=300, null=True, blank=True)	#可用红包明细
-    own_ticket_num = models.IntegerField(default=0)				#可用券数量
-    own_ticket_value = models.IntegerField(default=0)				#可用礼券金额
-    create_time = models.DateTimeField(default=timezone.now)		#首次关注时间
-    subscribe = models.BooleanField(default=True)					#是否关注
-    on_table = models.ForeignKey(DiningTable, null=True, blank=True, on_delete=models.CASCADE)	#就餐桌台
-    session = models.ForeignKey(DiningSession, null=True, blank=True, related_name="consumer_set", on_delete=models.CASCADE)	#就餐会话
     latest_time = models.DateTimeField(default=timezone.now)		#最近到店时间
+
+    class Meta:
+        verbose_name = _("forum profile")
+        verbose_name_plural = _("forum profiles")
+
+    def save(self, *args, **kwargs):
+        try:
+            existing = Consumer.objects.get(user=self.user)
+            self.id = existing.id #force update instead of insert
+        except Consumer.DoesNotExist:
+            pass
+
+        if self.user.is_superuser:
+            self.is_administrator = True
+
+        if self.is_administrator:
+            self.is_moderator = True
+
+        models.Model.save(self, *args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('user:detail', kwargs={'pk': self.user.pk, 'slug': self.slug})
+
 
     def __unicode__(self):
         return self.name

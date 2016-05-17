@@ -1,0 +1,38 @@
+{% load i18n %}
+
+<form action="{% url "wx:wx-comment-publish" topic_id %}" method="post" class="js-reply" id="wxsendcommentform">
+    {% csrf_token %}
+    {% if next %}<input type="hidden" name="next" value="{{ next }}"/>{% endif %}
+
+    {{ form.non_field_errors }}
+
+    <div class="card-content">
+        <div class="card-content-inner" style="padding: 0;">
+            {% for field in form %}
+                {{ field.errors }}
+                {{ field }}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="card-footer border">
+                        <span style="text-align: center;">
+                            <a href="#" style="width: 40px;display: inline-block"><i
+                                    class="icon iconfont icon-biaoqing">&nbsp;</i></a> &nbsp;&nbsp;
+                            <a href="#" style="width: 40px;display: inline-block"><i class="icon iconfont icon-tupian">
+                                &nbsp;</i></a>
+                        </span>
+                        <span>
+                            <a href="#" class="button close-popup" style="width: 55px;display: inline-block">取消</a> &nbsp;&nbsp;
+                            <button href="#" class="button button-fill button-success"
+                                    style="width: 55px;display: inline-block">发送
+                            </button>
+                        </span>
+    </div>
+</form>
+
+
+<script>
+
+
+
+</script>

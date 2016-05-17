@@ -1,0 +1,425 @@
+{% extends "joyforum/base.html" %}
+{% load static %}
+{% load forum_tags i18n %}
+{% load wxwraper %}
+{% load emoji_tags %}
+
+{% block title %}{% endblock %}
+
+{% block cssext %}
+    <style>
+        .avator {
+            width: 25px;
+            height: 25px;
+            margin-right: 10px;
+        }
+
+        .content-block-title {
+            margin: 0.75rem 0.75rem 0.5rem !important;
+        }
+
+        .card-header * {
+            vertical-align: middle;
+        }
+
+        .card-header .mytitle {
+            line-height: 30px;
+        }
+
+        ul.nav {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        ul.nav li {
+            display: inline-block;
+        }
+
+        ul.nav li:after {
+            content: " /";
+        }
+
+        ul.nav li:last-child:after {
+            content: "";
+        }
+
+        .popup-comment {
+            height: 12.3rem;
+            border-bottom: 1px solid #757575;
+            margin: 0.1rem !important;
+            width: inherit;
+            overflow-y: hidden;
+        }
+
+        .popup-comment .card-content-inner {
+            height: 10rem;
+            overflow-x: hidden;
+            overflow-y: auto;;
+        }
+
+        .popup-comment .card-content-inner textarea {
+            border-color: transparent;
+
+        }
+
+        .popup-comment .card-content-inner textarea:focus {
+            border-color: transparent;
+
+        }
+
+        .comment-item {
+            align-items: baseline !important;
+        }
+
+        .comment-item .item-media::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: auto;
+            top: auto;
+            height: 1px;
+            width: 100%;
+            background-color: #e7e7e7;
+            display: block;
+            z-index: 15;
+            -webkit-transform-origin: 50% 100%;
+            transform-origin: 50% 100%;
+        }
+
+        ul > li:last-child .comment-item .item-media::after {
+            display: none;
+        }
+
+        .facebook-card .card-footer a {
+            color: inherit !important;
+        }
+
+        .card-footer.mod {
+            background: transparent !important;
+            padding: 0.1rem 0.5rem;
+            min-height: inherit;
+        }
+
+        .list-block .item-text {
+            font-size: 0.75rem;
+            color: #5f646e;
+            line-height: inherit;
+            position: relative;
+            overflow: inherit;
+            height: inherit;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: inherit;
+            -webkit-box-orient: vertical;
+            display: -webkit-box;
+        }
+
+        .imagelist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .imagelist li {
+            float: left;
+            width: 32%;
+            margin: 0.1rem;
+        }
+
+        .imagelist li img {
+            width: 100%;
+        }
+
+    </style>
+{% endblock %}
+
+{% block headerjs %}
+    <script type='text/javascript' src='{% static "js/timeago/jquery.timeago.js" %}' charset='utf-8'></script>
+    <script type='text/javascript' src='{% static "js/timeago/locales/jquery.timeago.zh-CN.js" %}'
+            charset='utf-8'></script>
+{% endblock %}
+
+{% block contentclass %}pull-to-refresh-content infinite-scroll infinite-scroll-bottom data-distance="100"{% endblock %}
+
+{% block barheader %}
+    <header class="bar bar-nav">
+
+
+        <a class="button button-link button-nav pull-left external"
+           href="{% url "wx:wx-index" %}?open_id={{ user.jf.open_id }}">
+            <span class="icon icon-left"></span>
+            返回
+        </a>
+
+        <h1 class="title">{{ topic.title }}</h1>
+    </header>
+
+{% endblock %}
+
+{% block navbar %}
+    <nav class="bar bar-tab">
+        <a class="tab-item external active" href="{% url "wx:wx-comment-publish" topic_id=topic.id %}">
+            <span class="tab-label"><i class="icon iconfont icon-huifu">&nbsp;</i>评论</span>
+        </a>
+    </nav>
+{% endblock %}
+
+{% block pullrefresh %}
+    <div class="pull-to-refresh-layer">
+        <div class="preloader"></div>
+        <div class="pull-to-refresh-arrow"></div>
+    </div>
+{% endblock %}
+
+{% block page %}
+    <div class="page-current">
+        <div class="card facebook-card">
+            <div class="card-header no-border">
+                <div class="facebook-avatar"><img class="img-circle" src="{{ topic.user.jf.picture }}" width="40"
+                                                  height="40"></div>
+                <div class="facebook-name">{{ topic.title }}</div>
+                <div class="facebook-date"><span>{{ topic.user.jf.name }}</span>
+                    <time style="margin-left: 15px;" title="{{ topic.last_active }}" datetime="{{ topic.last_active|date:"c" }}" class="timeago"></time></div>
+            </div>
+            <div class="card-content">
+                <div class="card-content-inner">
+                    <p>
+                        {{ topic.comment.comment|safe|emoji_replace }}
+                    </p>
+
+                    <ul class="imagelist">
+                        {% for image in topic.imagelist %}
+                            <li>
+                                <img src="{{ image.imageurl }}">
+                            </li>
+                        {% endfor %}
+                        <div style="clear: both;"></div>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-footer no-border mod">
+                <span></span>
+                <span></span>
+                        <span>
+
+                            {% with topic.comment as c %}
+                                {% if user.is_authenticated %}
+                                    {% if c.like %}
+                                        <a class="js-like external" href="javascript:void(0);" data-href="{% url "wx:wx-comment-like-delete" c.like.pk %}"
+                                           data-count="{{ c.likes_count }}"><i
+                                                class="icon iconfont icon-appreciatefill">
+                                        </i>&nbsp;<span>{{ c.likes_count }}</span></a>
+                                    {% else %}
+                                        {% ifnotequal c.user user %}
+                                            <a class="js-like like external" href="javascript:void(0);"
+                                               data-href="{% url "wx:wx-comment-like-create" c.pk %}"
+                                               data-count="{{ c.likes_count }}"><i
+                                                    class="icon iconfont icon-appreciate">
+                                            </i>&nbsp;<span>{{ c.likes_count }}</span></a>
+                                        {% else %}
+                                            <span href="javascript:void(0);"><i
+                                                    class="icon iconfont icon-appreciate"></i>&nbsp;{{ c.likes_count }}</span>
+                                        {% endifnotequal %}
+                                    {% endif %}
+                                {% else %}
+                                    <span href="javascript:void(0);"> <i class="icon iconfont icon-appreciate"></i>&nbsp;{{ c.likes_count }}</span>
+                                {% endif %}
+                            {% endwith %}
+
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" style="display: inline-block;" class="link">
+                            <i style="display: inline-block;" class="icon iconfont icon-presentfill"></i><span>{% if topic.liquan %}{{ topic.liquan }}{% else %}0{% endif %}</span></a>
+                        </span>
+
+            </div>
+        </div>
+
+
+    </div>
+    <div class="comment">
+        <div class="content-block-title">所有评论</div>
+        <div class="list-block media-list">
+            <ul class="allcomment" id="pageindex">
+                {% for comment in comments %}
+                    <li>
+{#                        <a name="c{{ forloop.counter0|add:comments.start_index }}"#}
+{#                           id="c{{ forloop.counter0|add:comments.start_index }}"#}
+{#                           data-number="{{ forloop.counter0|add:comments.start_index }}" data-pk="{{ comment.pk }}"></a>#}
+
+                        <div class="item-content comment-item">
+                            <div class="item-media facebook-avatar"><img
+                                    src="{{ comment.user.jf.picture }}" class="img-circle"
+                                    width="34"></div>
+                            <div class="item-inner">
+                                <div class="item-title-row">
+                                    <div class="facebook-name">{{ user.jf.name }}</div>
+                                    <div class="facebook-date">
+                                        <small><time title="{{ comment.date }}" datetime="{{ comment.date|date:"c" }}" class="timeago"></time></small>
+                                        &nbsp;&nbsp;
+                                        <small><i class="icon iconfont icon-presentfill
+                                        present presentto_{{ comment.user.jf.open_id }}" cid="{{ comment.id }}" topic_cid="{{ topic.comment.id }}"></i></small>
+                                    </div>
+                                </div>
+                                <div class="item-text">{{ comment.comment_html|safe|emoji_replace }}</div>
+                            </div>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="no-comment">
+                        <div class="item-text">还没有评论！</div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="infinite-scroll-preloader loading">
+            <div class="preloader"></div>
+        </div>
+        <div class="infinite-scroll-preloader endnote" style="display: none;">
+            <div><span>没有更多了......</span></div>
+        </div>
+
+        <div id="cacheelements" style="display: none;">
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block jsext %}
+    <script type='text/javascript' src='{% static "js/util.no-min.js" %}' charset='utf-8'></script>
+    <script type='text/javascript' src='{% static "js/like.no-min.js" %}' charset='utf-8'></script>
+    <script type='text/javascript' src='{% static "js/store.no-min.js" %}' charset='utf-8'></script>
+
+    <script type="text/javascript">
+        var config = {};
+        config.curpage = {{ curpage }};
+        config.ctime = "{{ time }}";
+        config.ctime2 = "{{ time }}";
+        config.maxitems = {{ maxitems }};
+        config.showscroll = {{ showscroll|yesno:"1,0" }};
+
+        var loading = false;
+        var lastIndex = {{ comments|length }};
+
+        $(document).on('refresh', '.pull-to-refresh-content', function (e) {
+            config.type = "down";
+            $.post('{% url "wx:wx-topic-detail" pk=topic.id %}',
+                    config,
+                    function (resp) {
+                        setTimeout(function () {
+                            $("#cacheelements").html(resp.html);
+                            $("#pageindex").prepend($("#cacheelements").html());
+                            $.pullToRefreshDone('.pull-to-refresh-content');
+                        }, 1500);
+                        config.ctime = resp.time;
+                    });
+        });
+
+        $(document).on('infinite', '.infinite-scroll-bottom', function () {
+            if (loading) return;
+            loading = true;
+
+            config.type = "up";
+            if (lastIndex >= parseInt(config.maxitems)) {
+                $.detachInfiniteScroll($('.infinite-scroll'));
+                $('.infinite-scroll-preloader.loading').hide();
+                $('.infinite-scroll-preloader.endnote').show();
+                loading = false;
+                return;
+            }
+
+            config.page = parseInt(config.curpage) + 1;
+            console.log("page:" + config.page);
+
+
+            $.post('{% url "wx:wx-topic-detail" pk=topic.id %}',
+                    config,
+                    function (resp) {
+                        loading = false;
+                        $("#cacheelements").html(resp.html);
+                        $("#pageindex").append($("#cacheelements").html());
+                        lastIndex = $("#pageindex li").length;
+                        $.refreshScroller();
+
+                        config.curpage = parseInt(resp.curpage);
+                        loading = false;
+                        console.log("curpage:" + config.curpage);
+
+                    });
+
+        });
+
+
+        $(document).ready(function () {
+
+            if(config.showscroll==0){
+                $.detachInfiniteScroll($('.infinite-scroll'));
+                $('.infinite-scroll-preloader.loading').hide();
+                $('.infinite-scroll-preloader.endnote').show();
+            }
+
+            $(document).on('click','.present',function(){
+                var cid = $(this).attr("cid");
+                var tcid = $(this).attr("topic_cid");
+
+                $.post('{% url "wx:wx-topic-detail" pk=topic.id %}',
+                    config,
+                    function (resp) {
+                        loading = false;
+                        $("#cacheelements").html(resp.html);
+                        $("#pageindex").append($("#cacheelements").html());
+                        lastIndex = $("#pageindex li").length;
+                        $.refreshScroller();
+
+                        config.curpage = parseInt(resp.curpage);
+                        loading = false;
+                        console.log("curpage:" + config.curpage);
+
+                    });
+            });
+
+
+            jQuery(".imagelist li img").each(function (index, value) {
+                $(value).height($(value).width());
+            });
+
+            $(document).on("click", '.js-like', function (e) {
+                if (!jQuery(this).data('plugin_like')) {
+                    jQuery(this).like({
+                        csrfToken: "{{ csrf_token }}",
+                        likeText: '<i class="icon iconfont icon-appreciate"></i>&nbsp;<span>{count}</span>',
+                        removeLikeText: '<i class="icon iconfont icon-appreciatefill"></i>&nbsp;<span>{count}</span>'
+                    }).data('plugin_like').sendLike();
+                }
+                else {
+                    jQuery(this).data('plugin_like').sendLike();
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+            });
+
+            var photos = [];
+
+            $(document).on('click', '.imagelist', function () {
+                photos = [];
+                $(this).find("li img").each(function (index, value) {
+                    var imgobj = {url: $(value).attr("src")};
+                    photos.push(imgobj);
+                });
+                $.photoBrowser({
+                    photos: photos,
+                    theme: 'dark',
+                    type: 'standalone'
+                }).open();
+            });
+
+            jQuery("time.timeago").timeago();
+
+        });
+
+    </script>
+
+{% endblock %}
