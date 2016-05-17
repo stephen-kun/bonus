@@ -756,13 +756,12 @@ def action_weixin_order(data, request):
 	# 调用微信统一下单接口
 	wx_order=UnifiedOrder_pub()
 	param_dict={}
-	param_dict["out_trade_no"] ='9875757662870187'
-	param_dict["body"]="pay test"
-	param_dict['total_fee']=1
-	param_dict['notify_utl']='http://wx.tonki.com.cn/pay_noitify'
-	param_dict['trade_type']='JSAPI'
-	param_dict['open_id']=open_id
-	wx_order.setParameter(param_dict)
+	wx_order.setParameter("out_trade_no", '9875757662870187')
+	wx_order.setParameter("body", "pay test")
+	wx_order.setParameter('total_fee', 1)
+	wx_order.setParameter('notify_utl', 'http://wx.tonki.com.cn/pay_noitify')
+	wx_order.setParameter('trade_type','JSAPI')
+	wx_order.setParameter('open_id', open_id)
 	prepay_id=wx_order.getPrepayId()
 	print prepay_id
 	return prepay_id
