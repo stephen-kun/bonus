@@ -273,6 +273,7 @@ class Recharge(models.Model):
 #消费券
 class Ticket(models.Model):
     id_ticket = models.CharField(unique=True, max_length=12)		#消费券唯一id
+	title = models.CharField(null=True, blank=True)				#冠名
     ticket_type = models.IntegerField(default=0)            #消费券类型：0-生成券，1-系统券
     ticket_value = models.FloatField(default=0.0)			#券值
     create_time = models.DateTimeField(default=timezone.now)					#消费券创建时间
