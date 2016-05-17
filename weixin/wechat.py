@@ -34,8 +34,8 @@ QUBABA_APPID = 'wx966e11eecf374549'
 QUBABA_APPSECRET = 'b60c602d3af0375af596eaf329319e8b'
 
 TOKEN = 'token'
-APPID = KOOVOX_APPID
-APPSECRET = KOOVOX_APPSECRET
+APPID = QUBABA_APPID 
+APPSECRET = QUBABA_APPSECRET
 ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=CODE&grant_type=authorization_code'%(APPID,APPSECRET)
 OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_base&state=1#wechat_redirect"%(APPID)
 USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN"
@@ -224,7 +224,7 @@ if __name__ == '__main__':
 		"action_name": "QR_LIMIT_SCENE", 
 		"action_info": {
 			"scene": {
-				"scene_id": 1
+				"scene_id": 3 
 			}
 		}
 	}
@@ -310,7 +310,7 @@ if __name__ == '__main__':
 		]
 	}
 
-	create_qrcode(qrcode, 'koovox_table_01.jpg')
+	create_qrcode(qrcode, 'qubaba_table_03.jpg')
 	create_menu(menu_hongkong)
 			
 		
