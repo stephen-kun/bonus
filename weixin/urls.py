@@ -38,5 +38,6 @@ urlpatterns = [
 	url(r'^view_user_email',views.view_user_email, name='view_user_email'),	
 	url(r'^view_user_sex',views.view_user_sex, name='view_user_sex'),	
 	url(r'^view_qubaba_forum',views.view_qubaba_forum, name='view_qubaba_forum'),	
-	url(r'^view_redirect_qubaba_forum',views.view_redirect_qubaba_forum, name='view_redirect_qubaba_forum'),	
+	url(r'^view_redirect_qubaba_forum',views.view_redirect_qubaba_forum, name='view_redirect_qubaba_forum'),
+	url(r'^pay_notify', views.view_pay_notify, name='pay_notify')
 ]

@@ -14,6 +14,8 @@ import pytz
 import traceback
 from django.utils import timezone
 
+from wzhifuSDK import *
+
 COMMON_BONUS = 0
 RANDOM_BONUS = 1	
 SYS_BONUS	= 2	
@@ -750,8 +752,20 @@ def action_modify_sex(data):
 	
 def action_weixin_order(data, request):
 	request.session['consumer_order'] = data
+	open_id = request.session['openid']
 	# 调用微信统一下单接口
-	return ''
+	wx_order=UnifiedOrder_pub()
+	param_dict={}
+	param_dict["out_trade_no"] ='9875757662870187'
+	param_dict["body"]="pay test"
+	param_dict['total_fee']=1
+	param_dict['notify_utl']='http://wx.tonki.com.cn/pay_noitify'
+	param_dict['trade_type']='JSAPI'
+	param_dict['open_id']=open_id
+	wx_order.setParameter(param_dict)
+	prepay_id=wx_order.getPrepayId()
+	print prepay_id
+	return prepay_id
 	
 #ajax请求处理函数
 def handle_ajax_request(action, data, request):

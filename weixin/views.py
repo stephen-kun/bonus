@@ -12,6 +12,7 @@ from .utils import  action_get_bonus, is_consumer_dining, handle_ajax_request, g
 from .utils import check_geted_bonus, decode_choose_pay, get_bonus_type_str, get_record_openid, is_enough_pay, update_wallet_money, log_print
 from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
+from wzhifuSDK import *
 
 
 #ADDRESS_IP = '127.0.0.1:8000'
@@ -653,4 +654,11 @@ def view_wechat_token(request):
 	
 	response = PostResponse(request)
 	return response.auto_handle()
+
+@csrf_exempt
+def view_pay_notify(request):
+	print "get notify"
+	notify=Notify_pub()
+	notify.setReturnParameter("")
+	return HttpResponse()
 
