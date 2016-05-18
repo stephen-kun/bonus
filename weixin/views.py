@@ -15,8 +15,8 @@ from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvB
 
 
 #ADDRESS_IP = '127.0.0.1:8000'
-ADDRESS_IP = 'wx.tonki.com.cn'
-#ADDRESS_IP = '120.76.122.53'
+#ADDRESS_IP = 'wx.tonki.com.cn'
+ADDRESS_IP = '120.76.122.53'
 
 REDIRECT_SSB_URL = 'http://%s/weixin/view_redirect_self_snd_bonus'%(ADDRESS_IP)
 REDIRECT_SRB_URL = 'http://%s/weixin/view_redirect_self_rcv_bonus'%(ADDRESS_IP)
