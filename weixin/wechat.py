@@ -10,13 +10,17 @@ if __name__ != '__main__':
 	from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 	from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 	from .utils import create_primary_key
+	from django.contrib.auth import get_user_model
+	User = get_user_model()
+	from .wx_config import *
+else:
+	from wx_config import *
 
 from django.http.response import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist 
 from django.utils import timezone
 
-from django.contrib.auth import get_user_model
-User = get_user_model()
+
 
 import re
 import pytz
@@ -24,24 +28,6 @@ import urllib
 import urllib2
 import urlparse
 import json
-
-
-
-STEPHEN_APPID = 'wxc32d7686c0827f2a'
-STEPHEN_APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
-
-KOOVOX_APPID = 'wxd4dd9f440f125088'
-KOOVOX_APPSECRET = '8405baf42ccb5b066393bc93b92a1efd'
-
-QUBABA_APPID = 'wx966e11eecf374549'
-QUBABA_APPSECRET = 'b60c602d3af0375af596eaf329319e8b'
-
-TOKEN = 'token'
-APPID = STEPHEN_APPID 
-APPSECRET = STEPHEN_APPSECRET
-ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=CODE&grant_type=authorization_code'%(APPID,APPSECRET)
-OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_base&state=1#wechat_redirect"%(APPID)
-USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN"
 
 
 global wechat
@@ -52,11 +38,6 @@ conf = WechatConf(
 	appsecret = APPSECRET,
 	encrypt_mode = 'normal'
 )
-
-SND_BONUS_URL = 'http://120.76.122.53/weixin/view_snd_bonus'
-RCV_BONUS_URL = 'http://120.76.122.53/weixin/view_rcv_bonus'
-SETTLE_ACCOUNT_URL = 'http://120.76.122.53/weixin/view_settle_account'
-USER_ACCOUNT_URL = 'http://120.76.122.53/weixin/view_user_account'
 
 wechat = WechatBasic(conf = conf)
 
@@ -85,7 +66,7 @@ def user_subscribe(openid):
 			consumer.subscribe = True
 	except ObjectDoesNotExist:
 		# 获取用户信息
-		url = USER_INFO_URL.replace('ACCESS_TOKEN', wechat.access_token)
+		url = WX_USER_INFO_URL.replace('ACCESS_TOKEN', wechat.access_token)
 		url = url.replace('OPENID', openid)
 		user_info = UserInfo(url)
 		name = user_info.get_name()
@@ -188,8 +169,7 @@ class PostResponse():
 		1、根据openid,查询consumer，获取当前用户的ownBonusValue,ownTicketValue，idTable.
 		2、根据idtable，查询RcvBonus，获取该桌抢到的所有红包
 		'''
-		if self.message.key == SETTLE_ACCOUNT_URL:
-			pass
+
 		return ''
 		
 	#自动处理
