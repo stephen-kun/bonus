@@ -318,7 +318,8 @@ def display_user_ticket(open_id, request):
 		openid = open_id
 		static_url = settings.STATIC_URL	
 		consumer = Consumer.objects.get(open_id=openid)
-		ticket_list = Ticket.objects.filter(consumer=consumer)
+		ticket_list = consumer.own_ticket_list
+		ticket_num = len(ticket_list)
 		menu = _MenuUrl()
 		return render_to_response('user_ticket.html', locals())	
 	except:
@@ -594,7 +595,7 @@ def view_choose_pay(request):
 		result_dir = decode_choose_pay(request, data_dict)
 		good_list = result_dir['good_list']
 		total_money = result_dir['total_money']
-		enough_money = is_enough_pay(consumer, request.GET)
+		enough_money = is_enough_pay(consumer, float(total_money))
 		snd_bonus_url = SND_BONUS_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		menu = _MenuUrl()

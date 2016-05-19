@@ -70,7 +70,7 @@
 	<div class="box-dongqi">
 		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="message('{{bonus.id_bonus}}')">留言</span></h6>
 		<h6>{{bonus.datetime|date:"m-j"}}</h6>
-        <h2 id="h{{bonus.id_bonus}}"><input type="button" id="refuse" class="red" value="婉拒" onClick="refuse_bonus('{{bonus.id_bonus}}', '{{ajax_request_url}}')"></h2>
+        <h2><input type="button" id="refuse{{bonus.id_bonus}}" class="red" value="婉拒" onClick="refuse_bonus('{{bonus.id_bonus}}', '{{ajax_request_url}}')"></h2>
         <span class="wj"><a href="{{common_bonus_url}}" target="_blank">回赠</a></span>	
 	</div>	
 {% endfor %}

@@ -35,7 +35,7 @@ AJAX_MODIFY_SEX = 'ajax_modify_sex'
 AJAX_WEIXIN_ORDER = 'ajax_weixin_order'
 
 AUTH_CODE = '888888'
-LIST_KEY_ID	= u'串串'
+#LIST_KEY_ID	= u'串串'
 
 
 
@@ -130,15 +130,8 @@ def bonus_content_json_to_models(json_content):
 	
 		
 #判断用户是否有足够零钱支付红包
-def is_enough_pay(consumer, bonus_content):
-	if consumer.own_bonus_detail:
-		# 后面做数据检测，如有异常，能够自修复
-		content_list = bonus_content_json_to_models(consumer.own_bonus_detail)
-		for content in content_list:
-			key = content.name
-			if key in bonus_content:
-				if int(bonus_content[key]) > content.number:
-					return False
+def is_enough_pay(consumer, total_money):
+	if consumer.own_bonus_value >= total_money:
 		return True
 	else:
 		return False
@@ -240,15 +233,14 @@ def action_bonus_message(data):
 	rcv_bonus.message = message
 	rcv_bonus.is_message = True
 	rcv_bonus.save()
-	return ""
+	return "ok"
 	
 #红包婉拒
 def action_bonus_refuse(data):
 	id_bonus = data['id_bonus']
 	rcv_bonus = RcvBonus.objects.get(id_bonus=id_bonus)
-	rcv_bonus.is_refuse = True
-	rcv_bonus.save()
-	return ''
+	rcv_bonus.bonus_refuse()
+	return 'refuse ok'
 		
 #随机分配红包算法
 def get_random_bonus(money_num, bonus_num):
@@ -274,6 +266,7 @@ def snd_bonus_random_rcv_bonus(snd_bonus, number_list):
 	number_list.sort(reverse=True)
 	is_best = True
 	total_number = 0
+	total_value = 0
 	for number in number_list: 
 		total_money = 0
 		rcv_bonus = RcvBonus.objects.create(id_bonus=create_primary_key(), snd_bonus=snd_bonus)
@@ -282,8 +275,8 @@ def snd_bonus_random_rcv_bonus(snd_bonus, number_list):
 		for money in money_list:
 			money.rcv_bonus = rcv_bonus
 			money.is_receive = True 
-			if money.money.name == LIST_KEY_ID:
-				account += 1
+			#if money.money.name == LIST_KEY_ID:
+			account += 1
 			money.save()
 			total_money += money.money.price
 		rcv_bonus.bonus_type = snd_bonus.bonus_type
@@ -295,7 +288,9 @@ def snd_bonus_random_rcv_bonus(snd_bonus, number_list):
 		rcv_bonus.content = bonus_content_detail(bonus=rcv_bonus, type='rcv')
 		rcv_bonus.save()
 		total_number += account
+		total_value += total_money
 	snd_bonus.consumer.snd_bonus_num += total_number
+	snd_bonus.consumer.snd_bonus_value += total_value
 	snd_bonus.consumer.save()
 
 #微信支付
@@ -336,8 +331,10 @@ def action_weixin_pay(data, request):
 		recharge.save()
 		new_snd_bonus.content = bonus.content
 		new_snd_bonus.save()	
-		consumer.own_bonus_detail = bonus_content_detail(consumer=consumer, type='own')
-		consumer.save()
+		
+		#更新个人钱包信息
+		consumer.flush_own_money
+
 		
 		#随机分配红包	
 		number_list = get_random_bonus(int(money_num), int(new_snd_bonus.bonus_num))
@@ -459,16 +456,14 @@ def action_create_ticket(data):
 		consumer.on_table.save()			
 		consumer_list = Consumer.objects.filter(session=consumer.session)
 		for user in consumer_list:
-			#print("++++++++++++请会话以及桌台+++++++++++++++++")
+			#print("++++++++++++清会话以及桌台+++++++++++++++++")
 			user.on_table = None
 			user.session = None
 			user.save()
 		
-		new_consumer = Consumer.objects.get(open_id=openid)	
 		#更新用户钱包余额及明细
-		new_consumer.own_bonus_detail = bonus_content_detail(consumer=new_consumer, type="own")
-		new_consumer.own_ticket_num += 1
-		update_wallet_money(new_consumer)
+		new_consumer = Consumer.objects.get(open_id=openid)	
+		new_consumer.flush_own_money
 		
 		#返回消费券码以及券值
 		id_ticket = str(new_ticket.id_ticket)
@@ -629,6 +624,7 @@ def action_get_bonus(openid, request):
 		consumer.session.total_number += total_number
 		consumer.session.save()
 		consumer.rcv_bonus_num += total_number
+		consumer.rcv_bonus_value += total_money
 		consumer.save()
 				
 		#更新抢红包记录
@@ -698,8 +694,8 @@ def decode_choose_pay(request, data_dir):
 			price = float(create_bonus[key].price)
 			num = int(value)
 			total_money += price*num
-			if key == LIST_KEY_ID:
-				number += int(value)
+			#if key == LIST_KEY_ID:
+			number += int(value)
 		else:
 			if key == 'table':
 				bonus.table = value

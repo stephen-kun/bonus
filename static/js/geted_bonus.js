@@ -1,34 +1,16 @@
 ﻿var refuse_flag = 1;
 function refuse_bonus(id_bonus, url){
-	var xmlhttp;
+	var xmlhttp = new XMLHttpRequest();
 	var data = '{"id_bonus":"ID_BONUS", "action":"ajax_bonus_refuse"}';
 	data = data.replace(/ID_BONUS/, id_bonus);
 
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-	  xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-	  
 	xmlhttp.onreadystatechange=function()
 	{
 		if(xmlhttp.readyState==4 && xmlhttp.status==200)
 		{
-			var result = JSON.parse(xmlhttp.responseText);
-			if(result.status == '0')
-			{
-				var html = '<input type="button" id="button" class="gray" value="婉拒">';
-				var id = "hID_BONUS".replace(/ID_BONUS/, id_bonus);
-				document.getElementById(id).innerHTML = html;				
-			}
-			else
-			{
-				alert(result.error_msg)
-			}
-
+			alert('已婉拒');
+			var id = 'refuseID_BONUS'.replace(/ID_BONUS/, id_bonus);
+			document.getElementById(id).setAttribute('class', "blue");
 		}
 	}
 	
@@ -44,7 +26,7 @@ function refuse_bonus(id_bonus, url){
 
 function send_message(url){
 	var openid, id_bonus, message, data;
-	var xmlhttp;
+	var xmlhttp = new XMLHttpRequest();
 	id_bonus = $("#id_bonus").val();
 	if($("#message").val())
 	{
@@ -58,16 +40,7 @@ function send_message(url){
 
 	data = '{"id_bonus":"ID_BONUS","message":"MESSAGE", "action":"ajax_bonus_message"}';
 	data = data.replace(/ID_BONUS/, id_bonus).replace(/MESSAGE/, message);
-
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-	  xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-	  
+  
 	xmlhttp.onreadystatechange=function()
 	{
 		if(xmlhttp.readyState==4 && xmlhttp.status==200)

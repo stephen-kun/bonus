@@ -25,20 +25,8 @@
 
 <section>
 	<div class="accept">
-		{% if snd_bonus.is_exhausted and snd_bonus.user_time.hour and snd_bonus.user_time.minute %}
-		<h4>{{snd_bonus.number}}个串串，{{snd_bonus.user_time.hour}}小时{{snd_bonus.user_time.minute}}分钟被抢光</h4>
-		{% endif %}
-		{% if snd_bonus.is_exhausted and snd_bonus.user_time.hour and not snd_bonus.user_time.minute %}
-		<h4>{{snd_bonus.number}}个串串，{{snd_bonus.user_time.hour}}小时被抢光</h4>
-		{% endif %}		
-		{% if snd_bonus.is_exhausted and not snd_bonus.user_time.hour and snd_bonus.user_time.minute and snd_bonus.user_time.second %}
-		<h4>{{snd_bonus.number}}个串串，{{snd_bonus.user_time.minute}}分钟{{snd_bonus.user_time.second}}秒被抢光</h4>
-		{% endif %}	
-		{% if snd_bonus.is_exhausted and not snd_bonus.user_time.hour and snd_bonus.user_time.minute and not snd_bonus.user_time.second %}
-		<h4>{{snd_bonus.number}}个串串，{{snd_bonus.user_time.minute}}分钟被抢光</h4>
-		{% endif %}			
-		{% if snd_bonus.is_exhausted and not snd_bonus.user_time.hour and not snd_bonus.user_time.minute and snd_bonus.user_time.second %}
-		<h4>{{snd_bonus.number}}个串串，{{snd_bonus.user_time.second}}秒被抢光</h4>
+		{% if snd_bonus.is_exhausted  %}
+		<h4>{{snd_bonus.number}}个串串，已被抢光</h4>
 		{% endif %}			
 		{% if snd_bonus.is_valid and snd_bonus.bonus_remain %}
 		<h4>已领取{{snd_bonus.bonus_exhausted}}/{{snd_bonus.bonus_num}}个</h4>
@@ -60,11 +48,13 @@
 				<p>{{bonus.message}}</a></p>
 				{% else %}
 				{% ifequal bonus.consumer.open_id openid %}
-				<p id="{{bonus.id_bonus}}"><a onClick="message('{{bonus.id_bonus}}')">留言</a></p>
+				{% if not bonus.is_refuse %}
+				<p id="{{bonus.id_bonus}}"><a onClick="message('{{bonus.id_bonus}}')">留言</a></p>				
+				{% endif %}
 				{% endifequal %}				
 				{% endif %}
 				{% if bonus.is_refuse %}
-				<i>婉拒</i>
+				<i>已婉拒</i>
 				{% endif %}
 				</h3>
                	<h5>

@@ -18,7 +18,7 @@
         </div>
         
         <!--<h5>可抵扣</h5>-->
-        <h3>{{consumer.own_ticket_num}}<span>张</span></h3>
+        <h3>{{ticket_num}}<span>张</span></h3>
         <style type="text/css">
 			.blades{animation: spin 100s linear infinite;}
 		</style>
@@ -28,15 +28,19 @@
   	<div class="box-duixiang">
     	<h4><span class="rfloat"><font class="qbhui"></font></span>我的卡券</h4>
     </div>
-	{% ifequal  consumer.own_ticket_num 0 %}
+	{% ifequal  ticket_num 0 %}
 	<div class="no_card"> 您还没有礼券 </div>
 	{% else %}
 		<div class="box-food qbbaise">
 			<ul>
 				{% for ticket in  ticket_list %}
 				<li>
-					<h3><font class="qbred">{{ticket.consumer.name}}</font>领取了！<font class="qbred">[规划]</font>冠名赞助券</h3>
-					<h4><span class="rfloat font8">有效期<font class="qbred">{{ticket.valid_time|date:"F-j-Y"}}</font></span><font class="qbred">30元</font></h4>
+				{% if ticket.title %}
+					<h3><font class="qbred">{{ticket.title}}</font>  冠名赞助</h3>
+				{% else %}
+					<h3><font class="qbred">趣八八</font></h3>
+				{% endif %}
+					<h4><span class="rfloat font8">有效期<font class="qbred">{{ticket.valid_time|date:"m-j-Y"}}</font></span><font class="qbred">{{ticket.ticket_value}}元</font></h4>
 				</li>
 				{% endfor %}
 			</ul>
