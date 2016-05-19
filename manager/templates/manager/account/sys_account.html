@@ -2,7 +2,7 @@
 <html>
 {% include 'header.html' %}
 <body>
-<article>
+<!--<article>
     <section>
     	<div class="right_award_box">
         	<div class="admin_if_bj">
@@ -18,13 +18,74 @@
                             {% endfor %}
                         </span></h4></li>
                     <li><h4><font class="font_admin_626261">可用礼券</font><span>
-                            {% for value,counter in consumer.valid_tickets.items %}
-                            {{ value }}元券x{{counter}}&nbsp
-                            {% endfor %}
+                            {{ consumer.valid_tickets }}
+                    </span></h4></li>
+
+                    <li><h4><font class="font_admin_626261">总共发红包</font><span>
+                            {{ consumer.snd_bonus.count }}个
                     </span></h4></li>
                 </ul>
                 <div class="clear"></div>
             </div>
+            </div>
+
+            <div class="admin_detailed_list">
+                <ul>
+                    {% for bonus in consumer.snd_bonus %}
+                	<li class="detailed_heiht">
+                    <h4>
+                        <p><font size="-1" color="#afacaa">{{ bonus.create_time|date:"Y-n-j H:i:s" }}</font></p>
+                        <p><font color='black'>发出{{bonus.bonus_num}}个</font></p>
+                        <p><font color='orange'>{{ bonus.good_contents }}</font></p>
+                    </h4>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </section>    
+</article>-->
+<article>
+    <section>
+    	<div class="right_award_box">
+        	<div class="admin_guanli">
+            	<div class="admin_guanli_left">
+                	<h2><img src="{{ consumer.picture }}" /></h2>
+                    <h4>{{ consumer.name }}</h4>
+                </div>
+                <div class="admin_guanli_right">
+                	<div class="admin_guanli_number">总共发红包<span>{{ consumer.snd_bonus.count }}</span>个</div>
+                    <div class="admin_guanli_String">可用余额：<span>
+                    {% for cg in consumer.valid_goods %}
+                            {{ cg.good.name }}x{{ cg.number }}&nbsp
+                            {% endfor %}</span>
+                    </div>
+                    <div class="admin_guanli_String admin_guanli_white">可用礼券：<span>{{ consumer.valid_tickets }}</span></div>
+                </div>
+            </div>
+            <div class="admin_guanli_list">
+            	<div class="admin_guanli_list_tit">
+                	<ul>
+                    	<li>时间</li>
+                        <li>内容</li>
+                        <li class="admin_guanli_w460">串串数量</li>
+                        <li class="admin_guanli_w106">操作</li>
+                    </ul>
+                </div>
+                <div class="admin_guanli_list_content">
+                	<ul>
+                    	{% for bonus in consumer.snd_bonus %}
+                    	<li>
+                        	<time>{{ bonus.create_time|date:"Y-n-j H:i:s" }}</time>
+                            <h4>发出{{bonus.bonus_num}}个</h4>
+                            <p>{{ bonus.good_contents }}&nbsp</p>
+                            <span><a href="{% url 'bonus_detail' %}?type=send&bonus_id={{ bonus.id_bonus }}" class="color_a" target="mainFrame">查看详细</a></span>
+                        </li>
+                        {% endfor %}
+                        <div class="clear"></div>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>    

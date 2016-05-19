@@ -49,6 +49,7 @@ urlpatterns = [
 
 	url(r'^consumer/index/$', views.consumer_index, name='consumer'),
 	url(r'^consumer/consumer_list/$', views.consumer_list, name='consumer_list'),
+	url(r'^consumer/dining_list/$', views.dining_list, name='dining_list'),
 	url(r'^consumer/consumer_is_dining/$', views.consumer_is_dining, name='consumer_is_dining'),
 	url(r'^consumer/consumer_detail/$', views.consumer_detail, name='consumer_detail'),
 	url(r'^consumer/consumer_bonus_list/$', views.consumer_bonus_list, name='consumer_bonus_list'),
