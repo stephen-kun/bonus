@@ -10,14 +10,14 @@
 
                 <div class="comment-media">
                     <div class="comment-img">
-                        <img class="comment-avatar" src="{% get_gravatar_url user=c.user size=50 %}" />
+                        <img class="comment-avatar" src="{{ c.user.jf.picture }}" style="width: 50px;width: 50px;">
                     </div>
 
                     <div class="comment-body">
                         <div class="comment-info">
 
                             <div class="comment-username">
-                                <a class="username{% if c.user.jf.is_administrator %} is-admin{% elif c.user.jf.is_moderator %} is-mod{% endif %}" href="{{ c.user.jf.get_absolute_url }}">{{ c.user.username }}</a><span class="comment-realname">{{ c.user.get_full_name }}</span>
+                                <a class="username{% if c.user.jf.is_administrator %} is-admin{% elif c.user.jf.is_moderator %} is-mod{% endif %}" href="{{ c.user.jf.get_absolute_url }}">{{ c.user.jf.name }}</a><span class="comment-realname">{{ c.user.get_full_name }}</span>
                             </div>
 
                             <ul class="comment-date">
@@ -42,6 +42,10 @@
 
                 {% if not c.action %}
                     <ul class="comment-actions">
+                        {% if user.jf.is_seller and forloop.counter0 == 0 %}
+                            <li><a href="/manager/account/send_coupon/"><i class="fa fa-gift"></i>  礼券</a></li>
+                        {% endif %}
+
                         {% if user.is_authenticated %}
                             {% if user.jf.is_moderator %}
                                 <li><a href="{% url "comment:delete" c.pk %}"><i class="fa fa-times"></i> {% trans "delete" %}</a></li>
@@ -50,7 +54,7 @@
 {#                            <li><a href="{% url "comment:flag:create" c.pk %}"><i class="fa fa-flag"></i> {% trans "report" %}</a></li>#}
                         {% endif %}
 
-                        <li><a class="js-share" href="#" data-dialog=".js-share-{{ c.pk }}"><i class="fa fa-share"></i> {% trans "share" %}</a></li>
+{#                        <li><a class="js-share" href="#" data-dialog=".js-share-{{ c.pk }}"><i class="fa fa-share"></i> {% trans "share" %}</a></li>#}
 
                         {% if user.is_authenticated %}
                             {% if c.like %}
@@ -67,29 +71,25 @@
                                 <li><a href="{% url "comment:update" pk=c.pk %}" >{% trans "edit" %}</a></li>
                             {% endif %}
 
-                            {% ifnotequal c.user.pk user.pk %}
-                                <li><a href="{% url "comment:publish" topic_id=topic.pk pk=c.pk %}" >{% trans "quote" %}</a></li>
-                                <li><a href="#reply" >{% trans "reply" %}</a></li>
-                            {% endifnotequal %}
                         {% endif %}
                     </ul>
 
-                    <div class="share js-share-{{ c.pk }}" style="display: none;">
-                        <div class="share-box">
-                            <a class="share-close" href="#" ><i class="fa fa-times"></i> {% trans "close" %}</a>
-
-                            {% with comment_url=c.get_absolute_url %}
-                                <input class="share-url" type="text" value="{% get_share_url url=comment_url %}" />
-                                <ul class="share-actions">
-                                    <li><a href="{% get_twitter_share_url url=comment_url title=topic.title %}" target="_blank"><i class="fa fa-twitter"></i></a></li><!--
-                                 --><li><a href="{% get_facebook_share_url url=comment_url title=topic.title %}" target="_blank"><i class="fa fa-facebook"></i></a></li><!--
-                                 --><li><a href="{% get_gplus_share_url url=comment_url %}" target="_blank"><i class="fa fa-google-plus"></i></a></li><!--
-                                 --><li><a href="{% get_email_share_url url=comment_url title=topic.title %}" ><i class="fa fa-envelope"></i></a></li>
-                                </ul>
-                            {% endwith %}
-
-                        </div>
-                    </div>
+{#                    <div class="share js-share-{{ c.pk }}" style="display: none;">#}
+{#                        <div class="share-box">#}
+{#                            <a class="share-close" href="#" ><i class="fa fa-times"></i> {% trans "close" %}</a>#}
+{##}
+{#                            {% with comment_url=c.get_absolute_url %}#}
+{#                                <input class="share-url" type="text" value="{% get_share_url url=comment_url %}" />#}
+{#                                <ul class="share-actions">#}
+{#                                    <li><a href="{% get_twitter_share_url url=comment_url title=topic.title %}" target="_blank"><i class="fa fa-twitter"></i></a></li><!--#}
+{#                                 --><li><a href="{% get_facebook_share_url url=comment_url title=topic.title %}" target="_blank"><i class="fa fa-facebook"></i></a></li><!--#}
+{#                                 --><li><a href="{% get_gplus_share_url url=comment_url %}" target="_blank"><i class="fa fa-google-plus"></i></a></li><!--#}
+{#                                 --><li><a href="{% get_email_share_url url=comment_url title=topic.title %}" ><i class="fa fa-envelope"></i></a></li>#}
+{#                                </ul>#}
+{#                            {% endwith %}#}
+{##}
+{#                        </div>#}
+{#                    </div>#}
                 {% endif %}
 
             {% else %}
@@ -97,7 +97,7 @@
                 <div class="comment-media">
                     <div class="comment-img">
                         <div class="comment-removed">
-                            <a href="{{ c.user.jf.get_absolute_url }}">{{ c.user.username }}</a>
+                            <a href="{{ c.user.jf.get_absolute_url }}">{{ c.user.jf.name }}</a>
                         </div>
                     </div>
 
@@ -140,7 +140,7 @@
             } );
         {% endif %}
 
-        $('.js-share').social_share();
+{#        $('.js-share').social_share();#}
 
         hljs.initHighlightingOnLoad();
 

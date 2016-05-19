@@ -15,20 +15,20 @@ class TopicForm(forms.ModelForm):
 
     class Meta:
         model = Topic
-        fields = ('title', 'category')
+        fields = ('title',)
 
     def __init__(self, user, *args, **kwargs):
         super(TopicForm, self).__init__(*args, **kwargs)
         self.user = user
-        self.fields['category'] = NestedModelChoiceField(queryset=Category.objects.visible().opened(),
-                                                         related_name='category_set',
-                                                         parent_field='parent_id',
-                                                         label_field='title',
-                                                         label=_("Category"),
-                                                         empty_label=_("Chose a category"))
+        # self.fields['category'] = NestedModelChoiceField(queryset=Category.objects.visible().opened(),
+        #                                                  related_name='category_set',
+        #                                                  parent_field='parent_id',
+        #                                                  label_field='title',
+        #                                                  label=_("Category"),
+        #                                                  empty_label=_("Chose a category"))
 
-        if self.instance.pk and not user.jf.is_moderator:
-            del self.fields['category']
+        # if self.instance.pk and not user.jf.is_moderator:
+        #     del self.fields['category']
 
     def save(self, commit=True):
         if not self.instance.pk:

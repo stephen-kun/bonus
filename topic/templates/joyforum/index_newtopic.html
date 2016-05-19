@@ -5,81 +5,82 @@
 {#{% load emoji_tags %}#}
 
 {% block cssext %}
-<style>
-    .tupianpanel{
-        height:5rem;
-        width: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-        border-top: 1px solid #e8e8e8;
-    }
+    <style>
+        .tupianpanel {
+            height: 5rem;
+            width: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            border-top: 1px solid #e8e8e8;
+        }
 
-    .tupianpanel ul{
-        list-style: none;
-        margin-top: 0;
-        padding: 0.2rem;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
+        .tupianpanel ul {
+            list-style: none;
+            margin-top: 0;
+            padding: 0.2rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
 
-    #biaoqing_container{
-        list-style:none;
-        padding: 0.1rem;
-        overflow-x: hidden;
-        overflow-y: auto;
-        margin-top: 0;
-        height: 100%;
-    }
+        #biaoqing_container {
+            list-style: none;
+            padding: 0.1rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+            margin-top: 0;
+            height: 100%;
+        }
 
-    #biaoqing_container li{
-        float: left;
-        width: 1.2rem;
-        height:1.2rem;
-        margin: 0.1rem;
-    }
+        #biaoqing_container li {
+            float: left;
+            width: 1.2rem;
+            height: 1.2rem;
+            margin: 0.1rem;
+        }
 
-        #biaoqing_container li img{
+        #biaoqing_container li img {
             height: 1.1rem;
             width: 1.1rem;
         }
 
-    .tupianpanel ul li{
-        float:left;
-        width: 2rem;
-        height: 2rem;
-        margin: 0.2rem;
-    }
+        .tupianpanel ul li {
+            float: left;
+            width: 2rem;
+            height: 2rem;
+            margin: 0.2rem;
+        }
 
-    .tupianpanel ul li *{
-        font-size: 1.5rem!important;
-    }
+        .tupianpanel ul li * {
+            font-size: 1.5rem !important;
+        }
 
-    .tupianpanel ul li.last .icon:focus{
-        color: #ff7a00!important;
-    }
+        .tupianpanel ul li.last .icon:focus {
+            color: #ff7a00 !important;
+        }
 
-    textarea{
-        margin-top: 0.1rem;
-    }
+        textarea {
+            margin-top: 0.1rem;
+        }
 
-    .textarea{
-        width: 100%;
-        height: 100%;
-        resize: none;
-        margin: 0.1rem 0;
-        border: 0px;
-        outline: 0px solid transparent;
-        background: white;
-    }
+        .textarea {
+            width: 100%;
+            height: 100%;
+            resize: none;
+            margin: 0.1rem 0;
+            border: 0px;
+            outline: 0px solid transparent;
+            background: white;
+        }
 
-    .textarea img{
-        height: 0.9rem;
-        width: 0.9rem;
-    }
-    .textarea:focus{
-        outline:none;
-    }
-</style>
+        .textarea img {
+            height: 0.9rem;
+            width: 0.9rem;
+        }
+
+        .textarea:focus {
+            outline: none;
+        }
+    </style>
 {% endblock %}
 
 {% block headerjs %}
@@ -91,7 +92,7 @@
     <script type='text/javascript' src='{% static "js/atwho/jquery.atwho.min.js" %}' charset='utf-8'></script>
     <script type='text/javascript' src='{% static "js/atwho/jquery.caret.min.js" %}' charset='utf-8'></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-{#    <script src="{% static 'emoji/js/emoji.js' %}"></script>#}
+    {#    <script src="{% static 'emoji/js/emoji.js' %}"></script>#}
 {% endblock %}
 
 {% block barheader %}
@@ -118,6 +119,7 @@
             <span class="icon iconfont icon-biaoqing"></span>
 
         </a>
+
         <div class="tupianpanel" style="display: none;">
             <ul id="tupian_container">
                 <li class="last"><a href="#" class="js-box-image icon iconfont icon-tianjiatupian"></a></li>
@@ -134,7 +136,7 @@
 {% endblock %}
 
 {% block page %}
-{#    {% autoescape off %}#}
+    {#    {% autoescape off %}#}
     <div class="page-current" style="height: 100%">
         <form action="{% url "wx:wx-newtopic" %}" method="post" class="js-reply"
               id="wxsendtopicform">
@@ -146,17 +148,17 @@
                 {{ field }}
             {% endfor %}
             <div style="display:none;">
-            {% for field in cform %}
-                {{ field.errors }}
-                {{ field }}
-            {% endfor %}
+                {% for field in cform %}
+                    {{ field.errors }}
+                    {{ field }}
+                {% endfor %}
             </div>
             <div class="textarea" contenteditable="true">
 
             </div>
         </form>
     </div>
-{#    {% endautoescape %}#}
+    {#    {% endautoescape %}#}
 {% endblock %}
 
 {% block jsext %}
@@ -181,21 +183,21 @@
                 })
             });
 
-             $("#sendtopic").on('click',function(){
-                 var imagelist = [];
-                 $("#tupian_container li.item").each(function(index,value){
-                     imagelist.push($(value).find("img").attr("cmid"));
-                 });
+            $("#sendtopic").on('click', function () {
+                var imagelist = [];
+                $("#tupian_container li.item").each(function (index, value) {
+                    imagelist.push($(value).find("img").attr("cmid"));
+                });
                 $("#imagelist").val(imagelist);
                 $("#wxsendtopicform").submit();
             });
 
-            $("#tupianbtn").on('click',function(){
-                if($("#biaoqingbtn").hasClass("active")) {
+            $("#tupianbtn").on('click', function () {
+                if ($("#biaoqingbtn").hasClass("active")) {
                     $(".biaoqingpanel").hide();
                     $("#biaoqingbtn").removeClass("active");
                 }
-                if($(this).hasClass("active")){
+                if ($(this).hasClass("active")) {
                     $("#commentbottombar").css("height", "2.5rem");
                     $(".content").css("bottom", "2.5rem");
                     $(".tupianpanel").hide();
@@ -210,12 +212,12 @@
                 }
             });
 
-            $("#biaoqingbtn").on('click',function(){
-                if($("#tupianbtn").hasClass("active")) {
+            $("#biaoqingbtn").on('click', function () {
+                if ($("#tupianbtn").hasClass("active")) {
                     $(".tupianpanel").hide();
                     $("#tupianbtn").removeClass("active");
                 }
-                if($(this).hasClass("active")){
+                if ($(this).hasClass("active")) {
                     $("#commentbottombar").css("height", "2.5rem");
                     $(".content").css("bottom", "2.5rem");
                     $(".biaoqingpanel").hide();
@@ -230,44 +232,44 @@
                 }
             });
 
-            $("#cancelcomment").on('click',function(){
-                $('#tupian_container li.item').each(function(index,value){   //TODO: DELETE IMAGE WHEN CANCEL
+            $("#cancelcomment").on('click', function () {
+                $('#tupian_container li.item').each(function (index, value) {   //TODO: DELETE IMAGE WHEN CANCEL
 
                 });
             });
         });
 
-    jQuery( document ).ready(function() {
+        jQuery(document).ready(function () {
 
-        marked.setOptions( {
-            renderer: new marked.Renderer(),
-            gfm: true,
-            tables: false,
-            breaks: true,
-            pedantic: false,
-            sanitize: true,
-            smartLists: false,
-            smartypants: false
-        } );
+            marked.setOptions({
+                renderer: new marked.Renderer(),
+                gfm: true,
+                tables: false,
+                breaks: true,
+                pedantic: false,
+                sanitize: true,
+                smartLists: false,
+                smartypants: false
+            });
 
-        jQuery( '#tupian_container' ).editor_image_upload( {
-			csrfToken: "{{ csrf_token }}",
-			target: "{% url "comment:image-upload-ajax" %}",
-			placeholderText: "{% trans "uploading {image_name}" %}"
-		    });
+            jQuery('#tupian_container').editor_image_upload({
+                csrfToken: "{{ csrf_token }}",
+                target: "{% url "comment:image-upload-ajax" %}",
+                placeholderText: "{% trans "uploading {image_name}" %}"
+            });
         });
 
-{#        Emoji.setDataUrl('{% url 'emoji:list.json' %}').load();#}
-{##}
-{#        var emojisobj = jQuery.parseJSON(localStorage.emojis);#}
-{#        jQuery.each(emojisobj,function(idx,val){#}
-{#            $("#biaoqing_container").append("<li emoji='"+idx+"'><img src='"+val+"'></li>");#}
-{#        });#}
-{##}
-{#        jQuery("#biaoqing_container li").on("click",function(){#}
-{#            var emoji = $(this).attr("emoji");#}
-{#            $("#wxsendtopicform .textarea").append(":"+emoji+":");#}
-{#        });#}
+        {#        Emoji.setDataUrl('{% url 'emoji:list.json' %}').load();#}
+        {##}
+        {#        var emojisobj = jQuery.parseJSON(localStorage.emojis);#}
+        {#        jQuery.each(emojisobj,function(idx,val){#}
+        {#            $("#biaoqing_container").append("<li emoji='"+idx+"'><img src='"+val+"'></li>");#}
+        {#        });#}
+        {##}
+        {#        jQuery("#biaoqing_container li").on("click",function(){#}
+        {#            var emoji = $(this).attr("emoji");#}
+        {#            $("#wxsendtopicform .textarea").append(":"+emoji+":");#}
+        {#        });#}
 
 
     </script>

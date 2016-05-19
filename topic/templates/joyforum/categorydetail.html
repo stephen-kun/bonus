@@ -255,9 +255,9 @@
                                     <div class="facebook-name">{{ comment.user.jf.name }}</div>
                                     <div class="facebook-date">
                                         <small><time title="{{ comment.date }}" datetime="{{ comment.date|date:"c" }}" class="timeago"></time></small>
-                                        &nbsp;&nbsp;
-                                        <small><i class="icon iconfont icon-presentfill
-                                        present" openid="{{ comment.user.jf.open_id }}" cid="{{ comment.id }}" topic_cid="{{ topic.comment.id }}"></i></small>
+{#                                        &nbsp;&nbsp;#}
+{#                                        <small><i class="icon iconfont icon-presentfill#}
+{#                                        present" openid="{{ comment.user.jf.open_id }}" cid="{{ comment.id }}" topic_cid="{{ topic.comment.id }}"></i></small>#}
                                     </div>
                                 </div>
                                 <div class="item-text">{{ comment.comment_html|safe|emoji_replace }}</div>
@@ -359,21 +359,21 @@
                 $('.infinite-scroll-preloader.endnote').show();
             }
 
-            $(document).on('click','.present',function(){
-                var cid = $(this).attr("cid");
-                var tcid = $(this).attr("topic_cid");
-                var openid = $(this).attr("openid");
-                var scope = this;
-
-                $.post("/manager/account/send_coupon/",
-                        {'action':'send_ticket','openid':openid,'cid':cid,'tcid':tcid},
-                    function (resp) {
-                            console.log(resp);
-                            $('#totalliquan').text();
-                            $(scope).addClass("icon-presentfill");
-                            $(scope).removeClass("icon-present");
-                    });
-            });
+{#            $(document).on('click','.present',function(){#}
+{#                var cid = $(this).attr("cid");#}
+{#                var tcid = $(this).attr("topic_cid");#}
+{#                var openid = $(this).attr("openid");#}
+{#                var scope = this;#}
+{##}
+{#                $.post("/manager/account/send_coupon/",#}
+{#                        {'action':'send_ticket','openid':openid,'cid':cid,'tcid':tcid},#}
+{#                    function (resp) {#}
+{#                            console.log(resp);#}
+{#                            $('#totalliquan').text();#}
+{#                            $(scope).addClass("icon-presentfill");#}
+{#                            $(scope).removeClass("icon-present");#}
+{#                    });#}
+{#            });#}
 
 
             jQuery(".imagelist li img").each(function (index, value) {

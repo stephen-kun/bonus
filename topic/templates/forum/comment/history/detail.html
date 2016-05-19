@@ -17,14 +17,14 @@
 
                 <div class="comment-media">
                     <div class="comment-img">
-                        <img class="comment-avatar" src="{% get_gravatar_url user=c.comment_fk.user size=50 %}" />
+                        <img class="comment-avatar" src="{{ c.user.jf.picture }}" style="width: 50px;width: 50px;">
                     </div>
 
                     <div class="comment-body">
                         <div class="comment-info">
 
                             <div class="comment-username">
-                                <a href="{{ c.comment_fk.user.jf.get_absolute_url }}">{{ c.comment_fk.user.username }}</a>
+                                <a href="{{ c.comment_fk.user.jf.get_absolute_url }}">{{ c.comment_fk.user.jf.name }}</a>
                             </div>
 
                             <ul class="comment-date">

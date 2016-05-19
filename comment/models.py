@@ -50,6 +50,10 @@ class Comment(models.Model):    #评论
     def get_absolute_url(self):
         return reverse('comment:find', kwargs={'pk': str(self.id), })
 
+    @property
+    def is_topic(self):
+        return self.user_id == self.topic.user_id
+
 
     @property
     def like(self):

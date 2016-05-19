@@ -10,13 +10,14 @@ if __name__ != '__main__':
 	from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 	from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 	from .utils import create_primary_key
+	from django.contrib.auth import get_user_model
+	User = get_user_model()
 
 from django.http.response import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist 
 from django.utils import timezone
 
-from django.contrib.auth import get_user_model
-User = get_user_model()
+
 
 import re
 import pytz
@@ -228,7 +229,7 @@ if __name__ == '__main__':
 		"action_name": "QR_LIMIT_SCENE", 
 		"action_info": {
 			"scene": {
-				"scene_id": 3 
+				"scene_id": 2
 			}
 		}
 	}
@@ -314,7 +315,7 @@ if __name__ == '__main__':
 		]
 	}
 
-	create_qrcode(qrcode, 'qubaba_table_03.jpg')
+	create_qrcode(qrcode, 'koovox_hk_02.jpg')
 	create_menu(menu_hongkong)
 			
 		
