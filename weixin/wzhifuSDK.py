@@ -60,7 +60,7 @@ class WxPayConf_pub(object):
     #受理商ID，身份标识
     MCHID = "1342490601"
     #商户支付密钥Key。审核通过后，在微信发送的邮件中查看
-    KEY = "jkfdfqoenqroqut35jre09431nalzmld"
+    KEY = "fdsaeqwe5434tf4645er2543543r15we"
    
 
     #=======【异步通知url设置】===================================
@@ -321,12 +321,14 @@ class Wxpay_client_pub(Common_util_pub):
     def postXml(self):
         """post请求xml"""
         xml = self.createXml()
+	print xml
         self.response = self.postXmlCurl(xml, self.url, self.curl_timeout)
         return self.response
 
     def postXmlSSL(self):
         """使用证书post请求xml"""
         xml = self.createXml()
+	print xml
         self.response = self.postXmlSSLCurl(xml, self.url, self.curl_timeout)
         return self.response
 
@@ -350,15 +352,16 @@ class UnifiedOrder_pub(Wxpay_client_pub):
 
     def createXml(self):
         """生成接口参数xml"""
+        self.parameters["appid"] = WxPayConf_pub.APPID  #公众账号ID
+        self.parameters["mch_id"] = WxPayConf_pub.MCHID  #商户号
+        #self.parameters["spbill_create_ip"] = "127.0.0.1"  #终端ip      
+
         #检测必填参数
         if any(self.parameters[key] is None for key in ("out_trade_no", "body", "total_fee", "notify_url", "trade_type")):
             raise ValueError("missing parameter")
         if self.parameters["trade_type"] == "JSAPI" and self.parameters["openid"] is None:
             raise ValueError("JSAPI need openid parameters")
 
-        self.parameters["appid"] = WxPayConf_pub.APPID  #公众账号ID
-        self.parameters["mch_id"] = WxPayConf_pub.MCHID  #商户号
-        self.parameters["spbill_create_ip"] = "127.0.0.1"  #终端ip      
         self.parameters["nonce_str"] = self.createNoncestr()  #随机字符串
         self.parameters["sign"] = self.getSign(self.parameters)  #签名
         return  self.arrayToXml(self.parameters)
@@ -367,6 +370,7 @@ class UnifiedOrder_pub(Wxpay_client_pub):
         """获取prepay_id"""
         self.postXml()
         self.result = self.xmlToArray(self.response)
+	print self.result
         prepay_id = self.result["prepay_id"]
         return prepay_id
 

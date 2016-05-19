@@ -14,6 +14,9 @@ from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 from wzhifuSDK import *
 
+from .utils import gen_trade_no 
+from lxml import etree
+import types
 
 #ADDRESS_IP = '127.0.0.1:8000'
 ADDRESS_IP = 'wx.tonki.com.cn'
@@ -657,8 +660,50 @@ def view_wechat_token(request):
 
 @csrf_exempt
 def view_pay_notify(request):
-	print "get notify"
 	notify=Notify_pub()
-	notify.setReturnParameter("")
-	return HttpResponse()
+	try:
+		#request_xml = etree.fromstring(request.body)
+		notify.saveData(request.body)
+		if(notify.checkSign()):
+			notify.setReturnParameter("return_code", "SUCCESS")
+			notify.setReturnParameter("return_msg", "OK")
+		else:
+			notify.setReturnParameter("return_code", "FAIL")
+			notify.setReturnParameter("return_msg", u"SIGNERROR")
+
+	except: 
+		log_print(view_pay_notify)
+		notify.setReturnParameter("return_code", "FAIL")
+		notify.setReturnParameter("return_msg", "ARGSERROR")
+
+	print notify.returnXml()
+	return HttpResponse(notify.returnXml(), content_type="application/xml") 
+
+
+#支付页面
+@csrf_exempt	
+def view_test_wxpay(request):
+	openid = request.session['openid']
+	#openid = "oxxmTw-fh_5DHSJzm-dq619BumSE"
+	static_url = settings.STATIC_URL
+	wx_order=UnifiedOrder_pub()
+	param_dict={}
+	trade_no = gen_trade_no()
+	print trade_no
+	wx_order.setParameter("out_trade_no", trade_no)
+	wx_order.setParameter("body", "pay test")
+	wx_order.setParameter('total_fee', '1')
+	wx_order.setParameter('notify_url', 'http://wx.tonki.com.cn/weixin/pay_notify/')
+	wx_order.setParameter('trade_type','JSAPI')
+	wx_order.setParameter('openid', openid)
+	wx_order.setParameter('spbill_create_ip', request.META['REMOTE_ADDR'])
+	prepay_id=wx_order.getPrepayId()
+	print prepay_id
+
+	jsapi_pub=JsApi_pub()
+	jsapi_pub.setPrepayId(prepay_id)	
+	param_json = jsapi_pub.getParameters()
+	print param_json
+	return render_to_response('test_weixin_pay.html', locals())
+
 

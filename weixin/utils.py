@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
+import datetime
 import time
 import re
 import urllib2
@@ -758,10 +759,10 @@ def action_weixin_order(data, request):
 	param_dict={}
 	wx_order.setParameter("out_trade_no", '9875757662870187')
 	wx_order.setParameter("body", "pay test")
-	wx_order.setParameter('total_fee', 1)
-	wx_order.setParameter('notify_utl', 'http://wx.tonki.com.cn/pay_noitify')
+	wx_order.setParameter('total_fee', '1')
+	wx_order.setParameter('notify_url', 'http://wx.tonki.com.cn/pay_noitify')
 	wx_order.setParameter('trade_type','JSAPI')
-	wx_order.setParameter('open_id', open_id)
+	wx_order.setParameter('openid', open_id)
 	prepay_id=wx_order.getPrepayId()
 	print prepay_id
 	return prepay_id
@@ -797,4 +798,17 @@ def handle_ajax_request(action, data, request):
 			return action_modify_sex(data)
 	else:
 		return "faild"
+
+
+#生成18位订单号，年月日时分秒+四个字随机数字
+def gen_trade_no():
+	now = datetime.datetime.now()
+	strs = now.strftime('%Y%m%d%H%M%S') 
+	chars = "0123456789"
+	ran = []
+	for x in range(4):
+		ran.append(chars[random.randrange(0, len(chars))])	
+
+	return strs+"".join(ran)
+
 
