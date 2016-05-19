@@ -7,61 +7,76 @@
 */
 
 var flag_close_account = 1;
-   
+var flag_check_code = 0;   
 function action_create_ticket(openid, total_money, url){
 	var auth_code ;
-	auth_code = document.getElementById("auth_code").value;
-	ticket_value = document.getElementById("ticket_value").value;
+	auth_code = $("#auth_code").val();
+	var ticket_value = Number($("#ticket_value").val());
+	var sum = Number(total_money) + Number($("#user_wallet").val());
 	
 	if(!ticket_value){
 		alert("请设置券面值！");
 		return;
 	}
+	else if(ticket_value == 0 && sum > 0){
+		var info = '您能设置的最大券值为SUM';
+		info = info.replace(/SUM/, sum);
+		alert(info);
+		return;
+	}
 	
 	if(!auth_code){
-		alert("请输入验证码！");
+		alert("请输入6位验证码！");
 		return;
 	}
 
-
-	if(flag_close_account){
-		flag_close_account = 0;	
-		var user_wallet, action;
-		var xmlhttp = new XMLHttpRequest();
-		user_wallet = document.getElementById("user_wallet").value;
-		auth_code = document.getElementById("auth_code").value;
-		action = 'ajax_create_ticket';
-		var data = '{"openid":"OPENID", "action":"ACTION", "user_wallet":"USER_WALLET", "total_money":"TOTAL_MONEY","ticket_value":"TICKET_VALUE","auth_code":"AUTH_CODE"}';
-		data = data.replace(/OPENID/, openid).replace(/ACTION/, action).replace(/USER_WALLET/, user_wallet).replace(/TOTAL_MONEY/,total_money).replace(/TICKET_VALUE/,ticket_value).replace(/AUTH_CODE/, auth_code);
-
-		xmlhttp.onreadystatechange=function()
-		{
-			if(xmlhttp.readyState==4 && xmlhttp.status==200)
-			{
-				var JSONObject = JSON.parse(xmlhttp.responseText);
-				var html = '<p>PART1</p><p>PART2</p><p>PART3</p>';
-				if(JSONObject.status)
-				{
-					alert(JSONObject.error_message);								
-				}
-				else
-				{					
-					var a=document.getElementById("create_ticket");					
-					a.style.backgroundColor="#bdbec0";
-					a.value = '查看券';			
-					document.getElementById("ticket_code").innerHTML = html.replace(/PART1/,JSONObject.part1).replace(/PART2/,JSONObject.part2).replace(/PART3/,JSONObject.part3);
-					document.getElementById("value").innerHTML = JSONObject.ticket_value;	
-
-					var modalLocation = $("#create_ticket").attr('data-reveal-id');
-					$('#'+modalLocation).reveal($(this).data());								
-				}
-
-			}
-		}
-		xmlhttp.open("POST", url, true);
-		xmlhttp.send(data);	
+	if(!sum){
+		alert("没有串串");
+		return;
 	}
-	else
+	
+	
+	var user_wallet, action;
+	var xmlhttp = new XMLHttpRequest();
+	user_wallet = document.getElementById("user_wallet").value;
+	auth_code = document.getElementById("auth_code").value;
+	action = 'ajax_create_ticket';
+	var data = '{"openid":"OPENID", "action":"ACTION", "user_wallet":"USER_WALLET", "total_money":"TOTAL_MONEY","ticket_value":"TICKET_VALUE","auth_code":"AUTH_CODE"}';
+	data = data.replace(/OPENID/, openid).replace(/ACTION/, action).replace(/USER_WALLET/, user_wallet).replace(/TOTAL_MONEY/,total_money).replace(/TICKET_VALUE/,ticket_value).replace(/AUTH_CODE/, auth_code);
+
+	xmlhttp.onreadystatechange=function()
+	{
+		if(xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			var JSONObject = JSON.parse(xmlhttp.responseText);
+			var html = '<p>PART1</p><p>PART2</p><p>PART3</p>';
+			if(JSONObject.status)
+			{
+				alert(JSONObject.error_message);								
+			}
+			else
+			{					
+				var a=document.getElementById("create_ticket");					
+				a.style.backgroundColor="#bdbec0";
+				a.value = '查看券';			
+				document.getElementById("ticket_code").innerHTML = html.replace(/PART1/,JSONObject.part1).replace(/PART2/,JSONObject.part2).replace(/PART3/,JSONObject.part3);
+				document.getElementById("value").innerHTML = JSONObject.ticket_value;	
+				flag_check_code = 1;
+				var modalLocation = $("#create_ticket").attr('data-reveal-id');
+				$('#'+modalLocation).reveal($(this).data());								
+			}
+
+		}
+	}
+	
+	if(flag_close_account)
+	{
+		flag_close_account = 0;	
+		xmlhttp.open("POST", url, true);
+		xmlhttp.send(data);			
+	}
+	
+	if(flag_check_code)
 	{
 		$('input[data-reveal-id]').live('click', function(e) {
 			e.preventDefault();

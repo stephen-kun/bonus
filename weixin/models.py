@@ -48,7 +48,7 @@ class _BonusContent():
 		self.price = price
 		self.unit = unit
 		self.number = number
-
+		
 def get_random_bonus(money_num, bonus_num):
 	l_money = []
 	while bonus_num:
@@ -203,10 +203,10 @@ class Consumer(models.Model):
 	@property
 	def flush_own_money(self):
 		money_list = WalletMoney.objects.filter(consumer=self, is_used=False, is_valid=True, is_send=False)
+		num = len(money_list)
 		sum_money = float(0)
-		for money in money_list:
-			price = money.money.price
-			sum_money += price
+		if num:
+			sum_money = money_list[0].money.price * num
 		self.own_bonus_value = sum_money
 		self.own_bonus_detail = bonus_content_models_to_json(money_list)
 		self.save()
@@ -299,12 +299,32 @@ class Consumer(models.Model):
 		valid_wallets=self.wallet_set.filter(is_used=False,is_send=False, money=good)
 		return valid_wallets
 		
+	def wallet_pay_ticket(self, ticket):
+		pass
+	
+	def wallet_pay_bonus(self, snd_bonus):
+		money_list = WalletMoney.objects.filter(consumer=self, is_used=False, is_valid=True, is_send=False).order_by("create_time").reverse()
+		total_money = snd_bonus.total_money
+		for money in money_list:
+			if total_money:
+				money.snd_bonus = snd_bonus
+				money.is_send = True
+				money.save()
+				total_money -= money.money.price
+			else:
+				break
+		
 	def snd_person_bonus(self, bonus_info):
+		#创建一个红包
 		snd_bonus = SndBonus.objects.create(id_bonus=create_primary_key(), consumer=self, bonus_type=bonus_info.bonus_type, to_table=bonus_info.table,\
 					to_message=bonus_info.message, content=bonus_info.content, bonus_num=bonus_info.bonus_num, number=bonus_info.number,\
-					total_money=bonus_info.total_money, bonus_remain=bonus_info.bonus_num)
-					
-		snd_bonus.split_to_rcv_bonus(bonus_info.money_num)	
+					total_money=bonus_info.money, bonus_remain=bonus_info.bonus_num)
+		#将钱装入红包
+		self.wallet_pay_bonus(snd_bonus)
+		#更新钱包
+		self.flush_own_money
+		#预分配红包
+		snd_bonus.split_to_rcv_bonus(int(bonus_info.number))	
 
 	def send_sys_bonus(self, counter, good_contents, title="", message=""):
 		bonus=SndBonus.objects.create(id_bonus=create_primary_key(), consumer=self, bonus_type=SYS_BONUS, to_message=message, title=title, bonus_num=counter, bonus_remain=counter)
@@ -385,6 +405,9 @@ class RecordRcvBonus(models.Model):
 
 	def __unicode__(self):
 		return '%s RecordRcvBonus %s'%(self.consumer.name, self.id_record)
+		
+class AuthCode(models.Model):
+	id_code = models.CharField(unique=True, max_length=6)		#验证码
 
 #发出的红包
 class SndBonus(models.Model):
@@ -411,7 +434,7 @@ class SndBonus(models.Model):
 		return '%s SndBonus %s'%(self.consumer.name, self.id_bonus)
 
 	def split_to_rcv_bonus(self, money_num):
-		number_list=get_random_bonus(money_num, self.bonus_num)
+		number_list=get_random_bonus(int(money_num), int(self.bonus_num))
 		number_list.sort(reverse=True)
 		is_best = True
 		total_number = 0
@@ -519,6 +542,7 @@ class WalletMoney(models.Model):
 	is_send = models.BooleanField(default=False)							#是否已发做红包
 	ticket = models.ForeignKey(Ticket, null=True, blank=True, on_delete=models.CASCADE)			#消费券唯一id
 	recharge = models.ForeignKey(Recharge, null=True, related_name='wallet_set', on_delete=models.CASCADE)	#充值记录id
+	create_time = models.DateTimeField(default=timezone.now)		#创建时间
 	rcv_bonus = models.ForeignKey(RcvBonus, null=True, blank=True, related_name="wallet_set", on_delete=models.CASCADE)		#抢到的红包唯一id
 	is_receive = models.BooleanField(default=False)						#是否已接收红包
 	money = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币

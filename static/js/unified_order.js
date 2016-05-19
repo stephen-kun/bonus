@@ -52,7 +52,23 @@ function unified_order(url, url_go, openid, bonus_type)
 	{
 		if(xmlhttp.readyState==4 && xmlhttp.status==200)
 		{
-			window.location.href = url_go;
+			var result = JSON.parse(xmlhttp.responseText);
+			if(result.status == '0' && result.pay_type == '1')
+			{
+				// 余额支付
+				alert("红包已发送");
+				//window.history.back(-1);
+			}
+			else if(result.status == '0' && result.pay_type == '0')
+			{
+				// 微信支付
+				window.location.href = url_go;				
+			}
+			else
+			{
+				// 出错页面
+			}
+
 		}
 	};
 	

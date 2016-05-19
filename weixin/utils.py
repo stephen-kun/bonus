@@ -3,7 +3,7 @@
 # Create your utils here.
 import random, string
 from django.core.exceptions import ObjectDoesNotExist 
-from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
+from .models import DiningTable,Consumer,VirtualMoney, WalletMoney, AuthCode
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
 import time
@@ -33,10 +33,6 @@ AJAX_MODIFY_ADDRESS = 'ajax_modify_address'
 AJAX_MODIFY_EMAIL = 'ajax_modify_email'
 AJAX_MODIFY_SEX = 'ajax_modify_sex'
 AJAX_WEIXIN_ORDER = 'ajax_weixin_order'
-
-AUTH_CODE = '888888'
-#LIST_KEY_ID	= u'串串'
-
 
 
 class _GetedBonus():
@@ -335,7 +331,6 @@ def action_weixin_pay(data, request):
 		#更新个人钱包信息
 		consumer.flush_own_money
 
-		
 		#随机分配红包	
 		number_list = get_random_bonus(int(money_num), int(new_snd_bonus.bonus_num))
 		snd_bonus_random_rcv_bonus(new_snd_bonus, number_list)	
@@ -425,7 +420,8 @@ def action_create_ticket(data):
 		consumer = Consumer.objects.get(open_id=openid)		
 		ticket_value = float(data['ticket_value'])
 		auth_code = data['auth_code']
-		if auth_code != AUTH_CODE:
+		code = AuthCode.objects.filter(id_code=auth_code)
+		if len(code) == 0:
 			return dict(status=2, error_message="验证码错误，请重新输入！")
 	
 		#生成一条消费券记录
@@ -678,8 +674,6 @@ def snd_bonus_from_session(session):
 	else:
 		return None
 	
-	
-	
 #解析支付请求
 def decode_choose_pay(request, data_dir):
 	#print("**** decode_choose_pay  *****")
@@ -743,12 +737,55 @@ def action_modify_sex(data):
 	sex = data['sex']
 	Consumer.objects.filter(open_id=openid).update(sex=sex)
 	return ''
+
+#获得红包内容
+def decode_order_param(data_dir):
+	content_list = virtual_money_to_bonus_content()
+	result = {}
+	total_money = 0
+	number = 0				#统计串串个数
+	bonus = _Bonus()
+	l_name = []
+	l_content = []
+	for key, value in data_dir.items():
+		for content in content_list:
+			if key == content.name:
+				content.number = value
+				total_money += float(content.price)*int(value)
+				number += int(value)
+			else:
+				if key == 'table':
+					bonus.table = value
+				elif key == 'message':
+					bonus.message = value
+				elif key == "bonus_num":
+					bonus.bonus_num = value
+				elif key == "bonus_type":
+					bonus.bonus_type = value	
+			l_name.append(content.name)
+			s_content = json.dumps(dict(name=content.name, price=content.price, unit=content.unit, number=content.number))
+			l_content.append(s_content)					
+	bonus.money = total_money
+	bonus.number = number
+	bonus.content = json.dumps(dict(zip(l_name, l_content)))
+	result = dict(good_list=content_list, total_money=total_money, bonus_info=bonus)
+	return result
 	
 def action_weixin_order(data, request):
 	request.session['consumer_order'] = data
-	# 调用微信统一下单接口
-	print data
-	return ''
+	order_info = decode_order_param(data)
+	openid = data['openid']
+	consumer = Consumer.objects.get(open_id=openid)
+	total_money = order_info['total_money']
+	response = ''
+	if is_enough_pay(consumer, total_money):
+		#发红包
+		consumer.snd_person_bonus(bonus_info=order_info['bonus_info'])
+		response = dict(status=0, pay_type=1, money=total_money, prepay_id=0)
+	else:
+		#微信下单
+		response = dict(status=0, pay_type=0, money=total_money, prepay_id=0)
+	return json.dumps(response)
 	
 #ajax请求处理函数
 def handle_ajax_request(action, data, request):
