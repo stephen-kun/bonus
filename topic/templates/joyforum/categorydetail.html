@@ -184,7 +184,7 @@
             <div class="card-content">
                 <div class="card-content-inner">
                     <p>
-                        {{ topic.comment.comment|safe|emoji_replace }}
+                        {{ topic.comment.comment_html|safe|emoji_replace }}
                     </p>
 
                     <ul class="imagelist">
@@ -228,7 +228,7 @@
 
 
                             &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" style="display: inline-block;" class="link">
-                            <i style="display: inline-block;" class="icon iconfont icon-presentfill"></i><span id="totalliquan">{% if topic.liquan %}{{ topic.liquan }}{% else %}0{% endif %}</span></a>
+                            <i style="display: inline-block;" class="icon iconfont icon-presentfill"></i><span id="totalliquan">{% if topic.gifts %}{{ topic.gifts }}{% else %}0{% endif %}</span></a>
                         </span>
 
             </div>

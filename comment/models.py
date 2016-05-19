@@ -64,6 +64,13 @@ class Comment(models.Model):    #评论
         except (AttributeError, IndexError):
             return
 
+    @property
+    def gift(self):
+        try:
+            return self.gifts[0]
+        except (AttributeError, IndexError):
+            return
+
     def increase_modified_count(self):
         Comment.objects\
             .filter(pk=self.pk)\

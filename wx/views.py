@@ -29,7 +29,7 @@ from topic.models import Topic, SliderImage
 from topic import  utils as topicutils
 from core.utils.paginator import paginate, yt_paginate
 from topic.notification.models import TopicNotification
-from weixin.models import Consumer
+from weixin.models import Consumer,ConsumerGifts
 
 
 
@@ -93,7 +93,9 @@ def wx_index(request, pk=1):
                 .order_by("date")
             topic.comment = comment[0]
             imagelist = CommentImages.objects.filter(comment = comment[0])
+            gifts = ConsumerGifts.objects.filter(comment = comment[0])
             topic.imagelist = imagelist
+            topic.gifts = gifts.count()
 
         sliderimages = SliderImage.objects.filter(enabled=True)
 
@@ -135,7 +137,9 @@ def wx_index(request, pk=1):
                     .order_by("date")
                 topic.comment = comment[0]
                 imagelist = CommentImages.objects.filter(comment = comment[0])
+                gifts = ConsumerGifts.objects.filter(comment = comment[0])
                 topic.imagelist = imagelist
+                topic.gifts = gifts.count()
             context = {
                 'time':time.time(),
                 'count':count
@@ -168,7 +172,9 @@ def wx_index(request, pk=1):
                     .order_by("date")
                 topic.comment = comment[0]
                 imagelist = CommentImages.objects.filter(comment = comment[0])
+                gifts = ConsumerGifts.objects.filter(comment = comment[0])
                 topic.imagelist = imagelist
+                topic.gifts = gifts.count()
 
             htmlsnippet = render_to_string("joyforum/snippet/topic.html",{"topics":topics},context_instance=RequestContext(request))
             context={'html':htmlsnippet,'curpage':topics.number,'count':len(topics),'unread':unread}
@@ -288,6 +294,8 @@ def wx_topic_detail(request, pk, slug):
 
         imagelist = CommentImages.objects.filter(comment = topiccomment[0])
         topic.imagelist = imagelist
+        gifts = ConsumerGifts.objects.filter(comment = topiccomment[0])
+        topic.gifts = gifts.count()
 
         maxitems = comments.count()
 
@@ -328,6 +336,8 @@ def wx_topic_detail(request, pk, slug):
             for comment in comments:
                 imagelist = CommentImages.objects.filter(comment = comment)
                 comment.imagelist = imagelist
+                gifts = ConsumerGifts.objects.filter(comment = comment)
+                topic.gifts = gifts.count()
 
             context = {
                 'time':time.time()
@@ -354,6 +364,8 @@ def wx_topic_detail(request, pk, slug):
             for comment in comments:
                 imagelist = CommentImages.objects.filter(comment = comment)
                 comment.imagelist = imagelist
+                gifts = ConsumerGifts.objects.filter(comment = comment)
+                topic.gifts = gifts.count()
 
             htmlsnippet = render_to_string("joyforum/snippet/comment.html",{'comments': comments},context_instance=RequestContext(request))
             context={'html':htmlsnippet,'curpage':comments.number,'count':len(comments)}

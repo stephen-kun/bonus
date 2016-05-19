@@ -155,6 +155,10 @@ class DiningSession(models.Model):
             contents = union_dict(contents, bonus.good_contents())
         return contents
 
+class ConsumerGifts(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    comment = models.ForeignKey("comment.Comment",related_name='comment_gifts')
+
 #消费者数据表
 class Consumer(models.Model):
     open_id = models.CharField(max_length=30,unique=True)  # 微信openId

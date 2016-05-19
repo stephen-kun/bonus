@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q, Prefetch
 
 from comment.like.models import CommentLike
+from weixin.models import ConsumerGifts
 
 
 class CommentQuerySet(models.QuerySet):
@@ -41,6 +42,14 @@ class CommentQuerySet(models.QuerySet):
             return self.filter(user = user)
         else:
             return self.exclude(user = user)
+
+    def with_gifts(self,user):
+        if not user.is_authenticated():
+            return self
+
+        user_gift = ConsumerGifts.objects.filter(user=user)
+        prefetch = Prefetch("comment_gifts", queryset=user_gift, to_attr='gifts')
+        return self.prefetch_related(prefetch)
 
     def with_likes(self, user):
         if not user.is_authenticated():

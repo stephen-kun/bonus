@@ -106,7 +106,7 @@
                 <div class="card-content clickable" href="{{ topic.get_absolute_url|wxurl_wraper }}">
                     <div class="card-content-inner">
                         <p>
-                            {{ topic.comment.comment|safe|slice:":140"|emoji_replace }}... <a
+                            {{ topic.comment.comment_html|safe|slice:":140"|emoji_replace }}... <a
                                 href="{{ topic.get_absolute_url|wxurl_wraper }}"
                                 class="external">查看全文</a>
                         </p>
@@ -150,7 +150,7 @@
                                     class="icon iconfont icon-appreciate"></i>&nbsp;{{ c.likes_count }}</span>
                         {% endif %}
                     {% endwith %}
-                    <a href="#" class="link"><i class="icon iconfont icon-presentfill">&nbsp;</i>{% if topic.liquan %}{{ topic.liquan }}{% else %}0{% endif %}</a>
+                    <a href="#" class="link"><i class="icon iconfont icon-presentfill">&nbsp;</i>{% if topic.gifts %}{{ topic.gifts }}{% else %}0{% endif %}</a>
                 </div>
             </div>
         {% empty %}
