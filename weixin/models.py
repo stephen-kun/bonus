@@ -202,7 +202,7 @@ class Consumer(models.Model):
 		verbose_name_plural = _("forum profiles")
 		
 	@property
-	def flush_own_money(self):
+	def update_info(self):
 		money_list = WalletMoney.objects.filter(consumer=self, is_used=False, is_valid=True, is_send=False)
 		num = len(money_list)
 		sum_money = float(0)
@@ -323,9 +323,7 @@ class Consumer(models.Model):
 		#将钱装入红包
 		self.wallet_pay_bonus(snd_bonus)
 		#更新钱包
-		self.snd_bonus_num += bonus_info.number
-		self.snd_bonus_value += bonus_info.money
-		self.flush_own_money
+		self.update_info
 		#预分配红包
 		snd_bonus.split_to_rcv_bonus(int(bonus_info.number))	
 
@@ -525,7 +523,7 @@ class RcvBonus(models.Model):
 		self.is_refuse = True
 		money_list = WalletMoney.objects.filter(rcv_bonus=self).update(consumer=self.snd_bonus.consumer, is_send=False, is_receive=False)
 		self.consumer.rcv_bonus_num -= self.number
-		self.consumer.flush_own_money
+		self.consumer.update_info
 		self.save()
 		
 	
