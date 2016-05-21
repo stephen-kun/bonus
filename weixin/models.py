@@ -210,7 +210,28 @@ class Consumer(models.Model):
 			sum_money = money_list[0].money.price * num
 		self.own_bonus_value = sum_money
 		self.own_bonus_detail = bonus_content_models_to_json(money_list)
-		self.save()
+		
+	@property		
+	def update_self_info(self):
+		snd_bonus_list = SndBonus.objects.filter(consumer=self)
+		rcv_bonus_list = RcvBonus.objects.filter(consumer=self)
+		total_num = 0
+		total_money = 0
+		for bonus in snd_bonus_list:
+			total_num += bonus.number
+			total_money += bonus.total_money
+		self.snd_bonus_num = total_num
+		self.snd_bonus_value = total_money
+		total_num = 0
+		total_money = 0
+		for bonus in rcv_bonus_list:
+			total_num += bonus.number
+			total_money += bonus.total_money
+		self.rcv_bonus_num = total_num
+		self.rcv_bonus_value = total_money	
+		self.flush_own_money
+		
+		
 	
 	@property
 	def own_ticket_list(self):
@@ -324,10 +345,11 @@ class Consumer(models.Model):
 		self.wallet_pay_bonus(snd_bonus)
 		#更新钱包
 		self.snd_bonus_num += bonus_info.number
-		self.snd_bonus_value += bonus_info.money
+		self.snd_bonus_value +=  bonus_info.money
 		self.flush_own_money
 		#预分配红包
 		snd_bonus.split_to_rcv_bonus(int(bonus_info.number))	
+		self.save()
 
 	def send_sys_bonus(self, counter, good_contents, title="", message=""):
 		bonus=SndBonus.objects.create(id_bonus=create_primary_key(), consumer=self, bonus_type=SYS_BONUS, to_message=message, title=title, bonus_num=counter, bonus_remain=counter)
