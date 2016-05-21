@@ -471,11 +471,14 @@ def create_bonus_dict_to_session(request):
 
 #创建红包内容的字典
 def create_bonus_dict(request):
+	return create_bonus_dict_to_session(request)
+	'''
 	if "create_bonus" in request.session:
 		#print("***session create_bonus****")
 		return create_bonus_session_to_dict(request)
 	else:
 		return create_bonus_dict_to_session(request)
+	'''
 
 #我的钱包内容字符串
 def decode_bonus_detail(consumer):
