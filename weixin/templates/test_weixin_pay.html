@@ -1,0 +1,90 @@
+﻿<!-- 支付 -->
+{% extends "_bonus_base.html" %}
+
+{% block body %}
+<body class="qubaba_hsbj bottom_40">
+
+{% block content %}
+<article>
+<section>
+  	<div class="issue-top Angel-voucher-mt">
+    	
+        <div class="Angel Angel-voucher-img">
+        	<div class="blades">
+                <div class="Angel-baby Angel-voucher130"></div>
+            </div>
+            <h2><img src="{{consumer.picture}}"></h2>
+        </div>
+        <h3>{{consumer.name}}</h3>
+        <style type="text/css">
+			.blades{animation: spin 100s linear infinite;}
+		</style>
+    </div>	
+</section>
+
+<section>
+    <div class="box-food qbbaise box-food-mt">
+    	<ul>
+			{% for key, value in good_list.items %}
+        	<li>
+            	<h4><span class="rfloat"><font class="qbred">{{value.number}}</font>{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
+            </li>
+			{% endfor %}
+            <li>
+            	<h4><span class="rfloat"><font class="qbred">{{total_money}}</font>元</span>消费总额</h4>
+            </li>
+        </ul>
+    </div>
+	
+    <div class="queding">
+        <span id='weixin' >
+	<input type="button" class="green" value="微信支付" onclick="callPay()"></span>
+    </div>
+	
+</section>
+
+<!--<script type="text/javascript" src="{{static_url}}js/weixin_pay.js"></script>
+-->
+
+<script type="text/javascript">
+function onBridgeReady(){
+   WeixinJSBridge.invoke(
+       'getBrandWCPayRequest', 
+	{{ param_json|safe }},
+
+       function(res){     
+	if (res.err_msg == "get_brand_wcpay_request:ok") {
+        alert("支付成功");
+      }
+      if (res.err_msg == "get_brand_wcpay_request:cancel") {
+        alert("交易取消");
+      }
+      if (res.err_msg == "get_brand_wcpay_request:fail") {
+        alert("支付失败"+ res.err_msg + res.err_desc);
+      }	
+       }
+   ); 
+};
+
+function callPay(){
+	if (typeof WeixinJSBridge == "undefined"){
+		if( document.addEventListener ){
+			document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+		}else if (document.attachEvent){
+			document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+			document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+		}
+	}else{
+		onBridgeReady();
+	}
+}
+</script>
+
+</article>
+{% endblock %}
+
+{% block menu %}
+{% include '_menu.html' %}
+{% endblock %}
+</body>
+{% endblock %}

@@ -60,7 +60,7 @@ class WxPayConf_pub(object):
     #受理商ID，身份标识
     MCHID = "1342490601"
     #商户支付密钥Key。审核通过后，在微信发送的邮件中查看
-    KEY = "fdsaeqwe5434tf4645er2543543r15we"
+    KEY = "najklefqozvmljgqtnafvma43atmdffp"
    
 
     #=======【异步通知url设置】===================================
