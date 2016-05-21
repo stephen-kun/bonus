@@ -24,6 +24,14 @@ SYS_BONUS	= 2
 WEIXIN_PAY = '0'
 WALLET_PAY = '1'
 
+SUCCESS = 'SUCCESS'
+FAIL = 'FAIL'
+NOTPAY = 'NOTPAY'
+CLOSED = 'CLOSED'
+REFUND = 'REFUND'
+USERPAYING = 'USERPAYING'
+PAYERROR = 'PAYERROR'
+
 
 AJAX_GET_BONUS = 'ajax_get_bonus'
 AJAX_CREATE_TICKET = 'ajax_create_ticket'
@@ -294,57 +302,7 @@ def snd_bonus_random_rcv_bonus(snd_bonus, number_list):
 	snd_bonus.consumer.snd_bonus_num += total_number
 	snd_bonus.consumer.snd_bonus_value += total_value
 	snd_bonus.consumer.save()
-
-#微信支付
-def action_weixin_pay(data, request):
-	if data["method"] == WEIXIN_PAY:
-		#防止重复支付
-		bonus = snd_bonus_from_session(request.session)
-		if bonus is None:
-			return "have pay!"
-
-		#创建一条充值记录
-		openid = data['openid']
-		consumer = Consumer.objects.get(open_id=openid)
-		recharge = Recharge.objects.create(recharge_person=consumer)
-		recharge.recharge_value = float(data['money'])
-		recharge.recharge_type = int(WEIXIN_PAY)
-
-		#创建一条发红包记录
-		new_snd_bonus = SndBonus.objects.create(id_bonus=create_primary_key(), consumer=consumer, session=consumer.session)
-		new_snd_bonus.to_message = bonus.message
-		new_snd_bonus.to_table = bonus.table
-		new_snd_bonus.bonus_type = int(bonus.bonus_type)
-		new_snd_bonus.number = bonus.number
-		new_snd_bonus.total_money = bonus.money
-		new_snd_bonus.bonus_num = int(bonus.bonus_num)
-		new_snd_bonus.bonus_remain = new_snd_bonus.bonus_num
-
-		#生成虚拟货币
-		is_send = True
-		money_num = 0
-		money_list = VirtualMoney.objects.all()
-		for money in money_list:
-			content = bonus.content[money.name]
-			content = json.loads(content)
-			number = content['number']
-			money_num += int(number)
-			create_vitural_money(consumer, new_snd_bonus, recharge, money, number, is_send)
-		recharge.save()
-		new_snd_bonus.content = bonus.content
-		new_snd_bonus.save()	
-		
-		#更新个人钱包信息
-		consumer.flush_own_money
-
-		#随机分配红包	
-		number_list = get_random_bonus(int(money_num), int(new_snd_bonus.bonus_num))
-		snd_bonus_random_rcv_bonus(new_snd_bonus, number_list)
-	else:
-		pass
-	del request.session['snd_bonus']
-	return 'pay suc!'
-
+	
 #更新用户钱包余额
 def update_wallet_money(consumer):
 	money_list = WalletMoney.objects.filter(consumer=consumer, is_used=False, is_valid=True, is_send=False)
@@ -784,24 +742,109 @@ def action_weixin_order(data, request):
 	consumer = Consumer.objects.get(open_id=openid)
 	total_money = order_info['total_money']
 	response = ''
-	if is_enough_pay(consumer, total_money):
+	if is_enough_pay(consumer, int(total_money)):
 		#发红包
 		consumer.snd_person_bonus(bonus_info=order_info['bonus_info'])
-		response = dict(status=0, pay_type=1, money=total_money, prepay_id=0)
+		response = dict(status=0, pay_type=1, money=total_money)
 	else:
 		#微信下单
 		# 调用微信统一下单接口
+		total_fee = str(int(total_money)*100)
 		wx_order=UnifiedOrder_pub()
-		param_dict={}
-		wx_order.setParameter("out_trade_no", '9875757662870187')
+		trade_no = gen_trade_no()
+		wx_order.setParameter("out_trade_no", trade_no)
 		wx_order.setParameter("body", "pay test")
 		wx_order.setParameter('total_fee', '1')
-		wx_order.setParameter('notify_url', 'http://wx.tonki.com.cn/pay_noitify')
-		wx_order.setParameter('trade_type','JSAPI')
-		wx_order.setParameter('openid', open_id)
-		prepay_id=wx_order.getPrepayId()		
-		response = dict(status=0, pay_type=0, money=total_money, prepay_id=prepay_id)
+		wx_order.setParameter('openid', openid)
+		wx_order.setParameter('spbill_create_ip', request.META['REMOTE_ADDR'])
+		prepay_id=wx_order.getPrepayId()	
+		response = dict(status=0, pay_type=0, money=total_money)
+		
+		request.session['prepay_id'] = prepay_id
+		#创建一条充值记录
+		recharge = Recharge.objects.create(prepay_id=prepay_id, recharge_person=consumer, out_trade_no=out_trade_no, recharge_value=float(total_money))
+		
 	return json.dumps(response)
+
+def action_order_query(out_trade_no):
+	order_query = OrderQuery_pub()	
+	order_query.setParameter('out_trade_no', out_trade_no)
+	order_query.getOrderQueryResult()
+	return order_query
+	
+def action_weixin_pay(data, request):
+	response = {}
+	try:
+		print("== prepay_id: %s =="%(data['prepay_id']))
+		pay_result = data['pay_result']
+		prepay_id = data['prepay_id'].split('=')[1]
+		recharge = Recharge.objects.filter(prepay_id=prepay_id, status=False)
+		if len(recharge):	
+			#主动查询订单
+			out_trade_no = recharge[0].out_trade_no				
+			order_query = action_order_query(out_trade_no)	
+			if order_query.trade_state == SUCCESS:
+				recharge.update(status=True, trade_state=order_query.trade_state, total_fee=order_query.total_fee)
+				#支付成功业务
+				response = dict(status=SUCCESS, result=SUCCESS)
+			else:
+				response = dict(status=SUCCESS, result=FAIL)
+		else:
+			response = dict(status=SUCCESS, result=SUCCESS)
+	except:
+		log_print(action_weixin_pay)
+		response = dict(status=FAIL, err_msg='未知错误')
+	return json.dumps(response)
+	
+#微信支付
+def action_weixin_pay_order(data, request):
+	if data["method"] == WEIXIN_PAY:
+		#防止重复支付
+		bonus = snd_bonus_from_session(request.session)
+		if bonus is None:
+			return "have pay!"
+
+		#创建一条充值记录
+		openid = data['openid']
+		consumer = Consumer.objects.get(open_id=openid)
+		recharge = Recharge.objects.create(recharge_person=consumer)
+		recharge.recharge_value = float(data['money'])
+		recharge.recharge_type = int(WEIXIN_PAY)
+
+		#创建一条发红包记录
+		new_snd_bonus = SndBonus.objects.create(id_bonus=create_primary_key(), consumer=consumer, session=consumer.session)
+		new_snd_bonus.to_message = bonus.message
+		new_snd_bonus.to_table = bonus.table
+		new_snd_bonus.bonus_type = int(bonus.bonus_type)
+		new_snd_bonus.number = bonus.number
+		new_snd_bonus.total_money = bonus.money
+		new_snd_bonus.bonus_num = int(bonus.bonus_num)
+		new_snd_bonus.bonus_remain = new_snd_bonus.bonus_num
+
+		#生成虚拟货币
+		is_send = True
+		money_num = 0
+		money_list = VirtualMoney.objects.all()
+		for money in money_list:
+			content = bonus.content[money.name]
+			content = json.loads(content)
+			number = content['number']
+			money_num += int(number)
+			create_vitural_money(consumer, new_snd_bonus, recharge, money, number, is_send)
+		recharge.save()
+		new_snd_bonus.content = bonus.content
+		new_snd_bonus.save()	
+		
+		#更新个人钱包信息
+		consumer.flush_own_money
+
+		#随机分配红包	
+		number_list = get_random_bonus(int(money_num), int(new_snd_bonus.bonus_num))
+		snd_bonus_random_rcv_bonus(new_snd_bonus, number_list)
+	else:
+		pass
+	del request.session['snd_bonus']
+	return 'pay suc!'
 	
 #ajax请求处理函数
 def handle_ajax_request(action, data, request):

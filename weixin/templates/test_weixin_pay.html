@@ -37,12 +37,49 @@
     </div>
 	
     <div class="queding">
-        <span id='weixin' ><input type="button" class="green" value="微信支付" onclick="consumer_pay('{{ajax_request_url}}', '{{consumer.open_id}}','{{pay_param | safe}}', '{{pay_suc_url}}')"></span>
+        <span id='weixin' >
+	<input type="button" class="green" value="微信支付" onclick="callPay()"></span>
     </div>
 	
 </section>
 
-<script type="text/javascript" src="{{static_url}}js/weixin_pay.js"></script>
+<!--<script type="text/javascript" src="{{static_url}}js/weixin_pay.js"></script>
+-->
+
+<script type="text/javascript">
+function onBridgeReady(){
+   WeixinJSBridge.invoke(
+       'getBrandWCPayRequest', 
+	{{ param_json|safe }},
+
+       function(res){     
+	if (res.err_msg == "get_brand_wcpay_request:ok") {
+        alert("支付成功");
+      }
+      if (res.err_msg == "get_brand_wcpay_request:cancel") {
+        alert("交易取消");
+      }
+      if (res.err_msg == "get_brand_wcpay_request:fail") {
+        alert("支付失败"+ res.err_msg + res.err_desc);
+      }	
+       }
+   ); 
+};
+
+function callPay(){
+	if (typeof WeixinJSBridge == "undefined"){
+		if( document.addEventListener ){
+			document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+		}else if (document.attachEvent){
+			document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+			document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+		}
+	}else{
+		onBridgeReady();
+	}
+}
+</script>
+
 </article>
 {% endblock %}
 

@@ -9,7 +9,7 @@ import django.utils.timezone as timezone
 import json
 from .wechat import PostResponse, wechat, TOKEN, APPID, APPSECRET
 from .utils import  action_get_bonus, is_consumer_dining, handle_ajax_request, get_user_openid, decode_bonus_detail,create_bonus_dict
-from .utils import check_geted_bonus, decode_choose_pay, get_bonus_type_str, get_record_openid, is_enough_pay, update_wallet_money, log_print
+from .utils import check_geted_bonus, decode_order_param, get_bonus_type_str, get_record_openid, is_enough_pay, update_wallet_money, log_print
 from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 from wzhifuSDK import *
@@ -382,7 +382,7 @@ def display_common_bonus_views(open_id, request):
 		static_url = settings.STATIC_URL
 		good_list = create_bonus_dict(request)
 		ajax_request_url = AJAX_REQUEST_POST_URL
-		choose_pay_url = CHOOSE_PAY_URL
+		choose_pay_url = WEIXIN_PAY_URL
 		openid = open_id
 		menu = _MenuUrl()
 		return render_to_response('common_bonus.html', locals())	
@@ -408,7 +408,7 @@ def display_random_bonus_views(open_id, request):
 		title = '手气红包'
 		static_url = settings.STATIC_URL	
 		good_list = create_bonus_dict(request)
-		choose_pay_url = CHOOSE_PAY_URL
+		choose_pay_url = WEIXIN_PAY_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		openid = open_id
 		menu = _MenuUrl()
@@ -584,68 +584,7 @@ def view_geted_bonus(request):
 			return HttpResponseBadRequest('Bad request')		
 	else:
 		return check_session_openid(request, REDIRECT_BR_URL, display_rcv_bonus_views)
-
-#支付页面
-@csrf_exempt	
-def view_choose_pay(request):
-	try:
-		openid = request.session['openid']
-		consumer = Consumer.objects.get(open_id=openid)
-		title = '支付'
-		body_class = 'qubaba_hsbj'
-		static_url = settings.STATIC_URL
-		data_dict = request.session['consumer_order']
-		result_dir = decode_choose_pay(request, data_dict)
-		good_list = result_dir['good_list']
-		total_money = result_dir['total_money']
-		enough_money = is_enough_pay(consumer, float(total_money))
-		snd_bonus_url = SND_BONUS_URL
-		ajax_request_url = AJAX_REQUEST_POST_URL
-		menu = _MenuUrl()
-		return render_to_response('weixin_pay.html', locals())
-	except:
-		log_print(view_choose_pay) 
-		return HttpResponseBadRequest('Bad request')	
-	
-@csrf_exempt
-def view_wechat_token(request):
-	if request.method == 'GET':
-		# 检验合法性
-		# 从 request 中提取基本信息 (signature, timestamp, nonce, xml)
-		signature = request.GET.get('signature')
-		timestamp = request.GET.get('timestamp')
-		nonce = request.GET.get('nonce')
-
-		if not wechat.check_signature(signature, timestamp, nonce):
-			return HttpResponseBadRequest('Verify Failed')
-
-		return HttpResponse(request.GET.get('echostr', ''), content_type="text/plain")  
-	
-	response = PostResponse(request)
-	return response.auto_handle()
-
-@csrf_exempt
-def view_pay_notify(request):
-	notify=Notify_pub()
-	try:
-		#request_xml = etree.fromstring(request.body)
-		notify.saveData(request.body)
-		if(notify.checkSign()):
-			notify.setReturnParameter("return_code", "SUCCESS")
-			notify.setReturnParameter("return_msg", "OK")
-		else:
-			notify.setReturnParameter("return_code", "FAIL")
-			notify.setReturnParameter("return_msg", u"SIGNERROR")
-
-	except: 
-		log_print(view_pay_notify)
-		notify.setReturnParameter("return_code", "FAIL")
-		notify.setReturnParameter("return_msg", "ARGSERROR")
-
-	print notify.returnXml()
-	return HttpResponse(notify.returnXml(), content_type="application/xml") 
-
-
+		
 #支付页面
 @csrf_exempt	
 def view_test_wxpay(request):
@@ -671,5 +610,75 @@ def view_test_wxpay(request):
 	param_json = jsapi_pub.getParameters()
 	print param_json
 	return render_to_response('test_weixin_pay.html', locals())
+
+#支付页面
+@csrf_exempt	
+def view_weixin_pay(request):
+	try:
+		openid = request.session['openid']
+		consumer = Consumer.objects.get(open_id=openid)
+		title = '支付'
+		static_url = settings.STATIC_URL
+		data_dict = request.session['consumer_order']
+		result_dir = decode_order_param(data_dict)
+		good_list = result_dir['good_list']
+		total_money = result_dir['total_money']
+		ajax_request_url = AJAX_REQUEST_POST_URL
+		prepay_id = request.session['prepay_id']
+		jsapi_pub=JsApi_pub()
+		jsapi_pub.setPrepayId(prepay_id)	
+		pay_param = jsapi_pub.getParameters()		
+		pay_suc_url = SND_BONUS_URL
+		menu = _MenuUrl()
+		return render_to_response('weixin_pay.html', locals())
+	except:
+		log_print(view_weixin_pay) 
+		return HttpResponseBadRequest('Bad request')	
+	
+@csrf_exempt
+def view_wechat_token(request):
+	if request.method == 'GET':
+		# 检验合法性
+		# 从 request 中提取基本信息 (signature, timestamp, nonce, xml)
+		signature = request.GET.get('signature')
+		timestamp = request.GET.get('timestamp')
+		nonce = request.GET.get('nonce')
+
+		if not wechat.check_signature(signature, timestamp, nonce):
+			return HttpResponseBadRequest('Verify Failed')
+
+		return HttpResponse(request.GET.get('echostr', ''), content_type="text/plain")  
+	
+	response = PostResponse(request)
+	return response.auto_handle()
+
+@csrf_exempt
+def view_pay_notify(request):
+	notify=Notify_pub()
+	try:
+		#request_xml = etree.fromstring(request.body)
+		notify.saveNotifyData(request.body)
+		if(notify.checkSign()):
+			#判断通知订单已经处理
+			return_code = notify.return_code
+			out_trade_no = notify.out_trade_no
+			recharge = Recharge.objects.filter(out_trade_no=out_trade_no, status=False)
+			if len(recharge):
+				recharge.update(status=True, trade_state=notify.result_code, total_fee=notify.total_fee)
+				#支付成功业务
+				
+			notify.setReturnParameter("return_code", return_code)
+			notify.setReturnParameter("return_msg", "OK")
+		else:
+			notify.setReturnParameter("return_code", "FAIL")
+			notify.setReturnParameter("return_msg", u"SIGNERROR")
+	except: 
+		log_print(view_pay_notify)
+		notify.setReturnParameter("return_code", "FAIL")
+		notify.setReturnParameter("return_msg", "ARGSERROR")
+	return HttpResponse(notify.returnXml(), content_type="application/xml") 
+
+
+
 
 

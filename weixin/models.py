@@ -124,6 +124,7 @@ class DiningTable(models.Model):
 	def __unicode__(self):
 		return "table %s"%(self.index_table)
 
+
 #就餐会话
 class DiningSession(models.Model):
 	person_num	= models.IntegerField(default=0)							#就餐人数
@@ -354,6 +355,7 @@ class ConsumerSession(models.Model):
 	session = models.ForeignKey(DiningSession, null=True, on_delete=models.CASCADE)	#就餐会话
 	consumer = models.ForeignKey(Consumer, null=True, on_delete=models.CASCADE)		#就餐的消费者
 	time = models.DateTimeField(default=timezone.now) 				#记录时间
+	
 
 #充值记录
 class Recharge(models.Model):
@@ -362,6 +364,13 @@ class Recharge(models.Model):
 	recharge_type = models.IntegerField(default=0)				#充值方式：微信/商家系统/买单结余/婉拒/红包未被领取
 	recharge_person = models.ForeignKey(Consumer, null=True, related_name='recharge_set', on_delete=models.CASCADE)			#充值人
 
+	prepay_id = models.CharField(unique=True, max_length=64)	#预支付标识
+	out_trade_no = models.CharField(unique=True, max_length=18) #商家订单号	
+	status = models.BooleanField(default=False)				#订单状态 0:未处理 1:已处理
+	trade_state = models.CharField(null=True, blank=True, max_length=32)
+	total_free = models.IntegerField(default=0)				# 1 代表一分钱
+
+	
 	def __unicode__(self):
 		return '%s Recharge'%(self.recharge_person.name)
 
