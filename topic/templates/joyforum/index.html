@@ -98,10 +98,11 @@
                     <div class="facebook-avatar"><img class="img-circle" src="{{ topic.user.jf.picture }}" width="40"
                                                       height="40">
                     </div>
-                    <div class="facebook-name"><a href="{{ topic.get_absolute_url|wxurl_wraper }}" class="external">{{ topic.title }}</a>
+                    <div class="facebook-name"><a href="{{ topic.get_absolute_url|wxurl_wraper }}" class="external">{{ topic.user.jf.name }}</a>
                     </div>
-                    <div class="facebook-date"><span>{{ topic.user.jf.name }}</span>
-                        <time style="margin-left: 15px;" title="{{ topic.last_active }}" datetime="{{ topic.last_active|date:"c" }}" class="timeago"></time></div>
+                    <div class="facebook-date">
+{#                        <span>{{ topic.user.jf.name }}</span>#}
+                        <time title="{{ topic.last_active }}" datetime="{{ topic.last_active|date:"c" }}" class="timeago"></time></div>
                 </div>
                 <div class="card-content clickable" href="{{ topic.get_absolute_url|wxurl_wraper }}">
                     <div class="card-content-inner">
@@ -153,8 +154,8 @@
                     <a href="#" class="link"><i class="icon iconfont icon-presentfill">&nbsp;</i>{% if topic.gifts %}{{ topic.gifts }}{% else %}0{% endif %}</a>
                 </div>
             </div>
-        {% empty %}
-            <p>{% trans "There are no topics here, yet" %}</p>
+{#        {% empty %}#}
+{#            <p>{% trans "There are no topics here, yet" %}</p>#}
         {% endfor %}
 
     </div>
@@ -199,6 +200,7 @@
 {% block jsext %}
     <script type='text/javascript' src='{% static "js/util.no-min.js" %}' charset='utf-8'></script>
     <script type='text/javascript' src='{% static "js/like.no-min.js" %}' charset='utf-8'></script>
+    <script src="{% static 'emoji/js/emoji.js' %}"></script>
     <script type="text/javascript">
 
         var config = {};
@@ -324,6 +326,15 @@
 {#            jQuery.timeago.settings.localeTitle='zh-CN';#}
 
             jQuery("time.timeago").timeago();
+
+            if(localStorage.emojis){
+                if(Object.keys(jQuery.parseJSON(localStorage.emojis)).length>100){
+                    Emoji.clear();
+                    Emoji.setDataUrl('{% url 'emoji:list.json' %}').load();
+                }
+            }
+
+
         });
 
 

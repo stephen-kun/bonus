@@ -12,7 +12,7 @@ from .models import Topic
 
 
 class TopicForm(forms.ModelForm):
-
+    title = forms.CharField(label=_("title"),required=False,initial="",widget=forms.HiddenInput())
     class Meta:
         model = Topic
         fields = ('title',)
@@ -37,7 +37,7 @@ class TopicForm(forms.ModelForm):
         return super(TopicForm, self).save(commit)
 
 class WXTopicForm(forms.ModelForm):
-    title = forms.CharField(label=_("title"),widget=forms.TextInput(attrs={'placeholder':_('input topic title here.'),
+    title = forms.CharField(label=_("title"),required=False,initial="",widget=forms.HiddenInput(attrs={'placeholder':_('input topic title here.'),
                                                                            'style':"width:100%;height: 2rem;border: transparent;"}))
 
     class Meta:

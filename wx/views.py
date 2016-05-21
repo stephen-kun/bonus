@@ -93,9 +93,12 @@ def wx_index(request, pk=1):
                 .order_by("date")
             topic.comment = comment[0]
             imagelist = CommentImages.objects.filter(comment = comment[0])
-            gifts = ConsumerGifts.objects.filter(comment = comment[0])
             topic.imagelist = imagelist
-            topic.gifts = gifts.count()
+            giftscount = ConsumerGifts.objects.filter(comment = comment[0]).count()
+            for commenti in Comment.objects.filter(topic=topic).exclude(id=comment[0].id):
+                gifts = ConsumerGifts.objects.filter(comment = commenti)
+                giftscount = giftscount + gifts.count()
+            topic.gifts = giftscount
 
         sliderimages = SliderImage.objects.filter(enabled=True)
 
@@ -137,9 +140,12 @@ def wx_index(request, pk=1):
                     .order_by("date")
                 topic.comment = comment[0]
                 imagelist = CommentImages.objects.filter(comment = comment[0])
-                gifts = ConsumerGifts.objects.filter(comment = comment[0])
                 topic.imagelist = imagelist
-                topic.gifts = gifts.count()
+                giftscount = ConsumerGifts.objects.filter(comment = comment[0]).count()
+                for commenti in Comment.objects.filter(topic=topic).exclude(id=comment[0].id):
+                    gifts = ConsumerGifts.objects.filter(comment = commenti)
+                    giftscount = giftscount + gifts.count()
+                topic.gifts = giftscount
             context = {
                 'time':time.time(),
                 'count':count
@@ -172,9 +178,12 @@ def wx_index(request, pk=1):
                     .order_by("date")
                 topic.comment = comment[0]
                 imagelist = CommentImages.objects.filter(comment = comment[0])
-                gifts = ConsumerGifts.objects.filter(comment = comment[0])
                 topic.imagelist = imagelist
-                topic.gifts = gifts.count()
+                giftscount = ConsumerGifts.objects.filter(comment = comment[0]).count()
+                for commenti in Comment.objects.filter(topic=topic).exclude(id=comment[0].id):
+                    gifts = ConsumerGifts.objects.filter(comment = commenti)
+                    giftscount = giftscount + gifts.count()
+                topic.gifts = giftscount
 
             htmlsnippet = render_to_string("joyforum/snippet/topic.html",{"topics":topics},context_instance=RequestContext(request))
             context={'html':htmlsnippet,'curpage':topics.number,'count':len(topics),'unread':unread}
@@ -197,6 +206,7 @@ def wx_newtopic(request, category_id=1):
             # wrap in transaction.atomic?
             topic = form.save(commit=False)
             topic.category_id = 1
+            topic.title = ""
             topic.save()
             cform.topic = topic
             comment = cform.save()
@@ -310,6 +320,8 @@ def wx_topic_detail(request, pk, slug):
         for comment in comments:
             imagelist = CommentImages.objects.filter(comment = comment)
             comment.imagelist = imagelist
+            gifts = ConsumerGifts.objects.filter(comment = comment)
+            comment.gifts = gifts.count()
 
         context = {
             'topic': topic,
@@ -337,7 +349,7 @@ def wx_topic_detail(request, pk, slug):
                 imagelist = CommentImages.objects.filter(comment = comment)
                 comment.imagelist = imagelist
                 gifts = ConsumerGifts.objects.filter(comment = comment)
-                topic.gifts = gifts.count()
+                comment.gifts = gifts.count()
 
             context = {
                 'time':time.time()
@@ -365,7 +377,7 @@ def wx_topic_detail(request, pk, slug):
                 imagelist = CommentImages.objects.filter(comment = comment)
                 comment.imagelist = imagelist
                 gifts = ConsumerGifts.objects.filter(comment = comment)
-                topic.gifts = gifts.count()
+                comment.gifts = gifts.count()
 
             htmlsnippet = render_to_string("joyforum/snippet/comment.html",{'comments': comments},context_instance=RequestContext(request))
             context={'html':htmlsnippet,'curpage':comments.number,'count':len(comments)}

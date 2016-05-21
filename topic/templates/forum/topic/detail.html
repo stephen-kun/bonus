@@ -16,22 +16,22 @@
 {#		    <li><a href="{{ topic.category.get_absolute_url }}" >{{ topic.category.title }}</a></li>#}
 {#        </ul>#}
 
-        <h1 class="headline">
-            {% if topic.is_pinned or topic.is_globally_pinned %}
-                <i class="fa fa-thumb-tack"></i>
-            {% endif %}
-            {% if topic.is_closed %}
-                <i class="fa fa-lock"></i>
-            {% endif %}
-
-            {{ topic.title }}
-
-            {% if user.jf.is_moderator %}
-                <a class="head-edit-link" href="{% url "topic:update" topic.pk %}"><i class="fa fa-pencil"></i> {% trans "edit" %}</a>
-            {% elif user.pk == topic.user.pk and not topic.is_closed %}
-                <a class="head-edit-link" href="{% url "topic:update" topic.pk %}"><i class="fa fa-pencil"></i> {% trans "edit" %}</a>
-            {% endif %}
-        </h1>
+{#        <h1 class="headline">#}
+{#            {% if topic.is_pinned or topic.is_globally_pinned %}#}
+{#                <i class="fa fa-thumb-tack"></i>#}
+{#            {% endif %}#}
+{#            {% if topic.is_closed %}#}
+{#                <i class="fa fa-lock"></i>#}
+{#            {% endif %}#}
+{##}
+{#            {{ topic.title }}#}
+{##}
+{#            {% if user.jf.is_moderator %}#}
+{#                <a class="head-edit-link" href="{% url "topic:update" topic.pk %}"><i class="fa fa-pencil"></i> {% trans "edit" %}</a>#}
+{#            {% elif user.pk == topic.user.pk and not topic.is_closed %}#}
+{#                <a class="head-edit-link" href="{% url "topic:update" topic.pk %}"><i class="fa fa-pencil"></i> {% trans "edit" %}</a>#}
+{#            {% endif %}#}
+{#        </h1>#}
 
         {% if user.jf.is_moderator %}
             <div class="topic-moderation js-tabs-container">

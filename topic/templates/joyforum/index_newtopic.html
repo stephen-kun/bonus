@@ -92,7 +92,7 @@
     <script type='text/javascript' src='{% static "js/atwho/jquery.atwho.min.js" %}' charset='utf-8'></script>
     <script type='text/javascript' src='{% static "js/atwho/jquery.caret.min.js" %}' charset='utf-8'></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-    {#    <script src="{% static 'emoji/js/emoji.js' %}"></script>#}
+    <script src="{% static 'emoji/js/emoji.js' %}"></script>
 {% endblock %}
 
 {% block barheader %}
@@ -259,17 +259,19 @@
             });
         });
 
-        {#        Emoji.setDataUrl('{% url 'emoji:list.json' %}').load();#}
-        {##}
-        {#        var emojisobj = jQuery.parseJSON(localStorage.emojis);#}
-        {#        jQuery.each(emojisobj,function(idx,val){#}
-        {#            $("#biaoqing_container").append("<li emoji='"+idx+"'><img src='"+val+"'></li>");#}
-        {#        });#}
-        {##}
-        {#        jQuery("#biaoqing_container li").on("click",function(){#}
-        {#            var emoji = $(this).attr("emoji");#}
-        {#            $("#wxsendtopicform .textarea").append(":"+emoji+":");#}
-        {#        });#}
+        if(!localStorage.emojis){
+            Emoji.setDataUrl('{% url 'emoji:list.json' %}').load();
+        }
+
+        var emojisobj = jQuery.parseJSON(localStorage.emojis);
+        jQuery.each(emojisobj, function (idx, val) {
+            $("#biaoqing_container").append("<li emoji='" + idx + "'><img src='" + val + "'></li>");
+        });
+
+        jQuery("#biaoqing_container li").on("click", function () {
+            var emoji = $(this).attr("emoji");
+            $("#wxsendtopicform .textarea").append(":" + emoji + ":");
+        });
 
 
     </script>

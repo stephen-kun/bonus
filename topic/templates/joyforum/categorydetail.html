@@ -151,7 +151,7 @@
             返回
         </a>
 
-        <h1 class="title">{{ topic.title }}</h1>
+{#        <h1 class="title">{{ topic.title }}</h1>#}
     </header>
 
 {% endblock %}
@@ -177,9 +177,10 @@
             <div class="card-header no-border">
                 <div class="facebook-avatar"><img class="img-circle" src="{{ topic.user.jf.picture }}" width="40"
                                                   height="40"></div>
-                <div class="facebook-name">{{ topic.title }}</div>
-                <div class="facebook-date"><span>{{ topic.user.jf.name }}</span>
-                    <time style="margin-left: 15px;" title="{{ topic.last_active }}" datetime="{{ topic.last_active|date:"c" }}" class="timeago"></time></div>
+                <div class="facebook-name">{{ topic.user.jf.name }}</div>
+                <div class="facebook-date">
+{#                    <span>{{ topic.user.jf.name }}</span>#}
+                    <time title="{{ topic.last_active }}" datetime="{{ topic.last_active|date:"c" }}" class="timeago"></time></div>
             </div>
             <div class="card-content">
                 <div class="card-content-inner">
@@ -255,19 +256,19 @@
                                     <div class="facebook-name">{{ comment.user.jf.name }}</div>
                                     <div class="facebook-date">
                                         <small><time title="{{ comment.date }}" datetime="{{ comment.date|date:"c" }}" class="timeago"></time></small>
-{#                                        &nbsp;&nbsp;#}
-{#                                        <small><i class="icon iconfont icon-presentfill#}
-{#                                        present" openid="{{ comment.user.jf.open_id }}" cid="{{ comment.id }}" topic_cid="{{ topic.comment.id }}"></i></small>#}
+                                        &nbsp;&nbsp;
+                                        <small><i class="icon iconfont icon-presentfill
+                                        present">&nbsp;<span>{% if comment.gifts %}{{ comment.gifts }}{% else %}0{% endif %}</span></i></small>
                                     </div>
                                 </div>
                                 <div class="item-text">{{ comment.comment_html|safe|emoji_replace }}</div>
                             </div>
                         </div>
                     </li>
-                {% empty %}
-                    <li class="no-comment">
-                        <div class="item-text">还没有评论！</div>
-                    </li>
+{#                {% empty %}#}
+{#                    <li class="no-comment">#}
+{#                        <div class="item-text">还没有评论！</div>#}
+{#                    </li>#}
                 {% endfor %}
             </ul>
         </div>

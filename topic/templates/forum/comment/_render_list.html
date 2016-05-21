@@ -48,7 +48,8 @@
 
                 {% if not c.action %}
                     <ul class="comment-actions">
-                        {% if user.jf.is_seller and c.is_topic %}
+                        {% if user.jf.is_seller %}
+                            {% ifnotequal c.user user %}
                             {% if c.gift %}
                                 <li><a data-href="/manager/account/send_coupon/" href="javascript:void(0);" cid="{{ c.id }}"
                                    ,tcid="{{ c.topic.id }}" openid="{{ user.jf.open_id }}"
@@ -58,6 +59,7 @@
                                    ,tcid="{{ c.topic.id }}" openid="{{ user.jf.open_id }}"
                                    class="sendgift" sent="0"><i class="fa fa-gift"></i> 礼券</a></li>
                                 {% endif %}
+                            {% endifnotequal %}
                         {% endif %}
 
                         {% if user.is_authenticated %}

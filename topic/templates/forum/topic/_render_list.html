@@ -14,7 +14,7 @@
                         <i class="fa fa-lock"></i>
                     {% endif %}
 
-                    <a class="row-link{% if t.is_visited %} is-visited{% endif %}" href="{{ t.get_bookmark_url }}">{{ t.title }}</a>
+                    <a class="row-link{% if t.is_visited %} is-visited{% endif %}" href="{{ t.get_bookmark_url }}">{{ t.user.jf.name }}</a>
                 </div>
                 <div class="row-info">
                     <div>
