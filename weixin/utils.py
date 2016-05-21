@@ -428,7 +428,8 @@ def action_create_ticket(data):
 		
 		#更新用户钱包余额及明细
 		new_consumer = Consumer.objects.get(open_id=openid)	
-		new_consumer.update_info
+		new_consumer.flush_own_money
+		new_consumer.save()
 
 		#返回消费券码以及券值
 		id_ticket = str(new_ticket.id_ticket)
