@@ -668,7 +668,7 @@ def view_pay_notify(request):
 			recharge = Recharge.objects.filter(out_trade_no=out_trade_no, status=False)
 			if len(recharge):
 				print('===%s==='%(out_trade_no)) 
-				consumer_order = request.session['consumer_order']					
+				consumer_order = json.loads(recharge[0].consumer_order)				
 				recharge.update(status=True, trade_state=notify.data['result_code'], total_fee=notify.data['total_fee'])
 				#支付成功业务
 				snd_bonus_pay_weixin(consumer_order)

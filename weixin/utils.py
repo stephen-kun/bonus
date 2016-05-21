@@ -730,8 +730,8 @@ def decode_order_param(data_dir):
 				elif key == "bonus_type":
 					bonus.bonus_type = value	
 			l_name.append(content.name)
-			s_content = json.dumps(dict(name=content.name, price=content.price, unit=content.unit, number=content.number))
-			#s_content = dict(name=content.name, price=content.price, unit=content.unit, number=content.number)
+			#s_content = json.dumps(dict(name=content.name, price=content.price, unit=content.unit, number=content.number))
+			s_content = dict(name=content.name, price=content.price, unit=content.unit, number=content.number)
 			l_content.append(s_content)					
 	bonus.money = total_money
 	bonus.number = number
@@ -769,7 +769,8 @@ def action_weixin_order(data, request):
 		
 		request.session['prepay_id'] = prepay_id
 		#创建一条充值记录
-		recharge = Recharge.objects.create(prepay_id=prepay_id, recharge_person=consumer, out_trade_no=out_trade_no, recharge_value=float(total_money), consumer_order=data)
+		consumer_order = json.dumps(data)
+		recharge = Recharge.objects.create(prepay_id=prepay_id, recharge_person=consumer, out_trade_no=out_trade_no, recharge_value=float(total_money), consumer_order=consumer_order)
 		
 	return json.dumps(response)
 
@@ -790,7 +791,7 @@ def action_weixin_pay(data, request):
 			out_trade_no = recharge[0].out_trade_no				
 			order_query = action_order_query(out_trade_no)	
 			print("=========trade_state:%s========="%(order_query.result['trade_state']))
-			if order_query.trade_state == SUCCESS:
+			if order_query.result['trade_state'] == SUCCESS:
 				consumer_order = request.session['consumer_order']				
 				recharge.update(status=True, trade_state=order_query.result['trade_state'], total_fee=order_query.result['total_fee'])
 				#支付成功业务
