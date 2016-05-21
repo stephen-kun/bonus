@@ -1,6 +1,11 @@
 ﻿# -*- coding: utf-8 -*-
 # utils.py
 # Create your utils here.
+
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
 import random, string
 from django.core.exceptions import ObjectDoesNotExist 
 from .models import DiningTable,Consumer,VirtualMoney, WalletMoney, AuthCode
@@ -752,9 +757,9 @@ def action_weixin_order(data, request):
 		consumer.snd_person_bonus(bonus_info=bonus_info)
 		response = dict(status=0, pay_type=1, money=total_money)
 	else:
-		#l_content = bonus_content_json_to_models(bonus_info.content)
-		#order_detail = u"趣八八串串(%s元/%s):数量%s,总额%s"%(l_content[0].price, l_content[0].unit, l_content[0].number, total_money)
-		order_detail = 'QUBABA'
+		l_content = bonus_content_json_to_models(bonus_info.content)
+		order_detail = "趣八八串串(%s元/%s):数量%s,总额%s"%(l_content[0].price, l_content[0].unit, l_content[0].number, total_money)
+		#order_detail = 'QUBABA'
 		# 调用微信统一下单接口
 		total_fee = str(int(total_money)*100)
 		wx_order=UnifiedOrder_pub()

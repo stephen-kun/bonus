@@ -323,6 +323,8 @@ class Consumer(models.Model):
 		#将钱装入红包
 		self.wallet_pay_bonus(snd_bonus)
 		#更新钱包
+		self.snd_bonus_num += bonus_info.number
+		self.snd_bonus_value += bonus_info.money
 		self.flush_own_money
 		#预分配红包
 		snd_bonus.split_to_rcv_bonus(int(bonus_info.number))	
