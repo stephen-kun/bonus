@@ -369,6 +369,7 @@ class Recharge(models.Model):
 	status = models.BooleanField(default=False)				#订单状态 0:未处理 1:已处理
 	trade_state = models.CharField(null=True, blank=True, max_length=32)
 	total_fee = models.IntegerField(default=0)				# 1 代表一分钱
+	consumer_order = models.CharField(null=True, blank=True, max_length=100)	
 
 	
 	def __unicode__(self):

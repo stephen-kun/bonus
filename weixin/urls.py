@@ -18,7 +18,7 @@ urlpatterns = [
 	url(r'^view_self_rcv_bonus',views.view_self_rcv_bonus, name='view_self_rcv_bonus'),		
 	url(r'^view_self_snd_bonus',views.view_self_snd_bonus, name='view_self_snd_bonus'),	
 	url(r'^view_self_bonus_list',views.view_self_bonus_list, name='view_self_bonus_list'),		
-	url(r'^view_weixin_pay',views.view_weixin_pay, name='view_weixin_pay'),		
+	url(r'^wxpay/pay',views.view_weixin_pay, name='view_weixin_pay'),		
 	url(r'^view_redirect_settle_account',views.view_redirect_settle_account, name='view_redirect_settle_account'),		
 	url(r'^view_redirect_user_account',views.view_redirect_user_account, name='view_redirect_user_account'),	
 	url(r'^view_redirect_self_rcv_bonus',views.view_redirect_self_rcv_bonus, name='view_redirect_self_rcv_bonus'),		
@@ -40,5 +40,5 @@ urlpatterns = [
 	url(r'^view_qubaba_forum',views.view_qubaba_forum, name='view_qubaba_forum'),	
 	url(r'^view_redirect_qubaba_forum',views.view_redirect_qubaba_forum, name='view_redirect_qubaba_forum'),
 	url(r'^pay_notify', views.view_pay_notify, name='pay_notify'),
-	url(r'^test_wxpay/pay', views.view_weixin_pay, name='test_wxpay'),
+	url(r'^test_wxpay/pay', views.view_test_wxpay, name='test_wxpay'),
 ]

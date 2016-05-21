@@ -60,6 +60,7 @@ function wx_pay_result(){
 				// 实现跳转
 				var response = JSON.parse(xmlhttp.responseText);
 				if(response.status == 'SUCCESS' && response.result == 'SUCCESS'){
+					$("#weixin").html('<input type="button" class="gray" value="微信支付" >');
 					window.location.href = '{{pay_suc_url}}';	
 					clearInterval(timer);
 				}

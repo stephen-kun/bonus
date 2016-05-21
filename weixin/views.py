@@ -14,7 +14,7 @@ from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 from wzhifuSDK import *
 from .wx_config import *
-from .utils import gen_trade_no 
+from .utils import gen_trade_no , snd_bonus_pay_weixin
 from lxml import etree
 import types
 
@@ -656,22 +656,27 @@ def view_wechat_token(request):
 
 @csrf_exempt
 def view_pay_notify(request):
+	print('---------view_pay_notify-----------')
 	notify=Notify_pub()
 	try:
 		#request_xml = etree.fromstring(request.body)
-		notify.saveNotifyData(request.body)
+		notify.saveData(request.body)
 		if(notify.checkSign()):
 			#判断通知订单已经处理
-			return_code = notify.return_code
-			out_trade_no = notify.out_trade_no
+			return_code = notify.data['return_code']
+			out_trade_no = notify.data['out_trade_no']
 			recharge = Recharge.objects.filter(out_trade_no=out_trade_no, status=False)
 			if len(recharge):
-				recharge.update(status=True, trade_state=notify.result_code, total_fee=notify.total_fee)
+				print('===%s==='%(out_trade_no)) 
+				consumer_order = request.session['consumer_order']					
+				recharge.update(status=True, trade_state=notify.data['result_code'], total_fee=notify.data['total_fee'])
 				#支付成功业务
+				snd_bonus_pay_weixin(consumer_order)
 				
-			notify.setReturnParameter("return_code", return_code)
+			notify.setReturnParameter("return_code", "SUCCESS")
 			notify.setReturnParameter("return_msg", "OK")
 		else:
+			print('===error===') 
 			notify.setReturnParameter("return_code", "FAIL")
 			notify.setReturnParameter("return_msg", u"SIGNERROR")
 	except: 

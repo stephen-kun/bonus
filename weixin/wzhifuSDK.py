@@ -381,12 +381,6 @@ class OrderQuery_pub(Wxpay_client_pub):
 	def __init__(self, timeout=WxPayConf_pub.CURL_TIMEOUT):
 		#设置接口链接
 		self.url = "https://api.mch.weixin.qq.com/pay/orderquery"
-		self.return_code = None
-		self.result_code = None
-		self.out_trade_no = None
-		self.trade_state = None
-		self.total_fee = None
-		self.time_end = None
 		#设置curl超时时间
 		self.curl_timeout = timeout
 		super(OrderQuery_pub, self).__init__()
@@ -403,17 +397,6 @@ class OrderQuery_pub(Wxpay_client_pub):
 		self.parameters["nonce_str"] = self.createNoncestr()  #随机字符串
 		self.parameters["sign"] = self.getSign(self.parameters)  #签名
 		return  self.arrayToXml(self.parameters)
-	
-	def getOrderQueryResult(self):
-		self.result = self.getResult()
-		self.return_code = self.result['return_code']
-		if self.return_code == self.SUCCESS:
-			self.result_code = self.result['result_code']
-			if self.result_code == self.SUCCESS:
-				self.out_trade_no = self.result['out_trade_no']
-				self.trade_state = self.result['trade_state']
-				self.total_fee = self.result['total_fee']
-				self.time_end = self.result['time_end']	
 
 
 class Refund_pub(Wxpay_client_pub):
@@ -569,21 +552,6 @@ class Wxpay_server_pub(Common_util_pub):
 
 class Notify_pub(Wxpay_server_pub):
 	"""通用通知接口"""
-	def __init__(self):
-		self.return_code = None
-		self.result_code = None
-		self.out_trade_no = None
-		self.total_fee = None
-		self.time_end = None
-		
-	def saveNotifyData(self, xml):
-		self.saveData(xml)
-		self.return_code = self.data['return_code']
-		if self.return_code == self.SUCCESS:
-			self.result_code = self.data['result_code']
-			self.out_trade_no = self.data['out_trade_no']
-			self.total_fee = self.data['total_fee']
-			self.time_end = self.data['time_end']	
 
 
 class NativeCall_pub(Wxpay_server_pub):
