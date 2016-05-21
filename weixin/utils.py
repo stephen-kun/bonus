@@ -754,8 +754,8 @@ def action_weixin_order(data, request):
 		# 调用微信统一下单接口
 		total_fee = str(int(total_money)*100)
 		wx_order=UnifiedOrder_pub()
-		trade_no = gen_trade_no()
-		wx_order.setParameter("out_trade_no", trade_no)
+		out_trade_no = gen_trade_no()
+		wx_order.setParameter("out_trade_no", out_trade_no)
 		wx_order.setParameter("body", "pay test")
 		wx_order.setParameter('total_fee', '1')
 		wx_order.setParameter('openid', openid)

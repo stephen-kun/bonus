@@ -25,9 +25,9 @@
 <section>
     <div class="box-food qbbaise box-food-mt">
     	<ul>
-			{% for key, value in good_list.items %}
+			{% for goods in good_list %}
         	<li>
-            	<h4><span class="rfloat"><font class="qbred">{{value.number}}</font>{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
+            	<h4><span class="rfloat"><font class="qbred">{{goods.number}}</font>{{goods.unit}}</span>{{goods.name}}<span class="box-food-gray">({{goods.price}}元/{{goods.unit}})</span></h4>
             </li>
 			{% endfor %}
             <li>
@@ -37,12 +37,69 @@
     </div>
 	
     <div class="queding">
-        <span id='weixin' ><input type="button" class="green" value="微信支付" onclick="consumer_pay('{{ajax_request_url}}', '{{consumer.open_id}}','{{pay_param | safe}}', '{{pay_suc_url}}')"></span>
+        <span id='weixin' ><input type="button" class="green" value="微信支付" onclick="callPay()"></span>
     </div>
 	
 </section>
 
-<script type="text/javascript" src="{{static_url}}js/weixin_pay.js"></script>
+<script type="text/javascript" >
+
+function wx_pay_result(){
+	var url = '{{ajax_request_url}}';
+	var openid = '{{consumer.open_id}}';
+	var prepay_id = '{{prepay_id}}';
+	var timer = setInterval(function(){
+		var xmlhttp = new XMLHttpRequest();
+		var data = '{"openid":"OPENID","prepay_id":"PREPAY_ID", "action":"ajax_weixin_pay"}';
+		data = data.replace(/OPENID/, openid).replace(/PREPAY_ID/, prepay_id);
+		
+		xmlhttp.onreadystatechange=function()
+		{
+			if(xmlhttp.readyState==4 && xmlhttp.status==200)
+			{
+				// 实现跳转
+				var response = JSON.parse(xmlhttp.responseText);
+				if(response.status == 'SUCCESS' && response.result == 'SUCCESS'){
+					window.location.href = '{{pay_suc_url}}';	
+					clearInterval(timer);
+				}
+
+			}
+		}
+
+		xmlhttp.open("POST", url, true);
+		xmlhttp.send(data);			
+	}, 2000);
+}
+
+function onBridgeReady(){
+	WeixinJSBridge.invoke(
+		'getBrandWCPayRequest',
+		{{pay_param|safe}},
+		function(res){
+			if (res.err_msg == "get_brand_wcpay_request:ok") {
+				wx_pay_result();				
+			}
+		}
+		
+	);
+}
+
+function callPay(){
+	if (typeof WeixinJSBridge == "undefined"){
+		if( document.addEventListener ){
+			document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+		}else if (document.attachEvent){
+			document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+			document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+		}
+	}else{
+		onBridgeReady();
+	} 	
+}
+
+</script>
+
 </article>
 {% endblock %}
 

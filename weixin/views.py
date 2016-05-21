@@ -625,9 +625,11 @@ def view_weixin_pay(request):
 		total_money = result_dir['total_money']
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		prepay_id = request.session['prepay_id']
+		print prepay_id
 		jsapi_pub=JsApi_pub()
 		jsapi_pub.setPrepayId(prepay_id)	
-		pay_param = jsapi_pub.getParameters()		
+		pay_param = jsapi_pub.getParameters()	
+		print pay_param
 		pay_suc_url = SND_BONUS_URL
 		menu = _MenuUrl()
 		return render_to_response('weixin_pay.html', locals())
