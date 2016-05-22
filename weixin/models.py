@@ -399,7 +399,8 @@ class Recharge(models.Model):
 	@property
 	def charge_money(self):
 		if not self.status:
-			money = VirtualMoney.objects.all().[0]
+			money_list = VirtualMoney.objects.all()
+			money = money_list[0]
 			for x in range(self.number):
 				WalletMoney.objects.create(id_money=create_primary_key(),consumer=self.recharge_person, recharge=self, money=money)
 			
