@@ -12,7 +12,7 @@ from djconfig import config
 from core.utils.paginator import paginate, yt_paginate
 from core.utils.ratelimit.decorators import ratelimit
 from category.models import Category
-from comment.models import MOVED
+from comment.models import MOVED, CommentImages
 from comment.forms import CommentForm
 from comment.utils import comment_posted
 from comment.models import Comment
@@ -44,6 +44,7 @@ def publish(request, category_id=1):
                           pk=category_id)
 
     if request.method == 'POST':
+        imagelist = request.POST.get("imagelist",None)
         form = TopicForm(user=request.user, data=request.POST)
         cform = CommentForm(user=request.user, data=request.POST)
 
@@ -54,6 +55,13 @@ def publish(request, category_id=1):
             topic.save()
             cform.topic = topic
             comment = cform.save()
+            for cmid in imagelist.split(","):
+                try:
+                    cimage = CommentImages.objects.get(id=cmid)
+                    cimage.comment = comment
+                    cimage.save()
+                except Exception as ex:
+                    print ex.args
             comment_posted(comment=comment, mentions=cform.mentions)
             return redirect(topic.get_absolute_url())
     else:
@@ -112,6 +120,10 @@ def detail(request, pk, slug):
         page_number=request.GET.get('page', 1)
     )
 
+    for comment in comments:
+        imagelist = CommentImages.objects.filter(comment = comment)
+        comment.imagelist = imagelist
+
     context = {
         'topic': topic,
         'comments': comments,
@@ -143,6 +155,13 @@ def index_active(request):
         per_page=config.topics_per_page,
         page_number=request.GET.get('page', 1)
     )
+
+    for topic in topics:
+        try:
+            comment = Comment.objects.for_topic(topic=topic).for_user(topic.user).order_by("date")[0]
+            topic.comment = comment
+        except Exception as ex:
+            pass
 
     sliderimages = SliderImage.objects.filter(enabled=True)
 

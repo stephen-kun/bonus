@@ -1,5 +1,6 @@
 {% load forum_tags i18n %}
 {% load static %}
+{% load emoji_tags %}
 
 <div class="comments">
 
@@ -43,6 +44,14 @@
                                 <p>{% get_comment_action_text c.action %}.</p>
                             {% endif %}
                         </div>
+                        <ul class="imagelist">
+                            {% for image in c.imagelist %}
+                                <li>
+                                    <img src="{{ image.imageurl }}">
+                                </li>
+                            {% endfor %}
+                            <div style="clear: both;"></div>
+                        </ul>
                     </div>
                 </div>
 
@@ -112,11 +121,19 @@
 
                         <div class="comment-text">
                             {% if user.jf.is_moderator %}
-                                {{ c.comment_html|safe }}
+                                {{ c.comment_html|emoji_replace|safe }}
                             {% else %}
                                 {% trans "This comment was deleted" %}.
                             {% endif %}
                         </div>
+                        <ul class="imagelist">
+                            {% for image in c.imagelist %}
+                                <li>
+                                    <img src="{{ image.imageurl }}">
+                                </li>
+                            {% endfor %}
+                            <div style="clear: both;"></div>
+                        </ul>
                     </div>
                 </div>
 

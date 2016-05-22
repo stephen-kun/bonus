@@ -477,7 +477,15 @@ def wx_comment_publish(request, topic_id, pk=None):
         form = WXCommentForm(user=request.user, topic=topic, data=request.POST)
 
         if not request.is_limited and form.is_valid():
+            imagelist = request.POST.get("imagelist",None)
             comment = form.save()
+            for cmid in imagelist.split(","):
+                try:
+                    cimage = CommentImages.objects.get(id=cmid)
+                    cimage.comment = comment
+                    cimage.save()
+                except Exception as ex:
+                    print ex.args
             comment_posted(comment=comment, mentions=form.mentions)
             # return redirect(request.POST.get('next', comment.get_absolute_url()))
             # htmlcontext = {

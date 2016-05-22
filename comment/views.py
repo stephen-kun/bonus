@@ -30,10 +30,18 @@ def publish(request, topic_id, pk=None):
     )
 
     if request.method == 'POST':
+        imagelist = request.POST.get("imagelist",None)
         form = CommentForm(user=request.user, topic=topic, data=request.POST)
 
         if not request.is_limited and form.is_valid():
             comment = form.save()
+            for cmid in imagelist.split(","):
+                try:
+                    cimage = CommentImages.objects.get(id=cmid)
+                    cimage.comment = comment
+                    cimage.save()
+                except Exception as ex:
+                    print ex.args
             comment_posted(comment=comment, mentions=form.mentions)
             return redirect(request.POST.get('next', comment.get_absolute_url()))
     else:

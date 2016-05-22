@@ -262,6 +262,14 @@
                                     </div>
                                 </div>
                                 <div class="item-text">{{ comment.comment_html|safe|emoji_replace }}</div>
+                                <ul class="imagelist" style="padding-left: 0">
+                                    {% for image in comment.imagelist %}
+                                        <li>
+                                            <img src="{{ image.imageurl }}">
+                                        </li>
+                                    {% endfor %}
+                                    <div style="clear: both;"></div>
+                                </ul>
                             </div>
                         </div>
                     </li>

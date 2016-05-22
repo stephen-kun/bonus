@@ -2,6 +2,7 @@
 
 <form action="{% url "comment:publish" topic_id %}" method="post" class="js-reply">
     {% csrf_token %}
+    <input type="hidden" name="imagelist" value="" />
     {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
 
     {{ form.non_field_errors }}
@@ -18,11 +19,25 @@
     </div>
 </form>
 
+<ul id="imageslistpanel">
+    <div style="clear: both;"></div>
+</ul>
+
 
 <script>
     $( document ).ready(function() {
 
         $( ".reply" ).find( "textarea" ).store( "comment-thread-{{ topic_id }}" );
+
+{#        $('form').on("submit",function(e){#}
+{#            var imagelist=[];#}
+{#              $.each($("#imageslistpanel li"),function(idx,val){#}
+{#                imagelist.push($(val).find("img").attr("cmid"));#}
+{#              });#}
+{#              $("input[name=imagelist]").val(imagelist.join(','));#}
+{#            console.log($("input[name=imagelist]").val());#}
+{#            e.preventDefault();#}
+{#        });#}
 
 	});
 </script>
