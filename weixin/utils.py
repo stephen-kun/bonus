@@ -785,6 +785,7 @@ def action_order_query(out_trade_no):
 	order_query.setParameter('out_trade_no', out_trade_no)
 	order_query.getResult()
 	return order_query
+
 	
 def action_weixin_pay(data, request):
 	response = {}
@@ -795,17 +796,25 @@ def action_weixin_pay(data, request):
 		if len(recharge):	
 			#主动查询订单
 			out_trade_no = recharge[0].out_trade_no				
-			order_query = action_order_query(out_trade_no)	
-			print("=========trade_state:%s========="%(order_query.result['trade_state']))
-			if order_query.result['trade_state'] == SUCCESS:
-				consumer_order = request.session['consumer_order']				
-				recharge.update(status=True, trade_state=order_query.result['trade_state'], total_fee=order_query.result['total_fee'])
-				#支付成功业务
-				snd_bonus_pay_weixin(consumer_order)
-				
-				response = dict(status=SUCCESS, result=SUCCESS)
+			order_query = action_order_query(out_trade_no)
+			return_code = order_query.result['return_code']
+			if return_code == SUCCESS and order_query.result['result_code'] == SUCCESS:
+				if order_query.result['trade_state'] == SUCCESS:	
+					#充值进客户帐号
+					recharge[0].charge_money
+					recharge.update(status=True, trade_state=order_query.result['trade_state'], total_fee=order_query.result['total_fee'])
+					
+					#支付成功业务
+					consumer_order = request.session['consumer_order']						
+					snd_bonus_pay_weixin(consumer_order)
+					response = dict(status=SUCCESS, result=SUCCESS)
+				elif order_query.result['trade_state'] == USERPAYING:
+					response = dict(status=SUCCESS, result=USERPAYING)
+				else:
+					recharge.update(status=True, trade_state=order_query.result['trade_state'], total_fee=order_query.result['total_fee'])			
+					response = dict(status=SUCCESS, result=FAIL)
 			else:
-				response = dict(status=SUCCESS, result=FAIL)
+				response = dict(status=SUCCESS, result=USERPAYING)
 		else:
 			response = dict(status=SUCCESS, result=SUCCESS)
 	except:

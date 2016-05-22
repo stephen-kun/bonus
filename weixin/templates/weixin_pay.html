@@ -48,6 +48,7 @@ function wx_pay_result(){
 	var url = '{{ajax_request_url}}';
 	var openid = '{{consumer.open_id}}';
 	var prepay_id = '{{prepay_id}}';
+	var i_count = 0;
 	var timer = setInterval(function(){
 		var xmlhttp = new XMLHttpRequest();
 		var data = '{"openid":"OPENID","prepay_id":"PREPAY_ID", "action":"ajax_weixin_pay"}';
@@ -63,6 +64,20 @@ function wx_pay_result(){
 					$("#weixin").html('<input type="button" class="gray" value="微信支付" >');
 					window.location.href = '{{pay_suc_url}}';	
 					clearInterval(timer);
+				}
+				else if(response.result == 'USERPAYING'){
+					// 等待提示
+					if(i_count >= 3){
+						window.location.href = '{{pay_suc_url}}';	
+						clearInterval(timer);
+						alert('网络异常')
+					}
+					i_count += 1;
+				}
+				else{
+					alert('支付失败');
+					$("#weixin").html('<input type="button" class="gray" value="微信支付" >');
+					window.location.href = '{{pay_suc_url}}';					
 				}
 
 			}

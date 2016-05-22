@@ -666,13 +666,20 @@ def view_pay_notify(request):
 			return_code = notify.data['return_code']
 			out_trade_no = notify.data['out_trade_no']
 			recharge = Recharge.objects.filter(out_trade_no=out_trade_no, status=False)
-			if len(recharge):
+			if len(recharge) and return_code == 'SUCCESS':
 				print('===%s==='%(out_trade_no)) 
-				consumer_order = json.loads(recharge[0].consumer_order)				
-				recharge.update(status=True, trade_state=notify.data['result_code'], total_fee=notify.data['total_fee'])
-				#支付成功业务
-				snd_bonus_pay_weixin(consumer_order)
-				
+				consumer_order = json.loads(recharge[0].consumer_order)	
+				consumer = recharge[0].recharge_person
+				if notify.data['result_code'] == 'SUCCESS':
+					#充值进客户账号
+					recharge[0].charge_money
+					if consumer.session:
+						#支付成功业务
+						snd_bonus_pay_weixin(consumer_order)
+				else:
+					#支付失败业务
+					pass	
+				recharge.update(status=True, trade_state=notify.data['result_code'], total_fee=notify.data['total_fee'])					
 			notify.setReturnParameter("return_code", "SUCCESS")
 			notify.setReturnParameter("return_msg", "OK")
 		else:

@@ -344,8 +344,8 @@ class Consumer(models.Model):
 		#将钱装入红包
 		self.wallet_pay_bonus(snd_bonus)
 		#更新钱包
-		self.snd_bonus_num += bonus_info.number
-		self.snd_bonus_value +=  bonus_info.money
+		self.snd_bonus_num += int(bonus_info.number)
+		self.snd_bonus_value +=  float(bonus_info.money)
 		self.flush_own_money
 		#预分配红包
 		snd_bonus.split_to_rcv_bonus(int(bonus_info.number))	
@@ -394,8 +394,15 @@ class Recharge(models.Model):
 	trade_state = models.CharField(null=True, blank=True, max_length=32)
 	total_fee = models.IntegerField(default=0)				# 1 代表一分钱
 	consumer_order = models.CharField(null=True, blank=True, max_length=100)	
+	number = models.IntegerField(default=0)					#串串个数
 
-	
+	@property
+	def charge_money(self):
+		if not self.status:
+			money = VirtualMoney.objects.all().[0]
+			for x in range(self.number):
+				WalletMoney.objects.create(id_money=create_primary_key(),consumer=self.recharge_person, recharge=self, money=money)
+			
 	def __unicode__(self):
 		return '%s Recharge'%(self.recharge_person.name)
 
