@@ -22,6 +22,9 @@ from django.utils import timezone
 
 from wzhifuSDK import *
 
+
+TEST_DEBUG = True 
+
 COMMON_BONUS = 0
 RANDOM_BONUS = 1
 SYS_BONUS	= 2
@@ -764,14 +767,18 @@ def action_weixin_order(data, request):
 		#order_detail = 'QUBABA'
 		# 调用微信统一下单接口
 		total_fee = str(int(total_money)*100)
-		wx_order=UnifiedOrder_pub()
-		out_trade_no = gen_trade_no()
-		wx_order.setParameter("out_trade_no", out_trade_no)
-		wx_order.setParameter("body", order_detail)
-		wx_order.setParameter('total_fee', '1')
-		wx_order.setParameter('openid', openid)
-		wx_order.setParameter('spbill_create_ip', request.META['REMOTE_ADDR'])
-		prepay_id=wx_order.getPrepayId()	
+		out_trade_no = gen_trade_no()		
+		if TEST_DEBUG:
+			prepay_id = gen_trade_no()
+		else:
+			wx_order=UnifiedOrder_pub()
+			wx_order.setParameter("out_trade_no", out_trade_no)
+			wx_order.setParameter("body", order_detail)
+			wx_order.setParameter('total_fee', '1')
+			wx_order.setParameter('openid', openid)
+			wx_order.setParameter('spbill_create_ip', request.META['REMOTE_ADDR'])
+			prepay_id=wx_order.getPrepayId()			
+	
 		response = dict(status=0, pay_type=0, money=total_money)
 		
 		request.session['prepay_id'] = prepay_id
