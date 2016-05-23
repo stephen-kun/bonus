@@ -1,4 +1,5 @@
-﻿<!-- 支付 -->
+﻿
+<!-- 支付 -->
 {% extends "_bonus_base.html" %}
 
 {% block body %}
@@ -25,9 +26,9 @@
 <section>
     <div class="box-food qbbaise box-food-mt">
     	<ul>
-			{% for key, value in good_list.items %}
+			{% for goods in good_list %}
         	<li>
-            	<h4><span class="rfloat"><font class="qbred">{{value.number}}</font>{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
+            	<h4><span class="rfloat"><font class="qbred">{{goods.number}}</font>{{goods.unit}}</span>{{goods.name}}<span class="box-food-gray">({{goods.price}}元/{{goods.unit}})</span></h4>
             </li>
 			{% endfor %}
             <li>
@@ -37,48 +38,12 @@
     </div>
 	
     <div class="queding">
-        <span id='weixin' >
-	<input type="button" class="green" value="微信支付" onclick="callPay()"></span>
+        <span id='weixin' ><input type="button" class="green" value="微信支付" onclick="consumer_pay('{{ajax_request_url}}', '{{pay_suc_url}}', '{{consumer.open_id}}', '{{prepay_id}}')"></span>
     </div>
 	
 </section>
 
-<!--<script type="text/javascript" src="{{static_url}}js/weixin_pay.js"></script>
--->
-
-<script type="text/javascript">
-function onBridgeReady(){
-   WeixinJSBridge.invoke(
-       'getBrandWCPayRequest', 
-	{{ param_json|safe }},
-
-       function(res){     
-	if (res.err_msg == "get_brand_wcpay_request:ok") {
-        alert("支付成功");
-      }
-      if (res.err_msg == "get_brand_wcpay_request:cancel") {
-        alert("交易取消");
-      }
-      if (res.err_msg == "get_brand_wcpay_request:fail") {
-        alert("支付失败"+ res.err_msg + res.err_desc);
-      }	
-       }
-   ); 
-};
-
-function callPay(param_json){
-	if (typeof WeixinJSBridge == "undefined"){
-		if( document.addEventListener ){
-			document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-		}else if (document.attachEvent){
-			document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
-			document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
-		}
-	}else{
-		onBridgeReady();
-	}
-}
-</script>
+<script type="text/javascript" src="{{static_url}}js/weixin_pay.js"></script>
 
 </article>
 {% endblock %}

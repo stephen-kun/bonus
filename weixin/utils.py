@@ -29,9 +29,8 @@ COMMON_BONUS = 0
 RANDOM_BONUS = 1
 SYS_BONUS	= 2
 
-WEIXIN_PAY = '0'
-WALLET_PAY = '1'
-
+WEIXIN_PAY = 'WEIXIN_PAY'
+WALLET_PAY = 'WALLET_PAY'
 SUCCESS = 'SUCCESS'
 FAIL = 'FAIL'
 NOTPAY = 'NOTPAY'
@@ -39,7 +38,8 @@ CLOSED = 'CLOSED'
 REFUND = 'REFUND'
 USERPAYING = 'USERPAYING'
 PAYERROR = 'PAYERROR'
-
+NOTDINING = 'NOTDINING'
+INEXISTENCE = 'INEXISTENCE'
 
 AJAX_GET_BONUS = 'ajax_get_bonus'
 AJAX_CREATE_TICKET = 'ajax_create_ticket'
@@ -756,10 +756,19 @@ def action_weixin_order(data, request):
 	total_money = order_info['total_money']
 	bonus_info = order_info['bonus_info']
 	response = {}
+	#桌台检测
+	index_table = data['table']
+	table = DiningTable.objects.filter(index_table=index_table)
+	if len(table) and table.status == False:
+		response = dict(status=SUCCESS, reslut=FAIL, err_code=NOTDINING)
+		return json.dumps(response)
+	elif not len(table):
+		response = dict(status=SUCCESS, reslut=FAIL, err_code=INEXISTENCE)
+		return json.dumps(response)
 	if is_enough_pay(consumer, int(total_money)):
 		#发红包
 		consumer.snd_person_bonus(bonus_info=bonus_info)
-		response = dict(status=0, pay_type=1, money=total_money)
+		response = dict(status=SUCCESS, result=SUCCESS, pay_type=WALLET_PAY)
 	else:
 		l_content = bonus_content_json_to_models(bonus_info.content)
 		number = int(l_content[0].number)
@@ -779,7 +788,7 @@ def action_weixin_order(data, request):
 			wx_order.setParameter('spbill_create_ip', request.META['REMOTE_ADDR'])
 			prepay_id=wx_order.getPrepayId()			
 	
-		response = dict(status=0, pay_type=0, money=total_money)
+		response = dict(status=SUCCESS, result=SUCCESS, pay_type=WEIXIN_PAY)
 		
 		request.session['prepay_id'] = prepay_id
 		#创建一条充值记录
@@ -798,7 +807,6 @@ def action_order_query(out_trade_no):
 def action_weixin_pay(data, request):
 	response = {}
 	try:
-		print("== prepay_id: %s =="%(data['prepay_id']))
 		prepay_id = data['prepay_id']
 		recharge = Recharge.objects.filter(prepay_id=prepay_id, status=False)	
 		if len(recharge):	

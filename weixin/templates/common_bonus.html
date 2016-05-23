@@ -8,7 +8,7 @@
 <article>
 <section>
   	<div class="box-duixiang">
-    	<h4><span class="rfloat"><input type="number" name="table" class="lvse">号桌</span>发送对象
+    	<h4><span class="rfloat"><input type="number" maxlength="6" name="table" class="lvse">号桌</span>发送对象
         <img src="{{static_url}}images/qubaba2_01.png" width="40">
         </h4>
     </div>
@@ -16,11 +16,11 @@
 		<ul>
 		{% for key, value in good_list.items %}		
         	<li>
-            	<h4><span class="rfloat"><input type="number" name="{{value.name}}" placeholder="0" class="kongbai">{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
+            	<h4><span class="rfloat"><input type="number" maxlength="6" name="{{value.name}}" placeholder="0" class="kongbai">{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
             </li>
 		{% endfor %} 
 			<li>
-				<h4><span class="rfloat"><input type="number" name="bonus_num"  class="kongbai">个</span>红包个数</h4>			
+				<h4><span class="rfloat"><input type="number" maxlength="6" name="bonus_num"  class="kongbai">个</span>红包个数</h4>			
 			</li>		
 		</ul>
 	</div>

@@ -17,11 +17,11 @@
     	<ul>
 		{% for key, value in good_list.items %}		
         	<li>
-            	<h4><span class="rfloat"><input type="number" name="{{value.name}}" placeholder="0" class="kongbai">{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
+            	<h4><span class="rfloat"><input type="number" name="{{value.name}}" maxlength="6" placeholder="0" class="kongbai">{{value.unit}}</span>{{key}}<span class="box-food-gray">({{value.price}}元/{{value.unit}})</span></h4>
             </li>
 		{% endfor %}
 			<li>
-				<h4><span class="rfloat"><input type="number" name="bonus_num"  class="kongbai">个</span>红包个数</h4>			
+				<h4><span class="rfloat"><input type="number" name="bonus_num" maxlength="6" class="kongbai">个</span>红包个数</h4>			
 			</li>
         </ul>
     </div>	
