@@ -594,7 +594,6 @@ def view_test_wxpay(request):
 	wx_order=UnifiedOrder_pub()
 	param_dict={}
 	trade_no = gen_trade_no()
-	print trade_no
 	wx_order.setParameter("out_trade_no", trade_no)
 	wx_order.setParameter("body", "pay test")
 	wx_order.setParameter('total_fee', '1')
@@ -603,12 +602,10 @@ def view_test_wxpay(request):
 	wx_order.setParameter('openid', openid)
 	wx_order.setParameter('spbill_create_ip', request.META['REMOTE_ADDR'])
 	prepay_id=wx_order.getPrepayId()
-	print prepay_id
 
 	jsapi_pub=JsApi_pub()
 	jsapi_pub.setPrepayId(prepay_id)	
 	param_json = jsapi_pub.getParameters()
-	print param_json
 	return render_to_response('test_weixin_pay.html', locals())
 
 #支付页面
@@ -625,11 +622,9 @@ def view_weixin_pay(request):
 		total_money = result_dir['total_money']
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		prepay_id = request.session['prepay_id']
-		print prepay_id
 		jsapi_pub=JsApi_pub()
 		jsapi_pub.setPrepayId(prepay_id)	
 		pay_param = jsapi_pub.getParameters()	
-		print pay_param
 		pay_suc_url = SND_BONUS_URL
 		menu = _MenuUrl()
 		return render_to_response('weixin_pay.html', locals())
@@ -656,7 +651,6 @@ def view_wechat_token(request):
 
 @csrf_exempt
 def view_pay_notify(request):
-	print('---------view_pay_notify-----------')
 	notify=Notify_pub()
 	try:
 		#request_xml = etree.fromstring(request.body)
@@ -667,7 +661,6 @@ def view_pay_notify(request):
 			out_trade_no = notify.data['out_trade_no']
 			recharge = Recharge.objects.filter(out_trade_no=out_trade_no, status=False)
 			if len(recharge) and return_code == 'SUCCESS':
-				print('===%s==='%(out_trade_no)) 
 				consumer_order = json.loads(recharge[0].consumer_order)	
 				consumer = recharge[0].recharge_person
 				if notify.data['result_code'] == 'SUCCESS':
@@ -683,7 +676,6 @@ def view_pay_notify(request):
 			notify.setReturnParameter("return_code", "SUCCESS")
 			notify.setReturnParameter("return_msg", "OK")
 		else:
-			print('===error===') 
 			notify.setReturnParameter("return_code", "FAIL")
 			notify.setReturnParameter("return_msg", u"SIGNERROR")
 	except: 

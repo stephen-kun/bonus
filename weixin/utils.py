@@ -791,7 +791,6 @@ def action_order_query(out_trade_no):
 def action_weixin_pay(data, request):
 	response = {}
 	try:
-		print("== prepay_id: %s =="%(data['prepay_id']))
 		prepay_id = data['prepay_id']
 		recharge = Recharge.objects.filter(prepay_id=prepay_id, status=False)	
 		if len(recharge):	
