@@ -759,7 +759,8 @@ def action_weixin_order(data, request):
 		response = dict(status=0, pay_type=1, money=total_money)
 	else:
 		l_content = bonus_content_json_to_models(bonus_info.content)
-		order_detail = "趣八八串串(%s元/%s):数量%s,总额%s"%(l_content[0].price, l_content[0].unit, l_content[0].number, total_money)
+		number = int(l_content[0].number)
+		order_detail = "趣八八串串(%s元/%s):数量%s,总额%s元"%(l_content[0].price, l_content[0].unit, l_content[0].number, total_money)
 		#order_detail = 'QUBABA'
 		# 调用微信统一下单接口
 		total_fee = str(int(total_money)*100)
@@ -776,7 +777,7 @@ def action_weixin_order(data, request):
 		request.session['prepay_id'] = prepay_id
 		#创建一条充值记录
 		consumer_order = json.dumps(data)
-		recharge = Recharge.objects.create(prepay_id=prepay_id, recharge_person=consumer, out_trade_no=out_trade_no, recharge_value=float(total_money), consumer_order=consumer_order)
+		recharge = Recharge.objects.create(prepay_id=prepay_id, recharge_person=consumer, number=number, out_trade_no=out_trade_no, recharge_value=float(total_money), consumer_order=consumer_order)
 		
 	return json.dumps(response)
 
