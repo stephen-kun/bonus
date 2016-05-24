@@ -8,11 +8,11 @@
 
 var flag_close_account = 1;
 var flag_check_code = 0;   
-function action_create_ticket(openid, total_money, url){
+function action_create_ticket(openid, total_money, wallet_money, url){
 	var auth_code ;
 	auth_code = $("#auth_code").val();
 	var ticket_value = Number($("#ticket_value").val());
-	var sum = Number(total_money) + Number($("#user_wallet").val());
+	var sum = Number(total_money) + Number(wallet_money);
 	
 	if(!ticket_value){
 		alert("请设置券面值！");
@@ -36,13 +36,12 @@ function action_create_ticket(openid, total_money, url){
 	}
 	
 	
-	var user_wallet, action;
+	var action;
 	var xmlhttp = new XMLHttpRequest();
-	user_wallet = document.getElementById("user_wallet").value;
 	auth_code = document.getElementById("auth_code").value;
 	action = 'ajax_create_ticket';
 	var data = '{"openid":"OPENID", "action":"ACTION", "user_wallet":"USER_WALLET", "total_money":"TOTAL_MONEY","ticket_value":"TICKET_VALUE","auth_code":"AUTH_CODE"}';
-	data = data.replace(/OPENID/, openid).replace(/ACTION/, action).replace(/USER_WALLET/, user_wallet).replace(/TOTAL_MONEY/,total_money).replace(/TICKET_VALUE/,ticket_value).replace(/AUTH_CODE/, auth_code);
+	data = data.replace(/OPENID/, openid).replace(/ACTION/, action).replace(/USER_WALLET/, wallet_money).replace(/TOTAL_MONEY/,total_money).replace(/TICKET_VALUE/,ticket_value).replace(/AUTH_CODE/, auth_code);
 
 	xmlhttp.onreadystatechange=function()
 	{
@@ -52,7 +51,8 @@ function action_create_ticket(openid, total_money, url){
 			var html = '<p>PART1</p><p>PART2</p><p>PART3</p>';
 			if(JSONObject.status)
 			{
-				alert(JSONObject.error_message);								
+				alert(JSONObject.error_message);	
+				flag_close_account = 1
 			}
 			else
 			{					

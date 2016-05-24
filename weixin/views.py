@@ -9,7 +9,7 @@ import django.utils.timezone as timezone
 import json
 from .wechat import PostResponse, wechat, TOKEN, APPID, APPSECRET
 from .utils import  action_get_bonus, is_consumer_dining, handle_ajax_request, get_user_openid, decode_bonus_detail,create_bonus_dict
-from .utils import check_geted_bonus, decode_order_param, get_bonus_type_str, get_record_openid, is_enough_pay, update_wallet_money, log_print
+from .utils import check_geted_bonus, decode_order_param, get_bonus_type_str, get_record_openid, is_enough_pay, log_print
 from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 from wzhifuSDK import *
@@ -19,7 +19,7 @@ from lxml import etree
 import types
 
 
-
+TEST_DEBUG = True 
 
 class _MenuUrl():
 	get_bonus_url = GET_BONUS_URL
@@ -260,9 +260,9 @@ def display_settle_account_views(open_id, request):
 			title = '结算'
 			static_url = settings.STATIC_URL
 			consumer = Consumer.objects.get(open_id=openid)
-			total_money = consumer.session.total_money
-			consumer = update_wallet_money(consumer)
-			wallet_money = consumer.own_bonus_value
+			#total_money = consumer.session.total_money
+			#consumer = update_wallet_money(consumer)
+			#wallet_money = consumer.own_bonus_value
 			ajax_request_url = AJAX_REQUEST_POST_URL
 			menu = _MenuUrl()
 			return render_to_response('close_an_account.html', locals())		
@@ -279,7 +279,8 @@ def display_user_account_views(open_id, request):
 		openid = open_id
 		static_url = settings.STATIC_URL	
 		consumer = Consumer.objects.get(open_id=openid)
-		consumer = update_wallet_money(consumer)
+		#consumer.flush_own_money
+		#consumer = update_wallet_money(consumer)
 		good_list = decode_bonus_detail(consumer)
 		user_ticket_url = USER_TICKET_URL
 		user_info_url = USER_INFO_URL
@@ -383,6 +384,7 @@ def display_common_bonus_views(open_id, request):
 		good_list = create_bonus_dict(request)
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		choose_pay_url = WEIXIN_PAY_URL
+		pay_suc_url = SND_BONUS_URL
 		openid = open_id
 		menu = _MenuUrl()
 		return render_to_response('common_bonus.html', locals())	
@@ -410,6 +412,7 @@ def display_random_bonus_views(open_id, request):
 		good_list = create_bonus_dict(request)
 		choose_pay_url = WEIXIN_PAY_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
+		pay_suc_url = SND_BONUS_URL
 		openid = open_id
 		menu = _MenuUrl()
 		return render_to_response('random_bonus.html', locals())	
@@ -594,7 +597,6 @@ def view_test_wxpay(request):
 	wx_order=UnifiedOrder_pub()
 	param_dict={}
 	trade_no = gen_trade_no()
-	print trade_no
 	wx_order.setParameter("out_trade_no", trade_no)
 	wx_order.setParameter("body", "pay test")
 	wx_order.setParameter('total_fee', '1')
@@ -603,12 +605,10 @@ def view_test_wxpay(request):
 	wx_order.setParameter('openid', openid)
 	wx_order.setParameter('spbill_create_ip', request.META['REMOTE_ADDR'])
 	prepay_id=wx_order.getPrepayId()
-	print prepay_id
 
 	jsapi_pub=JsApi_pub()
 	jsapi_pub.setPrepayId(prepay_id)	
 	param_json = jsapi_pub.getParameters()
-	print param_json
 	return render_to_response('test_weixin_pay.html', locals())
 
 #支付页面
@@ -625,14 +625,15 @@ def view_weixin_pay(request):
 		total_money = result_dir['total_money']
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		prepay_id = request.session['prepay_id']
-		print prepay_id
-		jsapi_pub=JsApi_pub()
-		jsapi_pub.setPrepayId(prepay_id)	
-		pay_param = jsapi_pub.getParameters()	
-		print pay_param
 		pay_suc_url = SND_BONUS_URL
 		menu = _MenuUrl()
-		return render_to_response('weixin_pay.html', locals())
+		if TEST_DEBUG:
+			return render_to_response('test_weixin_pay.html', locals())
+		else:
+			jsapi_pub=JsApi_pub()
+			jsapi_pub.setPrepayId(prepay_id)	
+			pay_param = jsapi_pub.getParameters()				
+			return render_to_response('weixin_pay.html', locals())			
 	except:
 		log_print(view_weixin_pay) 
 		return HttpResponseBadRequest('Bad request')	
@@ -656,7 +657,6 @@ def view_wechat_token(request):
 
 @csrf_exempt
 def view_pay_notify(request):
-	print('---------view_pay_notify-----------')
 	notify=Notify_pub()
 	try:
 		#request_xml = etree.fromstring(request.body)
@@ -667,7 +667,6 @@ def view_pay_notify(request):
 			out_trade_no = notify.data['out_trade_no']
 			recharge = Recharge.objects.filter(out_trade_no=out_trade_no, status=False)
 			if len(recharge) and return_code == 'SUCCESS':
-				print('===%s==='%(out_trade_no)) 
 				consumer_order = json.loads(recharge[0].consumer_order)	
 				consumer = recharge[0].recharge_person
 				if notify.data['result_code'] == 'SUCCESS':
@@ -683,7 +682,6 @@ def view_pay_notify(request):
 			notify.setReturnParameter("return_code", "SUCCESS")
 			notify.setReturnParameter("return_msg", "OK")
 		else:
-			print('===error===') 
 			notify.setReturnParameter("return_code", "FAIL")
 			notify.setReturnParameter("return_msg", u"SIGNERROR")
 	except: 

@@ -22,13 +22,15 @@ from django.utils import timezone
 
 from wzhifuSDK import *
 
+
+TEST_DEBUG = True 
+
 COMMON_BONUS = 0
 RANDOM_BONUS = 1
 SYS_BONUS	= 2
 
-WEIXIN_PAY = '0'
-WALLET_PAY = '1'
-
+WEIXIN_PAY = 'WEIXIN_PAY'
+WALLET_PAY = 'WALLET_PAY'
 SUCCESS = 'SUCCESS'
 FAIL = 'FAIL'
 NOTPAY = 'NOTPAY'
@@ -36,7 +38,8 @@ CLOSED = 'CLOSED'
 REFUND = 'REFUND'
 USERPAYING = 'USERPAYING'
 PAYERROR = 'PAYERROR'
-
+NOTDINING = 'NOTDINING'
+INEXISTENCE = 'INEXISTENCE'
 
 AJAX_GET_BONUS = 'ajax_get_bonus'
 AJAX_CREATE_TICKET = 'ajax_create_ticket'
@@ -392,48 +395,60 @@ def action_create_ticket(data):
 		code = AuthCode.objects.filter(id_code=auth_code)
 		if len(code) == 0:
 			return dict(status=2, error_message="验证码错误，请重新输入！")
+		id_ticket = create_primary_key()
+		try:
+			#生成一条消费券记录
+			new_ticket = Ticket.objects.create(id_ticket=id_ticket, valid_time=timezone.now(), consumer=consumer)
 
-		#生成一条消费券记录
-		new_ticket = Ticket.objects.create(id_ticket=create_primary_key(), valid_time=timezone.now())
-		new_ticket.consumer = consumer
+			#结算操作
+			ticket_value = consumer.close_an_account(new_ticket, ticket_value)
+			if ticket_value:
+				new_ticket.ticket_value = ticket_value
+				new_ticket.save()
+			else:
+				Ticket.objects.filter(id_ticket=id_ticket).delete()
+				return dict(status=3, error_message="生成券失败！")
+			
+			'''
+			#失效该就餐会话发出的红包，将未抢红包以及婉拒红包返回客户账号
+			snd_bonus_list = SndBonus.objects.filter(session=consumer.session, is_exhausted=False)
+			for snd_bonus in snd_bonus_list:
+				snd_bonus.is_valid = False
+				snd_bonus.save()
+				rcv_bonus_list = RcvBonus.objects.filter(snd_bonus=snd_bonus, is_receive=False)
+				bonus_snd_back(rcv_bonus_list)
 
-		#结算操作
-		ticket_value = close_an_account(consumer, new_ticket, ticket_value)
-		new_ticket.ticket_value = ticket_value
-		new_ticket.save()
+			#婉拒红包退回
+			refuse_bonus_list = RcvBonus.objects.filter(is_refuse=True)
+			bonus_snd_back(refuse_bonus_list)
 
-		#失效该就餐会话发出的红包，将未抢红包以及婉拒红包返回客户账号
-		snd_bonus_list = SndBonus.objects.filter(session=consumer.session, is_exhausted=False)
-		for snd_bonus in snd_bonus_list:
-			snd_bonus.is_valid = False
-			snd_bonus.save()
-			rcv_bonus_list = RcvBonus.objects.filter(snd_bonus=snd_bonus, is_receive=False)
-			bonus_snd_back(rcv_bonus_list)
+			#关闭就餐会话，释放桌台
+			consumer.session.over_time = timezone.now()
+			consumer.session.save()
+			consumer.on_table.status = False
+			consumer.on_table.save()
+			consumer_list = Consumer.objects.filter(session=consumer.session)
+			for user in consumer_list:
+				#print("++++++++++++清会话以及桌台+++++++++++++++++")
+				user.on_table = None
+				user.session = None
+				user.save()
+			'''
+			#结算就餐会话
+			consumer.session.close_session()
+			
+			#更新用户钱包余额及明细
+			new_consumer = Consumer.objects.get(open_id=openid)	
+			new_consumer.flush_own_money
 
-		#婉拒红包退回
-		refuse_bonus_list = RcvBonus.objects.filter(is_refuse=True)
-		bonus_snd_back(refuse_bonus_list)
 
-		#关闭就餐会话，释放桌台
-		consumer.session.over_time = timezone.now()
-		consumer.session.save()
-		consumer.on_table.status = False
-		consumer.on_table.save()
-		consumer_list = Consumer.objects.filter(session=consumer.session)
-		for user in consumer_list:
-			#print("++++++++++++清会话以及桌台+++++++++++++++++")
-			user.on_table = None
-			user.session = None
-			user.save()
-		
-		#更新用户钱包余额及明细
-		new_consumer = Consumer.objects.get(open_id=openid)	
-		new_consumer.flush_own_money
-		new_consumer.save()
-
-		#返回消费券码以及券值
-		id_ticket = str(new_ticket.id_ticket)
-		return dict(status=0, ticket_value=ticket_value, part1=id_ticket[0:3], part2=id_ticket[3:6], part3=id_ticket[6:10])
+			#返回消费券码以及券值
+			id_ticket = str(new_ticket.id_ticket)
+			return dict(status=0, ticket_value=ticket_value, part1=id_ticket[0:3], part2=id_ticket[3:6], part3=id_ticket[6:10])
+		except:
+			Ticket.objects.filter(id_ticket=id_ticket).delete()
+			log_print(action_create_ticket)
+			return dict(status=3, error_message="内部错误")
 	else:
 		return dict(status=1, error_message="参数错误")
 
@@ -753,10 +768,20 @@ def action_weixin_order(data, request):
 	total_money = order_info['total_money']
 	bonus_info = order_info['bonus_info']
 	response = {}
+	#桌台检测
+	index_table = data['table']
+	if index_table != '-1':
+		table = DiningTable.objects.filter(index_table=index_table)
+		if len(table) and table[0].status == False:
+			response = dict(status=SUCCESS, result=FAIL, err_code=NOTDINING)
+			return json.dumps(response)
+		elif not len(table):
+			response = dict(status=SUCCESS, result=FAIL, err_code=INEXISTENCE)
+			return json.dumps(response)
 	if is_enough_pay(consumer, int(total_money)):
 		#发红包
 		consumer.snd_person_bonus(bonus_info=bonus_info)
-		response = dict(status=0, pay_type=1, money=total_money)
+		response = dict(status=SUCCESS, result=SUCCESS, pay_type=WALLET_PAY)
 	else:
 		l_content = bonus_content_json_to_models(bonus_info.content)
 		number = int(l_content[0].number)
@@ -764,15 +789,19 @@ def action_weixin_order(data, request):
 		#order_detail = 'QUBABA'
 		# 调用微信统一下单接口
 		total_fee = str(int(total_money)*100)
-		wx_order=UnifiedOrder_pub()
-		out_trade_no = gen_trade_no()
-		wx_order.setParameter("out_trade_no", out_trade_no)
-		wx_order.setParameter("body", order_detail)
-		wx_order.setParameter('total_fee', '1')
-		wx_order.setParameter('openid', openid)
-		wx_order.setParameter('spbill_create_ip', request.META['REMOTE_ADDR'])
-		prepay_id=wx_order.getPrepayId()	
-		response = dict(status=0, pay_type=0, money=total_money)
+		out_trade_no = gen_trade_no()		
+		if TEST_DEBUG:
+			prepay_id = gen_trade_no()
+		else:
+			wx_order=UnifiedOrder_pub()
+			wx_order.setParameter("out_trade_no", out_trade_no)
+			wx_order.setParameter("body", order_detail)
+			wx_order.setParameter('total_fee', '1')
+			wx_order.setParameter('openid', openid)
+			wx_order.setParameter('spbill_create_ip', request.META['REMOTE_ADDR'])
+			prepay_id=wx_order.getPrepayId()			
+	
+		response = dict(status=SUCCESS, result=SUCCESS, pay_type=WEIXIN_PAY)
 		
 		request.session['prepay_id'] = prepay_id
 		#创建一条充值记录
@@ -791,31 +820,39 @@ def action_order_query(out_trade_no):
 def action_weixin_pay(data, request):
 	response = {}
 	try:
-		print("== prepay_id: %s =="%(data['prepay_id']))
 		prepay_id = data['prepay_id']
 		recharge = Recharge.objects.filter(prepay_id=prepay_id, status=False)	
 		if len(recharge):	
 			#主动查询订单
-			out_trade_no = recharge[0].out_trade_no				
-			order_query = action_order_query(out_trade_no)
-			return_code = order_query.result['return_code']
-			if return_code == SUCCESS and order_query.result['result_code'] == SUCCESS:
-				if order_query.result['trade_state'] == SUCCESS:	
-					#充值进客户帐号
-					recharge[0].charge_money
-					recharge.update(status=True, trade_state=order_query.result['trade_state'], total_fee=order_query.result['total_fee'])
-					
-					#支付成功业务
-					consumer_order = request.session['consumer_order']						
-					snd_bonus_pay_weixin(consumer_order)
-					response = dict(status=SUCCESS, result=SUCCESS)
-				elif order_query.result['trade_state'] == USERPAYING:
-					response = dict(status=SUCCESS, result=USERPAYING)
-				else:
-					recharge.update(status=True, trade_state=order_query.result['trade_state'], total_fee=order_query.result['total_fee'])			
-					response = dict(status=SUCCESS, result=FAIL)
+			out_trade_no = recharge[0].out_trade_no		
+			if TEST_DEBUG:
+				recharge[0].charge_money
+				total_fee = int(float(data['total_fee'])*100)
+				recharge.update(status=True, trade_state=SUCCESS, total_fee=total_fee)
+				#支付成功业务
+				consumer_order = request.session['consumer_order']						
+				snd_bonus_pay_weixin(consumer_order)
+				response = dict(status=SUCCESS, result=SUCCESS)				
 			else:
-				response = dict(status=SUCCESS, result=USERPAYING)
+				order_query = action_order_query(out_trade_no)
+				return_code = order_query.result['return_code']
+				if return_code == SUCCESS and order_query.result['result_code'] == SUCCESS:
+					if order_query.result['trade_state'] == SUCCESS:	
+						#充值进客户帐号
+						recharge[0].charge_money
+						recharge.update(status=True, trade_state=order_query.result['trade_state'], total_fee=order_query.result['total_fee'])
+						
+						#支付成功业务
+						consumer_order = request.session['consumer_order']						
+						snd_bonus_pay_weixin(consumer_order)
+						response = dict(status=SUCCESS, result=SUCCESS)
+					elif order_query.result['trade_state'] == USERPAYING:
+						response = dict(status=SUCCESS, result=USERPAYING)
+					else:
+						recharge.update(status=True, trade_state=order_query.result['trade_state'], total_fee=order_query.result['total_fee'])			
+						response = dict(status=SUCCESS, result=FAIL)
+				else:
+					response = dict(status=SUCCESS, result=USERPAYING)
 		else:
 			response = dict(status=SUCCESS, result=SUCCESS)
 	except:
