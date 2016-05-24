@@ -384,6 +384,7 @@ def display_common_bonus_views(open_id, request):
 		good_list = create_bonus_dict(request)
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		choose_pay_url = WEIXIN_PAY_URL
+		pay_suc_url = SND_BONUS_URL
 		openid = open_id
 		menu = _MenuUrl()
 		return render_to_response('common_bonus.html', locals())	
@@ -411,6 +412,7 @@ def display_random_bonus_views(open_id, request):
 		good_list = create_bonus_dict(request)
 		choose_pay_url = WEIXIN_PAY_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
+		pay_suc_url = SND_BONUS_URL
 		openid = open_id
 		menu = _MenuUrl()
 		return render_to_response('random_bonus.html', locals())	
