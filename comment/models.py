@@ -29,7 +29,7 @@ class Comment(models.Model):    #评论
 
     parent = models.ForeignKey("self",related_name='comment_parent',null=True,blank=True)
 
-    comment = models.TextField(_("comment"),max_length=1024)
+    comment = models.TextField(_("Comment"),max_length=1024)
     comment_html = models.TextField(_("comment html"),max_length=1024)
     action = models.IntegerField(_("action"), choices=ACTION, default=COMMENT)
     date = models.DateTimeField(default=timezone.now)
@@ -50,6 +50,10 @@ class Comment(models.Model):    #评论
     def get_absolute_url(self):
         return reverse('comment:find', kwargs={'pk': str(self.id), })
 
+    # @property
+    # def is_topic(self):
+    #     return self.user_id == self.topic.user_id
+
 
     @property
     def like(self):
@@ -57,6 +61,13 @@ class Comment(models.Model):    #评论
         try:
             assert len(self.likes) <= 1, "Panic, too many likes"
             return self.likes[0]
+        except (AttributeError, IndexError):
+            return
+
+    @property
+    def gift(self):
+        try:
+            return self.gifts[0]
         except (AttributeError, IndexError):
             return
 

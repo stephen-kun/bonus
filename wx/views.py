@@ -29,7 +29,7 @@ from topic.models import Topic, SliderImage
 from topic import  utils as topicutils
 from core.utils.paginator import paginate, yt_paginate
 from topic.notification.models import TopicNotification
-from weixin.models import Consumer
+from weixin.models import Consumer,ConsumerGifts
 
 
 
@@ -94,6 +94,11 @@ def wx_index(request, pk=1):
             topic.comment = comment[0]
             imagelist = CommentImages.objects.filter(comment = comment[0])
             topic.imagelist = imagelist
+            giftscount = ConsumerGifts.objects.filter(comment = comment[0]).count()
+            for commenti in Comment.objects.filter(topic=topic).exclude(id=comment[0].id):
+                gifts = ConsumerGifts.objects.filter(comment = commenti)
+                giftscount = giftscount + gifts.count()
+            topic.gifts = giftscount
 
         sliderimages = SliderImage.objects.filter(enabled=True)
 
@@ -136,6 +141,11 @@ def wx_index(request, pk=1):
                 topic.comment = comment[0]
                 imagelist = CommentImages.objects.filter(comment = comment[0])
                 topic.imagelist = imagelist
+                giftscount = ConsumerGifts.objects.filter(comment = comment[0]).count()
+                for commenti in Comment.objects.filter(topic=topic).exclude(id=comment[0].id):
+                    gifts = ConsumerGifts.objects.filter(comment = commenti)
+                    giftscount = giftscount + gifts.count()
+                topic.gifts = giftscount
             context = {
                 'time':time.time(),
                 'count':count
@@ -169,6 +179,11 @@ def wx_index(request, pk=1):
                 topic.comment = comment[0]
                 imagelist = CommentImages.objects.filter(comment = comment[0])
                 topic.imagelist = imagelist
+                giftscount = ConsumerGifts.objects.filter(comment = comment[0]).count()
+                for commenti in Comment.objects.filter(topic=topic).exclude(id=comment[0].id):
+                    gifts = ConsumerGifts.objects.filter(comment = commenti)
+                    giftscount = giftscount + gifts.count()
+                topic.gifts = giftscount
 
             htmlsnippet = render_to_string("joyforum/snippet/topic.html",{"topics":topics},context_instance=RequestContext(request))
             context={'html':htmlsnippet,'curpage':topics.number,'count':len(topics),'unread':unread}
@@ -176,7 +191,7 @@ def wx_index(request, pk=1):
 
 
 
-@ratelimit(rate='1/5s')
+@ratelimit(rate='1/10s')
 def wx_newtopic(request, category_id=1):
     if category_id:
         get_object_or_404(Category.objects.visible(),
@@ -187,20 +202,26 @@ def wx_newtopic(request, category_id=1):
         form = WXTopicForm(user=request.user, data=request.POST)
         cform = WXCommentForm(user=request.user, data=request.POST)
 
-        if not request.is_limited and all([form.is_valid(), cform.is_valid()]):  # TODO: test!
+        if request.is_limited:
+            errorinfo = "发主题太频繁，请10s后再试!"
+            return json_response({'result':'nok','errorinfo':errorinfo})
+
+        if not request.is_limited and all([form.is_valid(), cform.is_valid()]):  #
             # wrap in transaction.atomic?
             topic = form.save(commit=False)
             topic.category_id = 1
+            topic.title = ""
             topic.save()
             cform.topic = topic
             comment = cform.save()
-            for cmid in imagelist.split(","):
-                try:
-                    cimage = CommentImages.objects.get(id=cmid)
-                    cimage.comment = comment
-                    cimage.save()
-                except Exception as ex:
-                    print ex.args
+            if imagelist:
+                for cmid in imagelist.split(","):
+                    try:
+                        cimage = CommentImages.objects.get(id=int(cmid))
+                        cimage.comment = comment
+                        cimage.save()
+                    except Exception as ex:
+                        print ex.args
             comment_posted(comment=comment, mentions=cform.mentions)
             return json_response({'url':topic.get_absolute_url(),'result':'ok'})
     else:
@@ -288,6 +309,8 @@ def wx_topic_detail(request, pk, slug):
 
         imagelist = CommentImages.objects.filter(comment = topiccomment[0])
         topic.imagelist = imagelist
+        gifts = ConsumerGifts.objects.filter(comment = topiccomment[0])
+        topic.gifts = gifts.count()
 
         maxitems = comments.count()
 
@@ -302,6 +325,8 @@ def wx_topic_detail(request, pk, slug):
         for comment in comments:
             imagelist = CommentImages.objects.filter(comment = comment)
             comment.imagelist = imagelist
+            gifts = ConsumerGifts.objects.filter(comment = comment)
+            comment.gifts = gifts.count()
 
         context = {
             'topic': topic,
@@ -328,6 +353,8 @@ def wx_topic_detail(request, pk, slug):
             for comment in comments:
                 imagelist = CommentImages.objects.filter(comment = comment)
                 comment.imagelist = imagelist
+                gifts = ConsumerGifts.objects.filter(comment = comment)
+                comment.gifts = gifts.count()
 
             context = {
                 'time':time.time()
@@ -354,6 +381,8 @@ def wx_topic_detail(request, pk, slug):
             for comment in comments:
                 imagelist = CommentImages.objects.filter(comment = comment)
                 comment.imagelist = imagelist
+                gifts = ConsumerGifts.objects.filter(comment = comment)
+                comment.gifts = gifts.count()
 
             htmlsnippet = render_to_string("joyforum/snippet/comment.html",{'comments': comments},context_instance=RequestContext(request))
             context={'html':htmlsnippet,'curpage':comments.number,'count':len(comments)}
@@ -452,15 +481,21 @@ def wx_comment_publish(request, topic_id, pk=None):
     if request.method == 'POST':
         form = WXCommentForm(user=request.user, topic=topic, data=request.POST)
 
+        if request.is_limited:
+            errorinfo = "评论太频繁，请10s后再试!"
+            return json_response({'result':'nok','errorinfo':errorinfo})
+
         if not request.is_limited and form.is_valid():
+            imagelist = request.POST.get("imagelist",None)
             comment = form.save()
+            for cmid in imagelist.split(","):
+                try:
+                    cimage = CommentImages.objects.get(id=cmid)
+                    cimage.comment = comment
+                    cimage.save()
+                except Exception as ex:
+                    print ex.args
             comment_posted(comment=comment, mentions=form.mentions)
-            # return redirect(request.POST.get('next', comment.get_absolute_url()))
-            # htmlcontext = {
-            #             'comment':comment
-            #            }
-            # html = render_to_string("joyforum/catlist/comment_snippet.html",htmlcontext,context_instance=RequestContext(request))
-            # context = {'result':'ok','html':html}
             context = {'result':'ok'}
             return json_response(context)
         else:

@@ -9,14 +9,15 @@ from wechat_sdk import messages
 if __name__ != '__main__':
 	from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 	from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
-	from .utils import create_primary_key
+	from .utils import create_primary_key, log_print
+	from django.contrib.auth import get_user_model
+	User = get_user_model()
 
 from django.http.response import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist 
 from django.utils import timezone
 
-from django.contrib.auth import get_user_model
-User = get_user_model()
+
 
 import re
 import pytz
@@ -78,23 +79,31 @@ class UserInfo():
 
 #用户关注注册
 def user_subscribe(openid):
+	open_id = openid
 	consumer = None
-	try:
-		consumer = Consumer.objects.get(open_id=openid)
-		if consumer.subscribe == False:
+	user = None
+	try:	
+		try:
+			user = User.objects.get(username=open_id)
+		except ObjectDoesNotExist:
+			user = User.objects.create(username=open_id, email="xxxx@xxx.com", is_staff=False)
+		
+		try:
+			consumer = Consumer.objects.get(open_id=open_id)
+			if consumer.subscribe == False:
+				consumer.subscribe = True	
+		except ObjectDoesNotExist:		
+			url = USER_INFO_URL.replace('ACCESS_TOKEN', wechat.access_token)
+			url = url.replace('OPENID', open_id)
+			user_info = UserInfo(url)
+			name = user_info.get_name()
+			sex = user_info.get_sex()
+			headimgurl = user_info.get_headimgurl()		
+			consumer = Consumer(open_id=open_id, user=user, name=name, sex=sex, picture=headimgurl)	
 			consumer.subscribe = True
-	except ObjectDoesNotExist:
-		# 获取用户信息
-		url = USER_INFO_URL.replace('ACCESS_TOKEN', wechat.access_token)
-		url = url.replace('OPENID', openid)
-		user_info = UserInfo(url)
-		name = user_info.get_name()
-		sex = user_info.get_sex()
-		headimgurl = user_info.get_headimgurl()
-	        user = User.objects.create(username=name, email="xxxx@xxx", is_staff=False)	
-		consumer = Consumer(open_id=openid, user=user, name=name, sex=sex, picture=headimgurl)	
-		consumer.subscribe = True
-	consumer.save()
+		consumer.save()	
+	except:
+		log_print(user_subscribe)
 	return consumer
 	
 #更新或创建就餐会话
@@ -134,6 +143,9 @@ class PostResponse():
 	def _subscribe(self):
 		# 查询Consumer，如果有记录则修改subscribe；如果没有记录，则先从微信获取用户信息，然后新建一条记录
 		consumer = user_subscribe(self.source)	
+		if not consumer:
+			return wechat.response_text(content = u'注册失败')
+	
 		# 获取桌对象
 		index_table = re.findall(r'\d+',self.message.key)[0]
 		try:
@@ -171,6 +183,8 @@ class PostResponse():
 			consumer = Consumer.objects.get(open_id=self.source)
 		except ObjectDoesNotExist:
 			consumer = user_subscribe(self.source)	
+			if not consumer:
+				return wechat.response_text(content = u'注册失败')			
 		if consumer.session and consumer.on_table.index_table != index_table:
 			return wechat.response_text(content =  u'请您先结算%s号桌所抢红包，再扫描该桌'%(consumer.on_table.index_table))
 		elif consumer.session and consumer.on_table.index_table == index_table:
@@ -228,7 +242,7 @@ if __name__ == '__main__':
 		"action_name": "QR_LIMIT_SCENE", 
 		"action_info": {
 			"scene": {
-				"scene_id": 3 
+				"scene_id": 2
 			}
 		}
 	}
@@ -314,7 +328,7 @@ if __name__ == '__main__':
 		]
 	}
 
-	create_qrcode(qrcode, 'qubaba_table_03.jpg')
+	create_qrcode(qrcode, 'qubaba_hk_02.jpg')
 	create_menu(menu_hongkong)
 			
 		

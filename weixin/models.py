@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import json
 from manager.datatype import *
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 from core.utils.timezone import TIMEZONE_CHOICES
 from core.utils.models import AutoSlugField
 from django.core.urlresolvers import reverse
@@ -155,6 +155,10 @@ class DiningSession(models.Model):
             contents = union_dict(contents, bonus.good_contents())
         return contents
 
+class ConsumerGifts(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    comment = models.ForeignKey("comment.Comment",related_name='comment_gifts')
+
 #消费者数据表
 class Consumer(models.Model):
     open_id = models.CharField(max_length=30,unique=True)  # 微信openId
@@ -219,7 +223,7 @@ class Consumer(models.Model):
 
 
     def __unicode__(self):
-        return self.name
+        return self.name 
 
     @property
     def recharges(self):
@@ -298,6 +302,13 @@ class Consumer(models.Model):
             total_good_num += number
 
         bonus.split_to_rcv_bonus(total_good_num)
+
+    @property
+    def is_seller(self):
+        try:
+            return Group.objects.get(id=2) in self.user.groups.all()
+        except Exception as ex:
+            return False
 
 class ConsumerAccountGoods(models.Model):
     good = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币

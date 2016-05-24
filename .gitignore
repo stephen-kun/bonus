@@ -4,3 +4,5 @@
 db.sqlite*
 uwsgi.log
 /log
+00*init*
+00*auto*

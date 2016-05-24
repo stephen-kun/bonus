@@ -15,6 +15,7 @@ from core.utils.decorators import moderator_required
 from core.utils import markdown, paginator, render_form_errors, json_response
 from like.forms import LikeForm
 from topic.models import Topic
+from weixin.models import ConsumerGifts
 from .models import Comment, CommentImages
 from .forms import CommentForm, CommentMoveForm, CommentImageForm
 from .utils import comment_posted, post_comment_update
@@ -29,10 +30,18 @@ def publish(request, topic_id, pk=None):
     )
 
     if request.method == 'POST':
+        imagelist = request.POST.get("imagelist","")
         form = CommentForm(user=request.user, topic=topic, data=request.POST)
 
         if not request.is_limited and form.is_valid():
             comment = form.save()
+            for cmid in imagelist.split(","):
+                try:
+                    cimage = CommentImages.objects.get(id=cmid)
+                    cimage.comment = comment
+                    cimage.save()
+                except Exception as ex:
+                    print ex.args
             comment_posted(comment=comment, mentions=form.mentions)
             return redirect(request.POST.get('next', comment.get_absolute_url()))
     else:
@@ -156,3 +165,11 @@ def commentlike(request,comment_id):
     }
 
     return render(request, 'forum/comment/like/create.html', context)
+
+@login_required
+def addgift(request,cid):
+    try:
+        ConsumerGifts.objects.create(user=request.user,comment=Comment.objects.get(id=cid))
+        return json_response({'status':'0'})
+    except Exception as ex:
+        return json_response({'status':-1,'error':ex.message})

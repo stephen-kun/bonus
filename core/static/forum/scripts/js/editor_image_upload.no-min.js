@@ -120,6 +120,10 @@
     };
 
     EditorImageUpload.prototype.openFileDialog = function() {
+      if($("#imageslistpanel li").length>=9){
+        alert("不能超过9张图！");
+        return;
+      }
       this.inputFile.trigger('click');
     };
 
