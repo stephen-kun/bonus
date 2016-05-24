@@ -137,7 +137,71 @@ class DiningSession(models.Model):
 
 	def __unicode__(self):
 		return "Dining Session %s"%(self.table.index_table)
+		
+	@property
+	def update_session_info(self):
+		rcv_bonus_list = RcvBonus.objects.filter(session=self, is_refuse=False)
+		total_bonus = int(0)
+		total_money = float(0)
+		total_number = int(0)
+		for bonus in rcv_bonus_list:
+			total_number += bonus.number
+			total_bonus += 1
+			total_money += bonus.total_money
+		self.total_bonus = total_bonus
+		self.total_number = total_number
+		self.total_money = total_money
+		self.save()
+	
+	#结束就餐会话
+	def close_session(self):
+		self.over_time = timezone.now()
+		#失效该就餐会话发出的红包，将未抢红包以及婉拒红包返回客户账号
+		snd_bonus_list = SndBonus.objects.filter(session=self, is_exhausted=False).update(is_valid=False)
+		rcv_bonus_list = RcvBonus.objects.filter(session=self, is_receive=False)
+		for bonus in rcv_bonus_list:
+			money_list = WalletMoney.objects.filter(rcv_bonus=bonus)
+			for money in money_list:
+				money.snd_bonus = None
+				money.rcv_bonus = None
+				money.is_send = False
+				money.is_receive = False
+				money.ticket = None
+				money.save()
+		rcv_bonus_list.update(is_valid=False)
+		
+		#关闭就餐会话，释放桌台
+		self.table.status = False
+		self.table.save()
+		consumer_list = Consumer.objects.filter(session=self)
+		for consumer in consumer_list:
+			consumer.on_table = None
+			consumer.session = None
+			consumer.save()
+		self.save()
 
+	def create_ticket(self, ticket, total_money):
+		ticket_value = float(0)
+		if total_money:
+			rcv_bonus_list = RcvBonus.objects.filter(session=self, is_refuse=False, is_receive=True)
+			sum = float(0)
+			for bonus in rcv_bonus_list:
+				money_list = WalletMoney.objects.filter(rcv_bonus=bonus)
+				for money in money_list:
+					sum += money.money.price
+					if sum > total_money:
+						money.ticket = None
+						money.is_send = False
+						money.is_receive = False
+						money.snd_bonus = None
+						money.rcv_bonus = None					
+					else:
+						ticket_value = sum
+						money.ticket = ticket
+					money.consumer = ticket.consumer
+					money.save()	
+		return ticket_value
+		
 	@property
 	def consumers(self):
 		return self.consumer_set.all()
@@ -145,9 +209,9 @@ class DiningSession(models.Model):
 	@property
 	def consumer_number(self):
 		return self.consumer_set.all().count()
-
+		
 	def rcv_bonus(self):
-		bonus_set = self.rcv_bonus_set.all()
+		bonus_set = RcvBonus.objects.filter(session=self, is_refuse=False)
 		return bonus_set
 
 	def rcv_bonus_contents(self):
@@ -202,14 +266,20 @@ class Consumer(models.Model):
 		verbose_name_plural = _("forum profiles")
 		
 	@property
+	def own_money_list(self):
+		return WalletMoney.objects.filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False)
+		
+	@property
 	def flush_own_money(self):
-		money_list = WalletMoney.objects.filter(consumer=self, is_used=False, is_valid=True, is_send=False)
+		money_list = self.own_money_list
 		num = len(money_list)
 		sum_money = float(0)
 		if num:
 			sum_money = money_list[0].money.price * num
 		self.own_bonus_value = sum_money
 		self.own_bonus_detail = bonus_content_models_to_json(money_list)
+		self.save()
+		print("===flush_own_money: num: %d price: %f ==="%(num, sum_money))
 		
 	@property		
 	def update_self_info(self):
@@ -229,6 +299,7 @@ class Consumer(models.Model):
 			total_money += bonus.total_money
 		self.rcv_bonus_num = total_num
 		self.rcv_bonus_value = total_money	
+		self.save()
 		self.flush_own_money
 		
 		
@@ -252,6 +323,23 @@ class Consumer(models.Model):
 			self.is_moderator = True
 
 		models.Model.save(self, *args, **kwargs)
+		
+	#结算
+	def close_an_account(self, ticket, ticket_value):
+		sum = float(0)
+		session_money = self.session.total_money
+		total_money = session_money + self.own_bonus_value
+		if(ticket_value <= session_money):
+			sum = self.session.create_ticket(ticket, ticket_value)
+		elif ticket_value <= total_money:
+			sum = self.session.create_ticket(ticket, session_money)
+			sum = self.wallet_pay_ticket(ticket, (ticket_value - session_money))
+			sum += session_money
+		else:
+			sum = self.session.create_ticket(ticket, session_money)
+			sum = self.wallet_pay_ticket(ticket, self.own_bonus_value)	
+			sum = total_money
+		return sum
 
 	def get_absolute_url(self):
 		return reverse('user:detail', kwargs={'pk': self.user.pk, 'slug': self.slug})
@@ -321,11 +409,23 @@ class Consumer(models.Model):
 		valid_wallets=self.wallet_set.filter(is_used=False,is_send=False, money=good)
 		return valid_wallets
 		
-	def wallet_pay_ticket(self, ticket):
-		pass
+	def wallet_pay_ticket(self, ticket, total_money):
+		ticket_value = float(0)		
+		if total_money:
+			sum = float(0)
+			money_list = self.own_money_list.order_by("create_time").reverse()
+			for money in money_list:
+				sum += money.money.price
+				if sum > total_money:
+					break
+				else:
+					ticket_value = sum
+					money.ticket = ticket
+					money.save()
+		return ticket_value
 	
 	def wallet_pay_bonus(self, snd_bonus):
-		money_list = WalletMoney.objects.filter(consumer=self, is_used=False, is_valid=True, is_send=False).order_by("create_time").reverse()
+		money_list = self.own_money_list.order_by("create_time").reverse()
 		total_money = snd_bonus.total_money
 		for money in money_list:
 			if total_money:
@@ -340,7 +440,7 @@ class Consumer(models.Model):
 		#创建一个红包
 		snd_bonus = SndBonus.objects.create(id_bonus=create_primary_key(), consumer=self, bonus_type=bonus_info.bonus_type, to_table=bonus_info.table,\
 					to_message=bonus_info.message, content=bonus_info.content, bonus_num=bonus_info.bonus_num, number=bonus_info.number,\
-					total_money=bonus_info.money, bonus_remain=bonus_info.bonus_num)
+					total_money=bonus_info.money, bonus_remain=bonus_info.bonus_num, session=self.session)
 		#将钱装入红包
 		self.wallet_pay_bonus(snd_bonus)
 		#更新钱包
@@ -349,9 +449,9 @@ class Consumer(models.Model):
 		self.flush_own_money
 		#预分配红包
 		snd_bonus.split_to_rcv_bonus(int(bonus_info.number))	
-		self.save()
 
-	def send_sys_bonus(self, counter, good_contents, title="", message=""):
+
+	def send_sys_bonus(self, counter, good_contents, title="趣八八", message=""):
 		bonus=SndBonus.objects.create(id_bonus=create_primary_key(), consumer=self, bonus_type=SYS_BONUS, to_message=message, title=title, bonus_num=counter, bonus_remain=counter)
 		total_good_num=0
 		for name,number in good_contents.items():
@@ -482,7 +582,7 @@ class SndBonus(models.Model):
 		total_number = 0
 		for number in number_list:
 			total_money = 0
-			rcv_bonus = RcvBonus.objects.create(id_bonus=create_primary_key(), snd_bonus=self)
+			rcv_bonus = RcvBonus.objects.create(id_bonus=create_primary_key(), snd_bonus=self, bonus_type = self.bonus_type, session=self.session)
 			money_list = WalletMoney.objects.filter(snd_bonus=self, is_receive=False)[0:number]
 			account = 0	#统计串串个数
 			for money in money_list:
@@ -492,7 +592,6 @@ class SndBonus(models.Model):
 				account += 1
 				money.save()
 				total_money += money.money.price
-			rcv_bonus.bonus_type = self.bonus_type
 			rcv_bonus.number = account
 			rcv_bonus.total_money = total_money
 			if is_best and (rcv_bonus.bonus_type != COMMON_BONUS):
@@ -532,6 +631,7 @@ class RcvBonus(models.Model):
 	bonus_type = models.IntegerField(default=0)							#红包类型：0:普通红包/1:手气红包/2:系统红包
 	is_message = models.BooleanField(default=False)						#是否已留言
 	message = models.CharField(max_length=40, null=True, blank=True)		#留言内容
+	is_valid = models.BooleanField(default=True)							#是否有效
 	is_receive = models.BooleanField(default=False)						#是否已被领取
 	is_refuse = models.BooleanField(default=False)							#是否已拒绝
 	content = models.CharField(max_length=300, null=True, blank=True)		#红包内容
@@ -553,10 +653,10 @@ class RcvBonus(models.Model):
 	#婉拒
 	def bonus_refuse(self):
 		self.is_refuse = True
-		money_list = WalletMoney.objects.filter(rcv_bonus=self).update(consumer=self.snd_bonus.consumer, is_send=False, is_receive=False)
+		self.is_valid = False
+		money_list = WalletMoney.objects.filter(rcv_bonus=self).update(consumer=self.snd_bonus.consumer, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
 		self.consumer.rcv_bonus_num -= self.number
 		self.consumer.flush_own_money
-		self.consumer.save()
 		self.save()
 		
 	

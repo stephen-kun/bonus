@@ -10,7 +10,7 @@ function unified_order(url, url_go, openid, bonus_type)
 		return ;
 	}
 	
-	
+	/*
 	$("input").map(function(){
 		if(($(this).attr('name') == 'table')||($(this).attr('name') == 'message')||($(this).attr('name') == 'order')||($(this).attr('name') == 'bonus_num')){
 			return sum;
@@ -31,6 +31,24 @@ function unified_order(url, url_go, openid, bonus_type)
 		alert("亲，串串不够塞红包哦！");
 		return;		
 	}
+	*/
+	
+	if(!bonus_num){
+		alert("请输入红包个数！");
+		return;
+	}
+	
+	$("input").map(function(){
+		if(($(this).attr('name') == 'message')||($(this).attr('name') == 'order')){
+			return sum;
+		}
+		sum += Number($(this).val());
+		return sum});	
+		
+	if(sum == (Number(table) + Number(bonus_num))){
+		alert("红包里还没有东西！");
+		return;
+	}	
 	
 	var input_str = $("input").map(function(){
 		var str = '';
@@ -55,9 +73,9 @@ function unified_order(url, url_go, openid, bonus_type)
 	  
 	xmlhttp.onreadystatechange=function()
 	{
-		flag_order = 1;		
 		if(xmlhttp.readyState==4 && xmlhttp.status==200)
 		{
+			flag_order = 1;		
 			var result = JSON.parse(xmlhttp.responseText);
 			if(result.status == 'SUCCESS' && result.result == 'SUCCESS'){
 				if(result.pay_type == 'WALLET_PAY')
@@ -83,9 +101,6 @@ function unified_order(url, url_go, openid, bonus_type)
 					alert('该桌台目前没有就餐');
 				}				
 			}
-		}else{
-			// 网络错误
-			alert('网络错误');				
 		}
 	};
 	

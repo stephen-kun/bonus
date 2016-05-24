@@ -27,11 +27,11 @@
 	<div class="box-food qbbaise box-food-mt">
 		<ul>
 			<li>
-				<h4><span class="rfloat"><font class="qbred">{{total_money}}￥</font></span>抢到的串串</h4>
+				<h4><span class="rfloat"><font class="qbred">{{consumer.session.total_money}}￥</font></span>抢到的串串</h4>
 			</li>
 			<li>
 				<h4>
-					<span class="rfloat"><font class="qbred"><input type="button" disabled="disabled" style="background:none;color:#e0660c;font-size:1em;margin:0; padding:0;" id="user_wallet" value="{{wallet_money}}"></font>￥</span>我的钱包</h4>
+					<span class="rfloat"><font class="qbred"><input type="button" disabled="disabled" style="background:none;color:#e0660c;font-size:1em;margin:0; padding:0;" id="user_wallet" value="{{consumer.own_bonus_value}}"></font>￥</span>我的钱包</h4>
 			</li>
 			<li>
 				<h4>券面值：<input type="number" id="ticket_value" class="code"  placeholder="设置消费券面值"></h4>			
@@ -42,7 +42,7 @@
 		</ul>
 	</div>	
 	<div class="queding">
-		<input type="button" id="create_ticket"  class="jin" data-reveal-id="myModal" value="生成券" onclick="action_create_ticket('{{consumer.open_id}}', '{{total_money}}','{{ajax_request_url}}')">
+		<input type="button" id="create_ticket"  class="jin" data-reveal-id="myModal" value="生成券" onclick="action_create_ticket('{{consumer.open_id}}', '{{consumer.session.total_money}}', '{{consumer.own_bonus_value}}', '{{ajax_request_url}}')">
 	</div>		
 
 </section>

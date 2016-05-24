@@ -1,11 +1,11 @@
 var flag_pay = 1;
-function consumer_pay(url, url_go, openid, prepay_id){
+function consumer_pay(url, url_go, openid, prepay_id, total_fee){
 	if(flag_pay){
 		var i_count = 0;
 		var timer = setInterval(function(){
 			var xmlhttp = new XMLHttpRequest();
-			var data = '{"openid":"OPENID","prepay_id":"PREPAY_ID", "action":"ajax_weixin_pay"}';
-			data = data.replace(/OPENID/, openid).replace(/PREPAY_ID/, prepay_id);
+			var data = '{"openid":"OPENID","prepay_id":"PREPAY_ID", "action":"ajax_weixin_pay", "total_fee":"TOTAL_FEE"}';
+			data = data.replace(/OPENID/, openid).replace(/PREPAY_ID/, prepay_id).replace(/TOTAL_FEE/, total_fee);
 			
 			xmlhttp.onreadystatechange=function()
 			{

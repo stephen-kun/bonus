@@ -9,7 +9,7 @@ import django.utils.timezone as timezone
 import json
 from .wechat import PostResponse, wechat, TOKEN, APPID, APPSECRET
 from .utils import  action_get_bonus, is_consumer_dining, handle_ajax_request, get_user_openid, decode_bonus_detail,create_bonus_dict
-from .utils import check_geted_bonus, decode_order_param, get_bonus_type_str, get_record_openid, is_enough_pay, update_wallet_money, log_print
+from .utils import check_geted_bonus, decode_order_param, get_bonus_type_str, get_record_openid, is_enough_pay, log_print
 from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 from wzhifuSDK import *
@@ -260,9 +260,9 @@ def display_settle_account_views(open_id, request):
 			title = '结算'
 			static_url = settings.STATIC_URL
 			consumer = Consumer.objects.get(open_id=openid)
-			total_money = consumer.session.total_money
-			consumer = update_wallet_money(consumer)
-			wallet_money = consumer.own_bonus_value
+			#total_money = consumer.session.total_money
+			#consumer = update_wallet_money(consumer)
+			#wallet_money = consumer.own_bonus_value
 			ajax_request_url = AJAX_REQUEST_POST_URL
 			menu = _MenuUrl()
 			return render_to_response('close_an_account.html', locals())		
@@ -279,7 +279,8 @@ def display_user_account_views(open_id, request):
 		openid = open_id
 		static_url = settings.STATIC_URL	
 		consumer = Consumer.objects.get(open_id=openid)
-		consumer = update_wallet_money(consumer)
+		#consumer.flush_own_money
+		#consumer = update_wallet_money(consumer)
 		good_list = decode_bonus_detail(consumer)
 		user_ticket_url = USER_TICKET_URL
 		user_info_url = USER_INFO_URL
