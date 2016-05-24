@@ -1,7 +1,6 @@
 {% load static %}
 {% load forum_tags i18n %}
 {% load wxwraper %}
-{% load emoji_tags %}
 
 {% for comment in comments %}
 <li>
@@ -18,12 +17,9 @@
                 <div class="facebook-name">{{ comment.user.jf.name }}</div>
                 <div class="facebook-date">
                     <small><time title="{{ comment.date }}" datetime="{{ comment.date|date:"c" }}" class="timeago"></time></small>
-{#                    &nbsp;&nbsp;#}
-{#                    <small><i class="icon iconfont icon-presentfill#}
-{#                                        present" openid="{{ comment.user.jf.open_id }}" cid="{{ comment.id }}" topic_cid="{{ topic.comment.id }}"></i></small>#}
                 </div>
             </div>
-            <div class="item-text">{{ comment.comment_html|safe|emoji_replace }}</div>
+            <div class="item-text">{{ comment.comment_html|safe }}</div>
         </div>
     </div>
 </li>

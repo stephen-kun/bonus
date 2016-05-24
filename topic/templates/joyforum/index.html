@@ -2,8 +2,7 @@
 {% load static %}
 {% load forum_tags i18n %}
 {% load wxwraper %}
-{% load emoji_tags %}
-{% emoji_load %}
+{% load topic_tags %}
 
 {% block title %}{% endblock %}
 
@@ -85,7 +84,6 @@
                         src="{% get_media_prefix %}{{ image.url }}" style="width: 100%;height: 100%;" alt=""></div>
             {% endfor %}
         </div>
-        {#            <div class="myswipe-pagination"></div>#}
     </div>
 {% endblock %}
 
@@ -107,7 +105,7 @@
                 <div class="card-content clickable" href="{{ topic.get_absolute_url|wxurl_wraper }}">
                     <div class="card-content-inner">
                         <p>
-                            {{ topic.comment.comment_html|safe|slice:":140"|emoji_replace }}... <a
+                            {{ topic.comment.comment_html|safe }}...<a
                                 href="{{ topic.get_absolute_url|wxurl_wraper }}"
                                 class="external">查看全文</a>
                         </p>
@@ -200,7 +198,6 @@
 {% block jsext %}
     <script type='text/javascript' src='{% static "js/util.no-min.js" %}' charset='utf-8'></script>
     <script type='text/javascript' src='{% static "js/like.no-min.js" %}' charset='utf-8'></script>
-    <script src="{% static 'emoji/js/emoji.js' %}"></script>
     <script type="text/javascript">
 
         var config = {};
@@ -323,16 +320,7 @@
                 $(value).height($(value).width());
             });
 
-{#            jQuery.timeago.settings.localeTitle='zh-CN';#}
-
-            jQuery("time.timeago").timeago();
-
-            if(localStorage.emojis){
-                if(Object.keys(jQuery.parseJSON(localStorage.emojis)).length>100){
-                    Emoji.clear();
-                    Emoji.setDataUrl('{% url 'emoji:list.json' %}').load();
-                }
-            }
+             jQuery("time.timeago").timeago();
 
 
         });

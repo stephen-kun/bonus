@@ -191,7 +191,7 @@ def wx_index(request, pk=1):
 
 
 
-@ratelimit(rate='1/5s')
+@ratelimit(rate='1/10s')
 def wx_newtopic(request, category_id=1):
     if category_id:
         get_object_or_404(Category.objects.visible(),
@@ -202,7 +202,11 @@ def wx_newtopic(request, category_id=1):
         form = WXTopicForm(user=request.user, data=request.POST)
         cform = WXCommentForm(user=request.user, data=request.POST)
 
-        if not request.is_limited and all([form.is_valid(), cform.is_valid()]):  # TODO: test!
+        if request.is_limited:
+            errorinfo = "发主题太频繁，请10s后再试!"
+            return json_response({'result':'nok','errorinfo':errorinfo})
+
+        if not request.is_limited and all([form.is_valid(), cform.is_valid()]):  #
             # wrap in transaction.atomic?
             topic = form.save(commit=False)
             topic.category_id = 1
@@ -210,13 +214,14 @@ def wx_newtopic(request, category_id=1):
             topic.save()
             cform.topic = topic
             comment = cform.save()
-            for cmid in imagelist.split(","):
-                try:
-                    cimage = CommentImages.objects.get(id=cmid)
-                    cimage.comment = comment
-                    cimage.save()
-                except Exception as ex:
-                    print ex.args
+            if imagelist:
+                for cmid in imagelist.split(","):
+                    try:
+                        cimage = CommentImages.objects.get(id=int(cmid))
+                        cimage.comment = comment
+                        cimage.save()
+                    except Exception as ex:
+                        print ex.args
             comment_posted(comment=comment, mentions=cform.mentions)
             return json_response({'url':topic.get_absolute_url(),'result':'ok'})
     else:
@@ -476,6 +481,10 @@ def wx_comment_publish(request, topic_id, pk=None):
     if request.method == 'POST':
         form = WXCommentForm(user=request.user, topic=topic, data=request.POST)
 
+        if request.is_limited:
+            errorinfo = "评论太频繁，请10s后再试!"
+            return json_response({'result':'nok','errorinfo':errorinfo})
+
         if not request.is_limited and form.is_valid():
             imagelist = request.POST.get("imagelist",None)
             comment = form.save()
@@ -487,12 +496,6 @@ def wx_comment_publish(request, topic_id, pk=None):
                 except Exception as ex:
                     print ex.args
             comment_posted(comment=comment, mentions=form.mentions)
-            # return redirect(request.POST.get('next', comment.get_absolute_url()))
-            # htmlcontext = {
-            #             'comment':comment
-            #            }
-            # html = render_to_string("joyforum/catlist/comment_snippet.html",htmlcontext,context_instance=RequestContext(request))
-            # context = {'result':'ok','html':html}
             context = {'result':'ok'}
             return json_response(context)
         else:

@@ -42,8 +42,8 @@
 			pollChoiceText: "{% trans "Description" %}"
 		} )
         .atwho({
-			at: ':',
-			tpl: "<li data-value=':${name}:'><i class=\"tw tw-${class_name}\"></i> ${name} </li>",
+			at: '[',
+			tpl: "<li data-value='[${name}]'><img src=\"http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/${name_raw}\"> ${name} </li>",
 			data: $.emoji_list(),
             callbacks: {
                 before_save: function(data) {return data},  // Avoid extra work

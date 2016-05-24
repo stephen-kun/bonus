@@ -29,7 +29,7 @@ class Comment(models.Model):    #评论
 
     parent = models.ForeignKey("self",related_name='comment_parent',null=True,blank=True)
 
-    comment = models.TextField(_("comment"),max_length=1024)
+    comment = models.TextField(_("Comment"),max_length=1024)
     comment_html = models.TextField(_("comment html"),max_length=1024)
     action = models.IntegerField(_("action"), choices=ACTION, default=COMMENT)
     date = models.DateTimeField(default=timezone.now)

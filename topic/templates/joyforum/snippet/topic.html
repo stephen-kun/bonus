@@ -1,7 +1,7 @@
 {% load static %}
 {% load forum_tags i18n %}
 {% load wxwraper %}
-{% load emoji_tags %}
+{#{% load emoji_tags %}#}
 
 {% for topic in topics %}
 <div class="card facebook-card">
@@ -16,7 +16,7 @@
     <div class="card-content clickable" href="{{ topic.get_absolute_url|wxurl_wraper }}">
         <div class="card-content-inner">
             <p>
-                {{ topic.comment.comment_html|safe|slice:":140"|emoji_replace }}... <a href="{{ topic.get_absolute_url|wxurl_wraper }}"
+                {{ topic.comment.comment_html|safe }}...<a href="{{ topic.get_absolute_url|wxurl_wraper }}"
                                                                     class="external">查看全文</a>
             </p>
 

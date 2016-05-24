@@ -16,7 +16,7 @@ from .models import Comment
 
 class CommentForm(forms.ModelForm):
 
-    comment = forms.CharField(
+    comment = forms.CharField(label=_("Comment Content"),
         max_length=settings.COMMENT_MAX_LEN, widget=forms.Textarea)
 
     class Meta:
@@ -66,7 +66,7 @@ class CommentForm(forms.ModelForm):
 class WXCommentForm(forms.ModelForm):
 
     comment = forms.CharField(
-        max_length=settings.COMMENT_MAX_LEN, widget=forms.Textarea(attrs={"style":'width:100%;height:100%;resize:none;padding:0.1rem;border:0px;'}))
+        max_length=settings.COMMENT_MAX_LEN, widget=forms.Textarea(attrs={"style":'width:100%;height:100%;resize:none;padding:0.1rem;border:0px;word-wrap: break-word;outline:none;'}))
 
     class Meta:
         model = Comment

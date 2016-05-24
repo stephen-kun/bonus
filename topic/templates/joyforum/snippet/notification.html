@@ -5,8 +5,6 @@
 {% for n in notifications %}
     {% url "wx:wx-comment-find" pk=n.comment.pk as url_topic %}
     <li class="item-content" data-href="{{ url_topic }}">
-        {#                    {% url "wx:wx-user-detail" pk=n.comment.user.pk slug=n.comment.user.jf.slug as url_profile %}#}
-
 
         <div class="item-media"><img class="img-circle"
                                      src="{{ n.user.jf.picture }}"

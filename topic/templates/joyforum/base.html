@@ -46,6 +46,12 @@
             border-radius: 50%;
         }
 
+        .weiboimg{
+            display: inline-block!important;
+{#            height: 22px;#}
+{#            width: 26px;#}
+        }
+
         .card-content-inner img{
             max-width: 100%;
         }
@@ -147,10 +153,10 @@
 </div>
 
 <script>
-    {#    if(!$.device.isWeixin){#}
-    {#        $(".page-group").hide();#}
-    {#        $(".nowx").show();#}
-    {#    }#}
+        if(!$.device.isWeixin){
+            $(".page-group").hide();
+            $(".nowx").show();
+        }
 </script>
 
 

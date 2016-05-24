@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     'user.auth',
    # 'user.admin',
     'wx',
-    'emoji',
 
 ]
 
@@ -167,7 +166,7 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = 'media'
 
-COMMENT_MAX_LEN = 10240
+COMMENT_MAX_LEN = 140
 YT_PAGINATOR_PAGE_RANGE = 30
 
 JOY_TOPIC_PRIVATE_CATEGORY_PK=1

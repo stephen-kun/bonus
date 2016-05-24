@@ -6,33 +6,6 @@
 
 {% block content %}
 
-{#        <ul class="nav">#}
-{#            <li><a href="{% url "index" %}" >{% trans "Main" %}</a><i class="fa fa-chevron-right"></i></li>#}
-{##}
-{#            {% if topic.category.parent_id %}#}
-{#               <li><a href="{{ topic.category.parent.get_absolute_url }}" >{{ topic.category.parent.title }}</a><i class="fa fa-chevron-right"></i></li>#}
-{#            {% endif %}#}
-{##}
-{#		    <li><a href="{{ topic.category.get_absolute_url }}" >{{ topic.category.title }}</a></li>#}
-{#        </ul>#}
-
-{#        <h1 class="headline">#}
-{#            {% if topic.is_pinned or topic.is_globally_pinned %}#}
-{#                <i class="fa fa-thumb-tack"></i>#}
-{#            {% endif %}#}
-{#            {% if topic.is_closed %}#}
-{#                <i class="fa fa-lock"></i>#}
-{#            {% endif %}#}
-{##}
-{#            {{ topic.title }}#}
-{##}
-{#            {% if user.jf.is_moderator %}#}
-{#                <a class="head-edit-link" href="{% url "topic:update" topic.pk %}"><i class="fa fa-pencil"></i> {% trans "edit" %}</a>#}
-{#            {% elif user.pk == topic.user.pk and not topic.is_closed %}#}
-{#                <a class="head-edit-link" href="{% url "topic:update" topic.pk %}"><i class="fa fa-pencil"></i> {% trans "edit" %}</a>#}
-{#            {% endif %}#}
-{#        </h1>#}
-
         {% if user.jf.is_moderator %}
             <div class="topic-moderation js-tabs-container">
                 <a class="dropdown-button js-tab" href="#" data-related=".js-mod-content"><i class="fa fa-cogs"></i></a>
@@ -50,13 +23,6 @@
             </div>
 
 
-{#            <div class="move-comments" style="display:none;">#}
-{#                <div class="move-container">#}
-{#                    <label class="move-label">{% trans "Topic id" %}:</label><!--#}
-{#                 --><div class="move-input"><input id="id_move_comments_topic" name="topic" type="text" value="" /></div><!--#}
-{#                 --><a class="move-link js-move-comments" href="#move_to">{% trans "Move" %}</a>#}
-{#                </div>#}
-{#            </div>#}
         {% endif %}
 
         {% include "forum/comment/_render_list.html" %}
@@ -64,13 +30,6 @@
         <div class="container">
             {% render_paginator page=comments %}
 
-{#            <div class="notify">#}
-{#                {% if user.is_authenticated %}#}
-{#                    {% render_notification_form user=user topic=topic %}#}
-{#                {% elif not topic.is_closed %}#}
-{#                    <a class="button" href="{% url "comment:publish" topic_id=topic.pk %}">{% trans "Reply" %}</a>#}
-{#                {% endif %}#}
-{#            </div>#}
         </div>
 
         {% if user.is_authenticated %}
@@ -84,9 +43,7 @@
 
                         <div class="comment-body">
                             {% render_comments_form topic=topic %}
-{#                            <ul id="imageslistpanel">#}
-{#                                <div style="clear: both;"></div>#}
-{#                            </ul>#}
+
                         </div>
                     </div>
 

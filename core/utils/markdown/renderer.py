@@ -7,6 +7,8 @@ import mistune
 from django.conf import settings
 from django.utils.html import escape
 
+from core.utils.markdown.utils.weibo import weibo_url
+
 
 def sanitize_url(url):
     url = escape(url)  # & -> &amp; ...
@@ -82,6 +84,13 @@ class Renderer(mistune.Renderer):
         # todo: add no-follow to links since we are going to need migration to fix emojis
         return '<i class="tw tw-{name_class}" title=":{name_raw}:"></i>'.format(
             name_class=name_class,
+            name_raw=name_raw
+        )
+
+    def weibo(self,title,name_raw):
+        return '<img title="[{title}]" class="weiboimg" src="{weibo_url}{name_raw}">'.format(
+            title=title,
+            weibo_url=weibo_url,
             name_raw=name_raw
         )
 

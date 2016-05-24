@@ -2,7 +2,6 @@
 {% load static %}
 {% load forum_tags i18n %}
 {% load wxwraper %}
-{% load emoji_tags %}
 
 {% block title %}{% endblock %}
 
@@ -185,7 +184,7 @@
             <div class="card-content">
                 <div class="card-content-inner">
                     <p>
-                        {{ topic.comment.comment_html|safe|emoji_replace }}
+                        {{ topic.comment.comment_html|safe }}
                     </p>
 
                     <ul class="imagelist">
@@ -261,7 +260,7 @@
                                         present">&nbsp;<span>{% if comment.gifts %}{{ comment.gifts }}{% else %}0{% endif %}</span></i></small>
                                     </div>
                                 </div>
-                                <div class="item-text">{{ comment.comment_html|safe|emoji_replace }}</div>
+                                <div class="item-text">{{ comment.comment_html|safe }}</div>
                                 <ul class="imagelist" style="padding-left: 0">
                                     {% for image in comment.imagelist %}
                                         <li>
@@ -367,22 +366,6 @@
                 $('.infinite-scroll-preloader.loading').hide();
                 $('.infinite-scroll-preloader.endnote').show();
             }
-
-{#            $(document).on('click','.present',function(){#}
-{#                var cid = $(this).attr("cid");#}
-{#                var tcid = $(this).attr("topic_cid");#}
-{#                var openid = $(this).attr("openid");#}
-{#                var scope = this;#}
-{##}
-{#                $.post("/manager/account/send_coupon/",#}
-{#                        {'action':'send_ticket','openid':openid,'cid':cid,'tcid':tcid},#}
-{#                    function (resp) {#}
-{#                            console.log(resp);#}
-{#                            $('#totalliquan').text();#}
-{#                            $(scope).addClass("icon-presentfill");#}
-{#                            $(scope).removeClass("icon-present");#}
-{#                    });#}
-{#            });#}
 
 
             jQuery(".imagelist li img").each(function (index, value) {

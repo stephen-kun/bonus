@@ -30,7 +30,7 @@ def publish(request, topic_id, pk=None):
     )
 
     if request.method == 'POST':
-        imagelist = request.POST.get("imagelist",None)
+        imagelist = request.POST.get("imagelist","")
         form = CommentForm(user=request.user, topic=topic, data=request.POST)
 
         if not request.is_limited and form.is_valid():

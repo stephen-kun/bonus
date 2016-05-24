@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 
 import mistune
 
+from core.utils.markdown.utils.weibo import weibos
 from .utils.emoji import emojis
 
 User = get_user_model()
@@ -23,6 +24,14 @@ class InlineGrammar(mistune.InlineGrammar):
     # todo: match unicode emojis
     emoji = re.compile(
         r'^:(?P<emoji>[A-Za-z0-9_\-\+]+?):'
+    )
+
+    weibo = re.compile(
+        r'^\[(?P<weibo>[\u4E00-\u9FA5]+?)\]'
+    )
+
+    weibo3 = re.compile(
+        r'^\[(?P<weibo>NO|good|ok)\]'
     )
 
     mention = re.compile(
@@ -42,6 +51,8 @@ class InlineLexer(mistune.InlineLexer):
     default_rules = copy.copy(mistune.InlineLexer.default_rules)
     default_rules.insert(2, 'emoji')
     default_rules.insert(2, 'mention')
+    default_rules.insert(2, 'weibo')
+    default_rules.insert(2,'weibo3')
 
     def __init__(self, renderer, rules=None, **kwargs):
         rules = InlineGrammar()
@@ -51,6 +62,28 @@ class InlineLexer(mistune.InlineLexer):
 
         self.mentions = {}
         self._mention_count = 0
+
+    def output_weibo(self,m):
+        weibo = m.group('weibo')
+        if weibo not in weibos.keys():
+            return m.group(0)
+
+        title = weibo
+        name_raw = weibos[title]
+
+        return self.renderer.weibo(title,name_raw)
+
+
+    def output_weibo3(self,m):
+        weibo = m.group('weibo')
+        if weibo not in weibos.keys():
+            return m.group(0)
+
+        title = weibo
+        name_raw = weibos[title]
+
+        return self.renderer.weibo(title,name_raw)
+
 
     def output_emoji(self, m):
         emoji = m.group('emoji')

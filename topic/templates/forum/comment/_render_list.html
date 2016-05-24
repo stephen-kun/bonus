@@ -1,6 +1,5 @@
 {% load forum_tags i18n %}
 {% load static %}
-{% load emoji_tags %}
 
 <div class="comments">
 
@@ -121,7 +120,7 @@
 
                         <div class="comment-text">
                             {% if user.jf.is_moderator %}
-                                {{ c.comment_html|emoji_replace|safe }}
+                                {{ c.comment_html|safe }}
                             {% else %}
                                 {% trans "This comment was deleted" %}.
                             {% endif %}
@@ -157,8 +156,6 @@
 
 
     $(document).ready(function () {
-
-        {#        var csrf_token = '{% csrf_token %}';#}
 
         {% if user.is_authenticated %}
             $('.js-like').like({
@@ -214,8 +211,6 @@
                 });
             });
         {% endif %}
-
-        {#        $('.js-share').social_share();#}
 
         hljs.initHighlightingOnLoad();
 

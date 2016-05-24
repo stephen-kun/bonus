@@ -2,7 +2,6 @@
 {% load static %}
 {% load forum_tags i18n %}
 {% load wxwraper %}
-{#{% load emoji_tags %}#}
 
 {% block cssext %}
     <style>
@@ -15,16 +14,15 @@
         }
 
          .biaoqingpanel{
-             height: 5rem;
+             height: 10rem;
             width: 100%;
-             overflow-y: auto;
-            overflow-x: hidden;
             border-top: 1px solid #e8e8e8;
         }
 
 
         .tupianpanel ul {
             list-style: none;
+             padding: 0.1rem;
         }
 
         .tupianpanel ul li {
@@ -48,7 +46,9 @@
             overflow-x: hidden;
             overflow-y: auto;
             margin-top: 0;
+{#            height: calc(100% + 1px);#}
             height: 100%;
+            -webkit-overflow-scrolling:touch;
         }
 
         #biaoqing_container li {
@@ -93,7 +93,6 @@
     <script type='text/javascript' src='{% static "js/atwho/jquery.atwho.min.js" %}' charset='utf-8'></script>
     <script type='text/javascript' src='{% static "js/atwho/jquery.caret.min.js" %}' charset='utf-8'></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-    <script src="{% static 'emoji/js/emoji.js' %}"></script>
 {% endblock %}
 
 {% block barheader %}
@@ -130,7 +129,7 @@
         </div>
         <div class="biaoqingpanel" style="display: none;">
             <ul id="biaoqing_container" class="scroll">
-
+                {% include "joyforum/snippet/biaoqing.html" %}
             </ul>
             <div style="clear: both;"></div>
         </div>
@@ -145,15 +144,11 @@
             {% if next %}<input type="hidden" name="next" value="{{ next }}"/>{% endif %}
             <input type="hidden" name="imagelist" id="imagelist">
 
-            <div style="display:none;">
                 {% for field in form %}
                     {{ field.errors }}
                     {{ field }}
                 {% endfor %}
-            </div>
-            <div class="textarea" contenteditable="true">
 
-            </div>
         </form>
     </div>
 {% endblock %}
@@ -169,7 +164,6 @@
                     return true;
                 }
                 e.preventDefault();
-                $("#wxsendcommentform textarea").val($("#wxsendcommentform .textarea").html());
                 $.post(this.action, $form.serialize(), function (res) {
                     if (res.result == "ok") {
                         window.location.href = "{{ topic.get_bookmark_url|wxurl_wraper }}";
@@ -201,8 +195,8 @@
                     $(this).removeClass("active");
                 }
                 else {
-                    $("#commentbottombar").css("height", "7.5rem");
-                    $(".content").css("bottom", "7.5rem");
+                    $("#commentbottombar").css("height", "10.5rem");
+                    $(".content").css("bottom", "10.5rem");
                     $(".tupianpanel").show();
                     $(".biaoqingpanel").hide();
                     $(this).addClass("active");
@@ -221,8 +215,8 @@
                     $(this).removeClass("active");
                 }
                 else {
-                    $("#commentbottombar").css("height", "8.5rem");
-                    $(".content").css("bottom", "8.5rem");
+                    $("#commentbottombar").css("height", "12.5rem");
+                    $(".content").css("bottom", "12.5rem");
                     $(".biaoqingpanel").show();
                     $(".tupianpanel").hide();
                     $(this).addClass("active");
@@ -255,19 +249,11 @@
                 placeholderText: "{% trans "uploading {image_name}" %}"
             });
 
-            if(!localStorage.emojis){
-                Emoji.setDataUrl('{% url 'emoji:list.json' %}').load();
-            }
-
-            var emojisobj = jQuery.parseJSON(localStorage.emojis);
-            jQuery.each(emojisobj, function (idx, val) {
-                $("#biaoqing_container").append("<li emoji='" + idx + "'><img src='" + val + "'></li>");
-            });
 
             jQuery("#biaoqing_container li").on("click", function () {
-                var emoji = $(this).attr("emoji");
-                $("#wxsendcommentform .textarea").append(":" + emoji + ":");
-            });
+            var emoji = $(this).attr("title");
+            $("#wxsendcommentform textarea").val($("#wxsendcommentform textarea").val()+ emoji);
+        });
 
 
         });

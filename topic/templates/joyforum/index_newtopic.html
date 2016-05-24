@@ -7,7 +7,7 @@
 {% block cssext %}
     <style>
         .tupianpanel {
-            height: 5rem;
+            height: 8rem;
             width: 100%;
             overflow-y: auto;
             overflow-x: hidden;
@@ -15,10 +15,8 @@
         }
 
          .biaoqingpanel{
-             height: 5rem;
+             height: 10rem;
             width: 100%;
-             overflow-y: auto;
-            overflow-x: hidden;
             border-top: 1px solid #e8e8e8;
         }
 
@@ -26,10 +24,11 @@
         .tupianpanel ul {
             list-style: none;
             margin-top: 0;
-            padding: 0.2rem;
+            padding: 0.1rem;
             overflow-x: hidden;
             overflow-y: auto;
         }
+
 
         #biaoqing_container {
             list-style: none;
@@ -37,7 +36,9 @@
             overflow-x: hidden;
             overflow-y: auto;
             margin-top: 0;
+{#            height: calc(100% + 1px);#}
             height: 100%;
+            -webkit-overflow-scrolling:touch;
         }
 
         #biaoqing_container li {
@@ -101,7 +102,6 @@
     <script type='text/javascript' src='{% static "js/atwho/jquery.atwho.min.js" %}' charset='utf-8'></script>
     <script type='text/javascript' src='{% static "js/atwho/jquery.caret.min.js" %}' charset='utf-8'></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-    <script src="{% static 'emoji/js/emoji.js' %}"></script>
 {% endblock %}
 
 {% block barheader %}
@@ -137,7 +137,7 @@
         </div>
         <div class="biaoqingpanel" style="display: none;">
             <ul id="biaoqing_container" class="scroll">
-
+                {% include "joyforum/snippet/biaoqing.html" %}
             </ul>
             <div style="clear: both;"></div>
         </div>
@@ -145,8 +145,8 @@
 {% endblock %}
 
 {% block page %}
-    {#    {% autoescape off %}#}
-    <div class="page-current" style="height: 100%">
+
+    <div class="page-current" style="height: 100%;position: relative;">
         <form action="{% url "wx:wx-newtopic" %}" method="post" class="js-reply"
               id="wxsendtopicform">
             {% csrf_token %}
@@ -156,18 +156,17 @@
                 {{ field.errors }}
                 {{ field }}
             {% endfor %}
-            <div style="display:none;">
+
                 {% for field in cform %}
                     {{ field.errors }}
                     {{ field }}
                 {% endfor %}
-            </div>
-            <div class="textarea" contenteditable="true">
 
-            </div>
+
+
         </form>
     </div>
-    {#    {% endautoescape %}#}
+
 {% endblock %}
 
 {% block jsext %}
@@ -180,7 +179,7 @@
                 if (letSubmit) {
                     return true;
                 }
-                $("#wxsendtopicform textarea").val($("#wxsendtopicform .textarea").html());
+{#                $("#wxsendtopicform textarea").val($("#wxsendtopicform .textarea").html());#}
                 e.preventDefault();
                 $.post(this.action, $form.serialize(), function (res) {
                     if (res.result == "ok") {
@@ -213,8 +212,8 @@
                     $(this).removeClass("active");
                 }
                 else {
-                    $("#commentbottombar").css("height", "7.5rem");
-                    $(".content").css("bottom", "7.5rem");
+                    $("#commentbottombar").css("height", "10.5rem");
+                    $(".content").css("bottom", "10.5rem");
                     $(".tupianpanel").show();
                     $(".biaoqingpanel").hide();
                     $(this).addClass("active");
@@ -233,8 +232,8 @@
                     $(this).removeClass("active");
                 }
                 else {
-                    $("#commentbottombar").css("height", "8.5rem");
-                    $(".content").css("bottom", "8.5rem");
+                    $("#commentbottombar").css("height", "12.5rem");
+                    $(".content").css("bottom", "12.5rem");
                     $(".biaoqingpanel").show();
                     $(".tupianpanel").hide();
                     $(this).addClass("active");
@@ -242,7 +241,7 @@
             });
 
             $("#cancelcomment").on('click', function () {
-                $('#tupian_container li.item').each(function (index, value) {   //TODO: DELETE IMAGE WHEN CANCEL
+                $('#tupian_container li.item').each(function (index, value) {
 
                 });
             });
@@ -268,18 +267,9 @@
             });
         });
 
-        if(!localStorage.emojis){
-            Emoji.setDataUrl('{% url 'emoji:list.json' %}').load();
-        }
-
-        var emojisobj = jQuery.parseJSON(localStorage.emojis);
-        jQuery.each(emojisobj, function (idx, val) {
-            $("#biaoqing_container").append("<li emoji='" + idx + "'><img src='" + val + "'></li>");
-        });
-
         jQuery("#biaoqing_container li").on("click", function () {
-            var emoji = $(this).attr("emoji");
-            $("#wxsendtopicform .textarea").append(":" + emoji + ":");
+            var emoji = $(this).attr("title");
+            $("#wxsendtopicform textarea").val($("#wxsendtopicform textarea").val()+ emoji);
         });
 
 

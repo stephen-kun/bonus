@@ -44,7 +44,7 @@ def publish(request, category_id=1):
                           pk=category_id)
 
     if request.method == 'POST':
-        imagelist = request.POST.get("imagelist",None)
+        imagelist = request.POST.get("imagelist","")
         form = TopicForm(user=request.user, data=request.POST)
         cform = CommentForm(user=request.user, data=request.POST)
 
