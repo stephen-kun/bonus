@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/undelete/$', views.delete, kwargs={'remove': False, }, name='undelete'),
     # url(r'^like/(?P<comment_id>\d+)/create/$',views.commentlike,name='commentlike'),
     # url(r'^like/(?P<pk>\d+)/delete/$', views.commentlikedelete, name='commentlikedelete'),
+    url(r'^addgift/(?P<cid>\d+)/$',views.addgift,name='addgift'),
 
     url(r'^upload/$', views.image_upload_ajax, name='image-upload-ajax'),
 

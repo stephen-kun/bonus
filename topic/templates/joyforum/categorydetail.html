@@ -2,7 +2,6 @@
 {% load static %}
 {% load forum_tags i18n %}
 {% load wxwraper %}
-{% load emoji_tags %}
 
 {% block title %}{% endblock %}
 
@@ -151,7 +150,7 @@
             返回
         </a>
 
-        <h1 class="title">{{ topic.title }}</h1>
+{#        <h1 class="title">{{ topic.title }}</h1>#}
     </header>
 
 {% endblock %}
@@ -177,14 +176,15 @@
             <div class="card-header no-border">
                 <div class="facebook-avatar"><img class="img-circle" src="{{ topic.user.jf.picture }}" width="40"
                                                   height="40"></div>
-                <div class="facebook-name">{{ topic.title }}</div>
-                <div class="facebook-date"><span>{{ topic.user.jf.name }}</span>
-                    <time style="margin-left: 15px;" title="{{ topic.last_active }}" datetime="{{ topic.last_active|date:"c" }}" class="timeago"></time></div>
+                <div class="facebook-name">{{ topic.user.jf.name }}</div>
+                <div class="facebook-date">
+{#                    <span>{{ topic.user.jf.name }}</span>#}
+                    <time title="{{ topic.last_active }}" datetime="{{ topic.last_active|date:"c" }}" class="timeago"></time></div>
             </div>
             <div class="card-content">
                 <div class="card-content-inner">
                     <p>
-                        {{ topic.comment.comment|safe|emoji_replace }}
+                        {{ topic.comment.comment_html|safe }}
                     </p>
 
                     <ul class="imagelist">
@@ -228,7 +228,7 @@
 
 
                             &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" style="display: inline-block;" class="link">
-                            <i style="display: inline-block;" class="icon iconfont icon-presentfill"></i><span id="totalliquan">{% if topic.liquan %}{{ topic.liquan }}{% else %}0{% endif %}</span></a>
+                            <i style="display: inline-block;" class="icon iconfont icon-presentfill"></i><span id="totalliquan">{% if topic.gifts %}{{ topic.gifts }}{% else %}0{% endif %}</span></a>
                         </span>
 
             </div>
@@ -257,17 +257,25 @@
                                         <small><time title="{{ comment.date }}" datetime="{{ comment.date|date:"c" }}" class="timeago"></time></small>
                                         &nbsp;&nbsp;
                                         <small><i class="icon iconfont icon-presentfill
-                                        present" openid="{{ comment.user.jf.open_id }}" cid="{{ comment.id }}" topic_cid="{{ topic.comment.id }}"></i></small>
+                                        present">&nbsp;<span>{% if comment.gifts %}{{ comment.gifts }}{% else %}0{% endif %}</span></i></small>
                                     </div>
                                 </div>
-                                <div class="item-text">{{ comment.comment_html|safe|emoji_replace }}</div>
+                                <div class="item-text">{{ comment.comment_html|safe }}</div>
+                                <ul class="imagelist" style="padding-left: 0">
+                                    {% for image in comment.imagelist %}
+                                        <li>
+                                            <img src="{{ image.imageurl }}">
+                                        </li>
+                                    {% endfor %}
+                                    <div style="clear: both;"></div>
+                                </ul>
                             </div>
                         </div>
                     </li>
-                {% empty %}
-                    <li class="no-comment">
-                        <div class="item-text">还没有评论！</div>
-                    </li>
+{#                {% empty %}#}
+{#                    <li class="no-comment">#}
+{#                        <div class="item-text">还没有评论！</div>#}
+{#                    </li>#}
                 {% endfor %}
             </ul>
         </div>
@@ -358,22 +366,6 @@
                 $('.infinite-scroll-preloader.loading').hide();
                 $('.infinite-scroll-preloader.endnote').show();
             }
-
-            $(document).on('click','.present',function(){
-                var cid = $(this).attr("cid");
-                var tcid = $(this).attr("topic_cid");
-                var openid = $(this).attr("openid");
-                var scope = this;
-
-                $.post("/manager/account/send_coupon/",
-                        {'action':'send_ticket','openid':openid,'cid':cid,'tcid':tcid},
-                    function (resp) {
-                            console.log(resp);
-                            $('#totalliquan').text();
-                            $(scope).addClass("icon-presentfill");
-                            $(scope).removeClass("icon-present");
-                    });
-            });
 
 
             jQuery(".imagelist li img").each(function (index, value) {

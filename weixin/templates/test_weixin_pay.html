@@ -1,5 +1,5 @@
-﻿
 <!-- 支付 -->
+
 {% extends "_bonus_base.html" %}
 
 {% block body %}
@@ -26,6 +26,7 @@
 <section>
     <div class="box-food qbbaise box-food-mt">
     	<ul>
+
 			{% for goods in good_list %}
         	<li>
             	<h4><span class="rfloat"><font class="qbred">{{goods.number}}</font>{{goods.unit}}</span>{{goods.name}}<span class="box-food-gray">({{goods.price}}元/{{goods.unit}})</span></h4>
@@ -52,4 +53,6 @@
 {% include '_menu.html' %}
 {% endblock %}
 </body>
+
 {% endblock %}
+

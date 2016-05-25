@@ -31,7 +31,7 @@ class TicketWalletMoney(admin.ModelAdmin):
 class ConumerBonus(admin.ModelAdmin):
 	inlines = [RcvBonusInline, SndBonusInline]
 	
-admin.site.register(Consumer, ConumerBonus)	
+#admin.site.register(Consumer, ConumerBonus)	
 admin.site.register(Recharge, RechargeWalletMoney)
 admin.site.register(SndBonus, SndBonusWalletMoney)
 admin.site.register(RcvBonus, RcvBonusWalletMoney)
@@ -40,7 +40,7 @@ admin.site.register(Ticket, TicketWalletMoney)
 
 admin.site.register(AuthCode)
 admin.site.register(DiningTable)
-#admin.site.register(Consumer)
+admin.site.register(Consumer)
 #admin.site.register(Recharge)
 admin.site.register(DiningSession)
 #admin.site.register(Ticket)

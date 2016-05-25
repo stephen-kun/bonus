@@ -6,3 +6,5 @@ uwsgi.log
 weixin/wx_config.py
 00*.py
 /log
+00*init*
+00*auto*

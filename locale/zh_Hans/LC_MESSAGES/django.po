@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-16 01:03+0800\n"
+"POT-Creation-Date: 2016-05-24 09:35+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,8 @@ msgstr "上一级分类"
 msgid "show image"
 msgstr "展示图"
 
-#: .\category\models.py:22 .\topic\forms.py:40 .\topic\models.py:17
+#: .\category\models.py:22 .\topic\forms.py:15 .\topic\forms.py:40
+#: .\topic\models.py:17
 msgid "title"
 msgstr "标题"
 
@@ -83,6 +84,12 @@ msgstr "标记"
 msgid "comments bookmarks"
 msgstr "标记集"
 
+#: .\comment\forms.py:19
+#, fuzzy
+#| msgid "comment count"
+msgid "Comment Content"
+msgstr "贴子内容"
+
 #: .\comment\forms.py:32 .\comment\forms.py:81
 msgid "Write comment..."
 msgstr "发表评论贴子"
@@ -122,16 +129,18 @@ msgstr "论坛评论点赞"
 msgid "This like already exists"
 msgstr "本赞已存在"
 
-#: .\comment\like\models.py:22 .\templates\forum\comment\_render_list.html:60
-#: .\templates\forum\comment\_render_list.html:138
+#: .\comment\like\models.py:22
+#: .\topic\templates\forum\comment\_render_list.html:97
+#: .\topic\templates\forum\comment\_render_list.html:166
 msgid "like"
 msgstr "赞"
 
-#: .\comment\like\models.py:23 .\templates\forum\user\profile_likes.html:5
+#: .\comment\like\models.py:23
+#: .\topic\templates\forum\user\profile_likes.html:5
 msgid "likes"
 msgstr "赞(s)"
 
-#: .\comment\models.py:18 .\comment\models.py:32 .\comment\models.py:47
+#: .\comment\models.py:18 .\comment\models.py:47
 msgid "comment"
 msgstr "贴子"
 
@@ -151,6 +160,10 @@ msgstr "主题已置顶"
 msgid "topic unpinned"
 msgstr "主题已下架"
 
+#: .\comment\models.py:32 .\topic\notification\models.py:19
+msgid "Comment"
+msgstr "贴子"
+
 #: .\comment\models.py:34
 msgid "action"
 msgstr "操作"
@@ -163,7 +176,7 @@ msgstr "修改次数"
 msgid "likes count"
 msgstr "点赞数"
 
-#: .\comment\models.py:48 .\templates\forum\user\profile_comments.html:5
+#: .\comment\models.py:48 .\topic\templates\forum\user\profile_comments.html:5
 msgid "comments"
 msgstr "贴子(s)"
 
@@ -425,7 +438,8 @@ msgstr[1] "%(counter)s结果集"
 msgid "%(full_result_count)s total"
 msgstr "%(full_result_count)s总计"
 
-#: .\flat\templates\admin\search_form.html:9 .\templates\forum\_base.html:40
+#: .\flat\templates\admin\search_form.html:9
+#: .\topic\templates\forum\_base.html:40
 msgid "Show all"
 msgstr "显示全部"
 
@@ -441,713 +455,6 @@ msgstr "WKT调试窗口："
 #: .\flat\templates\gis\openlayers.html:19
 msgid "Debugging window (serialized value)"
 msgstr "调试窗口(序列值)"
-
-#: .\templates\403.html:10
-msgid "You do not have sufficient permissions to access this page"
-msgstr "你无权访问本页面"
-
-#: .\templates\404.html:10
-msgid "what you are looking for is gone..."
-msgstr "抱歉！你要找的不见了......"
-
-#: .\templates\forum\_base.html:38
-#, python-brace-format
-msgid "{user} has mention you on {topic}"
-msgstr "{user}在{topic}上提到你"
-
-#: .\templates\forum\_base.html:39
-#, python-brace-format
-msgid "{user} has commented on {topic}"
-msgstr "{user}已在{topic}跟贴"
-
-#: .\templates\forum\_base.html:41
-msgid "No new notifications, yet"
-msgstr "还没有新的消息"
-
-#: .\templates\forum\_base.html:42
-#: .\templates\forum\topic\notification\_render_list.html:17
-msgid "unread"
-msgstr "未读"
-
-#: .\templates\forum\_header.html:21 .\templates\forum\user\menu.html:14
-msgid "Profile"
-msgstr "个人信息"
-
-#: .\templates\forum\_header.html:22 .\templates\forum\user\_profile.html:47
-#: .\templates\forum\user\menu.html:15
-msgid "Topics"
-msgstr "主题"
-
-#: .\templates\forum\_header.html:23 .\templates\forum\user\menu.html:16
-msgid "Unread topics"
-msgstr "未读主题"
-
-#: .\templates\forum\_header.html:26 .\templates\forum\user\menu.html:20
-msgid "Admin"
-msgstr "管理"
-
-#: .\templates\forum\_header.html:29 .\templates\forum\user\auth\logout.html:5
-#: .\templates\forum\user\auth\logout.html:15
-#: .\templates\forum\user\menu.html:23
-msgid "Log out"
-msgstr "注销"
-
-#: .\templates\forum\_header.html:42
-msgid "Log in"
-msgstr "登录"
-
-#: .\templates\forum\comment\_editor.html:6 .\templates\joyforum\_editor.html:6
-msgid "Bold"
-msgstr "加粗"
-
-#: .\templates\forum\comment\_editor.html:7 .\templates\joyforum\_editor.html:7
-msgid "Italic"
-msgstr "斜体"
-
-#: .\templates\forum\comment\_editor.html:8
-#: .\templates\forum\user\admin\_tabs.html:4
-#: .\templates\joyforum\_editor.html:8
-msgid "List"
-msgstr "列表"
-
-#: .\templates\forum\comment\_editor.html:9 .\templates\joyforum\_editor.html:9
-msgid "URL"
-msgstr "URL"
-
-#: .\templates\forum\comment\_editor.html:10
-#: .\templates\joyforum\_editor.html:10
-msgid "Image"
-msgstr "图片"
-
-#: .\templates\forum\comment\_editor.html:11
-#: .\templates\joyforum\_editor.html:11
-msgid "Poll"
-msgstr "投票"
-
-#: .\templates\forum\comment\_editor.html:12
-#: .\templates\joyforum\_editor.html:12
-msgid "Preview"
-msgstr "预览"
-
-#: .\templates\forum\comment\_editor.html:32
-#: .\templates\joyforum\_editor.html:33 .\templates\joyforum\comment.html:163
-#: .\templates\joyforum\index_newtopic.html:171
-#, python-brace-format
-msgid "uploading {image_name}"
-msgstr "上传{image_name}"
-
-#: .\templates\forum\comment\_editor.html:35
-#: .\templates\joyforum\_editor.html:36
-msgid "bolded text"
-msgstr "加粗文本"
-
-#: .\templates\forum\comment\_editor.html:36
-#: .\templates\joyforum\_editor.html:37
-msgid "italicised text"
-msgstr "斜体文本"
-
-#: .\templates\forum\comment\_editor.html:37
-#: .\templates\joyforum\_editor.html:38
-msgid "list item"
-msgstr "列表项"
-
-#: .\templates\forum\comment\_editor.html:38
-#: .\templates\joyforum\_editor.html:39
-msgid "link text"
-msgstr "链接文本"
-
-#: .\templates\forum\comment\_editor.html:39
-#: .\templates\joyforum\_editor.html:40
-msgid "link url"
-msgstr "链接url"
-
-#: .\templates\forum\comment\_editor.html:40
-#: .\templates\joyforum\_editor.html:41
-msgid "image text"
-msgstr "图片文本"
-
-#: .\templates\forum\comment\_editor.html:41
-#: .\templates\joyforum\_editor.html:42
-msgid "image url"
-msgstr "图片url"
-
-#: .\templates\forum\comment\_editor.html:42
-#: .\templates\joyforum\_editor.html:43
-msgid "Title"
-msgstr "标题"
-
-#: .\templates\forum\comment\_editor.html:43
-#: .\templates\joyforum\_editor.html:44
-msgid "Description"
-msgstr "简述"
-
-#: .\templates\forum\comment\_form.html:17
-#: .\templates\forum\comment\publish.html:18
-#: .\templates\forum\comment\update.html:18
-#: .\templates\forum\topic\publish.html:37
-msgid "Publish"
-msgstr "发布"
-
-#: .\templates\forum\comment\_render_list.html:47
-msgid "delete"
-msgstr "删除"
-
-#: .\templates\forum\comment\_render_list.html:53
-msgid "share"
-msgstr "分享"
-
-#: .\templates\forum\comment\_render_list.html:57
-#: .\templates\forum\comment\_render_list.html:139
-msgid "remove like"
-msgstr "去赞"
-
-#: .\templates\forum\comment\_render_list.html:67
-#: .\templates\forum\topic\detail.html:30
-#: .\templates\forum\topic\detail.html:32
-#: .\templates\forum\user\admin\_list.html:9
-msgid "edit"
-msgstr "编辑"
-
-#: .\templates\forum\comment\_render_list.html:71
-msgid "quote"
-msgstr "引用"
-
-#: .\templates\forum\comment\_render_list.html:72
-msgid "reply"
-msgstr "回复"
-
-#: .\templates\forum\comment\_render_list.html:79
-msgid "close"
-msgstr "关闭"
-
-#: .\templates\forum\comment\_render_list.html:110
-msgid "This comment was deleted"
-msgstr "此贴已删除"
-
-#: .\templates\forum\comment\_render_list.html:118
-msgid "undelete"
-msgstr "恢复"
-
-#: .\templates\forum\comment\history\detail.html:5
-#: .\templates\forum\comment\history\detail.html:11
-msgid "Comment history"
-msgstr "跟贴历史"
-
-#: .\templates\forum\comment\like\create.html:5
-#: .\templates\forum\comment\like\create.html:14
-msgid "Like"
-msgstr "赞"
-
-#: .\templates\forum\comment\like\create.html:9
-#, python-format
-msgid "Like %(username)s's comment"
-msgstr "赞%(username)s的贴子"
-
-#: .\templates\forum\comment\like\delete.html:5
-#: .\templates\forum\comment\like\delete.html:13
-msgid "Remove like"
-msgstr "去赞"
-
-#: .\templates\forum\comment\like\delete.html:9
-#, python-format
-msgid "Remove %(username)s's comment like"
-msgstr "去掉%(username)s的点赞"
-
-#: .\templates\forum\comment\moderate.html:5
-#: .\templates\forum\comment\moderate.html:9
-msgid "Moderate comment"
-msgstr "审批贴子"
-
-#: .\templates\forum\comment\moderate.html:14
-#: .\templates\forum\topic\moderate.html:14
-msgid "Apply"
-msgstr "应用"
-
-#: .\templates\forum\comment\publish.html:5
-msgid "Publish comment"
-msgstr "发布贴子"
-
-#: .\templates\forum\comment\publish.html:9
-msgid "Publishing comment on"
-msgstr "正在发布贴子"
-
-#: .\templates\forum\comment\update.html:5
-#: .\templates\forum\comment\update.html:9
-msgid "Edit comment"
-msgstr "编辑贴子"
-
-#: .\templates\forum\topic\_render_list.html:38
-#: .\templates\joyforum\index.html:155
-msgid "There are no topics here, yet"
-msgstr "还没有主题"
-
-#: .\templates\forum\topic\_top_bar.html:8
-#: .\templates\forum\topic\_top_bar.html:19
-msgid "All Categories"
-msgstr "所有分类"
-
-#: .\templates\forum\topic\_top_bar.html:17
-msgid "All Subcategories"
-msgstr "所有子分类"
-
-#: .\templates\forum\topic\_top_bar.html:27
-#: .\templates\forum\topic\_top_bar.html:29
-msgid "Create Topic"
-msgstr "新建主题"
-
-#: .\templates\forum\topic\active.html:5
-msgid "Latest active topics"
-msgstr "近期活动主题"
-
-#: .\templates\forum\topic\detail.html:10
-msgid "Main"
-msgstr "首页"
-
-#: .\templates\forum\topic\detail.html:42
-msgid "Select comments to move"
-msgstr "选择要移动的贴子"
-
-#: .\templates\forum\topic\detail.html:45
-msgid "Undelete topic"
-msgstr "恢复主题"
-
-#: .\templates\forum\topic\detail.html:47
-msgid "Delete topic"
-msgstr "删除主题"
-
-#: .\templates\forum\topic\detail.html:51
-msgid "Open topic"
-msgstr "打开主题"
-
-#: .\templates\forum\topic\detail.html:53
-msgid "Close topic"
-msgstr "关闭主题"
-
-#: .\templates\forum\topic\detail.html:57
-msgid "Unpin topic"
-msgstr "下架主题"
-
-#: .\templates\forum\topic\detail.html:59
-msgid "Pin topic"
-msgstr "置顶主题"
-
-#: .\templates\forum\topic\detail.html:63
-msgid "Unpin topic globally"
-msgstr "下架全局主题"
-
-#: .\templates\forum\topic\detail.html:65
-msgid "Pin topic globally"
-msgstr "置顶全局主题"
-
-#: .\templates\forum\topic\detail.html:74
-msgid "Topic id"
-msgstr "主题id"
-
-#: .\templates\forum\topic\detail.html:76
-msgid "Move"
-msgstr "移动"
-
-#: .\templates\forum\topic\detail.html:90
-msgid "Reply"
-msgstr "回复"
-
-#: .\templates\forum\topic\moderate.html:5
-#: .\templates\forum\topic\moderate.html:9
-msgid "Moderate topic"
-msgstr "审批主题"
-
-#: .\templates\forum\topic\notification\_form.html:12
-msgid "Unnotify Me"
-msgstr "不要提醒我"
-
-#: .\templates\forum\topic\notification\_form.html:14
-msgid "Notify Me"
-msgstr "提醒我"
-
-#: .\templates\forum\topic\notification\_render_list.html:9
-#, python-format
-msgid ""
-"<a href=\"%(url_profile)s\">%(username)s</a> has commented on <a href="
-"\"%(url_topic)s\">%(topic_title)s</a>"
-msgstr ""
-"<a href=\"%(url_profile)s\">%(username)s</a> 已跟贴 <a href=\"%(url_topic)s"
-"\">%(topic_title)s</a>"
-
-#: .\templates\forum\topic\notification\_render_list.html:11
-#, python-format
-msgid ""
-"<a href=\"%(url_profile)s\">%(username)s</a> has mention you on <a href="
-"\"%(url_topic)s\">%(topic_title)s</a>"
-msgstr ""
-"<a href=\"%(url_profile)s\">%(username)s</a> 提到你在 <a href=\"%(url_topic)s"
-"\">%(topic_title)s</a>"
-
-#: .\templates\forum\topic\notification\_render_list.html:21
-#: .\templates\joyforum\index_notification.html:123
-msgid "There are no notifications, yet"
-msgstr "还没有消息"
-
-#: .\templates\forum\topic\notification\index.html:5
-#: .\templates\forum\topic\notification\index.html:9
-#: .\templates\joyforum\index_notification.html:58
-msgid "Notifications"
-msgstr "消息"
-
-#: .\templates\forum\topic\notification\index_unread.html:5
-#: .\templates\forum\topic\notification\index_unread.html:9
-msgid "Unread notifications"
-msgstr "未读消息"
-
-#: .\templates\forum\topic\notification\index_unread.html:15
-msgid "There are no new notifications"
-msgstr "没有新的消息"
-
-#: .\templates\forum\topic\notification\index_unread.html:22
-#: .\templates\forum\topic\unread\index.html:15
-msgid "Next"
-msgstr "下一步"
-
-#: .\templates\forum\topic\publish.html:5
-#: .\templates\forum\topic\publish.html:21
-msgid "Publish topic"
-msgstr "发布主题"
-
-#: .\templates\forum\topic\unread\index.html:5
-#: .\templates\forum\topic\unread\index.html:9
-msgid "Unread topics replies"
-msgstr "未读主题跟贴"
-
-#: .\templates\forum\topic\update.html:5 .\templates\forum\topic\update.html:9
-msgid "Update topic"
-msgstr "更新主题"
-
-#: .\templates\forum\topic\update.html:15
-msgid "Update"
-msgstr "更新"
-
-#: .\templates\forum\user\_profile.html:12
-msgid "Joined at"
-msgstr "加入于"
-
-#: .\templates\forum\user\_profile.html:16
-msgid "Sen"
-msgstr "最近访问于"
-
-#: .\templates\forum\user\_profile.html:22
-msgid "Last IP"
-msgstr "最近访问IP"
-
-#: .\templates\forum\user\_profile.html:31
-#: .\templates\forum\user\profile_update.html:5
-#: .\templates\forum\user\profile_update.html:9
-msgid "Preferences"
-msgstr "选项"
-
-#: .\templates\forum\user\_profile.html:46
-msgid "Comments"
-msgstr "贴子"
-
-#: .\templates\forum\user\_profile.html:48
-msgid "Likes"
-msgstr "获赞"
-
-#: .\templates\forum\user\_render_comments_list.html:36
-msgid "There are no comments here, yet"
-msgstr "还没有贴子"
-
-#: .\templates\forum\user\activation_email.html:2
-#, python-format
-msgid "You're receiving this email because you registered at %(site_name)s."
-msgstr "您接到本邮件，是因为您在%(site_name)s上注册过。"
-
-#: .\templates\forum\user\activation_email.html:4
-msgid "Please go to the following link to activate your account:"
-msgstr "请点下面的链接来激活您的帐号："
-
-#: .\templates\forum\user\activation_email.html:8
-#: .\templates\forum\user\auth\password_reset_email.html:9
-#: .\templates\forum\user\email_change_email.html:8
-msgid "Thanks for using our site!"
-msgstr "谢谢访问本站！"
-
-#: .\templates\forum\user\admin\_tabs.html:5
-#: .\templates\forum\user\admin\admins.html:5
-#: .\templates\forum\user\admin\admins.html:11
-msgid "Admins"
-msgstr "管理"
-
-#: .\templates\forum\user\admin\_tabs.html:6
-#: .\templates\forum\user\admin\mods.html:5
-#: .\templates\forum\user\admin\mods.html:11
-msgid "Mods"
-msgstr "审批"
-
-#: .\templates\forum\user\admin\_tabs.html:7
-msgid "Unactive"
-msgstr "未激活"
-
-#: .\templates\forum\user\admin\edit.html:5
-#: .\templates\forum\user\admin\edit.html:9
-msgid "Edit user"
-msgstr "编辑用户"
-
-#: .\templates\forum\user\admin\edit.html:16
-#: .\templates\forum\user\auth\password_reset_confirm.html:16
-#: .\templates\forum\user\profile_update.html:27
-msgid "Save"
-msgstr "保存"
-
-#: .\templates\forum\user\admin\index.html:5
-#: .\templates\forum\user\admin\index.html:11
-msgid "User list"
-msgstr "用户列表"
-
-#: .\templates\forum\user\admin\unactive.html:5
-#: .\templates\forum\user\admin\unactive.html:11
-msgid "Unactive Users"
-msgstr "未激活的用户"
-
-#: .\templates\forum\user\auth\activation_resend.html:5
-#: .\templates\forum\user\auth\activation_resend.html:9
-#: .\templates\forum\user\auth\login.html:23
-msgid "Resend activation email"
-msgstr "重发激活邮件"
-
-#: .\templates\forum\user\auth\activation_resend.html:16
-msgid "Resend email"
-msgstr "重发邮件"
-
-#: .\templates\forum\user\auth\login.html:5
-#: .\templates\forum\user\auth\login.html:9
-#: .\templates\forum\user\auth\login.html:16
-msgid "Login"
-msgstr "登录"
-
-#: .\templates\forum\user\auth\login.html:21
-msgid "Create an account"
-msgstr "创建帐号"
-
-#: .\templates\forum\user\auth\login.html:22
-msgid "I don't know my password"
-msgstr "忘记密码"
-
-#: .\templates\forum\user\auth\logout.html:9
-msgid "Are you sure you want to log out?"
-msgstr "您确定注销？"
-
-#: .\templates\forum\user\auth\password_reset_complete.html:7
-#: .\templates\forum\user\auth\password_reset_complete.html:11
-msgid "Password change successful"
-msgstr "密码修改成功"
-
-#: .\templates\forum\user\auth\password_reset_complete.html:13
-msgid "Continue to login"
-msgstr "继续登录"
-
-#: .\templates\forum\user\auth\password_reset_confirm.html:5
-msgid "Password reset confirmation"
-msgstr "密码重置确认"
-
-#: .\templates\forum\user\auth\password_reset_confirm.html:11
-msgid "Enter new password"
-msgstr "输入新密码"
-
-#: .\templates\forum\user\auth\password_reset_confirm.html:21
-msgid "Password reset unsuccessful"
-msgstr "密码重置成功"
-
-#: .\templates\forum\user\auth\password_reset_confirm.html:23
-msgid ""
-"The password reset link was invalid, possibly because it has already been "
-"used. Please request a new password reset."
-msgstr "密码重置链接已失效，可能已被使用，请重新申请密码重置。"
-
-#: .\templates\forum\user\auth\password_reset_done.html:5
-#: .\templates\forum\user\auth\password_reset_done.html:9
-msgid "Password reset successful"
-msgstr "密码重置成功"
-
-#: .\templates\forum\user\auth\password_reset_done.html:11
-msgid ""
-"We've emailed you instructions for setting your password. You should be "
-"receiving them shortly."
-msgstr "我们给您发一份邮件，以设置您的密码。您可能很快会收到。"
-
-#: .\templates\forum\user\auth\password_reset_done.html:12
-#: .\user\auth\views.py:113
-msgid ""
-"If you don't receive an email, please make sure you've entered the address "
-"you registered with, and check your spam folder."
-msgstr "如果您没有收到邮件，请确保您的注册地址正确，并检查一下邮件垃圾箱。"
-
-#: .\templates\forum\user\auth\password_reset_email.html:2
-#, python-format
-msgid ""
-"You're receiving this email because you requested a password reset for your "
-"user account at %(site_name)s."
-msgstr "您接到本邮件，是因为您在%(site_name)s上申请过密码重置。"
-
-#: .\templates\forum\user\auth\password_reset_email.html:4
-msgid "Please go to the following page and choose a new password:"
-msgstr "请进入下面的页面并选择一个新密码："
-
-#: .\templates\forum\user\auth\password_reset_email.html:11
-#, python-format
-msgid "The %(site_name)s team"
-msgstr "%(site_name)s团队"
-
-#: .\templates\forum\user\auth\password_reset_form.html:5
-#: .\templates\forum\user\auth\password_reset_form.html:9
-msgid "Password reset"
-msgstr "密码重置"
-
-#: .\templates\forum\user\auth\password_reset_form.html:15
-msgid "Reset my password"
-msgstr "重置我的密码"
-
-#: .\templates\forum\user\auth\password_reset_subject.txt:2
-#, python-format
-msgid "Password reset on %(site_name)s"
-msgstr "在%(site_name)s上重置密码"
-
-#: .\templates\forum\user\auth\register.html:5
-#: .\templates\forum\user\auth\register.html:22
-#: .\templates\forum\user\auth\register.html:28
-msgid "Register"
-msgstr "注册"
-
-#: .\templates\forum\user\email_change_email.html:2
-#, python-format
-msgid ""
-"You're receiving this because you changed your user email at %(site_name)s."
-msgstr "您收到本邮件，是因为您在%(site_name)s修改您的邮箱。"
-
-#: .\templates\forum\user\email_change_email.html:4
-msgid "Please go to the following link to confirm your email change:"
-msgstr "请进入到下面的链接以确认您的邮箱变更："
-
-#: .\templates\forum\user\menu.html:7
-msgid "User menu"
-msgstr "用户菜单"
-
-#: .\templates\forum\user\menu.html:11
-msgid "Menu"
-msgstr "菜单"
-
-#: .\templates\forum\user\menu.html:17
-msgid "Private topics"
-msgstr "私有主题"
-
-#: .\templates\forum\user\notification_email.html:2
-#, python-format
-msgid "You have a new notification at %(site_name)s."
-msgstr "您在%(site_name)s上新的消息。"
-
-#: .\templates\forum\user\notification_email.html:4
-msgid "Please go to the following link to read the comment:"
-msgstr "请点下面的链接阅读跟贴："
-
-#: .\templates\forum\user\notification_email.html:8
-msgid ""
-"If you don't want to keep receiving notifications, you can deactivate them "
-"on your profile preferences."
-msgstr "如果您不想接收消息，您可以在账号选项中去掉它。"
-
-#: .\templates\forum\user\profile_email_change.html:5
-#: .\templates\forum\user\profile_email_change.html:9 .\user\tests.py:421
-#: .\user\tests.py:680 .\user\utils\email.py:58
-msgid "Email change"
-msgstr "邮箱变更"
-
-#: .\templates\forum\user\profile_email_change.html:15
-msgid "Change my email"
-msgstr "更改我的邮箱"
-
-#: .\templates\forum\user\profile_password_change.html:5
-#: .\templates\forum\user\profile_password_change.html:9
-msgid "Password change"
-msgstr "密码变更"
-
-#: .\templates\forum\user\profile_password_change.html:15
-msgid "Change my password"
-msgstr "更改我的密码"
-
-#: .\templates\forum\user\profile_topics.html:5 .\topic\models.py:37
-msgid "topics"
-msgstr "主题"
-
-#: .\templates\forum\user\profile_update.html:12 .\user\auth\forms.py:125
-#: .\user\forms.py:43 .\user\forms.py:48
-msgid "Email"
-msgstr "邮箱"
-
-#: .\templates\forum\user\profile_update.html:15 .\user\auth\forms.py:25
-#: .\user\forms.py:49
-msgid "Password"
-msgstr "密码"
-
-#: .\templates\forum\user\profile_update.html:16
-msgid "Change password"
-msgstr "更改密码"
-
-#: .\templates\forum\user\profile_update.html:18
-msgid "Avatar"
-msgstr "头像"
-
-#: .\templates\forum\user\profile_update.html:19
-msgid "Change avatar"
-msgstr "更改头像"
-
-#: .\templates\forum\utils\paginator\_paginator.html:4
-#, python-format
-msgid "Page %(number)s of %(num_pages)s"
-msgstr "第%(number)s页，共%(num_pages)s页"
-
-#: .\templates\forum\utils\paginator\_paginator.html:8
-msgid "Last"
-msgstr "末页"
-
-#: .\templates\forum\utils\paginator\_paginator.html:10
-msgid "First"
-msgstr "首页"
-
-#: .\templates\forum\utils\paginator\_yt_paginator.html:5
-msgid "Page 1 of 1"
-msgstr "第1页，共1页"
-
-#: .\templates\joyforum\index_notification.html:109
-#: .\templates\joyforum\snippet\notification.html:38
-#, fuzzy, python-format
-#| msgid ""
-#| "<a href=\"%(url_profile)s\">%(username)s</a> has commented on <a href="
-#| "\"%(url_topic)s\">%(topic_title)s</a>"
-msgid ""
-"<span href=\"%(url_profile)s\">%(username)s</span> has commented on <a href="
-"\"%(url_topic)s\">%(topic_title)s</a>"
-msgstr ""
-"<span href=\"%(url_profile)s\">%(username)s</span> 已跟贴 <a href=\"%(url_topic)s"
-"\">%(topic_title)s</a>"
-
-#: .\templates\joyforum\index_notification.html:113
-#: .\templates\joyforum\snippet\notification.html:42
-#, fuzzy, python-format
-#| msgid ""
-#| "<a href=\"%(url_profile)s\">%(username)s</a> has mention you on <a href="
-#| "\"%(url_topic)s\">%(topic_title)s</a>"
-msgid ""
-"<span href=\"%(url_profile)s\">%(username)s</span> has mention you on <a "
-"href=\"%(url_topic)s\">%(topic_title)s</a>"
-msgstr ""
-"<span href=\"%(url_profile)s\">%(username)s</span> 提到你在 <a href=\"%(url_topic)s"
-"\">%(topic_title)s</a>"
-
-#: .\topic\forms.py:27
-msgid "Category"
-msgstr "分类"
-
-#: .\topic\forms.py:28
-msgid "Chose a category"
-msgstr "选择分类"
 
 #: .\topic\forms.py:40
 msgid "input topic title here."
@@ -1201,12 +508,16 @@ msgstr "全局置顶"
 msgid "views count"
 msgstr "访问数"
 
-#: .\topic\models.py:30 .\user\models.py:62
+#: .\topic\models.py:30 .\weixin\models.py:180
 msgid "comment count"
 msgstr "贴子数"
 
 #: .\topic\models.py:36
 msgid "topic"
+msgstr "主题"
+
+#: .\topic\models.py:37 .\topic\templates\forum\user\profile_topics.html:5
+msgid "topics"
 msgstr "主题"
 
 #: .\topic\models.py:101
@@ -1243,10 +554,6 @@ msgstr "未定义"
 msgid "Mention"
 msgstr "提到"
 
-#: .\topic\notification\models.py:19
-msgid "Comment"
-msgstr "贴子"
-
 #: .\topic\notification\models.py:39
 msgid "topic notification"
 msgstr "主题消息"
@@ -1254,6 +561,14 @@ msgstr "主题消息"
 #: .\topic\notification\models.py:40
 msgid "topics notification"
 msgstr "主题(s)消息"
+
+#: .\topic\templates\403.html:10
+msgid "You do not have sufficient permissions to access this page"
+msgstr "你无权访问本页面"
+
+#: .\topic\templates\404.html:10
+msgid "what you are looking for is gone..."
+msgstr "抱歉！你要找的不见了......"
 
 #: .\topic\templates\admin\topic\change_form.html:7
 #: .\topic\templates\admin\topic\manage_form.html:10
@@ -1263,6 +578,643 @@ msgstr "管理"
 #: .\topic\templates\admin\topic\manage_form.html:7
 msgid "Home"
 msgstr "首页"
+
+#: .\topic\templates\forum\_base.html:38
+#, python-brace-format
+msgid "{user} has mention you on {topic}"
+msgstr "{user}在{topic}上提到你"
+
+#: .\topic\templates\forum\_base.html:39
+#, python-brace-format
+msgid "{user} has commented on {topic}"
+msgstr "{user}已在{topic}跟贴"
+
+#: .\topic\templates\forum\_base.html:41
+msgid "No new notifications, yet"
+msgstr "还没有新的消息"
+
+#: .\topic\templates\forum\_base.html:42
+#: .\topic\templates\forum\topic\notification\_render_list.html:17
+msgid "unread"
+msgstr "未读"
+
+#: .\topic\templates\forum\_header.html:21
+#: .\topic\templates\forum\user\menu.html:14
+msgid "Profile"
+msgstr "个人信息"
+
+#: .\topic\templates\forum\_header.html:22
+#: .\topic\templates\forum\user\_profile.html:47
+#: .\topic\templates\forum\user\menu.html:15
+msgid "Topics"
+msgstr "主题"
+
+#: .\topic\templates\forum\_header.html:23
+#: .\topic\templates\forum\user\menu.html:16
+msgid "Unread topics"
+msgstr "未读主题"
+
+#: .\topic\templates\forum\_header.html:26
+#: .\topic\templates\forum\user\menu.html:20
+msgid "Admin"
+msgstr "管理"
+
+#: .\topic\templates\forum\_header.html:29
+#: .\topic\templates\forum\user\auth\logout.html:5
+#: .\topic\templates\forum\user\auth\logout.html:15
+#: .\topic\templates\forum\user\menu.html:23
+msgid "Log out"
+msgstr "注销"
+
+#: .\topic\templates\forum\_header.html:42
+msgid "Log in"
+msgstr "登录"
+
+#: .\topic\templates\forum\comment\_editor.html:6
+#: .\topic\templates\joyforum\_editor.html:6
+msgid "Bold"
+msgstr "加粗"
+
+#: .\topic\templates\forum\comment\_editor.html:7
+#: .\topic\templates\joyforum\_editor.html:7
+msgid "Italic"
+msgstr "斜体"
+
+#: .\topic\templates\forum\comment\_editor.html:8
+#: .\topic\templates\forum\user\admin\_tabs.html:4
+#: .\topic\templates\joyforum\_editor.html:8
+msgid "List"
+msgstr "列表"
+
+#: .\topic\templates\forum\comment\_editor.html:9
+#: .\topic\templates\joyforum\_editor.html:9
+msgid "URL"
+msgstr "URL"
+
+#: .\topic\templates\forum\comment\_editor.html:10
+#: .\topic\templates\joyforum\_editor.html:10
+msgid "Image"
+msgstr "图片"
+
+#: .\topic\templates\forum\comment\_editor.html:11
+#: .\topic\templates\joyforum\_editor.html:12
+msgid "Preview"
+msgstr "预览"
+
+#: .\topic\templates\forum\comment\_editor.html:31
+#: .\topic\templates\joyforum\_editor.html:33
+#: .\topic\templates\joyforum\comment.html:248
+#: .\topic\templates\joyforum\index_newtopic.html:267
+#, python-brace-format
+msgid "uploading {image_name}"
+msgstr "上传{image_name}"
+
+#: .\topic\templates\forum\comment\_editor.html:34
+#: .\topic\templates\joyforum\_editor.html:36
+msgid "bolded text"
+msgstr "加粗文本"
+
+#: .\topic\templates\forum\comment\_editor.html:35
+#: .\topic\templates\joyforum\_editor.html:37
+msgid "italicised text"
+msgstr "斜体文本"
+
+#: .\topic\templates\forum\comment\_editor.html:36
+#: .\topic\templates\joyforum\_editor.html:38
+msgid "list item"
+msgstr "列表项"
+
+#: .\topic\templates\forum\comment\_editor.html:37
+#: .\topic\templates\joyforum\_editor.html:39
+msgid "link text"
+msgstr "链接文本"
+
+#: .\topic\templates\forum\comment\_editor.html:38
+#: .\topic\templates\joyforum\_editor.html:40
+msgid "link url"
+msgstr "链接url"
+
+#: .\topic\templates\forum\comment\_editor.html:39
+#: .\topic\templates\joyforum\_editor.html:41
+msgid "image text"
+msgstr "图片文本"
+
+#: .\topic\templates\forum\comment\_editor.html:40
+#: .\topic\templates\joyforum\_editor.html:42
+msgid "image url"
+msgstr "图片url"
+
+#: .\topic\templates\forum\comment\_editor.html:41
+#: .\topic\templates\joyforum\_editor.html:43
+msgid "Title"
+msgstr "标题"
+
+#: .\topic\templates\forum\comment\_editor.html:42
+#: .\topic\templates\joyforum\_editor.html:44
+msgid "Description"
+msgstr "简述"
+
+#: .\topic\templates\forum\comment\_form.html:18
+#: .\topic\templates\forum\comment\publish.html:18
+#: .\topic\templates\forum\comment\update.html:18
+#: .\topic\templates\forum\topic\publish.html:37
+msgid "Publish"
+msgstr "发布"
+
+#: .\topic\templates\forum\comment\_render_list.html:77
+msgid "delete"
+msgstr "删除"
+
+#: .\topic\templates\forum\comment\_render_list.html:90
+#: .\topic\templates\forum\comment\_render_list.html:167
+msgid "remove like"
+msgstr "去赞"
+
+#: .\topic\templates\forum\comment\_render_list.html:104
+#: .\topic\templates\forum\user\admin\_list.html:9
+msgid "edit"
+msgstr "编辑"
+
+#: .\topic\templates\forum\comment\_render_list.html:126
+msgid "This comment was deleted"
+msgstr "此贴已删除"
+
+#: .\topic\templates\forum\comment\_render_list.html:143
+msgid "undelete"
+msgstr "恢复"
+
+#: .\topic\templates\forum\comment\history\detail.html:5
+#: .\topic\templates\forum\comment\history\detail.html:11
+msgid "Comment history"
+msgstr "跟贴历史"
+
+#: .\topic\templates\forum\comment\like\create.html:5
+#: .\topic\templates\forum\comment\like\create.html:14
+msgid "Like"
+msgstr "赞"
+
+#: .\topic\templates\forum\comment\like\create.html:9
+#, python-format
+msgid "Like %(username)s's comment"
+msgstr "赞%(username)s的贴子"
+
+#: .\topic\templates\forum\comment\like\delete.html:5
+#: .\topic\templates\forum\comment\like\delete.html:13
+msgid "Remove like"
+msgstr "去赞"
+
+#: .\topic\templates\forum\comment\like\delete.html:9
+#, python-format
+msgid "Remove %(username)s's comment like"
+msgstr "去掉%(username)s的点赞"
+
+#: .\topic\templates\forum\comment\moderate.html:5
+#: .\topic\templates\forum\comment\moderate.html:9
+msgid "Moderate comment"
+msgstr "审批贴子"
+
+#: .\topic\templates\forum\comment\moderate.html:14
+#: .\topic\templates\forum\topic\moderate.html:14
+msgid "Apply"
+msgstr "应用"
+
+#: .\topic\templates\forum\comment\publish.html:5
+msgid "Publish comment"
+msgstr "发布贴子"
+
+#: .\topic\templates\forum\comment\publish.html:9
+msgid "Publishing comment on"
+msgstr "正在发布贴子"
+
+#: .\topic\templates\forum\comment\update.html:5
+#: .\topic\templates\forum\comment\update.html:9
+msgid "Edit comment"
+msgstr "编辑贴子"
+
+#: .\topic\templates\forum\topic\_render_list.html:42
+msgid "There are no topics here, yet"
+msgstr "还没有主题"
+
+#: .\topic\templates\forum\topic\_top_bar.html:27
+#: .\topic\templates\forum\topic\_top_bar.html:29
+msgid "Create Topic"
+msgstr "新建主题"
+
+#: .\topic\templates\forum\topic\active.html:5
+msgid "Latest active topics"
+msgstr "近期活动主题"
+
+#: .\topic\templates\forum\topic\detail.html:44
+msgid "Undelete topic"
+msgstr "恢复主题"
+
+#: .\topic\templates\forum\topic\detail.html:46
+msgid "Delete topic"
+msgstr "删除主题"
+
+#: .\topic\templates\forum\topic\moderate.html:5
+#: .\topic\templates\forum\topic\moderate.html:9
+msgid "Moderate topic"
+msgstr "审批主题"
+
+#: .\topic\templates\forum\topic\notification\_form.html:12
+msgid "Unnotify Me"
+msgstr "不要提醒我"
+
+#: .\topic\templates\forum\topic\notification\_form.html:14
+msgid "Notify Me"
+msgstr "提醒我"
+
+#: .\topic\templates\forum\topic\notification\_render_list.html:9
+#, python-format
+msgid ""
+"<a href=\"%(url_profile)s\">%(username)s</a> has commented on <a href="
+"\"%(url_topic)s\">%(topic_title)s</a>"
+msgstr ""
+"<a href=\"%(url_profile)s\">%(username)s</a> 已跟贴 <a href=\"%(url_topic)s"
+"\">%(topic_title)s</a>"
+
+#: .\topic\templates\forum\topic\notification\_render_list.html:11
+#, python-format
+msgid ""
+"<a href=\"%(url_profile)s\">%(username)s</a> has mention you on <a href="
+"\"%(url_topic)s\">%(topic_title)s</a>"
+msgstr ""
+"<a href=\"%(url_profile)s\">%(username)s</a> 提到你在 <a href=\"%(url_topic)s"
+"\">%(topic_title)s</a>"
+
+#: .\topic\templates\forum\topic\notification\_render_list.html:21
+msgid "There are no notifications, yet"
+msgstr "还没有消息"
+
+#: .\topic\templates\forum\topic\notification\index.html:5
+#: .\topic\templates\forum\topic\notification\index.html:9
+#: .\topic\templates\joyforum\index_notification.html:58
+msgid "Notifications"
+msgstr "消息"
+
+#: .\topic\templates\forum\topic\notification\index_unread.html:5
+#: .\topic\templates\forum\topic\notification\index_unread.html:9
+msgid "Unread notifications"
+msgstr "未读消息"
+
+#: .\topic\templates\forum\topic\notification\index_unread.html:15
+msgid "There are no new notifications"
+msgstr "没有新的消息"
+
+#: .\topic\templates\forum\topic\notification\index_unread.html:22
+#: .\topic\templates\forum\topic\unread\index.html:15
+msgid "Next"
+msgstr "下一步"
+
+#: .\topic\templates\forum\topic\publish.html:5
+#: .\topic\templates\forum\topic\publish.html:21
+msgid "Publish topic"
+msgstr "发布主题"
+
+#: .\topic\templates\forum\topic\unread\index.html:5
+#: .\topic\templates\forum\topic\unread\index.html:9
+msgid "Unread topics replies"
+msgstr "未读主题跟贴"
+
+#: .\topic\templates\forum\topic\update.html:5
+#: .\topic\templates\forum\topic\update.html:9
+msgid "Update topic"
+msgstr "更新主题"
+
+#: .\topic\templates\forum\topic\update.html:15
+msgid "Update"
+msgstr "更新"
+
+#: .\topic\templates\forum\user\_profile.html:12
+msgid "Joined at"
+msgstr "加入于"
+
+#: .\topic\templates\forum\user\_profile.html:16
+msgid "Sen"
+msgstr "最近访问于"
+
+#: .\topic\templates\forum\user\_profile.html:22
+msgid "Last IP"
+msgstr "最近访问IP"
+
+#: .\topic\templates\forum\user\_profile.html:31
+#: .\topic\templates\forum\user\profile_update.html:5
+#: .\topic\templates\forum\user\profile_update.html:9
+msgid "Preferences"
+msgstr "选项"
+
+#: .\topic\templates\forum\user\_profile.html:46
+msgid "Comments"
+msgstr "贴子"
+
+#: .\topic\templates\forum\user\_profile.html:48
+msgid "Likes"
+msgstr "获赞"
+
+#: .\topic\templates\forum\user\_render_comments_list.html:36
+msgid "There are no comments here, yet"
+msgstr "还没有贴子"
+
+#: .\topic\templates\forum\user\activation_email.html:2
+#, python-format
+msgid "You're receiving this email because you registered at %(site_name)s."
+msgstr "您接到本邮件，是因为您在%(site_name)s上注册过。"
+
+#: .\topic\templates\forum\user\activation_email.html:4
+msgid "Please go to the following link to activate your account:"
+msgstr "请点下面的链接来激活您的帐号："
+
+#: .\topic\templates\forum\user\activation_email.html:8
+#: .\topic\templates\forum\user\auth\password_reset_email.html:9
+#: .\topic\templates\forum\user\email_change_email.html:8
+msgid "Thanks for using our site!"
+msgstr "谢谢访问本站！"
+
+#: .\topic\templates\forum\user\admin\_tabs.html:5
+#: .\topic\templates\forum\user\admin\admins.html:5
+#: .\topic\templates\forum\user\admin\admins.html:11
+msgid "Admins"
+msgstr "管理"
+
+#: .\topic\templates\forum\user\admin\_tabs.html:6
+#: .\topic\templates\forum\user\admin\mods.html:5
+#: .\topic\templates\forum\user\admin\mods.html:11
+msgid "Mods"
+msgstr "审批"
+
+#: .\topic\templates\forum\user\admin\_tabs.html:7
+msgid "Unactive"
+msgstr "未激活"
+
+#: .\topic\templates\forum\user\admin\edit.html:5
+#: .\topic\templates\forum\user\admin\edit.html:9
+msgid "Edit user"
+msgstr "编辑用户"
+
+#: .\topic\templates\forum\user\admin\edit.html:16
+#: .\topic\templates\forum\user\auth\password_reset_confirm.html:16
+#: .\topic\templates\forum\user\profile_update.html:27
+msgid "Save"
+msgstr "保存"
+
+#: .\topic\templates\forum\user\admin\index.html:5
+#: .\topic\templates\forum\user\admin\index.html:11
+msgid "User list"
+msgstr "用户列表"
+
+#: .\topic\templates\forum\user\admin\unactive.html:5
+#: .\topic\templates\forum\user\admin\unactive.html:11
+msgid "Unactive Users"
+msgstr "未激活的用户"
+
+#: .\topic\templates\forum\user\auth\activation_resend.html:5
+#: .\topic\templates\forum\user\auth\activation_resend.html:9
+#: .\topic\templates\forum\user\auth\login.html:23
+msgid "Resend activation email"
+msgstr "重发激活邮件"
+
+#: .\topic\templates\forum\user\auth\activation_resend.html:16
+msgid "Resend email"
+msgstr "重发邮件"
+
+#: .\topic\templates\forum\user\auth\login.html:5
+#: .\topic\templates\forum\user\auth\login.html:9
+#: .\topic\templates\forum\user\auth\login.html:16
+msgid "Login"
+msgstr "登录"
+
+#: .\topic\templates\forum\user\auth\login.html:21
+msgid "Create an account"
+msgstr "创建帐号"
+
+#: .\topic\templates\forum\user\auth\login.html:22
+msgid "I don't know my password"
+msgstr "忘记密码"
+
+#: .\topic\templates\forum\user\auth\logout.html:9
+msgid "Are you sure you want to log out?"
+msgstr "您确定注销？"
+
+#: .\topic\templates\forum\user\auth\password_reset_complete.html:7
+#: .\topic\templates\forum\user\auth\password_reset_complete.html:11
+msgid "Password change successful"
+msgstr "密码修改成功"
+
+#: .\topic\templates\forum\user\auth\password_reset_complete.html:13
+msgid "Continue to login"
+msgstr "继续登录"
+
+#: .\topic\templates\forum\user\auth\password_reset_confirm.html:5
+msgid "Password reset confirmation"
+msgstr "密码重置确认"
+
+#: .\topic\templates\forum\user\auth\password_reset_confirm.html:11
+msgid "Enter new password"
+msgstr "输入新密码"
+
+#: .\topic\templates\forum\user\auth\password_reset_confirm.html:21
+msgid "Password reset unsuccessful"
+msgstr "密码重置成功"
+
+#: .\topic\templates\forum\user\auth\password_reset_confirm.html:23
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used. Please request a new password reset."
+msgstr "密码重置链接已失效，可能已被使用，请重新申请密码重置。"
+
+#: .\topic\templates\forum\user\auth\password_reset_done.html:5
+#: .\topic\templates\forum\user\auth\password_reset_done.html:9
+msgid "Password reset successful"
+msgstr "密码重置成功"
+
+#: .\topic\templates\forum\user\auth\password_reset_done.html:11
+msgid ""
+"We've emailed you instructions for setting your password. You should be "
+"receiving them shortly."
+msgstr "我们给您发一份邮件，以设置您的密码。您可能很快会收到。"
+
+#: .\topic\templates\forum\user\auth\password_reset_done.html:12
+#: .\user\auth\views.py:113
+msgid ""
+"If you don't receive an email, please make sure you've entered the address "
+"you registered with, and check your spam folder."
+msgstr "如果您没有收到邮件，请确保您的注册地址正确，并检查一下邮件垃圾箱。"
+
+#: .\topic\templates\forum\user\auth\password_reset_email.html:2
+#, python-format
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr "您接到本邮件，是因为您在%(site_name)s上申请过密码重置。"
+
+#: .\topic\templates\forum\user\auth\password_reset_email.html:4
+msgid "Please go to the following page and choose a new password:"
+msgstr "请进入下面的页面并选择一个新密码："
+
+#: .\topic\templates\forum\user\auth\password_reset_email.html:11
+#, python-format
+msgid "The %(site_name)s team"
+msgstr "%(site_name)s团队"
+
+#: .\topic\templates\forum\user\auth\password_reset_form.html:5
+#: .\topic\templates\forum\user\auth\password_reset_form.html:9
+msgid "Password reset"
+msgstr "密码重置"
+
+#: .\topic\templates\forum\user\auth\password_reset_form.html:15
+msgid "Reset my password"
+msgstr "重置我的密码"
+
+#: .\topic\templates\forum\user\auth\password_reset_subject.txt:2
+#, python-format
+msgid "Password reset on %(site_name)s"
+msgstr "在%(site_name)s上重置密码"
+
+#: .\topic\templates\forum\user\auth\register.html:5
+#: .\topic\templates\forum\user\auth\register.html:22
+#: .\topic\templates\forum\user\auth\register.html:28
+msgid "Register"
+msgstr "注册"
+
+#: .\topic\templates\forum\user\email_change_email.html:2
+#, python-format
+msgid ""
+"You're receiving this because you changed your user email at %(site_name)s."
+msgstr "您收到本邮件，是因为您在%(site_name)s修改您的邮箱。"
+
+#: .\topic\templates\forum\user\email_change_email.html:4
+msgid "Please go to the following link to confirm your email change:"
+msgstr "请进入到下面的链接以确认您的邮箱变更："
+
+#: .\topic\templates\forum\user\menu.html:7
+msgid "User menu"
+msgstr "用户菜单"
+
+#: .\topic\templates\forum\user\menu.html:11
+msgid "Menu"
+msgstr "菜单"
+
+#: .\topic\templates\forum\user\menu.html:17
+msgid "Private topics"
+msgstr "私有主题"
+
+#: .\topic\templates\forum\user\notification_email.html:2
+#, python-format
+msgid "You have a new notification at %(site_name)s."
+msgstr "您在%(site_name)s上新的消息。"
+
+#: .\topic\templates\forum\user\notification_email.html:4
+msgid "Please go to the following link to read the comment:"
+msgstr "请点下面的链接阅读跟贴："
+
+#: .\topic\templates\forum\user\notification_email.html:8
+msgid ""
+"If you don't want to keep receiving notifications, you can deactivate them "
+"on your profile preferences."
+msgstr "如果您不想接收消息，您可以在账号选项中去掉它。"
+
+#: .\topic\templates\forum\user\profile_email_change.html:5
+#: .\topic\templates\forum\user\profile_email_change.html:9 .\user\tests.py:421
+#: .\user\tests.py:680 .\user\utils\email.py:58
+msgid "Email change"
+msgstr "邮箱变更"
+
+#: .\topic\templates\forum\user\profile_email_change.html:15
+msgid "Change my email"
+msgstr "更改我的邮箱"
+
+#: .\topic\templates\forum\user\profile_password_change.html:5
+#: .\topic\templates\forum\user\profile_password_change.html:9
+msgid "Password change"
+msgstr "密码变更"
+
+#: .\topic\templates\forum\user\profile_password_change.html:15
+msgid "Change my password"
+msgstr "更改我的密码"
+
+#: .\topic\templates\forum\user\profile_update.html:12 .\user\auth\forms.py:125
+#: .\user\forms.py:43 .\user\forms.py:48
+msgid "Email"
+msgstr "邮箱"
+
+#: .\topic\templates\forum\user\profile_update.html:15 .\user\auth\forms.py:25
+#: .\user\forms.py:49
+msgid "Password"
+msgstr "密码"
+
+#: .\topic\templates\forum\user\profile_update.html:16
+msgid "Change password"
+msgstr "更改密码"
+
+#: .\topic\templates\forum\utils\paginator\_paginator.html:4
+#, python-format
+msgid "Page %(number)s of %(num_pages)s"
+msgstr "第%(number)s页，共%(num_pages)s页"
+
+#: .\topic\templates\forum\utils\paginator\_paginator.html:8
+msgid "Last"
+msgstr "末页"
+
+#: .\topic\templates\forum\utils\paginator\_paginator.html:10
+msgid "First"
+msgstr "首页"
+
+#: .\topic\templates\forum\utils\paginator\_yt_paginator.html:5
+msgid "Page 1 of 1"
+msgstr "第1页，共1页"
+
+#: .\topic\templates\joyforum\_editor.html:11
+msgid "Poll"
+msgstr "投票"
+
+#: .\topic\templates\joyforum\index_notification.html:109
+#, fuzzy, python-format
+#| msgid ""
+#| "<a href=\"%(url_profile)s\">%(username)s</a> has commented on <a href="
+#| "\"%(url_topic)s\">%(topic_title)s</a>"
+msgid ""
+"<span href=\"%(url_profile)s\">%(username)s</span> 评论了你的主题 <a href="
+"\"%(url_topic)s\" class=\"external\">%(topic_title)s</a>"
+msgstr ""
+"<span href=\"%(url_profile)s\">%(username)s</span> 已跟贴 <a href="
+"\"%(url_topic)s\">%(topic_title)s</a>"
+
+#: .\topic\templates\joyforum\index_notification.html:113
+#, fuzzy, python-format
+#| msgid ""
+#| "<a href=\"%(url_profile)s\">%(username)s</a> has commented on <a href="
+#| "\"%(url_topic)s\">%(topic_title)s</a>"
+msgid ""
+"<span href=\"%(url_profile)s\">%(username)s</span> 在 <a href=\"%(url_topic)s"
+"\" class=\"external\">%(topic_title)s</a>中提到你。"
+msgstr ""
+"<span href=\"%(url_profile)s\">%(username)s</span> 已跟贴 <a href="
+"\"%(url_topic)s\">%(topic_title)s</a>"
+
+#: .\topic\templates\joyforum\snippet\notification.html:38
+#, fuzzy, python-format
+#| msgid ""
+#| "<a href=\"%(url_profile)s\">%(username)s</a> has commented on <a href="
+#| "\"%(url_topic)s\">%(topic_title)s</a>"
+msgid ""
+"<span href=\"%(url_profile)s\">%(username)s</span> has commented on <a href="
+"\"%(url_topic)s\">%(topic_title)s</a>"
+msgstr ""
+"<span href=\"%(url_profile)s\">%(username)s</span> 已跟贴 <a href="
+"\"%(url_topic)s\">%(topic_title)s</a>"
+
+#: .\topic\templates\joyforum\snippet\notification.html:42
+#, fuzzy, python-format
+#| msgid ""
+#| "<a href=\"%(url_profile)s\">%(username)s</a> has mention you on <a href="
+#| "\"%(url_topic)s\">%(topic_title)s</a>"
+msgid ""
+"<span href=\"%(url_profile)s\">%(username)s</span> has mention you on <a "
+"href=\"%(url_topic)s\">%(topic_title)s</a>"
+msgstr ""
+"<span href=\"%(url_profile)s\">%(username)s</span> 提到你在 <a href="
+"\"%(url_topic)s\">%(topic_title)s</a>"
 
 #: .\topic\unread\apps.py:11
 #, fuzzy
@@ -1363,64 +1315,6 @@ msgstr "密码不对"
 msgid "Current time is: %(date)s %(time)s"
 msgstr "当前时间：%(date)s %(time)s"
 
-#: .\user\models.py:47
-msgid "profile"
-msgstr "个人信息"
-
-#: .\user\models.py:50
-msgid "location"
-msgstr "位置"
-
-#: .\user\models.py:51
-msgid "last seen"
-msgstr "最近访问"
-
-#: .\user\models.py:52
-msgid "last ip"
-msgstr "最近IP"
-
-#: .\user\models.py:53
-msgid "time zone"
-msgstr "时区"
-
-#: .\user\models.py:54
-msgid "administrator status"
-msgstr "管理员状态"
-
-#: .\user\models.py:55
-msgid "moderator status"
-msgstr "审批状态"
-
-#: .\user\models.py:56
-msgid "verified"
-msgstr "已确认"
-
-#: .\user\models.py:57
-msgid ""
-"Designates whether the user has verified his account by email or by other "
-"means. Un-select this to let the user activate his account."
-msgstr "确定是否通过邮箱或其它方式确认，让用户激活账号，则保持空选。"
-
-#: .\user\models.py:61
-msgid "topic count"
-msgstr "主题数"
-
-#: .\user\models.py:82
-msgid "forum profile"
-msgstr "论坛信息"
-
-#: .\user\models.py:83
-msgid "forum profiles"
-msgstr "论坛信息"
-
-#: .\user\models.py:110
-msgid "user"
-msgstr "用户"
-
-#: .\user\models.py:111
-msgid "users"
-msgstr "用户"
-
 #: .\user\utils\email.py:67
 #, python-format
 msgid "New notification: %(topic_name)s"
@@ -1445,6 +1339,130 @@ msgstr "您的邮箱已更改！"
 #: .\user\views.py:99
 msgid "Sorry, we were not able to change your email."
 msgstr "对不起，我们不能更改您的邮箱。"
+
+#: .\weixin\models.py:165
+msgid "profile"
+msgstr "个人信息"
+
+#: .\weixin\models.py:168
+msgid "location"
+msgstr "位置"
+
+#: .\weixin\models.py:169
+msgid "last seen"
+msgstr "最近访问"
+
+#: .\weixin\models.py:170
+msgid "last ip"
+msgstr "最近IP"
+
+#: .\weixin\models.py:171
+msgid "time zone"
+msgstr "时区"
+
+#: .\weixin\models.py:172
+msgid "administrator status"
+msgstr "管理员状态"
+
+#: .\weixin\models.py:173
+msgid "moderator status"
+msgstr "审批状态"
+
+#: .\weixin\models.py:174
+msgid "verified"
+msgstr "已确认"
+
+#: .\weixin\models.py:175
+msgid ""
+"Designates whether the user has verified his account by email or by other "
+"means. Un-select this to let the user activate his account."
+msgstr "确定是否通过邮箱或其它方式确认，让用户激活账号，则保持空选。"
+
+#: .\weixin\models.py:179
+msgid "topic count"
+msgstr "主题数"
+
+#: .\weixin\models.py:203
+msgid "forum profile"
+msgstr "论坛信息"
+
+#: .\weixin\models.py:204
+msgid "forum profiles"
+msgstr "论坛信息"
+
+#, fuzzy
+#~| msgid "Publish comment"
+#~ msgid "Please Comment"
+#~ msgstr "发布贴子"
+
+#~ msgid "share"
+#~ msgstr "分享"
+
+#~ msgid "quote"
+#~ msgstr "引用"
+
+#~ msgid "reply"
+#~ msgstr "回复"
+
+#~ msgid "close"
+#~ msgstr "关闭"
+
+#~ msgid "All Categories"
+#~ msgstr "所有分类"
+
+#~ msgid "All Subcategories"
+#~ msgstr "所有子分类"
+
+#~ msgid "Main"
+#~ msgstr "首页"
+
+#~ msgid "Select comments to move"
+#~ msgstr "选择要移动的贴子"
+
+#~ msgid "Open topic"
+#~ msgstr "打开主题"
+
+#~ msgid "Close topic"
+#~ msgstr "关闭主题"
+
+#~ msgid "Unpin topic"
+#~ msgstr "下架主题"
+
+#~ msgid "Pin topic"
+#~ msgstr "置顶主题"
+
+#~ msgid "Unpin topic globally"
+#~ msgstr "下架全局主题"
+
+#~ msgid "Pin topic globally"
+#~ msgstr "置顶全局主题"
+
+#~ msgid "Topic id"
+#~ msgstr "主题id"
+
+#~ msgid "Move"
+#~ msgstr "移动"
+
+#~ msgid "Reply"
+#~ msgstr "回复"
+
+#~ msgid "Avatar"
+#~ msgstr "头像"
+
+#~ msgid "Change avatar"
+#~ msgstr "更改头像"
+
+#~ msgid "Category"
+#~ msgstr "分类"
+
+#~ msgid "Chose a category"
+#~ msgstr "选择分类"
+
+#~ msgid "user"
+#~ msgstr "用户"
+
+#~ msgid "users"
+#~ msgstr "用户"
 
 #~ msgid "Go to gravatar.com and use your current email to change it"
 #~ msgstr "去gravatar.com，使用您当前邮箱更改"

@@ -2,8 +2,8 @@
 
 
     <div class="profile-img">
-		<img class="profile-avatar" src="{% get_gravatar_url user=p_user size=200 %}" />
-		<div class="profile-username">{{ p_user.username }}</div>
+		<img class="profile-avatar" src="{{ p_user.jf.picture }}" style="width: 200px;height: 200px;" />
+		<div class="profile-username">{{ p_user.jf.name }}</div>
 	</div>
 
     <div class="profile-info">

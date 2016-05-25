@@ -61,6 +61,7 @@ class WxPayConf_pub(object):
 	MCHID = "1342490601"
 	#商户支付密钥Key。审核通过后，在微信发送的邮件中查看
 	KEY = "najklefqozvmljgqtnafvma43atmdffp"
+
    
 
 	#=======【异步通知url设置】===================================

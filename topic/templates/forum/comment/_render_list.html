@@ -1,4 +1,5 @@
 {% load forum_tags i18n %}
+{% load static %}
 
 <div class="comments">
 
@@ -42,14 +43,31 @@
                                 <p>{% get_comment_action_text c.action %}.</p>
                             {% endif %}
                         </div>
+                        <ul class="imagelist">
+                            {% for image in c.imagelist %}
+                                <li>
+                                    <img src="{{ image.imageurl }}">
+                                </li>
+                            {% endfor %}
+                            <div style="clear: both;"></div>
+                        </ul>
                     </div>
                 </div>
 
                 {% if not c.action %}
                     <ul class="comment-actions">
-                        {% if user.jf.is_seller and forloop.counter0 == 0 %}
-                            <li><a data-href="/manager/account/send_coupon/" href="javascript:void(0);" cid="{{ c.id }}",tcid="{{ c.topic.id }}" openid="{{ user.jf.open_id }}"
-                                   class="sendgift"><i class="fa fa-gift"></i> 礼券</a></li>
+                        {% if user.jf.is_seller %}
+                            {% ifnotequal c.user user %}
+                            {% if c.gift %}
+                                <li><a data-href="/manager/account/send_coupon/" href="javascript:void(0);" cid="{{ c.id }}"
+                                   ,tcid="{{ c.topic.id }}" openid="{{ user.jf.open_id }}"
+                                   class="sendgift" sent="1"><i class="fa fa-gift"></i> 礼券（已发）</a></li>
+                                {% else %}
+                            <li><a data-href="/manager/account/send_coupon/" href="javascript:void(0);" cid="{{ c.id }}"
+                                   ,tcid="{{ c.topic.id }}" openid="{{ user.jf.open_id }}"
+                                   class="sendgift" sent="0"><i class="fa fa-gift"></i> 礼券</a></li>
+                                {% endif %}
+                            {% endifnotequal %}
                         {% endif %}
 
                         {% if user.is_authenticated %}
@@ -88,66 +106,7 @@
                         {% endif %}
                     </ul>
 
-                    {#                    <div class="share js-share-{{ c.pk }}" style="display: none;">#}
-                    {#                        <div class="share-box">#}
-                    {#                            <a class="share-close" href="#" ><i class="fa fa-times"></i> {% trans "close" %}</a>#}
-                    {##}
-                    {#                            {% with comment_url=c.get_absolute_url %}#}
-                    {#                                <input class="share-url" type="text" value="{% get_share_url url=comment_url %}" />#}
-                    {#                                <ul class="share-actions">#}
-                    {#                                    <li><a href="{% get_twitter_share_url url=comment_url title=topic.title %}" target="_blank"><i class="fa fa-twitter"></i></a></li><!--#}
-                    {#                                 --><li><a href="{% get_facebook_share_url url=comment_url title=topic.title %}" target="_blank"><i class="fa fa-facebook"></i></a></li><!--#}
-                    {#                                 --><li><a href="{% get_gplus_share_url url=comment_url %}" target="_blank"><i class="fa fa-google-plus"></i></a></li><!--#}
-                    {#                                 --><li><a href="{% get_email_share_url url=comment_url title=topic.title %}" ><i class="fa fa-envelope"></i></a></li>#}
-                    {#                                </ul>#}
-                    {#                            {% endwith %}#}
-                    {##}
-                    {#                        </div>#}
-                    {#                    </div>#}
-                {% endif %}
-
-            {% else %}
-
-                <div class="comment-media">
-                    <div class="comment-img">
-                        <div class="comment-removed">
-                            <a href="{{ c.user.jf.get_absolute_url }}">{{ c.user.jf.name }}</a>
-                        </div>
-                    </div>
-
-                    <div class="comment-body">
-
-                        <div class="comment-text">
-                            {% if user.jf.is_moderator %}
-                                {{ c.comment_html|safe }}
-                            {% else %}
-                                {% trans "This comment was deleted" %}.
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-
-                {% if user.jf.is_moderator %}
-                    <ul class="comment-actions">
-                        <li><a href="{% url "comment:undelete" c.pk %}"><i
-                                class="fa fa-times"></i> {% trans "undelete" %}</a></li>
-                    </ul>
-                {% endif %}
-
-            {% endif %}
-
-        </div>
-
-    {% endfor %}
-
-</div>
-
-
-<script>
-
     $(document).ready(function () {
-
-{#        var csrf_token = '{% csrf_token %}';#}
 
         {% if user.is_authenticated %}
             $('.js-like').like({
@@ -157,11 +116,17 @@
             });
 
             $(".sendgift").on('click', function () {
+                var sent = $(this).attr("sent");
+                if (sent == "1") {
+                    alert("礼券已发！");
+                    return;
+                }
                 var href = $(this).attr('data-href');
                 var openid = $(this).attr("open_id");
                 var cid = $(this).attr("cid");
                 var tcid = $(this).attr("tcid");
-                var data = {'open_id':openid,'action':"send_ticket",'cid':cid,'tcid':tcid};
+                var data = {'open_id': openid, 'action': "send_ticket", 'cid': cid, 'tcid': tcid};
+                var scope = this;
                 $.ajax({
                     type: 'POST',
                     url: href,
@@ -171,14 +136,32 @@
                     },
                     data: data,
                     dataType: 'json',
-                    success: function(data){
-                        console.log(data);
+                    success: function (data) {
+                        if (data.state == 0) {
+                            $(scope).html('<i class="fa fa-gift"></i> 礼券（已发）');
+                            $(scope).attr("sent", 1);
+
+                            $.ajax({
+                                type: 'POST',
+                                url: "/comment/addgift/"+cid+"/",
+                                beforeSend: function (xhr, settings) {
+                                    var csrftoken = $.cookie('csrftoken');
+                                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                },
+                                data: {},
+                                dataType: 'json',
+                                success: function (data) {
+                                    if (data.state == -1) {
+                                        alert("保存发送礼券数据出错！请联系管理员！");
+                                    }
+                                }
+                            });
+
+                        }
                     }
                 });
             });
         {% endif %}
-
-        {#        $('.js-share').social_share();#}
 
         hljs.initHighlightingOnLoad();
 

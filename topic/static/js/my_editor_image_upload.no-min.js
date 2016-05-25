@@ -124,6 +124,10 @@
     };
 
     EditorImageUpload.prototype.openFileDialog = function() {
+      if($("#tupian_container li").length>9){
+        alert("不能超过9张图！");
+        return;
+      }
       this.inputFile.trigger('click');
     };
 
