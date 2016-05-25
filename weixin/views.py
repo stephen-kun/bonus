@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
 from django.http.response import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist 
 from django.views.decorators.csrf import csrf_exempt
@@ -640,20 +645,24 @@ def view_weixin_pay(request):
 	
 @csrf_exempt
 def view_wechat_token(request):
-	if request.method == 'GET':
-		# 检验合法性
-		# 从 request 中提取基本信息 (signature, timestamp, nonce, xml)
-		signature = request.GET.get('signature')
-		timestamp = request.GET.get('timestamp')
-		nonce = request.GET.get('nonce')
+	try:
+		if request.method == 'GET':
+			# 检验合法性
+			# 从 request 中提取基本信息 (signature, timestamp, nonce, xml)
+			signature = request.GET.get('signature')
+			timestamp = request.GET.get('timestamp')
+			nonce = request.GET.get('nonce')
 
-		if not wechat.check_signature(signature, timestamp, nonce):
-			return HttpResponseBadRequest('Verify Failed')
+			if not wechat.check_signature(signature, timestamp, nonce):
+				return HttpResponseBadRequest('Verify Failed')
 
-		return HttpResponse(request.GET.get('echostr', ''), content_type="text/plain")  
-	
-	response = PostResponse(request)
-	return response.auto_handle()
+			return HttpResponse(request.GET.get('echostr', ''), content_type="text/plain")  
+		
+		response = PostResponse(request)
+		return response.auto_handle()
+	except:
+		log_print(view_wechat_token)
+		return HttpResponseBadRequest('Verify Failed')
 
 @csrf_exempt
 def view_pay_notify(request):

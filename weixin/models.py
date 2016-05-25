@@ -221,8 +221,8 @@ class DiningSession(models.Model):
 		return contents
 
 class ConsumerGifts(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    comment = models.ForeignKey("comment.Comment",related_name='comment_gifts')
+	user = models.ForeignKey(settings.AUTH_USER_MODEL)
+	comment = models.ForeignKey("comment.Comment",related_name='comment_gifts')
 
 #消费者数据表
 class Consumer(models.Model):
@@ -473,12 +473,12 @@ class Consumer(models.Model):
 		bonus.split_to_rcv_bonus(total_good_num)
 
 
-    @property
-    def is_seller(self):
-        try:
-            return Group.objects.get(id=2) in self.user.groups.all()
-        except Exception as ex:
-            return False
+	@property
+	def is_seller(self):
+		try:
+			return Group.objects.get(id=2) in self.user.groups.all()
+		except Exception as ex:
+			return False
 
 class ConsumerAccountGoods(models.Model):
 	good = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币

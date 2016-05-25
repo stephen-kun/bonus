@@ -105,6 +105,55 @@
 
                         {% endif %}
                     </ul>
+                {% endif %}
+
+            {% else %}
+
+                <div class="comment-media">
+                    <div class="comment-img">
+                        <div class="comment-removed">
+                            <a href="{{ c.user.jf.get_absolute_url }}">{{ c.user.jf.name }}</a>
+                        </div>
+                    </div>
+
+                    <div class="comment-body">
+
+                        <div class="comment-text">
+                            {% if user.jf.is_moderator %}
+                                {{ c.comment_html|safe }}
+                            {% else %}
+                                {% trans "This comment was deleted" %}.
+                            {% endif %}
+                        </div>
+                        <ul class="imagelist">
+                            {% for image in c.imagelist %}
+                                <li>
+                                    <img src="{{ image.imageurl }}">
+                                </li>
+                            {% endfor %}
+                            <div style="clear: both;"></div>
+                        </ul>
+                    </div>
+                </div>
+
+                {% if user.jf.is_moderator %}
+                    <ul class="comment-actions">
+                        <li><a href="{% url "comment:undelete" c.pk %}"><i
+                                class="fa fa-times"></i> {% trans "undelete" %}</a></li>
+                    </ul>
+                {% endif %}
+
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+<script type='text/javascript' src='{% static "js/jquery.cookie.js" %}' charset='utf-8'></script>
+<script>
+
 
     $(document).ready(function () {
 

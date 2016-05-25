@@ -33,6 +33,10 @@ Created on 2014-11-24
 
 """
 
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
 import json
 import time
 import random

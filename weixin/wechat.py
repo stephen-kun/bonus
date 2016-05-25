@@ -1,6 +1,11 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 # wechat.py
 # Create your wechat here.
+
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
 from wechat_sdk import WechatConf
 from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
@@ -9,12 +14,14 @@ from wechat_sdk import messages
 if __name__ != '__main__':
 	from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 	from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
-	from .utils import create_primary_key
+	from .utils import create_primary_key, log_print
 	from django.contrib.auth import get_user_model
+	from django.contrib.auth.models import Group
 	User = get_user_model()
 	from .wx_config import *
 else:
 	from wx_config import *
+	from utils import create_primary_key, log_print
 
 
 from django.http.response import HttpResponse, HttpResponseBadRequest,HttpResponseRedirect
@@ -68,13 +75,14 @@ def user_subscribe(openid):
 			user = User.objects.get(username=open_id)
 		except ObjectDoesNotExist:
 			user = User.objects.create(username=open_id, email="xxxx@xxx.com", is_staff=False)
+		user.groups.add(Group.objects.get(id=2))
 		
 		try:
 			consumer = Consumer.objects.get(open_id=open_id)
 			if consumer.subscribe == False:
 				consumer.subscribe = True	
 		except ObjectDoesNotExist:		
-			url = USER_INFO_URL.replace('ACCESS_TOKEN', wechat.access_token)
+			url = WX_USER_INFO_URL.replace('ACCESS_TOKEN', wechat.access_token)
 			url = url.replace('OPENID', open_id)
 			user_info = UserInfo(url)
 			name = user_info.get_name()
@@ -84,6 +92,7 @@ def user_subscribe(openid):
 			consumer.subscribe = True
 		consumer.save()	
 	except:
+		User.objects.filter(username=open_id).delete()
 		log_print(user_subscribe)
 	return consumer
 	
@@ -188,20 +197,24 @@ class PostResponse():
 		
 	#自动处理
 	def auto_handle(self):
-		response = wechat.response_text(content='')
-		if isinstance(self.message, messages.TextMessage):
-			response = wechat.response_text(content=self.message.content)
-		elif isinstance(self.message, messages.EventMessage):
-			if self.type == 'subscribe':
-				response = self._subscribe()
-			elif self.type == 'unsubscribe':
-				response = self._unsubscribe()
-			elif self.type == 'scan':
-				response = self._scan()
-			elif self.type == 'view':
-				response = self._view_jump()
-		
-		return HttpResponse(response, content_type='application/xml')
+		try:
+			response = wechat.response_text(content='')
+			if isinstance(self.message, messages.TextMessage):
+				response = wechat.response_text(content=self.message.content)
+			elif isinstance(self.message, messages.EventMessage):
+				if self.type == 'subscribe':
+					response = self._subscribe()
+				elif self.type == 'unsubscribe':
+					response = self._unsubscribe()
+				elif self.type == 'scan':
+					response = self._scan()
+				elif self.type == 'view':
+					response = self._view_jump()
+			
+			return HttpResponse(response, content_type='application/xml')
+		except:
+			log_print(auto_handle)
+			return HttpResponseBadRequest("system error!")
 		
 def create_qrcode(qrcode, filename):
 	ticket = wechat.create_qrcode(qrcode)['ticket']
