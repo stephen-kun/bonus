@@ -23,7 +23,7 @@ from django.utils import timezone
 from wzhifuSDK import *
 
 
-TEST_DEBUG = True 
+TEST_DEBUG = False 
 
 COMMON_BONUS = 0
 RANDOM_BONUS = 1
