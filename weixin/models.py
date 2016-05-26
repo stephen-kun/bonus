@@ -7,6 +7,7 @@ import django.utils.timezone as timezone
 import string, random
 from django.core.exceptions import ObjectDoesNotExist
 import json
+import datetime
 from manager.datatype import *
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser, Group
@@ -100,11 +101,14 @@ def bonus_content_models_to_json(models_list):
 	return json.dumps(dict(zip(l_name, l_bonus)))
 
 #将红包分拆
-def create_primary_key(length=10):
-	a = list(string.digits)
-	random.shuffle(a)
-	primary = ''.join(a[:length])
-	return primary
+def create_primary_key():
+	now = datetime.datetime.now()
+	strs = now.strftime('%f') 
+	chars = "0123456789"
+	ran = []
+	for x in range(4):
+		ran.append(chars[random.randrange(0, len(chars))])	
+	return strs+"".join(ran)
 
 class VirtualMoney(models.Model):
 	name = models.CharField(unique=True, max_length=40, default="串串")		#虚拟钱币的名字

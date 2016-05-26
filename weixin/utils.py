@@ -163,11 +163,14 @@ def is_consumer_dining(openid):
 
 
 #主键生成方法
-def create_primary_key(length=10):
-	a = list(string.digits)
-	random.shuffle(a)
-	primary = ''.join(a[:length])
-	return primary
+def create_primary_key():
+	now = datetime.datetime.now()
+	strs = now.strftime('%f') 
+	chars = "0123456789"
+	ran = []
+	for x in range(4):
+		ran.append(chars[random.randrange(0, len(chars))])	
+	return strs+"".join(ran)
 
 #统计餐桌抢到的所有红包金额
 def count_total_money_on_table(openid):
