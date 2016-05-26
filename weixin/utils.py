@@ -793,11 +793,12 @@ def action_weixin_pay(data, request):
 		recharge = Recharge.objects.filter(prepay_id=prepay_id, status=False)	
 		if len(recharge):	
 			#主动查询订单
-			out_trade_no = recharge[0].out_trade_no		
+			out_trade_no = recharge[0].out_trade_no	
+			new_recharge = Recharge.objects.get(out_trade_no=out_trade_no)
 			if TEST_DEBUG:
-				recharge[0].charge_money
 				total_fee = int(float(data['total_fee'])*100)
 				recharge.update(status=True, trade_state=SUCCESS, total_fee=total_fee)
+				new_recharge.charge_money
 				#支付成功业务
 				consumer_order = request.session['consumer_order']						
 				snd_bonus_pay_weixin(consumer_order)
@@ -808,8 +809,8 @@ def action_weixin_pay(data, request):
 				if return_code == SUCCESS and order_query.result['result_code'] == SUCCESS:
 					if order_query.result['trade_state'] == SUCCESS:	
 						#充值进客户帐号
-						recharge[0].charge_money
 						recharge.update(status=True, trade_state=order_query.result['trade_state'], total_fee=order_query.result['total_fee'])
+						new_recharge.charge_money
 						
 						#支付成功业务
 						consumer_order = request.session['consumer_order']						
