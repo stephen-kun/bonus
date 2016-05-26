@@ -163,11 +163,14 @@ def is_consumer_dining(openid):
 
 
 #主键生成方法
-def create_primary_key(length=10):
-	a = list(string.digits)
-	random.shuffle(a)
-	primary = ''.join(a[:length])
-	return primary
+def create_primary_key():
+	now = datetime.datetime.now()
+	strs = now.strftime('%f') 
+	chars = "0123456789"
+	ran = []
+	for x in range(4):
+		ran.append(chars[random.randrange(0, len(chars))])	
+	return strs+"".join(ran)
 
 #统计餐桌抢到的所有红包金额
 def count_total_money_on_table(openid):
@@ -793,11 +796,12 @@ def action_weixin_pay(data, request):
 		recharge = Recharge.objects.filter(prepay_id=prepay_id, status=False)	
 		if len(recharge):	
 			#主动查询订单
-			out_trade_no = recharge[0].out_trade_no		
+			out_trade_no = recharge[0].out_trade_no	
+			new_recharge = Recharge.objects.get(out_trade_no=out_trade_no)
 			if TEST_DEBUG:
-				recharge[0].charge_money
 				total_fee = int(float(data['total_fee'])*100)
 				recharge.update(status=True, trade_state=SUCCESS, total_fee=total_fee)
+				new_recharge.charge_money
 				#支付成功业务
 				consumer_order = request.session['consumer_order']						
 				snd_bonus_pay_weixin(consumer_order)
@@ -808,8 +812,8 @@ def action_weixin_pay(data, request):
 				if return_code == SUCCESS and order_query.result['result_code'] == SUCCESS:
 					if order_query.result['trade_state'] == SUCCESS:	
 						#充值进客户帐号
-						recharge[0].charge_money
 						recharge.update(status=True, trade_state=order_query.result['trade_state'], total_fee=order_query.result['total_fee'])
+						new_recharge.charge_money
 						
 						#支付成功业务
 						consumer_order = request.session['consumer_order']						

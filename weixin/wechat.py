@@ -197,24 +197,21 @@ class PostResponse():
 		
 	#自动处理
 	def auto_handle(self):
-		try:
-			response = wechat.response_text(content='')
-			if isinstance(self.message, messages.TextMessage):
-				response = wechat.response_text(content=self.message.content)
-			elif isinstance(self.message, messages.EventMessage):
-				if self.type == 'subscribe':
-					response = self._subscribe()
-				elif self.type == 'unsubscribe':
-					response = self._unsubscribe()
-				elif self.type == 'scan':
-					response = self._scan()
-				elif self.type == 'view':
-					response = self._view_jump()
-			
-			return HttpResponse(response, content_type='application/xml')
-		except:
-			log_print(auto_handle)
-			return HttpResponseBadRequest("system error!")
+		response = wechat.response_text(content='')
+		if isinstance(self.message, messages.TextMessage):
+			response = wechat.response_text(content=self.message.content)
+		elif isinstance(self.message, messages.EventMessage):
+			if self.type == 'subscribe':
+				response = self._subscribe()
+			elif self.type == 'unsubscribe':
+				response = self._unsubscribe()
+			elif self.type == 'scan':
+				response = self._scan()
+			elif self.type == 'view':
+				response = self._view_jump()
+		
+		return HttpResponse(response, content_type='application/xml')
+
 		
 def create_qrcode(qrcode, filename):
 	ticket = wechat.create_qrcode(qrcode)['ticket']

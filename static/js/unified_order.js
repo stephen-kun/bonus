@@ -81,8 +81,44 @@ function unified_order(url, url_go, openid, bonus_type, pay_suc_url)
 		return str;}).get().join();
 	
 	var user_str = '"action":"ACTION","openid":"OPENID","bonus_type":"BONUS_TYPE"'.replace(/ACTION/, 'ajax_weixin_order').replace(/OPENID/, openid).replace(/BONUS_TYPE/, bonus_type);
-	var data = '{' + input_str + user_str + '}';
+	var request_data = '{' + input_str + user_str + '}';
 	
+	if(flag_order){
+		flag_order = 0;
+		$.post(url, request_data, function(data, status){
+			if(status == 'success'){
+				var result = JSON.parse(data);
+				if(result.status == 'SUCCESS' && result.result == 'SUCCESS'){
+					if(result.pay_type == 'WALLET_PAY')
+					{
+						// 余额支付
+						alert("红包已发送");
+						window.location.href = pay_suc_url;	
+					}
+					else if(result.pay_type == 'WEIXIN_PAY')
+					{
+						// 微信支付
+						window.location.href = url_go;				
+					}				
+				}
+				else if(result.status == 'SUCCESS' && result.result == 'FAIL'){
+					if(result.err_code == 'INEXISTENCE')
+					{
+						// 桌台不存在
+						alert("该桌台不错在");
+						flag_order = 1;	
+					}
+					else if(result.err_code == 'NOTDINING'){
+						// 未就餐
+						alert('该桌台目前没有就餐');
+						flag_order = 1;	
+					}					
+				}
+			}
+		});
+	}
+	
+	/*
 	var xmlhttp=new XMLHttpRequest();
 
 	  
@@ -125,4 +161,5 @@ function unified_order(url, url_go, openid, bonus_type, pay_suc_url)
 		xmlhttp.send(data);		
 		flag_order = 0;
 	}
+	*/
 }
