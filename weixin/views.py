@@ -639,9 +639,9 @@ def view_wechat_token(request):
 
 @csrf_exempt
 def view_pay_notify(request):
+	log_print(view_pay_notify, log_level=1, message="%s"%(request.body))
 	notify=Notify_pub()
 	try:
-		#request_xml = etree.fromstring(request.body)
 		notify.saveData(request.body)
 		if(notify.checkSign()):
 			#判断通知订单已经处理

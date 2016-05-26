@@ -244,18 +244,18 @@ class Consumer(models.Model):
 	topic_count = models.PositiveIntegerField(_("topic count"), default=0)
 	comment_count = models.PositiveIntegerField(_("comment count"), default=0)
 
-	name = models.CharField(max_length=30, default='小明')  # 用户名
+	name = models.CharField(max_length=50, default='小明')  # 用户名
 	sex = models.CharField(max_length=1, default='0')  # 性别
 	phone_num = models.CharField(max_length=20, null=True, blank=True)  # 电话
 	address = models.CharField(max_length=30, null=True, blank=True)  # 地址
-	picture = models.URLField(max_length=200, null=True, blank=True)  # 头像地址
+	picture = models.URLField(null=True, blank=True)  # 头像地址
 	bonus_range = models.IntegerField(default=0)  # 排行榜名次
 	snd_bonus_num = models.IntegerField(default=0)  # 发串串总数
 	rcv_bonus_num = models.IntegerField(default=0)  # 收串串总数
 	snd_bonus_value = models.FloatField(default=0)  # 发串串金额
 	rcv_bonus_value = models.FloatField(default=0)		#收串串金额
 	own_bonus_value = models.FloatField(default=0)  # 可用红包金额
-	own_bonus_detail = models.CharField(max_length=100, null=True, blank=True)  # 可用红包明细
+	own_bonus_detail = models.CharField(max_length=300, null=True, blank=True)  # 可用红包明细
 	own_ticket_value = models.IntegerField(default=0)  # 可用礼券金额
 	create_time = models.DateTimeField(default=timezone.now())  # 首次关注时间
 	subscribe = models.BooleanField(default=True)  # 是否关注
@@ -505,7 +505,7 @@ class Recharge(models.Model):
 	status = models.BooleanField(default=False)				#订单状态 0:未处理 1:已处理
 	trade_state = models.CharField(null=True, blank=True, max_length=32)
 	total_fee = models.IntegerField(default=0)				# 1 代表一分钱
-	consumer_order = models.CharField(null=True, blank=True, max_length=100)	
+	consumer_order = models.CharField(null=True, blank=True, max_length=400)	
 	number = models.IntegerField(default=0)					#串串个数
 
 	@property
@@ -534,7 +534,7 @@ class Recharge(models.Model):
 #消费券
 class Ticket(models.Model):
 	id_ticket = models.CharField(unique=True, max_length=12)		#消费券唯一id
-	title = models.CharField(max_length=30, null=True, blank=True)				#冠名	
+	title = models.CharField(max_length=100, null=True, blank=True)				#冠名	
 	ticket_type = models.IntegerField(default=0)            #消费券类型：0-生成券，1-系统券
 	ticket_value = models.FloatField(default=0.0)			#券值
 	create_time = models.DateTimeField(default=timezone.now)					#消费券创建时间

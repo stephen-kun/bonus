@@ -49,43 +49,48 @@ function wx_pay_result(){
 	var openid = '{{consumer.open_id}}';
 	var prepay_id = '{{prepay_id}}';
 	var i_count = 0;
-	var timer = setInterval(function(){
-		var xmlhttp = new XMLHttpRequest();
-		var data = '{"openid":"OPENID","prepay_id":"PREPAY_ID", "action":"ajax_weixin_pay"}';
-		data = data.replace(/OPENID/, openid).replace(/PREPAY_ID/, prepay_id);
-		
-		xmlhttp.onreadystatechange=function()
-		{
-			if(xmlhttp.readyState==4 && xmlhttp.status==200)
-			{
-				// 实现跳转
-				var response = JSON.parse(xmlhttp.responseText);
-				if(response.status == 'SUCCESS' && response.result == 'SUCCESS'){
-					$("#weixin").html('<input type="button" class="gray" value="微信支付" >');
-					window.location.href = '{{pay_suc_url}}';	
-					clearInterval(timer);
-				}
-				else if(response.result == 'USERPAYING'){
-					// 等待提示
-					if(i_count >= 3){
-						window.location.href = '{{pay_suc_url}}';	
-						clearInterval(timer);
-						alert('网络异常')
-					}
-					i_count += 1;
-				}
-				else{
-					alert('支付失败');
-					$("#weixin").html('<input type="button" class="gray" value="微信支付" >');
-					window.location.href = '{{pay_suc_url}}';					
-				}
-
+	
+	var request_data = '{"openid":"OPENID","prepay_id":"PREPAY_ID", "action":"ajax_weixin_pay"}';
+	request_data = request_data.replace(/OPENID/, openid).replace(/PREPAY_ID/, prepay_id);	
+	$.post(url, request_data, function(data, status){
+		var response = JSON.parse(data);
+		if(status == 'success'){
+			if(response.status == 'SUCCESS' && response.result == 'SUCCESS'){
+				window.location.href = '{{pay_suc_url}}';	
+			}else if(response.result == 'USERPAYING'){
+				var timer = setInterval(function(){
+					$.post(url,request_data,function(data, status){
+						var response = JSON.parse(data);
+						if(status == 'success'){
+							if(response.status == 'SUCCESS' && response.result == 'SUCCESS'){
+								window.location.href = '{{pay_suc_url}}';	
+								clearInterval(timer);
+							}							
+						}
+						else if(response.result == 'USERPAYING'){
+							// 等待提示
+							if(i_count >= 3){
+								clearInterval(timer);
+								alert('网络异常');
+								window.location.href = '{{pay_suc_url}}';	
+							}
+							i_count += 1;
+						}
+						else{
+							alert('支付失败');
+							window.location.href = '{{pay_suc_url}}';							
+						}						
+					});
+				}, 1500);
+			}else{
+				alert('支付失败');
+				window.location.href = '{{pay_suc_url}}';				
 			}
+		}else{
+			
 		}
+	});		
 
-		xmlhttp.open("POST", url, true);
-		xmlhttp.send(data);			
-	}, 2000);
 }
 
 function onBridgeReady(){
@@ -94,6 +99,7 @@ function onBridgeReady(){
 		{{pay_param|safe}},
 		function(res){
 			if (res.err_msg == "get_brand_wcpay_request:ok") {
+				$("#weixin").html('<input type="button" class="gray" value="微信支付" >');
 				wx_pay_result();				
 			}
 		}
