@@ -21,38 +21,7 @@ import traceback
 from django.utils import timezone
 
 from wzhifuSDK import *
-
-
-TEST_DEBUG = False 
-
-COMMON_BONUS = 0
-RANDOM_BONUS = 1
-SYS_BONUS	= 2
-
-WEIXIN_PAY = 'WEIXIN_PAY'
-WALLET_PAY = 'WALLET_PAY'
-SUCCESS = 'SUCCESS'
-FAIL = 'FAIL'
-NOTPAY = 'NOTPAY'
-CLOSED = 'CLOSED'
-REFUND = 'REFUND'
-USERPAYING = 'USERPAYING'
-PAYERROR = 'PAYERROR'
-NOTDINING = 'NOTDINING'
-INEXISTENCE = 'INEXISTENCE'
-
-AJAX_GET_BONUS = 'ajax_get_bonus'
-AJAX_CREATE_TICKET = 'ajax_create_ticket'
-AJAX_WEIXIN_PAY = 'ajax_weixin_pay'
-AJAX_BONUS_REFUSE = 'ajax_bonus_refuse'
-AJAX_BONUS_MESSAGE = 'ajax_bonus_message'
-AJAX_MODIFY_PHONE = 'ajax_modify_phone'
-AJAX_MODIFY_NAME = 'ajax_modify_name'
-AJAX_MODIFY_ADDRESS = 'ajax_modify_address'
-AJAX_MODIFY_EMAIL = 'ajax_modify_email'
-AJAX_MODIFY_SEX = 'ajax_modify_sex'
-AJAX_WEIXIN_ORDER = 'ajax_weixin_order'
-
+from .wx_config import *
 
 class _GetedBonus():
 	def __init__(self, rcv_bonus):
@@ -832,7 +801,7 @@ def action_weixin_pay(data, request):
 				#支付成功业务
 				consumer_order = request.session['consumer_order']						
 				snd_bonus_pay_weixin(consumer_order)
-				response = dict(status=SUCCESS, result=SUCCESS)				
+				response = dict(status=SUCCESS, result=SUCCESS)
 			else:
 				order_query = action_order_query(out_trade_no)
 				return_code = order_query.result['return_code']

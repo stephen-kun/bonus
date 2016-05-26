@@ -17,7 +17,6 @@ ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&s
 OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_base&state=1#wechat_redirect"%(APPID)
 WX_USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN"
 
-
 #ADDRESS_IP = '127.0.0.1:8000'
 ADDRESS_IP = 'wx.tonki.com.cn'
 #ADDRESS_IP = '120.76.122.53'
@@ -53,3 +52,33 @@ USER_INFO_URL = 'http://%s/weixin/view_user_info'%(ADDRESS_IP)
 USER_TICKET_URL = 'http://%s/weixin/view_user_ticket'%(ADDRESS_IP)
 SETTLE_ACCOUNTS_URL = 'http://%s/weixin/site_settle_account'%(ADDRESS_IP)
 BONUS_DETAIL_URL = 'http://%s/weixin/view_bonus_detail'%(ADDRESS_IP)
+
+TEST_DEBUG = True 
+
+COMMON_BONUS = 0
+RANDOM_BONUS = 1
+SYS_BONUS	= 2
+
+WEIXIN_PAY = 'WEIXIN_PAY'
+WALLET_PAY = 'WALLET_PAY'
+SUCCESS = 'SUCCESS'
+FAIL = 'FAIL'
+NOTPAY = 'NOTPAY'
+CLOSED = 'CLOSED'
+REFUND = 'REFUND'
+USERPAYING = 'USERPAYING'
+PAYERROR = 'PAYERROR'
+NOTDINING = 'NOTDINING'
+INEXISTENCE = 'INEXISTENCE'
+
+AJAX_GET_BONUS = 'ajax_get_bonus'
+AJAX_CREATE_TICKET = 'ajax_create_ticket'
+AJAX_WEIXIN_PAY = 'ajax_weixin_pay'
+AJAX_BONUS_REFUSE = 'ajax_bonus_refuse'
+AJAX_BONUS_MESSAGE = 'ajax_bonus_message'
+AJAX_MODIFY_PHONE = 'ajax_modify_phone'
+AJAX_MODIFY_NAME = 'ajax_modify_name'
+AJAX_MODIFY_ADDRESS = 'ajax_modify_address'
+AJAX_MODIFY_EMAIL = 'ajax_modify_email'
+AJAX_MODIFY_SEX = 'ajax_modify_sex'
+AJAX_WEIXIN_ORDER = 'ajax_weixin_order'

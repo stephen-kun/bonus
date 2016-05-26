@@ -24,7 +24,6 @@ from lxml import etree
 import types
 
 
-TEST_DEBUG = False 
 
 class _MenuUrl():
 	get_bonus_url = GET_BONUS_URL
