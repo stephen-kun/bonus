@@ -41,4 +41,12 @@ urlpatterns = [
 	url(r'^view_redirect_qubaba_forum',views.view_redirect_qubaba_forum, name='view_redirect_qubaba_forum'),
 	url(r'^pay_notify', views.view_pay_notify, name='pay_notify'),
 	url(r'^test_wxpay/pay', views.view_test_wxpay, name='test_wxpay'),
+	
+	url(r'^view_redirect_common_bonus',views.view_redirect_common_bonus, name='view_redirect_common_bonus'),	
+	url(r'^view_redirect_random_bonus',views.view_redirect_random_bonus, name='view_redirect_random_bonus'),	
+	url(r'^site_snd_bonus',views.site_snd_bonus, name='site_snd_bonus'),	
+	url(r'^site_rcv_bonus',views.site_rcv_bonus, name='site_rcv_bonus'),
+	url(r'^site_settle_account', views.site_settle_account, name='site_settle_account'),
+	url(r'^site_user_account', views.site_user_account, name='site_user_account'),	
+	
 ]

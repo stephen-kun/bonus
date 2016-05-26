@@ -30,7 +30,6 @@ class _MenuUrl():
 	get_bonus_url = GET_BONUS_URL
 	snd_bonus_url = SND_BONUS_URL
 	settle_accounts_url = SETTLE_ACCOUNTS_URL
-	forum_url = QUBABA_FORUM_URL
 	user_account_url = USER_ACCOUNT_URL
 	user_info_url = USER_INFO_URL
 	user_ticket_url = USER_TICKET_URL
@@ -168,80 +167,48 @@ def view_redirect_func(redirect_uri):
 	url = OAUTH_URL.replace('REDIRECT_URL', redirect_uri)
 	return HttpResponseRedirect(url)
 	
+def display_redirect_views(view_func,request):
+	openid = get_user_openid(request, ACCESS_TOKEN_URL)
+	if openid:
+		request.session['openid'] = openid
+	else:
+		openid = request.session['openid']
+	return view_func(openid, request)	
+	
 #我的个人界面
 @csrf_exempt
 def view_user_account(request):	
-	#print('---**view_user_account**---\n')
 	return view_redirect_func(REDIRECT_UA_URL)
+	
+@csrf_exempt
+def view_redirect_user_account(request):	
+	return display_redirect_views(display_user_account_views, request)
+	
+def display_user_account_views(open_id, request):
+	try:
+		title = '我'
+		openid = open_id
+		static_url = settings.STATIC_URL	
+		consumer = Consumer.objects.get(open_id=openid)
+		good_list = decode_bonus_detail(consumer)
+		user_ticket_url = USER_TICKET_URL
+		user_info_url = USER_INFO_URL
+		menu = _MenuUrl()
+		return render_to_response('user_account.html', locals())	
+	except:
+		log_print(display_user_account_views) 
+		return HttpResponseBadRequest('Bad request')	
 	
 #发红包界面	
 @csrf_exempt
 def view_snd_bonus(request):
 	#print('---**view_snd_bonus**---\n')
 	return view_redirect_func(REDIRECT_BS_URL)	
-		
-#抢红包界面
-@csrf_exempt
-def view_rcv_bonus(request):
-	#print('---**view_rcv_bonus**---\n')
-	return view_redirect_func(REDIRECT_BR_URL)	
-	
-#结算界面
-@csrf_exempt
-def view_settle_account(request):	
-	#print('---**view_settle_account**---\n')
-	return view_redirect_func(REDIRECT_SA_URL)
-	
-#论坛界面
-@csrf_exempt
-def view_qubaba_forum(request):
-	return view_redirect_func(REDIRECT_QF_URL)
-	
-#论坛界面重定向
-@csrf_exempt
-def view_redirect_qubaba_forum(request):
-	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	request.session['openid'] = openid
-	return display_qubaba_forum_views(openid, request)	
-	
-def display_qubaba_forum_views(open_id, request):
-	#url = 'http://www.jinfuture.com:9999/wx/?open_id=%s'%(open_id)
-	url = 'http://wx.tonki.com.cn/wx/?open_id=%s'%(open_id)
-	return HttpResponseRedirect(url)
 
-#******************************************************************************	
-
-def check_session_openid(request, redirect_uri, redirect_func):
-	if 'openid' in request.session:
-		openid = request.session['openid']
-		return redirect_func(openid, request)
-	else:
-		url = OAUTH_URL.replace('REDIRECT_URL', redirect_uri)
-		return HttpResponseRedirect(url)
-
-		
-def display_prompt_views(message):
-	title = '提示'
-	static_url = settings.STATIC_URL
-	prompt_message = message
-	menu = _MenuUrl()
-	return render_to_response("user_prompt.html", locals())		
-
-def display_rcv_bonus_views(open_id, request):
-	#检测用户是否在用餐状态
-	openid = open_id
-	if is_consumer_dining(openid):
-		title = '抢红包'
-		static_url = settings.STATIC_URL
-		ajax_request_url = AJAX_REQUEST_POST_URL
-		geted_bonus_url = GETED_BONUS_URL
-		get_bonus_url = GET_BONUS_URL
-		menu = _MenuUrl()
-		return render_to_response('get_bonus.html', locals())
-	else:
-		prompt_message = '就餐用户独享抢红包！'
-		return display_prompt_views(prompt_message)
-		
+@csrf_exempt
+def view_redirect_bonus_snd(request): 
+	return display_redirect_views(display_snd_bonus_views, request)	
+	
 def display_snd_bonus_views(open_id, request):
 	openid = open_id
 	if is_consumer_dining(openid):	
@@ -257,6 +224,41 @@ def display_snd_bonus_views(open_id, request):
 	else:
 		prompt_message = '就餐用户独享抢红包！'
 		return display_prompt_views(prompt_message)	
+		
+#抢红包界面
+@csrf_exempt
+def view_rcv_bonus(request):
+	#print('---**view_rcv_bonus**---\n')
+	return view_redirect_func(REDIRECT_BR_URL)	
+	
+@csrf_exempt
+def view_redirect_bonus_rcv(request):
+	return display_redirect_views(display_rcv_bonus_views, request)	
+	
+def display_rcv_bonus_views(open_id, request):
+	#检测用户是否在用餐状态
+	openid = open_id
+	if is_consumer_dining(openid):
+		title = '抢红包'
+		static_url = settings.STATIC_URL
+		ajax_request_url = AJAX_REQUEST_POST_URL
+		geted_bonus_url = GETED_BONUS_URL
+		get_bonus_url = GET_BONUS_URL
+		menu = _MenuUrl()
+		return render_to_response('get_bonus.html', locals())
+	else:
+		prompt_message = '就餐用户独享抢红包！'
+		return display_prompt_views(prompt_message)
+	
+#结算界面
+@csrf_exempt
+def view_settle_account(request):	
+	#print('---**view_settle_account**---\n')
+	return view_redirect_func(REDIRECT_SA_URL)
+	
+@csrf_exempt
+def view_redirect_settle_account(request):	
+	return display_redirect_views(display_settle_account_views,  request)		
 
 def display_settle_account_views(open_id, request):	
 	openid = open_id
@@ -265,9 +267,6 @@ def display_settle_account_views(open_id, request):
 			title = '结算'
 			static_url = settings.STATIC_URL
 			consumer = Consumer.objects.get(open_id=openid)
-			#total_money = consumer.session.total_money
-			#consumer = update_wallet_money(consumer)
-			#wallet_money = consumer.own_bonus_value
 			ajax_request_url = AJAX_REQUEST_POST_URL
 			menu = _MenuUrl()
 			return render_to_response('close_an_account.html', locals())		
@@ -277,23 +276,36 @@ def display_settle_account_views(open_id, request):
 	except:
 		log_print(display_settle_account_views) 
 		return HttpResponseBadRequest('Bad request')
+	
+#论坛界面
+@csrf_exempt
+def view_qubaba_forum(request):
+	return view_redirect_func(REDIRECT_QF_URL)
+	
+@csrf_exempt
+def view_redirect_qubaba_forum(request):	
+	return display_redirect_views(display_qubaba_forum_views,  request)		
+	
+def display_qubaba_forum_views(open_id, request):
+	url = 'http://wx.tonki.com.cn/wx/?open_id=%s'%(open_id)
+	return HttpResponseRedirect(url)
+	
+def display_prompt_views(message):
+	title = '提示'
+	static_url = settings.STATIC_URL
+	prompt_message = message
+	menu = _MenuUrl()
+	return render_to_response("user_prompt.html", locals())		
 
-def display_user_account_views(open_id, request):
-	try:
-		title = '我'
-		openid = open_id
-		static_url = settings.STATIC_URL	
-		consumer = Consumer.objects.get(open_id=openid)
-		#consumer.flush_own_money
-		#consumer = update_wallet_money(consumer)
-		good_list = decode_bonus_detail(consumer)
-		user_ticket_url = USER_TICKET_URL
-		user_info_url = USER_INFO_URL
-		menu = _MenuUrl()
-		return render_to_response('user_account.html', locals())	
-	except:
-		log_print(display_user_account_views) 
-		return HttpResponseBadRequest('Bad request')	
+#******************************************************************************	
+
+def check_session_openid(request, redirect_uri, redirect_func):
+	if 'openid' in request.session:
+		openid = request.session['openid']
+		return redirect_func(openid, request)
+	else:
+		url = OAUTH_URL.replace('REDIRECT_URL', redirect_uri)
+		return HttpResponseRedirect(url)
 	
 def display_user_info(open_id, request):
 	try:
@@ -309,11 +321,8 @@ def display_user_info(open_id, request):
 		return HttpResponseBadRequest('Bad request')			
 
 @csrf_exempt
-def view_redirect_user_info(request):
-	#print('---view_redirect_user_info---\n')
-	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	request.session['openid'] = openid
-	return display_user_info(openid, request)	
+def view_redirect_user_info(request):	
+	return display_redirect_views(display_user_info,  request)	
 	
 #个人信息
 @csrf_exempt
@@ -337,50 +346,14 @@ def display_user_ticket(open_id, request):
 	
 @csrf_exempt
 def view_redirect_user_ticket(request):
-	#print('---view_redirect_user_ticket---\n')
-	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	request.session['openid'] = openid
-	return display_user_ticket(openid, request)		
+	return display_redirect_views(display_user_ticket,  request)		
 
-#个人礼券
+#我的消费券
 @csrf_exempt
 def view_user_ticket(request):
 	#print('---**view_user_ticket**---\n')
 	return check_session_openid(request, REDIRECT_UT_URL, display_user_ticket)	
 	
-#结算界面认证
-@csrf_exempt
-def view_redirect_settle_account(request):	
-	#print('---view_redirect_settle_account---\n')
-	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	request.session['openid'] = openid
-	return display_settle_account_views(openid, request)		
-	
-#我的个人界面认证
-@csrf_exempt
-def view_redirect_user_account(request):	
-	#print('---view_redirect_user_account---\n')
-	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	request.session['openid'] = openid
-	return display_user_account_views(openid, request)
-
-
-#发红包界面认证	
-@csrf_exempt
-def view_redirect_bonus_snd(request): 
-	#print('---view_redirect_bonus_snd---\n')
-	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	request.session['openid'] = openid
-	return display_snd_bonus_views(openid, request)
-	
-	
-#抢红包界面认证
-@csrf_exempt
-def view_redirect_bonus_rcv(request):
-	#print('---view_redirect_bonus_rcv---\n')
-	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	request.session['openid'] = openid
-	return display_rcv_bonus_views(openid, request)
 	
 def display_common_bonus_views(open_id, request):
 	try:
@@ -399,15 +372,11 @@ def display_common_bonus_views(open_id, request):
 	
 @csrf_exempt
 def view_redirect_common_bonus(request):
-	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	request.session['openid'] = openid
-	return display_common_bonus_views(openid, request)
+	return display_redirect_views(display_common_bonus_views,  request)	
 		
 #发普通红包
 @csrf_exempt
 def view_common_bonus(request):
-	#从request中解析出openid
-	#print("========view_common_bonus =========\n")
 	return check_session_openid(request, REDIRECT_CB_URL, display_common_bonus_views)
 	
 def display_random_bonus_views(open_id, request):
@@ -427,9 +396,7 @@ def display_random_bonus_views(open_id, request):
 
 @csrf_exempt
 def view_redirect_random_bonus(request):
-	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	request.session['openid'] = openid
-	return display_random_bonus_views(openid, request)	
+	return display_redirect_views(display_random_bonus_views,  request)	
 	
 #发手气红包
 @csrf_exempt
@@ -453,15 +420,12 @@ def display_bonus_detail(open_id, request):
 		return HttpResponseBadRequest('Bad request')		
 	
 @csrf_exempt
-def view_redirect_bonus_detail(request):
-	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	request.session['openid'] = openid
-	return display_bonus_detail(openid, request)	
+def view_redirect_bonus_detail(request):	
+	return display_redirect_views(display_bonus_detail,  request)	
 	
 #串串详情
 @csrf_exempt
 def view_bonus_detail(request):
-	#print("========view_bonus_detail =========\n")
 	if 'id_bonus' in request.GET:
 		request.session['id_bonus'] = request.GET.get('id_bonus')
 	return check_session_openid(request, REDIRECT_BD_URL, display_bonus_detail)
@@ -482,9 +446,7 @@ def display_self_rcv_bonus(open_id, request):
 
 @csrf_exempt	
 def view_redirect_self_rcv_bonus(request):
-	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	request.session['openid'] = openid
-	return display_self_rcv_bonus(openid, request)		
+	return display_redirect_views(display_self_rcv_bonus,  request)	
 	
 #check收到的串串
 @csrf_exempt
@@ -507,10 +469,8 @@ def display_self_snd_bonus(open_id, request):
 		return HttpResponseBadRequest('Bad request')		
 
 @csrf_exempt	
-def view_redirect_self_snd_bonus(request):
-	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	request.session['openid'] = openid
-	return display_self_snd_bonus(openid, request)		
+def view_redirect_self_snd_bonus(request):	
+	return display_redirect_views(display_self_snd_bonus,  request)	
 
 #check发出的串串
 @csrf_exempt
@@ -540,15 +500,29 @@ def display_self_bonus_list(open_id, request):
 	
 @csrf_exempt
 def view_redirect_self_bonus_list(request):
-	openid = get_user_openid(request, ACCESS_TOKEN_URL)
-	request.session['openid'] = openid
-	return display_self_bonus_list(openid, request)	
+	return display_redirect_views(display_self_bonus_list,  request)	
 	
 #check串串排行榜
 @csrf_exempt
 def view_self_bonus_list(request):
 	#print("========view_self_bonus_list =========\n")	
 	return check_session_openid(request, REDIRECT_SBL_URL, display_self_bonus_list)
+	
+#页内发红包
+def site_snd_bonus(request):
+	return check_session_openid(request, REDIRECT_BS_URL, display_snd_bonus_views)
+	
+#页内收发红包
+def site_rcv_bonus(request):
+	return check_session_openid(request, REDIRECT_BR_URL, display_rcv_bonus_views)
+
+#页内结算
+def site_settle_account(request):
+	return check_session_openid(request, REDIRECT_SA_URL, display_settle_account_views)
+
+#页内查看我
+def site_user_account(request):
+	return check_session_openid(request, REDIRECT_UA_URL, display_user_account_views)	
 		
 #网页ajax请求
 @csrf_exempt
