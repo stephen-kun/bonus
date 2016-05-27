@@ -11,20 +11,17 @@ function tc_center(){
 	$(".popup").css({bottom:_bottom,left:_left});
 }	
 
-var flag_get_bonus = 1;
+
 function click_get_bonus(url, openid){
 	// ajax 请求
 	var data = '{"action":"ACTION", "openid":"OPENID", "timestamp":"TIMESTAMP"}';
 	var curr_time = new Date();
 	data = data.replace(/ACTION/, 'ajax_get_bonus').replace(/OPENID/,openid).replace(/TIMESTAMP/, curr_time);
 	
-	var xmlhttp=new XMLHttpRequest();
-	  
-	xmlhttp.onreadystatechange=function()
-	{
-		if(xmlhttp.readyState==4 && xmlhttp.status==200)
+	$.post(url, data, function(data, status){
+		if(status=='success')
 		{
-			var JSONObject = JSON.parse(xmlhttp.responseText);
+			var JSONObject = JSON.parse(data);
 			if(JSONObject.status == '0')
 			{
 				if(JSONObject.number == '0'){
@@ -47,14 +44,7 @@ function click_get_bonus(url, openid){
 			$("#popup").fadeIn(1500);//查找ID为popup的DIV fadeIn()显示弹出时间
 			tc_center();
 		}
-	};
-	
-	if(flag_get_bonus)
-	{
-		xmlhttp.open("POST", url, true);
-		xmlhttp.send(data);		
-		flag_get_bonus = 0;
-	}
+	});	
 
 }	
 	

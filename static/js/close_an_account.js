@@ -6,8 +6,6 @@
  * http://www.opensource.org/licenses/mit-license.php
 */
 
-var flag_close_account = 1;
-var flag_check_code = 0;   
 function action_create_ticket(openid, total_money, wallet_money, url){
 	var auth_code ;
 	auth_code = $("#auth_code").val();
@@ -35,19 +33,12 @@ function action_create_ticket(openid, total_money, wallet_money, url){
 		return;
 	}
 	
-	
-	var action;
-	var xmlhttp = new XMLHttpRequest();
-	auth_code = document.getElementById("auth_code").value;
-	action = 'ajax_create_ticket';
-	var data = '{"openid":"OPENID", "action":"ACTION", "user_wallet":"USER_WALLET", "total_money":"TOTAL_MONEY","ticket_value":"TICKET_VALUE","auth_code":"AUTH_CODE"}';
-	data = data.replace(/OPENID/, openid).replace(/ACTION/, action).replace(/USER_WALLET/, wallet_money).replace(/TOTAL_MONEY/,total_money).replace(/TICKET_VALUE/,ticket_value).replace(/AUTH_CODE/, auth_code);
+	var data = '{"openid":"OPENID", "action":"ajax_create_ticket", "user_wallet":"USER_WALLET", "total_money":"TOTAL_MONEY","ticket_value":"TICKET_VALUE","auth_code":"AUTH_CODE"}';
+	data = data.replace(/OPENID/, openid).replace(/USER_WALLET/, wallet_money).replace(/TOTAL_MONEY/,total_money).replace(/TICKET_VALUE/,ticket_value).replace(/AUTH_CODE/, auth_code);
 
-	xmlhttp.onreadystatechange=function()
-	{
-		if(xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			var JSONObject = JSON.parse(xmlhttp.responseText);
+	$.post(url, data, function(data, status){
+		if(status == 'success'){
+			var JSONObject = JSON.parse(data);
 			var html = '<p>PART1</p><p>PART2</p><p>PART3</p>';
 			if(JSONObject.status)
 			{
@@ -61,33 +52,22 @@ function action_create_ticket(openid, total_money, wallet_money, url){
 				a.value = '查看券';			
 				document.getElementById("ticket_code").innerHTML = html.replace(/PART1/,JSONObject.part1).replace(/PART2/,JSONObject.part2).replace(/PART3/,JSONObject.part3);
 				document.getElementById("value").innerHTML = JSONObject.ticket_value;	
-				flag_check_code = 1;
 				var modalLocation = $("#create_ticket").attr('data-reveal-id');
 				$('#'+modalLocation).reveal($(this).data());								
 			}
-
 		}
-	}
-	
-	if(flag_close_account)
-	{
-		flag_close_account = 0;	
-		xmlhttp.open("POST", url, true);
-		xmlhttp.send(data);			
-	}
-	
-	if(flag_check_code)
-	{
-		$('input[data-reveal-id]').live('click', function(e) {
-			e.preventDefault();
-			var modalLocation = $(this).attr('data-reveal-id');
-			$('#'+modalLocation).reveal($(this).data());			
-
-		});			
-	}	
+	});	
 
 }
 
+function check_ticket_code(){
+	$('input[data-reveal-id]').live('click', function(e) {
+		e.preventDefault();
+		var modalLocation = $(this).attr('data-reveal-id');
+		$('#'+modalLocation).reveal($(this).data());			
+
+	});		
+}
 
 (function($) {
 

@@ -34,10 +34,17 @@
         <div class="blades">
 			<div class="blade3 bladep-pt"></div>
 		</div>	
-        <h4 class="ptf"><input type="button" name="order" class="subf" value="" onclick="unified_order('{{ajax_request_url}}', '{{choose_pay_url}}', '{{openid}}', '0', '{{pay_suc_url}}')"></h4>
+        <h4 class="ptf"><input type="button" id='snd_bonus' name="order" class="subf" value=""></h4>
     </div>
 </section>
 <script type="text/javascript" src="{{static_url}}js/unified_order.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#snd_bonus").unbind('click').click(function(){
+		unified_order({{ajax_request_url}}, {{choose_pay_url}}, {{openid}}, '0', {{pay_suc_url}});
+	});
+});
+</script>
 <style type="text/css">
 	.blades{animation: spin 100s linear infinite;}
 </style>

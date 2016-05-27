@@ -42,7 +42,7 @@
 		</ul>
 	</div>	
 	<div class="queding">
-		<input type="button" id="create_ticket"  class="jin" data-reveal-id="myModal" value="生成券" onclick="action_create_ticket('{{consumer.open_id}}', '{{consumer.session.total_money}}', '{{consumer.own_bonus_value}}', '{{ajax_request_url}}')">
+		<input type="button" id="create_ticket"  class="jin" data-reveal-id="myModal" value="生成券" >
 	</div>		
 
 </section>
@@ -54,6 +54,18 @@
 </div>
 
 <script src="{{static_url}}js/close_an_account.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#create_ticket").unbind('click').click(function(){
+		var name = $("#create_ticket").val();
+		if(name == '生成券'){
+			action_create_ticket({{consumer.open_id}}, {{consumer.session.total_money}}, {{consumer.own_bonus_value}}, {{ajax_request_url}});		
+		}else{
+			check_ticket_code();
+		}
+	});
+});
+</script>
 
 </article>
 {% endblock %}

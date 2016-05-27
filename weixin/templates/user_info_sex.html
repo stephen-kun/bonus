@@ -13,9 +13,9 @@
 			<div class="wo_xinxi_edit" style="text-align:left; padding:.3em .2em; margin:0 .8em; border-bottom:#f0efef 1px solid;">			
 				<span class="rfloat" style="width:auto;">
 				{% ifequal consumer.sex '1' %}
-				<input type="radio" id="sex_man" name="check" value='1' checked onclick="submit_sex_man('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">
+				<input type="radio" id="sex_man" name="check" value='1' checked>
 				{% else %}
-				<input type="radio" id="sex_man" name="check" value="1" onclick="submit_sex_man('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">				
+				<input type="radio" id="sex_man" name="check" value="1" >				
 				{% endifequal %}
 				</span>男
 			</div>
@@ -24,9 +24,9 @@
 			<div class="wo_xinxi_edit" style="text-align:left; padding:.3em .2em; margin:0 .8em; border-bottom:#f0efef 1px solid;">
 				<span class="rfloat" style="width:auto;">
 				{% ifequal consumer.sex '2' %}
-				<input type="radio" id="sex_woman" name="check" value="2"  checked onclick="submit_sex_woman('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">
+				<input type="radio" id="sex_woman" name="check" value="2"  checked >
 				{% else %}
-				<input type="radio" id="sex_woman" name="check" value="2" onclick="submit_sex_woman('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">				
+				<input type="radio" id="sex_woman" name="check" value="2">				
 				{% endifequal %}				
 				</span>女
 			</div>
@@ -78,7 +78,17 @@ input:checked ~ input:active {
 {% endblock %}
 
 <script src="{{static_url}}js/modify_user_info.js"></script>
-
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#sex_woman").unbind('click').click(function(){
+		submit_sex_woman({{openid}}, {{ajax_request_url}}, {{user_info_url}});
+	});
+	
+	$("#sex_man").unbind('click').click(function(){
+		submit_sex_man({{openid}}, {{ajax_request_url}}, {{user_info_url}});
+	});	
+});
+</script>
 </body>
 
 {% endblock %}

@@ -11,7 +11,7 @@
 		<div class="wo_xinxi wo_xinxi_mt">
 			<div class="wo_xinxi_edit">
 				<input class="nichen" id="name" placeholder="填入昵称" style="color:#333333;padding:.3em;">
-				<input type="button" class="baocun" value="保存" onclick="submit_name('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">
+				<input type="button" id="modify_name" class="baocun" value="保存" >
 			</div>
 		</div>
 	</section>
@@ -20,6 +20,13 @@
 {% endblock %}
 
 <script src="{{static_url}}js/modify_user_info.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#modify_name").unbind('click').click(function(){
+		submit_name({{openid}}, {{ajax_request_url}}, {{user_info_url}});
+	});
+});
+</script>
 
 </body>
 

@@ -1,32 +1,21 @@
-﻿var refuse_flag = 1;
+﻿
 function refuse_bonus(id_bonus, url){
-	var xmlhttp = new XMLHttpRequest();
 	var data = '{"id_bonus":"ID_BONUS", "action":"ajax_bonus_refuse"}';
 	data = data.replace(/ID_BONUS/, id_bonus);
 
-	xmlhttp.onreadystatechange=function()
-	{
-		if(xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
+	
+	$.post(url, data, function(data, status){
+		if(status == 'success'){
 			alert('已婉拒');
 			var id = 'refuseID_BONUS'.replace(/ID_BONUS/, id_bonus);
 			document.getElementById(id).setAttribute('class', "blue");
 		}
-	}
-	
-	if(refuse_flag)
-	{
-		refuse_flag = 0;		
-		xmlhttp.open("POST", url, true);
-		xmlhttp.send(data);			
-	}
-	
+	});	
 	
 }
 
 function send_message(url){
 	var openid, id_bonus, message, data;
-	var xmlhttp = new XMLHttpRequest();
 	id_bonus = $("#id_bonus").val();
 	if($("#message").val())
 	{
@@ -41,16 +30,12 @@ function send_message(url){
 	data = '{"id_bonus":"ID_BONUS","message":"MESSAGE", "action":"ajax_bonus_message"}';
 	data = data.replace(/ID_BONUS/, id_bonus).replace(/MESSAGE/, message);
   
-	xmlhttp.onreadystatechange=function()
-	{
-		if(xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-			var id = document.getElementById("show_message").value;
-			document.getElementById(id).innerHTML=message;
+	$.post(url, data, function(data, status){
+		if(status == 'success'){
+			var id = $("#show_message").val();
+			$("#" + id).text(message);
 		}
-	}
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send(data);	
+	});	
 }
 	
 function message(id_bonus){
@@ -69,6 +54,6 @@ function message(id_bonus){
 		},300);
 	})
 	
-	document.getElementById("id_bonus").value=id_bonus;		
-	document.getElementById("show_message").value=id_bonus;
+	$("#id_bonus").val(id_bonus);		
+	$("#show_message").val(id_bonu);
 }

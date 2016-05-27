@@ -11,7 +11,7 @@
 		<div class="wo_xinxi wo_xinxi_mt">
 			<div class="wo_xinxi_edit">
 				<input class="nichen" type="number" id="phone" placeholder="手机号码" style="color:#333333;padding:.3em;">
-				<input type="button" class="baocun" value="保存" onclick="submit_phone('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}')">
+				<input type="button" id='modify_phone' class="baocun" value="保存">
 			</div>
 		</div>
 	</section>
@@ -20,6 +20,13 @@
 {% endblock %}
 
 <script src="{{static_url}}js/modify_user_info.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#modify_phone").unbind('click').click(function(){
+		submit_phone({{openid}}, {{ajax_request_url}}, {{user_info_url}});
+	});
+});
+</script>
 
 </body>
 

@@ -15,7 +15,7 @@
 				<div class="main">
 					<div class="item1">
 						<div class="kodai">
-							<img src="{{static_url}}images/qubaba1_03.png" class="full" onclick="click_get_bonus('{{ajax_request_url}}', '{{openid}}')" />
+							<img id='get_bonus' src="{{static_url}}images/qubaba1_03.png" class="full" />
 							<img src="{{static_url}}images/qubaba1_03_zhse.png" class="empty" />
 						</div>
 						<div class="clipped-box">
@@ -42,6 +42,13 @@
 <script src="{{static_url}}js/bonus_animation.js"></script>
 <script src="{{static_url}}js/get_bonus.js"></script>
 <script src="{{static_url}}js/Heightauto.js" type="text/javascript"></script><!--页面高自由高度-->
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#get_bonus").unbind('click').click(function(){
+		click_get_bonus({{ajax_request_url}}, {{openid}});
+	});
+});
+</script>
 </article>
 {% endblock %}
 {% block menu %}

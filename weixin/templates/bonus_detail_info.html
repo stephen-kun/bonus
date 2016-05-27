@@ -49,7 +49,7 @@
 				{% else %}
 				{% ifequal bonus.consumer.open_id openid %}
 				{% if not bonus.is_refuse %}
-				<p id="{{bonus.id_bonus}}"><a onClick="message('{{bonus.id_bonus}}')">留言</a></p>				
+				<p id="{{bonus.id_bonus}}"><a>留言</a></p>				
 				{% endif %}
 				{% endifequal %}				
 				{% endif %}
@@ -76,12 +76,24 @@
 			<input type="text" class="blankin" name="message" id="message" placeholder="谢谢您的红包">
 			<input type="text" class="blankiny" name="id_bonus" id="id_bonus">
 			<input type="text" class="blankiny" name="show_message" id="show_message">
-			<input type="button" class="send_out" value="发送" onClick="send_message('{{ajax_request_url}}')">
+			<input type="button" id='snd_msg' class="send_out" value="发送" >
 		</h3>
     </div>	
 </section> 
 <script type="text/javascript" src="{{static_url}}js/jquery.js"></script>
 <script type="text/javascript" src="{{static_url}}js/geted_bonus.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#snd_msg").unbind('click').click(function(){
+		send_message({{ajax_request_url}});
+	});
+	
+	$("#" + {{bonus.id_bonus}}).unbind('click').click(function(){
+		message({{bonus.id_bonus}});
+	});
+	
+});
+</script>
 
 </article>
 {% endblock %}
