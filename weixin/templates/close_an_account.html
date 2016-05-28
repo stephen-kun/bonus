@@ -59,7 +59,7 @@ $(document).ready(function(){
 	$("#create_ticket").unbind('click').click(function(){
 		var name = $("#create_ticket").val();
 		if(name == '生成券'){
-			action_create_ticket({{consumer.open_id}}, {{consumer.session.total_money}}, {{consumer.own_bonus_value}}, {{ajax_request_url}});		
+			action_create_ticket('{{consumer.open_id}}', '{{consumer.session.total_money}}', '{{consumer.own_bonus_value}}', '{{ajax_request_url}}');		
 		}else{
 			check_ticket_code();
 		}

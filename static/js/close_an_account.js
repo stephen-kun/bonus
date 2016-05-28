@@ -5,7 +5,7 @@
  * Free to use under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
 */
-
+var ticket_flag = false;
 function action_create_ticket(openid, total_money, wallet_money, url){
 	var auth_code ;
 	auth_code = $("#auth_code").val();
@@ -33,6 +33,11 @@ function action_create_ticket(openid, total_money, wallet_money, url){
 		return;
 	}
 	
+	if(ticket_flag){
+		return;
+	}
+	ticket_flag = true;	
+	
 	var data = '{"openid":"OPENID", "action":"ajax_create_ticket", "user_wallet":"USER_WALLET", "total_money":"TOTAL_MONEY","ticket_value":"TICKET_VALUE","auth_code":"AUTH_CODE"}';
 	data = data.replace(/OPENID/, openid).replace(/USER_WALLET/, wallet_money).replace(/TOTAL_MONEY/,total_money).replace(/TICKET_VALUE/,ticket_value).replace(/AUTH_CODE/, auth_code);
 
@@ -43,7 +48,7 @@ function action_create_ticket(openid, total_money, wallet_money, url){
 			if(JSONObject.status)
 			{
 				alert(JSONObject.error_message);	
-				flag_close_account = 1
+				ticket_flag = false;
 			}
 			else
 			{					

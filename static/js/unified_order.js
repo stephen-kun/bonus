@@ -1,7 +1,11 @@
-﻿
+﻿var order_flag = false;
 
 function unified_order(url, url_go, openid, bonus_type, pay_suc_url)
 {
+	if(order_flag){
+		return;
+	}
+	order_flag =true;
 	var sum = 0;
 	var table = $('input').filter("[name='table']").val();
 	var bonus_num = $('input').filter("[name='bonus_num']").val();
@@ -105,10 +109,12 @@ function unified_order(url, url_go, openid, bonus_type, pay_suc_url)
 				{
 					// 桌台不存在
 					alert("该桌台不错在");
+					order_flag = false;
 				}
 				else if(result.err_code == 'NOTDINING'){
 					// 未就餐
 					alert('该桌台目前没有就餐');
+					order_flag = false;
 				}					
 			}
 		}

@@ -80,12 +80,12 @@ input:checked ~ input:active {
 <script src="{{static_url}}js/modify_user_info.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	$("#sex_woman").unbind('click').click(function(){
-		submit_sex_woman({{openid}}, {{ajax_request_url}}, {{user_info_url}});
+	$("#sex_woman").one('click', function(){
+		submit_sex_woman('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}');
 	});
 	
-	$("#sex_man").unbind('click').click(function(){
-		submit_sex_man({{openid}}, {{ajax_request_url}}, {{user_info_url}});
+	$("#sex_man").unbind('click', function(){
+		submit_sex_man('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}');
 	});	
 });
 </script>

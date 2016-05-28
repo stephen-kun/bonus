@@ -11,9 +11,7 @@ function tc_center(){
 	$(".popup").css({bottom:_bottom,left:_left});
 }	
 
-
 function click_get_bonus(url, openid){
-	// ajax 请求
 	var data = '{"action":"ACTION", "openid":"OPENID", "timestamp":"TIMESTAMP"}';
 	var curr_time = new Date();
 	data = data.replace(/ACTION/, 'ajax_get_bonus').replace(/OPENID/,openid).replace(/TIMESTAMP/, curr_time);

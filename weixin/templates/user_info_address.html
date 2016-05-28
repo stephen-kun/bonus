@@ -22,8 +22,8 @@
 <script src="{{static_url}}js/modify_user_info.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	$("#modify_address").unbind('click').click(function(){
-		submit_address({{openid}}, {{ajax_request_url}}, {{user_info_url}});
+	$("#modify_address").one('click', function(){
+		submit_address('{{openid}}', '{{ajax_request_url}}', '{{user_info_url}}');
 	});
 });
 </script>

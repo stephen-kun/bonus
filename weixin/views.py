@@ -355,6 +355,8 @@ def view_user_ticket(request):
 	
 	
 def display_common_bonus_views(open_id, request):
+	if 'table' in request.GET:
+		table = request.GET.get('table')
 	try:
 		title = '普通红包'
 		static_url = settings.STATIC_URL
@@ -547,7 +549,6 @@ def view_geted_bonus(request):
 	if "id_record" in request.session:
 		try:
 			id_record = request.session['id_record']
-			#print("===view_geted_bonus:%s===\n"%(id_record))
 			title = '抢到的红包'
 			static_url = settings.STATIC_URL
 			bonus_dir = check_geted_bonus(id_record)

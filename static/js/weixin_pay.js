@@ -1,8 +1,10 @@
 
+
 function consumer_pay(url, url_go, openid, prepay_id, total_fee){
 	var request_data = '{"openid":"OPENID","prepay_id":"PREPAY_ID", "action":"ajax_weixin_pay", "total_fee":"TOTAL_FEE"}';
 	request_data = request_data.replace(/OPENID/, openid).replace(/PREPAY_ID/, prepay_id).replace(/TOTAL_FEE/, total_fee);
 	var i_count = 0;
+
 
 	$.post(url, request_data, function(data, status){
 		var response = JSON.parse(data);
@@ -36,7 +38,7 @@ function consumer_pay(url, url_go, openid, prepay_id, total_fee){
 							window.location.href = url_go;							
 						}						
 					});
-				}, 3000);
+				}, 2000);
 			}else{
 				$("#weixin").html('<input type="button" class="gray" value="微信支付" >');
 				alert('支付失败');

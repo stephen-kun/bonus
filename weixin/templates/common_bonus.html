@@ -8,7 +8,7 @@
 <article>
 <section>
   	<div class="box-duixiang">
-    	<h4><span class="rfloat"><input type="number" maxlength="6" name="table" class="lvse">号桌</span>发送对象
+    	<h4><span class="rfloat"><input type="number" maxlength="6" name="table" class="lvse" value="{{table}}">号桌</span>发送对象
         <img src="{{static_url}}images/qubaba2_01.png" width="40">
         </h4>
     </div>
@@ -41,7 +41,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	$("#snd_bonus").unbind('click').click(function(){
-		unified_order({{ajax_request_url}}, {{choose_pay_url}}, {{openid}}, '0', {{pay_suc_url}});
+		unified_order('{{ajax_request_url}}', '{{choose_pay_url}}', '{{openid}}', '0', '{{pay_suc_url}}');
 	});
 });
 </script>

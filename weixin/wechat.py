@@ -99,19 +99,18 @@ def user_subscribe(openid):
 #更新或创建就餐会话
 def update_or_create_session(table, consumer):
 	session = None
-	consumer_list = Consumer.objects.filter(on_table=table)
-	if len(consumer_list):
+	if table.status:
+		consumer_list = Consumer.objects.filter(on_table=table)
 		session = consumer_list[0].session
 	else:
-		#创建会话
 		session = DiningSession.objects.create(table=table)
+		table.status = True
+		table.save()
 	consumer.on_table = table
 	consumer.session = session
 	consumer.save()
 	session.person_num += 1
 	session.save()
-	table.status = True
-	table.save()
 	return session
 	
 class PostResponse():
@@ -138,14 +137,12 @@ class PostResponse():
 	
 		# 获取桌对象
 		index_table = re.findall(r'\d+',self.message.key)[0]
-		try:
-			table = DiningTable.objects.get(index_table=index_table)	
-			#更新或创建就餐会话
-			session = update_or_create_session(table, consumer)	
-			# 返回选座信息    
-			return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))
-		except ObjectDoesNotExist:
-			return wechat.response_text(content = u'该桌台不存在')
+		table = DiningTable.objects.get_or_create(index_table=index_table)  	
+		#更新或创建就餐会话
+		update_or_create_session(table[0], consumer)	
+		# 返回选座信息    
+		return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))
+
 		
 	#取消关注
 	def _unsubscribe(self):
@@ -175,12 +172,12 @@ class PostResponse():
 			consumer = user_subscribe(self.source)	
 			if not consumer:
 				return wechat.response_text(content = u'注册失败')			
-		if consumer.session and consumer.on_table.index_table != index_table:
+		if consumer.on_table and consumer.on_table.index_table != index_table and consumer.on_table.status:
 			return wechat.response_text(content =  u'请您先结算%s号桌所抢红包，再扫描该桌'%(consumer.on_table.index_table))
-		elif consumer.session and consumer.on_table.index_table == index_table:
+		elif consumer.on_table and consumer.on_table.index_table == index_table and consumer.on_table.status:
 			return ''
 		#更新或创建就餐会话		
-		session = update_or_create_session(table[0], consumer)	
+		update_or_create_session(table[0], consumer)	
 		# 返回选座信息
 		return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))			
 

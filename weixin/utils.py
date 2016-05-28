@@ -32,6 +32,7 @@ class _GetedBonus():
 		self.message = rcv_bonus.snd_bonus.to_message
 		self.datetime = rcv_bonus.datetime
 		self.title = rcv_bonus.snd_bonus.title
+		self.table = rcv_bonus.snd_bonus.consumer.on_table.index_table
 		l_content = bonus_content_json_to_models(rcv_bonus.content)
 		self.content = l_content
 
@@ -848,9 +849,6 @@ def handle_ajax_request(action, data, request):
 		if action == AJAX_GET_BONUS:
 			return action_get_bonus(data['openid'], request)
 		elif action == AJAX_CREATE_TICKET:
-			#清django session
-			if 'openid' in request.session:
-				del request.session['openid']
 			response = action_create_ticket(data)
 			return json.dumps(response)
 		elif action == AJAX_WEIXIN_ORDER:

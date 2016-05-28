@@ -44,7 +44,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	$("#snd_bonus").unbind('click').click(function(){
-		unified_order({{ajax_request_url}}, {{choose_pay_url}}, {{openid}}, '1', {{pay_suc_url}});
+		unified_order('{{ajax_request_url}}', '{{choose_pay_url}}', '{{openid}}', '1', '{{pay_suc_url}}');
 	});
 });
 </script>

@@ -1,5 +1,4 @@
-﻿
-function refuse_bonus(id_bonus, url){
+﻿function refuse_bonus(id_bonus, url){
 	var data = '{"id_bonus":"ID_BONUS", "action":"ajax_bonus_refuse"}';
 	data = data.replace(/ID_BONUS/, id_bonus);
 
@@ -14,7 +13,12 @@ function refuse_bonus(id_bonus, url){
 	
 }
 
+var snd_flag = false;
 function send_message(url){
+	if(snd_flag){
+		return;
+	}
+	snd_flag = true;
 	var openid, id_bonus, message, data;
 	id_bonus = $("#id_bonus").val();
 	if($("#message").val())
@@ -34,10 +38,11 @@ function send_message(url){
 		if(status == 'success'){
 			var id = $("#show_message").val();
 			$("#" + id).text(message);
+			snd_flag = false;
 		}
 	});	
 }
-	
+		
 function message(id_bonus){
 	$(".am-share").addClass("am-modal-active");	
 	if($(".send_out").length>0){
@@ -55,5 +60,5 @@ function message(id_bonus){
 	})
 	
 	$("#id_bonus").val(id_bonus);		
-	$("#show_message").val(id_bonu);
+	$("#show_message").val(id_bonus);
 }

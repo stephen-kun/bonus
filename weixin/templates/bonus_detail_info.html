@@ -85,11 +85,14 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	$("#snd_msg").unbind('click').click(function(){
-		send_message({{ajax_request_url}});
+		send_message('{{ajax_request_url}}');
 	});
 	
-	$("#" + {{bonus.id_bonus}}).unbind('click').click(function(){
-		message({{bonus.id_bonus}});
+	$("p").unbind('click').click(function(){
+		var id = $(this).attr('id');
+		if(id){
+			message(id);
+		}
 	});
 	
 });
