@@ -7,7 +7,8 @@
 {% block content %}
 <article>
 <section>
-{% for bonus in system_bonus %}
+{% for bonus in rcv_bonus_list %}
+	{% ifequal bonus.bonus_type 2%}
     <div class="head">
 		<h2><img src={{bonus.picture}}></h2>
 		<h4>{{bonus.name}}</h4>
@@ -29,9 +30,9 @@
 		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="message('{{bonus.id_bonus}}')">留言</span></h6>
 		<h6>{{bonus.datetime|date:"m-j"}}</h6>
 	</div>
-{% endfor %}
+	{% endifequal %}
 
-{% for bonus in random_bonus %}
+	{% ifequal bonus.bonus_type 1%}
     <div class="head">
 		<h2><img src={{bonus.picture}}></h2>
 		<h4>{{bonus.name}}</h4>
@@ -50,9 +51,9 @@
 		<h6 class="rfloat" id="{{bonus.id_bonus}}"><span onClick="message('{{bonus.id_bonus}}')">留言</span></h6>
 		<h6>{{bonus.datetime|date:"m-j"}}</h6>
 	</div>
-{% endfor %}
+	{% endifequal %}
 
-{% for bonus in common_bonus %}
+	{% ifequal bonus.bonus_type 0%}
     <div class="head">
 		<h2><img src={{bonus.picture}}></h2>
 		<h4>{{bonus.name}}的红包</h4>
@@ -73,6 +74,7 @@
         <h2><input type="button" name="{{bonus.id_bonus}}" class="red" value="婉拒"></h2>
         <span class="wj"><a href="{{common_bonus_url}}/?table={{bonus.table}}" target="_blank">回赠</a></span>	
 	</div>	
+	{% endifequal %}
 {% endfor %}
 
 	<section>

@@ -551,14 +551,10 @@ def view_geted_bonus(request):
 			id_record = request.session['id_record']
 			title = '抢到的红包'
 			static_url = settings.STATIC_URL
-			bonus_dir = check_geted_bonus(id_record)
+			rcv_bonus_list = check_geted_bonus(id_record)
 			openid = get_record_openid(id_record)
-			random_bonus = bonus_dir['random_bonus']
-			common_bonus = bonus_dir['common_bonus']
-			system_bonus = bonus_dir['system_bonus']	
 			common_bonus_url = CREATE_COMMON_BONUS_URL
 			ajax_request_url = AJAX_REQUEST_POST_URL
-			#del request.session['id_record']
 			menu = _MenuUrl()
 			return render_to_response('geted_bonus.html', locals())
 		except:

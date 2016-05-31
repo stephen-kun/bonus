@@ -340,7 +340,7 @@ class Consumer(models.Model):
 	
 	@property
 	def own_ticket_list(self):
-		ticket_list = Ticket.objects.filter(consumer=self, is_valid=True).order_by('-id').reverse()
+		ticket_list = Ticket.objects.filter(consumer=self, is_valid=True).order_by('create_time').reverse()
 		return ticket_list
 
 	def save(self, *args, **kwargs):

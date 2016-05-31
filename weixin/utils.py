@@ -26,6 +26,7 @@ from .wx_config import *
 class _GetedBonus():
 	def __init__(self, rcv_bonus):
 		self.id_bonus = rcv_bonus.id_bonus
+		self.bonus_type = rcv_bonus.bonus_type
 		self.openid = rcv_bonus.consumer.open_id
 		self.name = rcv_bonus.snd_bonus.consumer.name
 		self.picture = rcv_bonus.snd_bonus.consumer.picture
@@ -189,22 +190,12 @@ def count_total_money_on_table(openid):
 def check_geted_bonus(id_record):
 	#print('*******check_geted_bonus********')
 	record_rcv_bonus = RecordRcvBonus.objects.get(id_record=id_record)
-	rcv_bonus_list = RcvBonus.objects.filter(record_rcv_bonus=record_rcv_bonus)
-	random_bonus = []
-	common_bonus = []
-	system_bonus = []
+	rcv_bonus_list = RcvBonus.objects.filter(record_rcv_bonus=record_rcv_bonus).order_by('datetime')
+	rcv_bonus = []
 	for bonus in rcv_bonus_list:
 		geted_bonus = _GetedBonus(bonus)
-		if bonus.bonus_type == COMMON_BONUS:
-			common_bonus.append(geted_bonus)
-		elif bonus.bonus_type == RANDOM_BONUS:
-			random_bonus.append(geted_bonus)
-		elif bonus.bonus_type == SYS_BONUS:
-			system_bonus.append(geted_bonus)
-		else:
-			#print('===can not match==\n')
-			pass
-	return dict(random_bonus=random_bonus, common_bonus=common_bonus, system_bonus=system_bonus)
+		rcv_bonus.append(geted_bonus)
+	return rcv_bonus
 
 #获取红包类型字符串
 def get_bonus_type_str(bonus_type):
