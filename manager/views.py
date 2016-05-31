@@ -647,6 +647,16 @@ def monthly_statistics(request):
 
 def ticket_consume_record(request):
 	time = datetime.datetime.today()
+	date_str = request.GET.get('date')
+	if (date_str):
+		try:
+			time = datetime.datetime.strptime(date_str, "%Y-%m-%d")
+		except ValueError:
+			time = datetime.datetime.today()
+	else:
+		time = datetime.datetime.today()
+
+	consumed_tickets=Ticket.get_consumed_ticket_by_date(time)
 	return render_to_response("manager/statistics/ticket_consume_record.html", locals())
 
 

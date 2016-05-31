@@ -661,7 +661,7 @@ class Ticket(models.Model):
 		else:
 			return 'ticket id %s'%(self.id_ticket)
 	@classmethod
-	def get_consumed_ticket_by_date(cls, date):
+	def get_consumed_ticket_by_date(cls, time):
 		start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
 	 	end_date = start_date + datetime.timedelta(1) 
 		return Ticket.objects.filter(is_consume=True, consume_time__range=(start_date, end_date))
