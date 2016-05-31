@@ -359,21 +359,18 @@ class Consumer(models.Model):
 		models.Model.save(self, *args, **kwargs)
 		
 	#结算
-	def close_an_account(self, ticket, ticket_value):
-		sum = float(0)
+	def close_an_account(self, ticket):
+		ticket_value = ticket.ticket_value
 		session_money = self.session.total_money
 		total_money = session_money + self.own_bonus_value
 		if(ticket_value <= session_money):
-			sum = self.session.create_ticket(ticket, ticket_value)
+			self.session.create_ticket(ticket, ticket_value)
 		elif ticket_value <= total_money:
-			sum = self.session.create_ticket(ticket, session_money)
-			sum = self.wallet_pay_ticket(ticket, (ticket_value - session_money))
-			sum += session_money
+			self.session.create_ticket(ticket, session_money)
+			self.wallet_pay_ticket(ticket, (ticket_value - session_money))
 		else:
-			sum = self.session.create_ticket(ticket, session_money)
-			sum = self.wallet_pay_ticket(ticket, self.own_bonus_value)	
-			sum = total_money
-		return sum
+			self.session.create_ticket(ticket, session_money)
+			self.wallet_pay_ticket(ticket, self.own_bonus_value)	
 
 	def get_absolute_url(self):
 		return reverse('user:detail', kwargs={'pk': self.user.pk, 'slug': self.slug})

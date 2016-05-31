@@ -22,6 +22,7 @@ from django.utils import timezone
 
 from wzhifuSDK import *
 from .wx_config import *
+from weixin.tasks import task_charge_money, task_snd_person_bonus, task_create_ticket
 
 class _GetedBonus():
 	def __init__(self, rcv_bonus):
@@ -365,9 +366,24 @@ def action_create_ticket(data):
 			return dict(status=2, error_message="验证码错误，请重新输入！")
 		id_ticket = create_primary_key()
 		try:
+			#释放桌台
+			consumer.on_table.status = False
+			consumer.on_table.save()
+			
+			#判断是否能够生成足额的券值
+			price = VirtualMoney.objects.get(name='串串').price
+			own_money = consumer.own_bonus_value
+			rcv_money = consumer.session.total_money
+			
+			if ticket_value >= (own_money + rcv_money):
+				ticket_value = own_money + rcv_money
+			else:
+				ticket_value = int(ticket_value / price)*price
+				
 			#生成一条消费券记录
-			new_ticket = Ticket.objects.create(id_ticket=id_ticket, valid_time=timezone.now(), consumer=consumer)
-
+			new_ticket = Ticket.objects.create(id_ticket=id_ticket, valid_time=timezone.now(), consumer=consumer, ticket_value=ticket_value)
+			
+			'''
 			#结算操作
 			ticket_value = consumer.close_an_account(new_ticket, ticket_value)
 			if ticket_value:
@@ -376,39 +392,15 @@ def action_create_ticket(data):
 			else:
 				Ticket.objects.filter(id_ticket=id_ticket).delete()
 				return dict(status=3, error_message="生成券失败！")
-			
-			'''
-			#失效该就餐会话发出的红包，将未抢红包以及婉拒红包返回客户账号
-			snd_bonus_list = SndBonus.objects.filter(session=consumer.session, is_exhausted=False)
-			for snd_bonus in snd_bonus_list:
-				snd_bonus.is_valid = False
-				snd_bonus.save()
-				rcv_bonus_list = RcvBonus.objects.filter(snd_bonus=snd_bonus, is_receive=False)
-				bonus_snd_back(rcv_bonus_list)
 
-			#婉拒红包退回
-			refuse_bonus_list = RcvBonus.objects.filter(is_refuse=True)
-			bonus_snd_back(refuse_bonus_list)
-
-			#关闭就餐会话，释放桌台
-			consumer.session.over_time = timezone.now()
-			consumer.session.save()
-			consumer.on_table.status = False
-			consumer.on_table.save()
-			consumer_list = Consumer.objects.filter(session=consumer.session)
-			for user in consumer_list:
-				#print("++++++++++++清会话以及桌台+++++++++++++++++")
-				user.on_table = None
-				user.session = None
-				user.save()
-			'''
 			#结算就餐会话
 			consumer.session.close_session()
 			
 			#更新用户钱包余额及明细
 			new_consumer = Consumer.objects.get(open_id=openid)	
 			new_consumer.flush_own_money
-
+			'''
+			ret = task_create_ticket.delay(consumer, new_ticket)
 
 			#返回消费券码以及券值
 			id_ticket = str(new_ticket.id_ticket)
@@ -760,7 +752,8 @@ def action_weixin_order(data, request):
 			return json.dumps(response)
 	if is_enough_pay(consumer, int(total_money)):
 		#发红包
-		consumer.snd_person_bonus(bonus_info=bonus_info)
+		#consumer.snd_person_bonus(bonus_info=bonus_info)
+		ret = task_snd_person_bonus.delay(consumer, bonus_info)
 		response = dict(status=SUCCESS, result=SUCCESS, pay_type=WALLET_PAY)
 	else:
 		l_content = bonus_content_json_to_models(bonus_info.content)
@@ -850,7 +843,8 @@ def snd_bonus_pay_weixin(data):
 	bonus_info = order_info['bonus_info']
 	openid = data['openid']
 	consumer = Consumer.objects.get(open_id=openid)
-	consumer.snd_person_bonus(bonus_info=bonus_info)
+	#consumer.snd_person_bonus(bonus_info=bonus_info)
+	ret = task_snd_person_bonus.delay(consumer, bonus_info)
 	
 	
 #ajax请求处理函数

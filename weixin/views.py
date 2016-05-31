@@ -23,7 +23,7 @@ from .utils import gen_trade_no , snd_bonus_pay_weixin
 from lxml import etree
 import types
 
-
+from weixin.tasks import task_charge_money, task_snd_person_bonus
 
 class _MenuUrl():
 	get_bonus_url = GET_BONUS_URL

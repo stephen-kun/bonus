@@ -31,8 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'weixin.apps.WeixinConfig',
-    'manager.apps.ManagerConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djconfig',
+	'djcelery',		
+    'weixin',
+    'manager',	
     # 'haystack',
     'core',
     'topic',
@@ -57,7 +58,6 @@ INSTALLED_APPS = [
     'user.auth',
    # 'user.admin',
     'wx',
-
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -214,3 +214,10 @@ CASE_INSENSITIVE_EMAILS = True
 # SESSION_COOKIE_DOMAIN = ['*',]
 
 TICKET_URL = "wx.tonki.com.cn/manager/account/send_coupon/"
+
+import djcelery
+djcelery.setup_loader()
+
+BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERY_TASK_RESULT_EXPIRES=3600
