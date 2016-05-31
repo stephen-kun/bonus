@@ -163,10 +163,14 @@ def is_consumer_dining(openid):
 		return False
 
 
-#主键生成方法
-def create_primary_key():
+#生成唯一key id
+def create_primary_key(length=10):
 	now = datetime.datetime.now()
-	strs = now.strftime('%f') 
+	strs = None
+	if length == 10:
+		strs = now.strftime('%f') 
+	elif length == 24:
+		strs = now.strftime('%Y%m%d%H%M%S%f')
 	chars = "0123456789"
 	ran = []
 	for x in range(4):
@@ -537,6 +541,7 @@ def get_bonus(consumer, session, record_rcv_bonus, bonus_list, param_tuple):
 				remain_bonus[rand].session = session
 				remain_bonus[rand].record_rcv_bonus = record_rcv_bonus
 				remain_bonus[rand].is_receive = True
+				remain_bonus[rand].content = bonus_content_detail(bonus=remain_bonus[rand], type='rcv')
 				remain_bonus[rand].save()
 				if bonus.bonus_remain == 1:
 					bonus.is_exhausted = True
@@ -550,13 +555,18 @@ def get_bonus(consumer, session, record_rcv_bonus, bonus_list, param_tuple):
 #抢红包事件
 def action_get_bonus(openid, request):
 
+	consumer = Consumer.objects.get(open_id=openid)
+	
+	#准备一条抢红包记录
+	id_record=create_primary_key()
+	record_rcv_bonus = RecordRcvBonus.objects.create(id_record=id_record, consumer=consumer)	
+	
+	'''
 	#返回抢到的红包个数
 	bonus_num = 0			#统计抢到的红包个数
 	total_number = 0		#统计串串个数
-	total_money = 0 		#统计抢到的红包总额
-
-	consumer = Consumer.objects.get(open_id=openid)
-
+	total_money = 0 		#统计抢到的红包总额	
+	
 	#准备一条抢红包记录
 	record_rcv_bonus = RecordRcvBonus.objects.create(id_record=create_primary_key(), consumer=consumer)
 
@@ -584,13 +594,19 @@ def action_get_bonus(openid, request):
 		consumer.rcv_bonus_value += total_money
 		consumer.save()
 
+	'''
+	bonus_num = consumer.rcv_qubaba_bonus(record_rcv_bonus)
+	
+	if bonus_num:
 		#更新抢红包记录
 		record_rcv_bonus.bonus_num = bonus_num
 		record_rcv_bonus.save()
-
+		
 		#存储django session
 		request.session['id_record'] = record_rcv_bonus.id_record
-
+	else:
+		RecordRcvBonus.objects.filter(id_record=id_record).delete()
+	
 	response = dict(status=0, number=bonus_num)
 	return json.dumps(response)
 
@@ -795,14 +811,17 @@ def action_weixin_pay(data, request):
 	try:
 		prepay_id = data['prepay_id']
 		recharge = Recharge.objects.filter(prepay_id=prepay_id, status=False)	
-		if len(recharge):	
+		if recharge:	
 			#主动查询订单
 			out_trade_no = recharge[0].out_trade_no	
 			new_recharge = Recharge.objects.get(out_trade_no=out_trade_no)
 			if TEST_DEBUG:
 				total_fee = int(float(data['total_fee'])*100)
 				recharge.update(status=True, trade_state=SUCCESS, total_fee=total_fee)
-				new_recharge.charge_money
+				if not new_recharge.charge_money:
+					#WalletMoney.objects.filter(recharge=new_recharge).delete()
+					response = dict(status=FAIL, err_msg='未知错误')
+					return json.dumps(response)
 				#支付成功业务
 				consumer_order = request.session['consumer_order']						
 				snd_bonus_pay_weixin(consumer_order)

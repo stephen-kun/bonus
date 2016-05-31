@@ -53,7 +53,7 @@ USER_TICKET_URL = 'http://%s/weixin/view_user_ticket'%(ADDRESS_IP)
 SETTLE_ACCOUNTS_URL = 'http://%s/weixin/site_settle_account'%(ADDRESS_IP)
 BONUS_DETAIL_URL = 'http://%s/weixin/view_bonus_detail'%(ADDRESS_IP)
 
-TEST_DEBUG = False 
+TEST_DEBUG = True 
 
 COMMON_BONUS = 0
 RANDOM_BONUS = 1
