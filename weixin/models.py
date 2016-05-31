@@ -180,27 +180,19 @@ class DiningSession(models.Model):
 	#结束就餐会话
 	def close_session(self):
 		#失效该就餐会话发出的红包，将未抢红包以及婉拒红包返回客户账号
-		list_len = SndBonus.objects.filter(session=self, is_exhausted=False).count()
-		while list_len:
-			list_len -= SndBonus.objects.select_for_update().filter(session=self, is_exhausted=False).update(is_valid=False)
+		SndBonus.objects.select_for_update().filter(session=self, is_exhausted=False).update(is_valid=False)
 		rcv_bonus_list = RcvBonus.objects.filter(session=self, is_receive=False)
-		length = RcvBonus.objects.filter(session=self, is_receive=False).count()
 		for bonus in rcv_bonus_list:
-			list_len = WalletMoney.objects.filter(rcv_bonus=bonus).count()
-			while list_len:
-				list_len -= WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus).update(snd_bonus=None, rcv_bonus=None, is_send=False, is_receive=False, ticket=None)
+			WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus).update(snd_bonus=None, rcv_bonus=None, is_send=False, is_receive=False, ticket=None)
 		
-		while length:
-			length -= rcv_bonus_list.update(is_valid=False)
+		rcv_bonus_list.update(is_valid=False)
 			
 		
 		#关闭就餐会话，释放桌台
 		DiningTable.objects.select_for_update().filter(id=self.table.id).update(status=False)
 		for consumer in Consumer.objects.filter(session=self):
 			consumer.flush_own_money
-		list_len = Consumer.objects.filter(session=self).count()
-		while list_len:
-			list_len -= Consumer.objects.select_for_update().filter(session=self).update(on_table=None, session=None)
+		Consumer.objects.select_for_update().filter(session=self).update(on_table=None, session=None)
 		DiningSession.objects.select_for_update().filter(id=self.id).update(over_time = timezone.now())
 
 	def create_ticket(self, ticket, total_money):
@@ -211,9 +203,7 @@ class DiningSession(models.Model):
 			is_enough = False
 			for bonus in rcv_bonus_list:
 				if is_enough:
-					list_len = WalletMoney.objects.filter(rcv_bonus=bonus).count()
-					while list_len:
-						list_len -= WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+						WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
 				else:
 					money_list = WalletMoney.objects.filter(rcv_bonus=bonus).order_by('-id').reverse()
 					id_index = 0
@@ -225,12 +215,8 @@ class DiningSession(models.Model):
 						else:
 							ticket_value = sum
 							id_index = money.id
-					list_len = WalletMoney.objects.filter(rcv_bonus=bonus, id__lte=id_index).count()
-					while list_len:
-						list_len -= WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__lte=id_index).update(ticket=ticket, consumer=ticket.consumer)
-					list_len = WalletMoney.objects.filter(rcv_bonus=bonus, id__gt=id_index).count()
-					while list_len:
-						list_len -= WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__gt=id_index).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+						WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__lte=id_index).update(ticket=ticket, consumer=ticket.consumer)
+						WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__gt=id_index).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
 		return ticket_value
 		
 	@property
@@ -456,8 +442,7 @@ class Consumer(models.Model):
 				number = int(self.own_bonus_value / price)
 			id_money = money_list[number - 1].id	
 			ticket_value = number*price
-			while number:
-				number -= WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, id__lte=id_money).update(ticket=ticket)
+			WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, id__lte=id_money).update(ticket=ticket)
 		return ticket_value
 	
 	def wallet_pay_bonus(self, snd_bonus):
@@ -470,9 +455,7 @@ class Consumer(models.Model):
 			id_money = money_list[snd_bonus.number - 1].id
 			
 		try:
-			list_len = WalletMoney.objects.filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, id__lte=id_money).count()
-			while list_len:
-				list_len -= WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, id__lte=id_money).update(snd_bonus=snd_bonus, is_send=True)
+			WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, id__lte=id_money).update(snd_bonus=snd_bonus, is_send=True)
 		except:
 			log_print('wallet_pay_bonus')
 			return False
@@ -548,9 +531,7 @@ class Consumer(models.Model):
 		#预分配红包
 		result = snd_bonus.split_to_rcv_bonus(int(bonus_info.number))	
 		if not result:
-			list_len = WalletMoney.objects.filter(snd_bonus=snd_bonus).count()
-			while list_len:
-				list_len -= WalletMoney.objects.select_for_update().filter(snd_bonus=snd_bonus).update(snd_bonus=None, rcv_bonus=None, is_send=False, is_receive=False)
+			WalletMoney.objects.select_for_update().filter(snd_bonus=snd_bonus).update(snd_bonus=None, rcv_bonus=None, is_send=False, is_receive=False)
 			SndBonus.objects.filter(id_bonus=id_bonus).delete()
 			self.snd_bonus_num -= int(bonus_info.number)
 			self.snd_bonus_value -=  float(bonus_info.money)
@@ -725,9 +706,7 @@ class SndBonus(models.Model):
 		for rcv_bonus in rcv_bonus_list:
 			id_money = WalletMoney.objects.filter(snd_bonus=self, is_receive=False).order_by('-id').reverse()[rcv_bonus.number - 1].id
 			try:
-				list_len = WalletMoney.objects.filter(snd_bonus=self, is_receive=False, id__lte=id_money).count()
-				while list_len:
-					list_len -= WalletMoney.objects.select_for_update().filter(snd_bonus=self, is_receive=False, id__lte=id_money).update(rcv_bonus=rcv_bonus, is_receive=True)
+				WalletMoney.objects.select_for_update().filter(snd_bonus=self, is_receive=False, id__lte=id_money).update(rcv_bonus=rcv_bonus, is_receive=True)
 			except:
 				RcvBonus.objects.filter(snd_bonus=self).delete()
 				return False
@@ -783,9 +762,7 @@ class RcvBonus(models.Model):
 	
 	#婉拒
 	def bonus_refuse(self):
-		list_len = WalletMoney.objects.filter(rcv_bonus=self).count()
-		while list_len:
-			list_len -= WalletMoney.objects.select_for_update().filter(rcv_bonus=self).update(consumer=self.snd_bonus.consumer, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+		WalletMoney.objects.select_for_update().filter(rcv_bonus=self).update(consumer=self.snd_bonus.consumer, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
 		self.consumer.rcv_bonus_num -= self.number
 		self.consumer.flush_own_money
 		RcvBonus.objects.select_for_update().filter(id=self.id).update(is_refuse=True, is_valid=False)

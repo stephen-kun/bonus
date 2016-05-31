@@ -802,10 +802,13 @@ def action_weixin_pay(data, request):
 			if TEST_DEBUG:
 				total_fee = int(float(data['total_fee'])*100)
 				recharge.update(status=True, trade_state=SUCCESS, total_fee=total_fee)
+				'''
 				if not new_recharge.charge_money:
 					#WalletMoney.objects.filter(recharge=new_recharge).delete()
 					response = dict(status=FAIL, err_msg='未知错误')
 					return json.dumps(response)
+				'''
+				ret = task_charge_money.delay(new_recharge)
 				#支付成功业务
 				consumer_order = request.session['consumer_order']						
 				snd_bonus_pay_weixin(consumer_order)
