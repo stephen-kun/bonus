@@ -7,7 +7,9 @@ import django.utils.timezone as timezone
 import string, random
 from django.core.exceptions import ObjectDoesNotExist
 import json
+import time
 import datetime
+import traceback
 from manager.datatype import *
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser, Group
@@ -19,6 +21,19 @@ COMMON_BONUS = 0
 RANDOM_BONUS = 1
 SYS_BONUS = 2
 #LIST_KEY_ID = u'串串'
+
+#日志存储
+def log_print(back_func, log_level=3, message=None):
+	path = './log/FILE.txt'.replace('FILE', back_func)
+	f = open(path, 'a')
+	f.write(time.strftime('===============%Y-%m-%d %H:%M============\n', time.localtime(time.time())))
+	if log_level >= 3:
+		traceback.print_exc(file=f)
+	else:
+		f.write(message)
+		f.write('\n')
+	f.flush()
+	f.close()
 
 #两个字典相加
 def union_dict(*objs):
@@ -101,9 +116,13 @@ def bonus_content_models_to_json(models_list):
 	return json.dumps(dict(zip(l_name, l_bonus)))
 
 #生成唯一key id
-def create_primary_key():
+def create_primary_key(length=10):
 	now = datetime.datetime.now()
-	strs = now.strftime('%f') 
+	strs = None
+	if length == 10:
+		strs = now.strftime('%f') 
+	elif length == 24:
+		strs = now.strftime('%Y%m%d%H%M%S%f')
 	chars = "0123456789"
 	ran = []
 	for x in range(4):
@@ -157,21 +176,31 @@ class DiningSession(models.Model):
 		#self.total_money = total_money
 		#self.save()
 		DiningSession.objects.select_for_update().filter(id=self.id).update(total_bonus=total_bonus, total_number = total_number, total_money = total_money)
-	
+		
 	#结束就餐会话
 	def close_session(self):
 		#失效该就餐会话发出的红包，将未抢红包以及婉拒红包返回客户账号
-		SndBonus.objects.select_for_update().filter(session=self, is_exhausted=False).update(is_valid=False)
+		list_len = SndBonus.objects.filter(session=self, is_exhausted=False).count()
+		while list_len:
+			list_len -= SndBonus.objects.select_for_update().filter(session=self, is_exhausted=False).update(is_valid=False)
 		rcv_bonus_list = RcvBonus.objects.filter(session=self, is_receive=False)
+		length = RcvBonus.objects.filter(session=self, is_receive=False).count()
 		for bonus in rcv_bonus_list:
-			WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus).update(snd_bonus=None, rcv_bonus=None, is_send=False, is_receive=False, ticket=None)
-		rcv_bonus_list.update(is_valid=False)
+			list_len = WalletMoney.objects.filter(rcv_bonus=bonus).count()
+			while list_len:
+				list_len -= WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus).update(snd_bonus=None, rcv_bonus=None, is_send=False, is_receive=False, ticket=None)
+		
+		while length:
+			length -= rcv_bonus_list.update(is_valid=False)
+			
 		
 		#关闭就餐会话，释放桌台
 		DiningTable.objects.select_for_update().filter(id=self.table.id).update(status=False)
 		for consumer in Consumer.objects.filter(session=self):
 			consumer.flush_own_money
-		Consumer.objects.select_for_update().filter(session=self).update(on_table=None, session=None)
+		list_len = Consumer.objects.filter(session=self).count()
+		while list_len:
+			list_len -= Consumer.objects.select_for_update().filter(session=self).update(on_table=None, session=None)
 		DiningSession.objects.select_for_update().filter(id=self.id).update(over_time = timezone.now())
 
 	def create_ticket(self, ticket, total_money):
@@ -182,7 +211,9 @@ class DiningSession(models.Model):
 			is_enough = False
 			for bonus in rcv_bonus_list:
 				if is_enough:
-					WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+					list_len = WalletMoney.objects.filter(rcv_bonus=bonus).count()
+					while list_len:
+						list_len -= WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
 				else:
 					money_list = WalletMoney.objects.filter(rcv_bonus=bonus).order_by('-id').reverse()
 					id_index = 0
@@ -194,8 +225,12 @@ class DiningSession(models.Model):
 						else:
 							ticket_value = sum
 							id_index = money.id
-					WalletMoney.objects.select_for_update().filter(id__lte=id_index).update(ticket=ticket, consumer=ticket.consumer)
-					WalletMoney.objects.select_for_update().filter(id__gt=id_index).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+					list_len = WalletMoney.objects.filter(rcv_bonus=bonus, id__lte=id_index).count()
+					while list_len:
+						list_len -= WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__lte=id_index).update(ticket=ticket, consumer=ticket.consumer)
+					list_len = WalletMoney.objects.filter(rcv_bonus=bonus, id__gt=id_index).count()
+					while list_len:
+						list_len -= WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__gt=id_index).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
 		return ticket_value
 		
 	@property
@@ -272,7 +307,7 @@ class Consumer(models.Model):
 	@property
 	def flush_own_money(self):
 		money_list = self.own_money_list
-		num = len(money_list)
+		num = money_list.count()
 		sum_money = float(0)
 		if num:
 			sum_money = money_list[0].money.price * num
@@ -305,7 +340,7 @@ class Consumer(models.Model):
 	
 	@property
 	def own_ticket_list(self):
-		ticket_list = Ticket.objects.filter(consumer=self, is_valid=True).order_by('create_time').reverse()
+		ticket_list = Ticket.objects.filter(consumer=self, is_valid=True).order_by('-id').reverse()
 		return ticket_list
 
 	def save(self, *args, **kwargs):
@@ -364,7 +399,7 @@ class Consumer(models.Model):
 			good=VirtualMoney.objects.get(name=name)
 			l_money = []
 			for i in range(counter):
-				money = WalletMoney(id_money=create_primary_key(), is_valid=True, consumer=self, recharge=charge, money=good)
+				money = WalletMoney(id_money=create_primary_key(length=24), is_valid=True, consumer=self, recharge=charge, money=good)
 				l_money.append(money)
 			WalletMoney.objects.bulk_create(l_money)
 			self.change_valid_good(good, 0, counter)
@@ -413,35 +448,98 @@ class Consumer(models.Model):
 		
 	def wallet_pay_ticket(self, ticket, total_money):
 		ticket_value = float(0)		
+		price = VirtualMoney.objects.get(name='串串').price
+		number = 0
 		if total_money:
-			sum = float(0)
-			money_list = self.own_money_list.order_by("create_time").reverse()
 			id_money = 0
-			for money in money_list:
-				sum += money.money.price
-				if sum > total_money:
-					break
-				else:
-					id_money = money.id
-					ticket_value = sum
-			WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, id__lte=id_money).update(ticket=ticket)
+			money_list = self.own_money_list.order_by("-id").reverse()			
+			if self.own_bonus_value > total_money:
+				number = int(total_money / price)
+			else:
+				number = int(self.own_bonus_value / price)
+			id_money = money_list[number - 1].id	
+			ticket_value = number*price
+			while number:
+				number -= WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, id__lte=id_money).update(ticket=ticket)
 		return ticket_value
 	
 	def wallet_pay_bonus(self, snd_bonus):
-		money_list = self.own_money_list.order_by("create_time").reverse()
-		total_money = snd_bonus.total_money
+		money_list = WalletMoney.objects.filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False).order_by("-id").reverse()
+		length = WalletMoney.objects.filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False).count()
 		id_money = 0
-		for money in money_list:
-			if total_money:
-				id_money = money.id
-				total_money -= money.money.price
-			else:
-				break
-		WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, id__lte=id_money).update(snd_bonus=snd_bonus, is_send=True)
+		if length < snd_bonus.number:
+			return False
+		else:	
+			id_money = money_list[snd_bonus.number - 1].id
+			
+		try:
+			list_len = WalletMoney.objects.filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, id__lte=id_money).count()
+			while list_len:
+				list_len -= WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, id__lte=id_money).update(snd_bonus=snd_bonus, is_send=True)
+		except:
+			log_print('wallet_pay_bonus')
+			return False
+		log_print('wallet_pay_bonus', log_level=1, message="id:%s length:%s===>number:%s update:%s"%(str(id_money),str(length), str(snd_bonus.number), str(WalletMoney.objects.filter(snd_bonus=snd_bonus, is_send=True).count())))					
+		return True
+		
+	def rcv_qubaba_bonus(self, record_rcv_bonus):
+		bonus_num = 0
+		total_money = 0
+		total_number = 0	
+		try:
+			snd_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True)
+		
+			for snd_bonus in snd_bonus_list:
+				is_receive = RcvBonus.objects.filter(snd_bonus=snd_bonus, consumer=self)
+				if is_receive:
+					continue
+				id_snd = snd_bonus.id
+				remain_bonus = RcvBonus.objects.filter(snd_bonus=snd_bonus).exclude(is_receive=True)
+				length = RcvBonus.objects.filter(snd_bonus=snd_bonus).exclude(is_receive=True).count()
+				if length:
+					rand = random.randint(0, (length-1))
+					bonus_num += 1
+					total_money += remain_bonus[rand].total_money
+					total_number += remain_bonus[rand].number				
+					id_rcv = remain_bonus[rand].id
+					content = bonus_content_detail(bonus=remain_bonus[rand], type='rcv')
+					try:
+						RcvBonus.objects.select_for_update().filter(id=id_rcv).update(consumer = self, content=content, datetime = timezone.now(), session = self.session, record_rcv_bonus = record_rcv_bonus, is_receive = True)
+					except:
+						return 0
+					is_exhausted = False
+					over_time = None
+					is_valid = True
+					if snd_bonus.bonus_remain == 1:
+						is_exhausted = True
+						is_valid = False
+						over_time = timezone.now()
+					bonus_remain = snd_bonus.bonus_remain - 1
+					bonus_exhausted = snd_bonus.bonus_exhausted + 1
+					try:
+						SndBonus.objects.select_for_update().filter(id=id_snd).update(is_exhausted=is_exhausted, over_time=over_time, is_valid=is_valid, bonus_remain=bonus_remain, bonus_exhausted=bonus_exhausted)
+					except:
+						RcvBonus.objects.select_for_update().filter(id=id_rcv).update(consumer=None, datetime=None, session=None, record_rcv_bonus=None, is_receive=False)
+						return 0
+						
+			#更新session信息
+			if bonus_num:
+				self.rcv_bonus_num += total_number
+				self.rcv_bonus_value += total_money					
+				total_bonus = self.session.total_bonus + bonus_num
+				total_money = self.session.total_money + total_money
+				total_number = self.session.total_number + total_number
+				DiningSession.objects.select_for_update().filter(id=self.session.id).update(total_bonus=total_bonus, total_money=total_money, total_number=total_number)
+						
+				self.save()
+		except:
+			return 0 
+		return bonus_num
 		
 	def snd_person_bonus(self, bonus_info):
+		id_bonus=create_primary_key()
 		#创建一个红包
-		snd_bonus = SndBonus.objects.create(id_bonus=create_primary_key(), consumer=self, bonus_type=bonus_info.bonus_type, to_table=bonus_info.table,\
+		snd_bonus = SndBonus.objects.create(id_bonus=id_bonus, consumer=self, bonus_type=bonus_info.bonus_type, to_table=bonus_info.table,\
 					to_message=bonus_info.message, content=bonus_info.content, bonus_num=bonus_info.bonus_num, number=bonus_info.number,\
 					total_money=bonus_info.money, bonus_remain=bonus_info.bonus_num, session=self.session)
 		#将钱装入红包
@@ -451,9 +549,19 @@ class Consumer(models.Model):
 		self.snd_bonus_value +=  float(bonus_info.money)
 		self.flush_own_money
 		#预分配红包
-		snd_bonus.split_to_rcv_bonus(int(bonus_info.number))	
-
-
+		result = snd_bonus.split_to_rcv_bonus(int(bonus_info.number))	
+		if not result:
+			list_len = WalletMoney.objects.filter(snd_bonus=snd_bonus).count()
+			while list_len:
+				list_len -= WalletMoney.objects.select_for_update().filter(snd_bonus=snd_bonus).update(snd_bonus=None, rcv_bonus=None, is_send=False, is_receive=False)
+			SndBonus.objects.filter(id_bonus=id_bonus).delete()
+			self.snd_bonus_num -= int(bonus_info.number)
+			self.snd_bonus_value -=  float(bonus_info.money)
+			self.flush_own_money
+			self.save()
+			return False
+		return True
+			
 	def send_sys_bonus(self, counter, good_contents, title="趣八八", message=""):
 		bonus=SndBonus.objects.create(id_bonus=create_primary_key(), consumer=self, bonus_type=SYS_BONUS, to_message=message, title=title, bonus_num=counter, bonus_remain=counter)
 		total_good_num=0
@@ -513,11 +621,12 @@ class Recharge(models.Model):
 			v_money = VirtualMoney.objects.get(name='串串')
 			l_money = []
 			for x in range(self.number):
-				money = WalletMoney(id_money=create_primary_key(),consumer=self.recharge_person, recharge=self, money=v_money)
+				money = WalletMoney(id_money=create_primary_key(length=24),consumer=self.recharge_person, recharge=self, money=v_money)
 				l_money.append(money)
 			try:
 				WalletMoney.objects.bulk_create(l_money)
 			except:
+				log_print('charge_money')
 				return False
 		return True
 			
@@ -608,14 +717,24 @@ class SndBonus(models.Model):
 				rcv_bonus.is_best = True
 				is_best = False
 			bulk_rcv_bonus.append(rcv_bonus)
-		RcvBonus.objects.bulk_create(bulk_rcv_bonus)
+			
+		try:
+			RcvBonus.objects.bulk_create(bulk_rcv_bonus)
+		except:
+			return False
 		
+		log_print('split_to_rcv_bonus', log_level=1, message='rcv_bonus_len:%s ====> money_num:%s %s'%(str(len(bulk_rcv_bonus)),str(WalletMoney.objects.filter(snd_bonus=self).count()), str(WalletMoney.objects.filter(snd_bonus=self, is_receive=False).count())))
 		rcv_bonus_list = RcvBonus.objects.filter(snd_bonus=self)
 		for rcv_bonus in rcv_bonus_list:
-			id_money = WalletMoney.objects.filter(snd_bonus=self, is_receive=False).order_by('-id').reverse()[rcv_bonus.number].id
-			WalletMoney.objects.select_for_update().filter(snd_bonus=self, is_receive=False, id__lt=id_money).update(rcv_bonus=rcv_bonus, is_receive=True)
-			#content = bonus_content_detail(bonus=rcv_bonus, type='rcv')	
-			#RcvBonus.objects.select_for_update().filter(id=rcv_bonus.id).update(content=content)			
+			id_money = WalletMoney.objects.filter(snd_bonus=self, is_receive=False).order_by('-id').reverse()[rcv_bonus.number - 1].id
+			try:
+				list_len = WalletMoney.objects.filter(snd_bonus=self, is_receive=False, id__lte=id_money).count()
+				while list_len:
+					list_len -= WalletMoney.objects.select_for_update().filter(snd_bonus=self, is_receive=False, id__lte=id_money).update(rcv_bonus=rcv_bonus, is_receive=True)
+			except:
+				RcvBonus.objects.filter(snd_bonus=self).delete()
+				return False
+		return True
 		
 	def good_contents(self):
 		wallets = self.wallet_set.all()
@@ -667,10 +786,12 @@ class RcvBonus(models.Model):
 	
 	#婉拒
 	def bonus_refuse(self):
-		WalletMoney.objects.select_for_update().filter(rcv_bonus=self).update(consumer=self.snd_bonus.consumer, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+		list_len = WalletMoney.objects.filter(rcv_bonus=self).count()
+		while list_len:
+			list_len -= WalletMoney.objects.select_for_update().filter(rcv_bonus=self).update(consumer=self.snd_bonus.consumer, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
 		self.consumer.rcv_bonus_num -= self.number
 		self.consumer.flush_own_money
-		RcvBonus.objects.select_for_update().filter(id=self.id).update(is_refuse=True, is_valid=False)	
+		RcvBonus.objects.select_for_update().filter(id=self.id).update(is_refuse=True, is_valid=False)
 		
 	
 	@property
@@ -690,7 +811,7 @@ class RcvBonus(models.Model):
 
 # 钱包
 class WalletMoney(models.Model):
-	id_money = models.CharField(unique=True, max_length=12)				#虚拟钱币的唯一id
+	id_money = models.CharField(unique=True, max_length=28)				#虚拟钱币的唯一id
 	is_valid = models.BooleanField(default=True)					#是否有效
 	is_used = models.BooleanField(default=False)					#是否已用
 	consumer = models.ForeignKey(Consumer, null=True, related_name="wallet_set", on_delete=models.CASCADE)		#钱包拥有着
