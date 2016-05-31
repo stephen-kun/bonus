@@ -203,7 +203,7 @@ def sys_account_detail(request):
 
 
 def account_manage(request):
-	user_list = User.objects.filter(groups__name='manager')
+	user_list = User.objects.filter(groups__name='manager', is_active=True)
 	return render_to_response("manager/account/manage_account.html", {'user_list': user_list})
 
 
@@ -225,22 +225,17 @@ def action(request):
 	if (action == "register"):
 		username = request.POST.get("username")
 		password = request.POST.get("password")
-		try:
-			User.objects.get(username=username)
-			return _response_json(1, u"用户名已存在!")
-		except ObjectDoesNotExist:
-			user = User.objects.create_user(username=username, password=password)
-			user.is_staff = True
-			group = GROUP.objects.get_or_create(id=2, name='manager')
-			user.groups.add(group)			
-			user.save()
-
+		if Consumer.create_manager(username, password):
 			return _response_json(0, u"新增用户%s" % (username))
+		else:
+			return _response_json(1, u"用户名已存在!")
+			
 	elif (action == "delete"):
 		username = request.POST.get("username")
 		try:
 			user = User.objects.get(username=username)
 			user.is_active = False
+			user.save()
 			return _response_json(0, u"删除成功!")
 		except ObjectDoesNotExist:
 			return _response_json(0, u"删除成功!")
