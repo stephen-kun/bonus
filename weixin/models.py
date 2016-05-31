@@ -572,6 +572,11 @@ class Ticket(models.Model):
 			return '%s ticket id %s'%(self.consumer.name, self.id_ticket)
 		else:
 			return 'ticket id %s'%(self.id_ticket)
+	@classmethod
+	def get_consumed_ticket_by_date(cls, date):
+		start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
+	 	end_date = start_date + datetime.timedelta(1) 
+		return Ticket.objects.filter(is_consume=True, consume_time__range=(start_date, end_date))
 
 #接收红包记录
 class RecordRcvBonus(models.Model):
