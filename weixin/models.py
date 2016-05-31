@@ -16,6 +16,8 @@ from django.contrib.auth.models import AbstractUser, Group
 from core.utils.timezone import TIMEZONE_CHOICES
 from core.utils.models import AutoSlugField
 from django.core.urlresolvers import reverse
+from django.contrib.auth import get_user_model
+
 
 COMMON_BONUS = 0
 RANDOM_BONUS = 1
@@ -165,10 +167,10 @@ class DiningSession(models.Model):
 	def get_sessions_by_dining_date(cls, time):
 		sessions=set()
 		start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
-	 	end_date = start_date + datetime.timedelta(1) 
-	 	for s in ConsumerSession.objects.filter(time__range=(start_date, end_date)).select_related('session'):
+		end_date = start_date + datetime.timedelta(1) 
+		for s in ConsumerSession.objects.filter(time__range=(start_date, end_date)).select_related('session'):
 			sessions.add(s.session)
-		 	print sessions
+			print sessions
 		return sessions
 		
 	@property
@@ -296,14 +298,40 @@ class Consumer(models.Model):
 		verbose_name = _("forum profile")
 		verbose_name_plural = _("forum profiles")
 		
-       	@classmethod
-       	def get_consumers_by_dining_date(cls, time):
-               consumers=set()
-               start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
-               end_date = start_date + datetime.timedelta(1) 
-               for s in ConsumerSession.objects.filter(time__range=(start_date,end_date)).select_related('consumer'):
-                       consumers.add(s.consumer)
-               return consumers
+	@classmethod
+	def get_consumers_by_dining_date(cls, time):
+		   consumers=set()
+		   start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
+		   end_date = start_date + datetime.timedelta(1) 
+		   for s in ConsumerSession.objects.filter(time__range=(start_date,end_date)).select_related('consumer'):
+				   consumers.add(s.consumer)
+		   return consumers
+		   
+	@classmethod
+	def create_manager(cls, username, password):
+		User = get_user_model()
+		try:
+			try:
+				user = User.objects.get(username=username)
+				if user.is_active:
+					return False
+				else:
+					user.set_password(password)
+					user.is_active = True
+					user.save()
+					return True
+			except ObjectDoesNotExist:
+				user = User.objects.create_user(username=username, password=password)
+				user.is_staff = True
+				user.groups.add(Group.objects.get(id=2))
+				user.save()
+				cls.objects.filter(user=user).update(open_id=create_primary_key(), name=username)
+				return True
+		except:
+			log_print('create_manager')
+			return False
+
+		
 
 	@property
 	def own_money_list(self):
@@ -663,7 +691,7 @@ class Ticket(models.Model):
 	@classmethod
 	def get_consumed_ticket_by_date(cls, date):
 		start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
-	 	end_date = start_date + datetime.timedelta(1) 
+		end_date = start_date + datetime.timedelta(1) 
 		return Ticket.objects.filter(is_consume=True, consume_time__range=(start_date, end_date))
 
 #接收红包记录
