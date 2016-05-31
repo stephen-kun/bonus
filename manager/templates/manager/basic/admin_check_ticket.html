@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+{% include 'header.html' %}
+<body>
+<article class="admin_80">
+    <section>
+    	<div class="right_award_box">
+        	<div class="award_box_title">验券</div>
+            <div class="admin_guanli_list admin_guanli_w1000">
+            	<div class="admin_guanli_list_tit">
+                	<ul>
+                    	<li class="admin_guanli_w106">名称</li>
+                        <li class="admin_guanli_w460">输入券码</li>
+                        <li class="admin_guanli_w430">操作</li>
+                    </ul>
+                </div>
+                <div class="admin_guanli_list_content">
+                	<ul>
+                        <li>
+                            <h4 class="w106">验券</h4>
+                            <p class="w461"><input type="text" id="ticket_id" class="admin_pass"></p>
+                            <span class="w430"><input type="button" id="save" class="admin_save" value="确定"></span>
+                        </li>
+                        <div class="clear"></div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>    
+</article>
+
+<script>
+ $("#save").click(function(){
+    var ticket_id = $("#ticket_id").val();
+
+    if( ticket_id!="")
+    {
+    $.post("{% url 'check_consumer_code' %}", {'ticket_code':ticket_id},function(data){
+        if(data.state==0){
+                	Showbo.Msg.alert("成功:" + data.message);
+                }else{
+                    Showbo.Msg.alert("失败:" + data.message);
+                }
+                }, "json");
+    }
+    else{
+        Showbo.Msg.alert("输入出错")
+    }
+});
+</script>
+
+
+</body>
+</html>

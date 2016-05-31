@@ -115,29 +115,37 @@ def view_user_sex(request):
 
 #*********************餐行健对接接口*****************
 
+def _response_json(state, message):
+	data = {}
+	data['state'] = state
+	data['message'] =  message
+	return HttpResponse(json.dumps(data), content_type="application/json")
+
 #验券接口
 @csrf_exempt
 def check_consumer_code(request):
 	try:
-		data_dict = json.loads(request.body)
-		id_ticket = str(data_dict['ticket_code'])
+		print request.body
+		#data_dict = json.loads(request.body)
+		id_ticket = request.POST.get('ticket_code') 
+		print id_ticket
 		ticket = Ticket.objects.filter(id_ticket=id_ticket)
 		ticket_value = float(0)
 		response = {}
 		if len(ticket) and (ticket[0].is_consume):
-			response = dict(status=1, err_msg="该券已使用")
+			return _response_json(1, "该券已使用")
 		elif len(ticket) and (ticket[0].is_consume == False):
 			ticket_value = ticket[0].ticket_value
 			ticket[0].is_consume = True
 			ticket[0].save()
-			response = dict(status=0, ticket_value=ticket_value)
+			return _response_json(0, "券可抵扣%d"%ticket_value)
 		else:
-			response = dict(status=2, err_msg="券码错误")
-		return HttpResponse(response)
+			return _response_json(2, "券码错误")
+
 	except Exception as e:
 		# 生成日志
 		log_print(check_consumer_code)
-		return HttpResponseBadRequest("Invalid param!")	
+		return _response_json(3, "错误")
 
 #请桌接口
 @csrf_exempt

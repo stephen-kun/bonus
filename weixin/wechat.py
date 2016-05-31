@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # wechat.py
 # Create your wechat here.
 
@@ -75,7 +75,7 @@ def user_subscribe(openid):
 			user = User.objects.get(username=open_id)
 		except ObjectDoesNotExist:
 			user = User.objects.create(username=open_id, email="xxxx@xxx.com", is_staff=False)
-		user.groups.add(Group.objects.get(id=2))
+		user.groups.add(Group.objects.get(id=3))
 		
 		try:
 			consumer = Consumer.objects.get(open_id=open_id)

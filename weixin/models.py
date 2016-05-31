@@ -160,6 +160,16 @@ class DiningSession(models.Model):
 
 	def __unicode__(self):
 		return "Dining Session %s"%(self.table.index_table)
+
+	@classmethod
+	def get_sessions_by_dining_date(cls, time):
+		sessions=set()
+		start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
+	 	end_date = start_date + datetime.timedelta(1) 
+	 	for s in ConsumerSession.objects.filter(time__range=(start_date, end_date)).select_related('session'):
+			sessions.add(s.session)
+		 	print sessions
+		return sessions
 		
 	@property
 	def update_session_info(self):
@@ -286,6 +296,15 @@ class Consumer(models.Model):
 		verbose_name = _("forum profile")
 		verbose_name_plural = _("forum profiles")
 		
+       	@classmethod
+       	def get_consumers_by_dining_date(cls, time):
+               consumers=set()
+               start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
+               end_date = start_date + datetime.timedelta(1) 
+               for s in ConsumerSession.objects.filter(time__range=(start_date,end_date)).select_related('consumer'):
+                       consumers.add(s.consumer)
+               return consumers
+
 	@property
 	def own_money_list(self):
 		return WalletMoney.objects.filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False)
@@ -641,6 +660,11 @@ class Ticket(models.Model):
 			return '%s ticket id %s'%(self.consumer.name, self.id_ticket)
 		else:
 			return 'ticket id %s'%(self.id_ticket)
+	@classmethod
+	def get_consumed_ticket_by_date(cls, date):
+		start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
+	 	end_date = start_date + datetime.timedelta(1) 
+		return Ticket.objects.filter(is_consume=True, consume_time__range=(start_date, end_date))
 
 #接收红包记录
 class RecordRcvBonus(models.Model):

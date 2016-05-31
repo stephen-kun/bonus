@@ -6423,7 +6423,8 @@ h2 {
     display: block;
     width: 100%;
     text-align: center;
-    background-color: #cecece
+    /*background-color: #cecece*/
+    background-color: #b6d554;
 }
 
 .button.is-undo, input[type=submit].button.is-undo {

@@ -8,50 +8,16 @@
         	<div class="award_box_title">
                 <input id="date" type="date" name="date" value='{{time|date:"Y-m-d"}}' style="float:left; margin-left:.5em; background:none; text-align:center;">
                 <input onclick="change()" class="chazhao" value="查找" style="float:left;">
-                就餐记录
+                抵扣券记录
             </div>
-            <!--<div class="award_box_content">
-                <table cellspacing="2" cellpadding="0" class="tab-add" id="tab-color">
-                  <tr>
-                    <th width="15%">开始时间</th>
-                    <th width="5%">桌号</th>
-                    <th width="5%">人数</th>
-                    <th width="50%">顾客</th>
-                    <th width="25%">收到红包</th>
-                  </tr>
-
-                  {% for session in session_list %}
-                  <tr class="table_new_h">
-                    <td class="color_b">{{ session.table.index_table }}</td>
-                    <td class="color_b">{{ session.begin_time|date:"Y-n-j H:i" }}</td>
-                    <td class="color_b">{{ session.consumer_number }}</td>
-                    <td class="color_a">
-                        {% for consumer in  session.consumers %}
-                        <a href="{% url 'consumer_detail' %}?open_id={{ consumer.open_id }}" target="mainFrame">
-                        <span class="table_new_head"><img src="{{ consumer.picture }}" align="absmiddle"></span>
-                        </a>
-                        {% endfor %}
-                    </td>
-                    <td class="color_a">
-                        {{session.rcv_bonus.count}}个&nbsp
-                        <a href="{% url 'session_detail' %}?table_index={{ session.table.index_table }}" target="mainFrame">
-                            <font size=3.2  color='gray'>查看</font>
-                        </a>
-                    </td>
-                  </tr>
-                  {% endfor %}
-
-                </table>
-            </div>-->
             <div class="admin_guanli_list admin_guanli_w1000">
             	<div class="admin_guanli_list_tit">
                 	<ul>
-                    	<li>开始时间</li>
-                    	<li class="admin_guanli_w106">桌号</li>
-                    	
-                        <li class="admin_guanli_w106">人数</li>
-                        <li class="admin_guanli_w460">顾客</li>
-                        <li class="admin_guanli_w130">收到的红包</li>
+                    	<li>时间</li>
+                    	<li class="admin_guanli_w130">桌号</li>
+                        <li class="admin_guanli_w130">顾客</li>
+                        <li class="admin_guanli_w130">券号</li>
+                        <li class="admin_guanli_w130">来源</li>
                     </ul>
                 </div>
                 <div class="admin_guanli_list_content">

@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
 from core.utils.models import AutoSlugField
@@ -99,7 +100,15 @@ class Topic(models.Model):      #主题
 
 class SliderImage(models.Model):
     url = models.ImageField(verbose_name=_('upload slide image'),upload_to="slideimage")
+    order = models.PositiveIntegerField(verbose_name=u'排序')
     enabled = models.BooleanField(verbose_name=_('enabled'),default=True)
     note = models.TextField(verbose_name=_('image note'),max_length=255,null=True,blank=True)
+
+
+class TopicRead(models.Model):
+    topic = models.ForeignKey(Topic)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    date = models.DateTimeField(default=now())
+
 
 
