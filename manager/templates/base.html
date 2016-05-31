@@ -19,7 +19,7 @@
                 {% if current_user.is_superuser%}
                 {% block account %}<li><a href="{% url 'account' %}">店长</a></li>{% endblock %}
                 {% endif %}
-                <li><a href="#">论坛</a></li>
+                <li><a href="{% url 'forum_index' %}">论坛</a></li>
             </ul>
     </nav>
     

@@ -97,9 +97,11 @@
       //  url: data.url
       //});
       //return this.textReplace(placeholder, imageTag);
-      var $el = $.format('<li class="item"><img src="{src}" cmid="{cmid}" style="width:100%;height:100%;"></li>',{
+      var $el = $.format('<li class="item"><img src="{src}" cmid="{cmid}" style="width:100%;height:100%;">' +
+          '<div class="remove"><span class="badge">-</span></div></li>',{
         src:data.url,
-        cmid:data.cmid
+        cmid:data.cmid,
+          cmid:data.cmid
       });
       this.el.prepend($el);
     };

@@ -64,6 +64,7 @@
             width: 100%;
         }
 
+
     </style>
 {% endblock %}
 
@@ -93,8 +94,8 @@
         {% for topic in topics %}
             <div class="card facebook-card">
                 <div class="card-header no-border">
-                    <div class="facebook-avatar"><img class="img-circle" src="{{ topic.user.jf.picture }}" width="40"
-                                                      height="40">
+                    <div class="facebook-avatar"><img class="img-circle" src="{{ topic.user.jf.picture }}" width="50"
+                                                      height="50">
                     </div>
                     <div class="facebook-name"><a href="{{ topic.get_absolute_url|wxurl_wraper }}" class="external">{{ topic.user.jf.name }}</a>
                     </div>
@@ -123,30 +124,30 @@
                 </div>
                 <div class="card-footer">
                     <a href="{% url "wx:wx-comment-publish" topic_id=topic.id %}" class="link external"><i
-                            class="icon iconfont icon-mark">
-                        &nbsp;</i>{{ topic.comment_count|add:"-1" }}</a>
+                            class="icon iconfont icon-mark" style="margin-right: 4px;">
+                        </i>{{ topic.comment_count|add:"-1" }}</a>
 
                     {% with topic.comment as c %}
                         {% if user.is_authenticated %}
                             {% if c.like %}
                                 <a class="js-like external" href="javascript:void(0);"
                                    data-href="{% url "wx:wx-comment-like-delete" c.like.pk %}"
-                                   data-count="{{ c.likes_count }}"><i class="icon iconfont icon-appreciatefill">
+                                   data-count="{{ c.likes_count }}"><i class="icon iconfont"><img style="height: 30px;" src="{% static "images/joyforum/praise-hover2.png" %}">
                                 </i>&nbsp;<span>{{ c.likes_count }}</span></a>
                             {% else %}
                                 {% ifnotequal c.user user %}
                                     <a class="js-like like external"
                                        href="javascript:void(0);" data-href="{% url "wx:wx-comment-like-create" c.pk %}"
-                                       data-count="{{ c.likes_count }}"><i class="icon iconfont icon-appreciate">
+                                       data-count="{{ c.likes_count }}"><i class="icon iconfont"><img style="height: 30px;" src="{% static "images/joyforum/praise-hover.png" %}">
                                     </i>&nbsp;<span>{{ c.likes_count }}</span></a>
                                 {% else %}
                                     <span href="javascript:void(0);"><i
-                                            class="icon iconfont icon-appreciate"></i>&nbsp;{{ c.likes_count }}</span>
+                                            class="icon iconfont"><img style="height: 30px;" src="{% static "images/joyforum/praise.png" %}"></i>&nbsp;{{ c.likes_count }}</span>
                                 {% endifnotequal %}
                             {% endif %}
                         {% else %}
                             <span href="javascript:void(0);"> <i
-                                    class="icon iconfont icon-appreciate"></i>&nbsp;{{ c.likes_count }}</span>
+                                    class="icon iconfont"><img style="height: 30px;" src="{% static "images/joyforum/praise.png" %}"></i>&nbsp;{{ c.likes_count }}</span>
                         {% endif %}
                     {% endwith %}
                     <a href="#" class="link"><i class="icon iconfont icon-presentfill">&nbsp;</i>{% if topic.gifts %}{{ topic.gifts }}{% else %}0{% endif %}</a>
@@ -174,16 +175,16 @@
 {% block navbar %}
     <nav class="bar bar-tab">
         <a class="tab-item external active" href="#">
-            <span class="icon iconfont icon-shouye"></span>
+            <span class="icon"><img class="tabimg" src="{% static "images/joyforum/home-hover.png" %}"></span>
             <span class="tab-label">首页</span>
         </a>
         <a class="tab-item external" href="{% url "wx:wx-newtopic" %}">
-            <span class="icon iconfont icon-zengjia"></span>
+            <span class="icon"><img class="tabimg" src="{% static "images/joyforum/new+.png" %}"></span>
             <span class="tab-label">发布主题</span>
 
         </a>
         <a class="tab-item external" href="{% url "wx:wx-notification" %}">
-            <span class="icon iconfont icon-xiaoxi"></span>
+            <span class="icon"><img class="tabimg" src="{% static "images/joyforum/letter.png" %}"></span>
             <span class="tab-label">消息</span>
             <span class="badge" id="unread" {% if not unread %}style="display:none"{% endif %}>{{ unread }}</span>
         </a>
@@ -290,8 +291,10 @@
                 if (!jQuery(this).data('plugin_like')) {
                     jQuery(this).like({
                         csrfToken: "{{ csrf_token }}",
-                        likeText: '<i class="icon iconfont icon-appreciate"></i>&nbsp;<span>{count}</span>',
-                        removeLikeText: '<i class="icon iconfont icon-appreciatefill"></i>&nbsp;<span>{count}</span>'
+{#                        likeText: '<i class="icon iconfont icon-appreciate"></i>&nbsp;<span>{count}</span>',#}
+{#                        removeLikeText: '<i class="icon iconfont icon-appreciatefill"></i>&nbsp;<span>{count}</span>'#}
+                        likeText:'<i class="icon iconfont"><img style="height: 30px;" src="{% static "images/joyforum/praise-hover.png" %}"></i>&nbsp;<span>{count}</span>',
+                        removeLikeText:'<i class="icon iconfont"><img style="height: 30px;" src="{% static "images/joyforum/praise-hover2.png" %}"></i>&nbsp;<span>{count}</span>'
                     }).data('plugin_like').sendLike();
                 }
                 else {

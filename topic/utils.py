@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
 from comment.bookmark.models import CommentBookmark
+from topic.models import TopicRead
 from weixin.models import Consumer
 from .notification.models import TopicNotification
 from .unread.models import TopicUnread
@@ -28,3 +29,5 @@ def topic_viewed(request, topic):
     TopicNotification.mark_as_read(user=user, topic=topic)
     TopicUnread.create_or_mark_as_read(user=user, topic=topic)
     topic.increase_view_count()
+    if user.jf.is_moderator or user.is_superuser:
+        TopicRead.objects.create(topic=topic,user=user)

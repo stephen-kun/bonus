@@ -22,6 +22,11 @@ def render_wx_comments_form(topic, next=None):
     form = WXCommentForm()
     return {'form': form, 'topic_id': topic.pk, 'next': next}
 
+@register.inclusion_tag('manager/forum/comment/_form.html')
+def render_forum_comments_form(topic, next=None):
+    form = CommentForm()
+    return {'form': form, 'topic_id': topic.pk, 'next': next}
+
 
 @register.simple_tag()
 def get_comment_action_text(action):

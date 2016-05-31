@@ -58,6 +58,21 @@
             width: 2rem;
             height: 2rem;
             margin: 0.2rem;
+            position: relative;
+        }
+
+        .tupianpanel li.item .remove{
+            position: absolute;
+            /* height: 20px; */
+            left: 7px;
+            top: 8px;
+        }
+
+        .tupianpanel li.item .remove span{
+                line-height: 0.8rem;
+                background: rgba(255, 200, 0, 0.84);
+                width: 25px;
+                height: 25px;
         }
 
         .tupianpanel ul li * {
@@ -265,6 +280,13 @@
                 target: "{% url "comment:image-upload-ajax" %}",
                 placeholderText: "{% trans "uploading {image_name}" %}"
             });
+
+            jQuery("#tupian_container").on("click",'.remove',function(){
+{#                $(this).closest(".item").find("img").attr("cmid");#}
+                $(this).closest(".item").remove();
+            });
+
+
         });
 
         jQuery("#biaoqing_container li").on("click", function () {

@@ -147,7 +147,7 @@
         <a class="button button-link button-nav pull-left external"
            href="{% url "wx:wx-index" %}?open_id={{ user.jf.open_id }}">
             <span class="icon icon-left"></span>
-            返回
+            论坛正文
         </a>
 
 {#        <h1 class="title">{{ topic.title }}</h1>#}
@@ -174,8 +174,8 @@
     <div class="page-current">
         <div class="card facebook-card">
             <div class="card-header no-border">
-                <div class="facebook-avatar"><img class="img-circle" src="{{ topic.user.jf.picture }}" width="40"
-                                                  height="40"></div>
+                <div class="facebook-avatar"><img class="img-circle" src="{{ topic.user.jf.picture }}" width="50"
+                                                  height="50"></div>
                 <div class="facebook-name">{{ topic.user.jf.name }}</div>
                 <div class="facebook-date">
 {#                    <span>{{ topic.user.jf.name }}</span>#}
@@ -207,22 +207,22 @@
                                     {% if c.like %}
                                         <a class="js-like external" href="javascript:void(0);" data-href="{% url "wx:wx-comment-like-delete" c.like.pk %}"
                                            data-count="{{ c.likes_count }}"><i
-                                                class="icon iconfont icon-appreciatefill">
+                                                class="icon iconfont"><img style="height: 30px;" src="{% static "images/joyforum/praise-hover2.png" %}">
                                         </i>&nbsp;<span>{{ c.likes_count }}</span></a>
                                     {% else %}
                                         {% ifnotequal c.user user %}
                                             <a class="js-like like external" href="javascript:void(0);"
                                                data-href="{% url "wx:wx-comment-like-create" c.pk %}"
                                                data-count="{{ c.likes_count }}"><i
-                                                    class="icon iconfont icon-appreciate">
+                                                    class="icon iconfont"><img style="height: 30px;" src="{% static "images/joyforum/praise-hover.png" %}">
                                             </i>&nbsp;<span>{{ c.likes_count }}</span></a>
                                         {% else %}
                                             <span href="javascript:void(0);"><i
-                                                    class="icon iconfont icon-appreciate"></i>&nbsp;{{ c.likes_count }}</span>
+                                                    class="icon iconfont"><img style="height: 30px;" src="{% static "images/joyforum/praise.png" %}"></i>&nbsp;{{ c.likes_count }}</span>
                                         {% endifnotequal %}
                                     {% endif %}
                                 {% else %}
-                                    <span href="javascript:void(0);"> <i class="icon iconfont icon-appreciate"></i>&nbsp;{{ c.likes_count }}</span>
+                                    <span href="javascript:void(0);"> <i class="icon iconfont"><img style="height: 30px;" src="{% static "images/joyforum/praise.png" %}"></i>&nbsp;{{ c.likes_count }}</span>
                                 {% endif %}
                             {% endwith %}
 
@@ -249,7 +249,7 @@
                         <div class="item-content comment-item">
                             <div class="item-media facebook-avatar"><img
                                     src="{{ comment.user.jf.picture }}" class="img-circle"
-                                    width="34"></div>
+                                    width="40"></div>
                             <div class="item-inner">
                                 <div class="item-title-row">
                                     <div class="facebook-name">{{ comment.user.jf.name }}</div>
@@ -376,8 +376,10 @@
                 if (!jQuery(this).data('plugin_like')) {
                     jQuery(this).like({
                         csrfToken: "{{ csrf_token }}",
-                        likeText: '<i class="icon iconfont icon-appreciate"></i>&nbsp;<span>{count}</span>',
-                        removeLikeText: '<i class="icon iconfont icon-appreciatefill"></i>&nbsp;<span>{count}</span>'
+{#                        likeText: '<i class="icon iconfont icon-appreciate"></i>&nbsp;<span>{count}</span>',#}
+{#                        removeLikeText: '<i class="icon iconfont icon-appreciatefill"></i>&nbsp;<span>{count}</span>'#}
+                        likeText:'<i class="icon iconfont"><img style="height: 30px;" src="{% static "images/joyforum/praise-hover.png" %}"></i>&nbsp;<span>{count}</span>',
+                        removeLikeText:'<i class="icon iconfont"><img style="height: 30px;" src="{% static "images/joyforum/praise-hover2.png" %}"></i>&nbsp;<span>{count}</span>'
                     }).data('plugin_like').sendLike();
                 }
                 else {

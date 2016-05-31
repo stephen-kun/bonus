@@ -141,16 +141,16 @@
 {% block navbar %}
     <nav class="bar bar-tab">
         <a class="tab-item external" href="{% url "wx:wx-index" %}">
-            <span class="icon iconfont icon-shouye"></span>
+            <span class="icon"><img class="tabimg" src="{% static "images/joyforum/home.png" %}"></span>
             <span class="tab-label">首页</span>
         </a>
         <a class="tab-item external" href="{% url "wx:wx-newtopic" %}">
-            <span class="icon iconfont icon-zengjia"></span>
+            <span class="icon"><img class="tabimg" src="{% static "images/joyforum/new+.png" %}"></span>
             <span class="tab-label">发布主题</span>
 
         </a>
         <a class="tab-item external active" href="#">
-            <span class="icon iconfont icon-xiaoxi"></span>
+            <span class="icon"><img class="tabimg" src="{% static "images/joyforum/letter-hover.png" %}"></span>
             <span class="tab-label">消息</span>
             {% if unread %}<span class="badge" id="unread">{{ unread }}</span>{% endif %}
         </a>

@@ -55,11 +55,17 @@ class DeleteView(BaseView):
     field_name = 'is_removed'
     to_value = True
 
+    def get(self, request, *args, **kwargs):
+        return render(request, 'manager/forum/topic/moderate.html', {'topic': self.topic,'type':'delete' })
+
 
 class UnDeleteView(BaseView):
 
     field_name = 'is_removed'
     to_value = False
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'manager/forum/topic/moderate.html', {'topic': self.topic,'type':'undelete' })
 
 
 class LockView(BaseView):
