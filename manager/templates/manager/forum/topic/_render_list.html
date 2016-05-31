@@ -1,0 +1,121 @@
+{% load forum_tags i18n %}
+<style>
+    .line .item{
+        float:left;
+        border-right:2px solid #fff;
+
+    }
+
+    .line{
+
+    }
+
+    .item{
+        padding: 5px;
+    }
+
+    .line.even{
+        background: #f7f7f4;
+    }
+
+    .admin_guanli_list_content .line *{
+        vertical-align: middle;
+{#        min-height: 100px;#}
+    }
+
+    .nick{
+        width: 20%;
+    }
+
+    .content{
+        width: 45%;
+    }
+
+    .dtime{
+        width: 15%;
+        text-align: center;
+    }
+
+    .operate{
+        width:20%;
+        text-align: center;
+    }
+
+    .operate a{
+        color:#b6d554;
+    }
+
+    .header{
+{#        background: #e0ecb8;#}
+        background: #f7f7f4;
+        text-align: center;
+        height:100%;
+        margin-bottom: inherit;
+{#        line-height: 44px;#}
+        color: #000;
+    }
+
+    .admin_guanli_list{
+        background: inherit;
+    }
+
+
+    .admin_guanli_list_content{
+        font-size: 1rem;
+    }
+
+
+</style>
+<div class="admin_guanli_list_tit">
+    <div class="line header">
+        <div class="item nick">昵称</div>
+
+        <div class="item content">内容</div>
+        <div class="item dtime">时间</div>
+        <div class="item operate">操作</div>
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="admin_guanli_list_content">
+        {% for t in topics %}
+            <div class="line {% if forloop.counter0|divisibleby:"2" %}odd{% else %}even{% endif %}">
+                <div class="item nick">
+
+                        <img src="{{ t.user.jf.picture }}" style="width: 50px;height: 50px;border-radius: 50%;">
+                        <span>{{ t.user.jf.name }}</span>
+
+                </div>
+                <div class="item content">
+                    {{ t.comment.comment_html|safe }}
+                </div>
+
+                <div class="item dtime">
+                        <span>{{ t.last_active|date:"Y-m-d" }}</span>
+                </div>
+                <div class="item operate">
+                    <span class="w106">
+                        {% if deltopic and user.jf.is_moderator %}
+                            {% if t.is_removed %}
+                                <a class="menu-link js-post" style="display: inline" href="{% url "topic:moderate:undelete" t.pk %}">恢复</a>
+                            {% else %}
+                                <a class="menu-link js-post" style="display: inline" href="{% url "topic:moderate:delete" t.pk %}">删除</a>
+                            {% endif %}
+                        {% endif %}
+
+                        &nbsp;&nbsp;<a href="/manager/forum{{ t.get_bookmark_url }}" target="mainFrame">{% if unread %}阅读详细{% else %}查看详细{% endif %}</a></span>
+                </div>
+            <div style="clear: both;"></div>
+
+            </div>
+        {% endfor %}
+
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        // .is_new depends on js (bookmarks)
+        $('.js-comment-is-new').addClass('is-new');
+    });
+</script>

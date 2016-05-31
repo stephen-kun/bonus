@@ -1,0 +1,82 @@
+{% load forum_tags i18n %}
+{% load static %}
+<html>
+{% include "header.html" %}
+
+<link rel="stylesheet" href="{% static "forum/stylesheets/styles.all.min.css" %}">
+<style>
+        ul, li, input, select, textarea {
+        font: 16px STHeiti,"Microsoft YaHei",Arial,SimSun;
+    }
+
+    .admin_guanli_list{
+        position: relative;
+    }
+</style>
+
+<script src="{% static "forum/scripts/all.min.js" %}"></script>
+
+<body>
+<article>
+    <section>
+        <div class="right_award_box">
+            <div class="award_box_title">主题详细</div>
+            <div class="admin_guanli_list admin_guanli_w1000">
+{#            <a href="javascript:window.history.back();" style="position: absolute;right: 0;top: -60px;">返回</a>#}
+                {% include "manager/forum/comment/_render_list.html" %}
+
+                <div class="container">
+                    {% render_paginator page=comments %}
+
+                </div>
+                {% if user.is_authenticated %}
+                    {% if not topic.is_closed %}
+                        <div id="reply" class="reply">
+
+                            <div class="comment-media">
+                                <div class="comment-img">
+                                    <img class="comment-avatar" src="{{ user.jf.picture }}"
+                                         style="width: 50px;width: 50px;">
+                                </div>
+
+                                <div class="comment-body">
+                                    {% render_forum_comments_form topic=topic %}
+
+                                </div>
+                            </div>
+
+                        </div>
+                    {% endif %}
+
+                    <script>
+                        $(document).ready(function () {
+
+                            $(".comment").bookmark({
+                                csrfToken: "{{ csrf_token }}",
+                                target: "{% url "comment:bookmark:create" topic.pk %}",
+                            });
+
+
+                        });
+                    </script>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    <script language="JavaScript">
+        var TbRow = document.getElementById("tab-color");
+        if (TbRow != null) {
+            for (var i = 0; i < TbRow.rows.length; i++) {
+                if (TbRow.rows[i].rowIndex % 2 == 1) {
+                    TbRow.rows[i].style.backgroundColor = "#ffffff";
+                }
+                else {
+                    TbRow.rows[i].style.backgroundColor = "#f7f7f4";
+                }
+            }
+        }
+    </script>
+</article>
+</body>
+
+</html>

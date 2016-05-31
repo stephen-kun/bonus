@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block left_frame %}
+<div class="left-frame">
+    <div class="left-f-title">论坛管理</div>
+    <div class="left-f-content">
+        <ul id="menu">
+            <li><span class="menu-list"><a href="{% url 'forum_new_topic' %}" target="mainFrame"><img src="/static/images/forum/new.png" align="absmiddle">新建主题</a></span></li>
+            <li><span class="menu-list"><a href="{% url 'forum_topic_list' %}" target="mainFrame"><img src="/static/images/forum/theme.png" align="absmiddle">主题</a></span></li>
+            <li><span class="menu-list"><a href="{% url 'forum_topic_unread' %}" target="mainFrame"><img src="/static/images/forum/unread.png" align="absmiddle">未读主题</a></span></li>
+            <li><span class="menu-list"><a href="{% url 'forum_topic_delete' %}" target="mainFrame"><img src="/static/images/forum/delete.png" align="absmiddle">删除主题</a></span></li>
+            <li><span class="menu-list"><a href="{% url 'forum_slider_man' %}" target="mainFrame"><img src="/static/images/forum/recommend.png" align="absmiddle">幻灯管理</a></span></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block right_frame %}
+<div class="right-frame">
+    <div class="right-f-title">
+        <b>当前位置：</b><a href="index.html" target="mainFrame">管理首页</a> > 发出的红包
+    </div>
+    <iframe id="mainFrame" name="mainFrame" src="{% url 'forum_topic_list' %}"  frameborder="0" ></iframe>
+</div>
+{% endblock %}

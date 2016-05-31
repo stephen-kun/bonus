@@ -1,0 +1,61 @@
+{% load forum_tags i18n %}
+{% load static  %}
+<html>
+{% include "header.html" %}
+
+ <link rel="stylesheet" href="{% static "forum/stylesheets/styles.all.min.css" %}">
+
+<style>
+        ul, li, input, select, textarea {
+        font: 16px STHeiti,"Microsoft YaHei",Arial,SimSun;
+    }
+</style>
+
+
+<script src="{% static "forum/scripts/all.min.js" %}"></script>
+
+<body>
+<article>
+    <section>
+        <div class="right_award_box">
+            <div class="award_box_title">新建主题</div>
+            <div class="admin_guanli_list admin_guanli_w1000">
+                <form action="." method="post" class="js-reply">
+                    {% csrf_token %}
+
+                    {# topic #}
+                    {% include "forum/_form.html" %}
+
+                    {# comment #}
+                    <div class="topic-publish-comment">
+                        {% include "forum/_form.html" with form=cform cform=1 %}
+                    </div>
+
+                    <div class="container">
+                        {% include "forum/comment/_editor.html" %}
+
+                        <input class="button reply-button" type="submit" value="{% trans "Publish" %}"/>
+                    </div>
+                </form>
+                <ul id="imageslistpanel">
+                    <div style="clear: both;"></div>
+            </div>
+        </div>
+    </section>
+    <script language="JavaScript">
+        var TbRow = document.getElementById("tab-color");
+        if (TbRow != null) {
+            for (var i = 0; i < TbRow.rows.length; i++) {
+                if (TbRow.rows[i].rowIndex % 2 == 1) {
+                    TbRow.rows[i].style.backgroundColor = "#ffffff";
+                }
+                else {
+                    TbRow.rows[i].style.backgroundColor = "#f7f7f4";
+                }
+            }
+        }
+    </script>
+</article>
+</body>
+
+</html>

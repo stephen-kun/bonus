@@ -1,0 +1,14 @@
+<div class="item order">{{ form.order }}</div>
+<div class="item show"><img src="{% if model.url %}/media/{{ model.url }}{% else %}&nbsp;{% endif %}" style="width: 150px;"></div>
+<div class="item upload">{{ form.url }}</div>
+<div class="item enabled">{{ form.enabled }}</div>
+<div class="item operate">
+    <input name="id" value="{{ model.id }}" type="hidden">
+    <input name="opertype" value="" type="hidden">
+    <div class="del"><input type="submit" name="_delete" value="删除幻灯" style="background: #d78d8d"></div>
+    <div style="height: 4px;width: 100%"></div>
+    <div class="save"><input type="submit" name="_save" value="保存幻灯" style="background: #cde38b;"> </div>
+</div>
+<div style="clear:both;"></div>
+
+

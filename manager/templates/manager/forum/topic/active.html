@@ -1,0 +1,86 @@
+{% load forum_tags i18n %}
+{% load static %}
+<html>
+{% include "header.html" %}
+
+<link rel="stylesheet" href="{% static "forum/stylesheets/styles.all.min.css" %}">
+<style>
+    ul.paginator{
+        margin-top: 20px;
+        text-align: center;
+        width: 100%;
+    }
+    ul, li, input, select, textarea {
+        font: 16px STHeiti,"Microsoft YaHei",Arial,SimSun;
+    }
+</style>
+
+<script src="{% static "forum/scripts/all.min.js" %}"></script>
+
+<body>
+<article>
+    <section>
+        <div class="right_award_box">
+            <div class="award_box_title">{% if deltopic %}删除主题{% elif unread %}未读主题{% else %}主题列表{% endif %}</div>
+            <div class="admin_guanli_list admin_guanli_w1000">
+{#                {% include "manager/forum/_render_list.html" %}#}
+
+            {% include "manager/forum/topic/_render_list.html" %}
+
+
+
+                <div class="container">
+                        {% render_paginator topics %}
+
+                </div>
+{#                {% if user.is_authenticated %}#}
+{#                    {% if not topic.is_closed %}#}
+{#                        <div id="reply" class="reply">#}
+{##}
+{#                            <div class="comment-media">#}
+{#                                <div class="comment-img">#}
+{#                                    <img class="comment-avatar" src="{{ user.jf.picture }}"#}
+{#                                         style="width: 50px;width: 50px;">#}
+{#                                </div>#}
+{##}
+{#                                <div class="comment-body">#}
+{#                                    {% render_comments_form topic=topic %}#}
+{##}
+{#                                </div>#}
+{#                            </div>#}
+{##}
+{#                        </div>#}
+{#                    {% endif %}#}
+{##}
+{#                    <script>#}
+{#                        $(document).ready(function () {#}
+{##}
+{#                            $(".comment").bookmark({#}
+{#                                csrfToken: "{{ csrf_token }}",#}
+{#                                target: "{% url "comment:bookmark:create" topic.pk %}",#}
+{#                            });#}
+{##}
+{##}
+{#                        });#}
+{#                    </script>#}
+{#                {% endif %}#}
+            </div>
+        </div>
+    </section>
+    <script language="JavaScript">
+        var TbRow = document.getElementById("tab-color");
+        if (TbRow != null) {
+            for (var i = 0; i < TbRow.rows.length; i++) {
+                if (TbRow.rows[i].rowIndex % 2 == 1) {
+                    TbRow.rows[i].style.backgroundColor = "#ffffff";
+                }
+                else {
+                    TbRow.rows[i].style.backgroundColor = "#f7f7f4";
+                }
+            }
+        }
+    </script>
+</article>
+</body>
+
+</html>

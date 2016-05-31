@@ -1,0 +1,229 @@
+{% load forum_tags i18n %}
+{% load manager_tags %}
+{% load static %}
+<html>
+{% include "header.html" %}
+
+<link rel="stylesheet" href="{% static "forum/stylesheets/styles.all.min.css" %}">
+<style>
+    ul.paginator {
+        margin-top: 20px;
+        text-align: center;
+        width: 100%;
+    }
+
+    ul, li, input, select, textarea {
+        font: 16px STHeiti, "Microsoft YaHei", Arial, SimSun;
+    }
+
+    .table .item {
+        float: left;
+        display: block;
+    }
+
+    .table .item.order input {
+        width: 50px;
+    }
+
+    .order {
+        width: 80px;
+    }
+
+    .show {
+        width: 20%;
+        text-align: center;
+    }
+
+    .upload {
+        width: 40%;
+        padding-left: 40px;
+    }
+
+    .admin_guanli_list {
+        background: inherit;
+    }
+
+    .enabled {
+        width: 15%;
+    }
+
+    .theader .item{
+        border-right: 1px white solid;
+    }
+
+    .theader .item:last-child{
+        border-right: 0;
+    }
+
+    .operate {
+        text-align: center;
+        width: 16.8%;
+        border-right: 0px!important;
+    }
+
+    .theader {
+        text-align: center;
+{#        background: #b6d554;#}
+        background: #f7f7f4;
+    }
+
+    .tbody {
+        font-size: 1rem;
+    }
+
+    .tbody .line {
+        padding: 15px 5px;
+        border-bottom: 1px solid #cfcfcf;
+    }
+
+    .enabled {
+        text-align: center;;
+    }
+
+    .enabled input {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .operate input {
+        height: 30px;
+        width: 100%;
+    }
+
+    .btn {
+        background: #b6d554;
+        padding: 5px 25px;
+        color: white;
+        border-radius: 4px;
+    }
+
+    {#    .line.even{#}
+    {#        background: #f7f7f4;#}
+    {#    }#}
+</style>
+
+<script src="{% static "forum/scripts/all.min.js" %}"></script>
+
+<body>
+<article>
+    <section>
+        <div class="right_award_box">
+            <div class="award_box_title">幻灯管理</div>
+            <div class="admin_guanli_list admin_guanli_w1000">
+                <div class="table" id="slidertable">
+                    <div class="theader">
+                        <div class="item order">排序</div>
+                        <div class="item show">展示图</div>
+                        <div class="item upload">上传图片</div>
+                        <div class="item enabled">是否启用</div>
+                        <div class="item operate">操作</div>
+                        <div style="clear:both;"></div>
+                    </div>
+
+                    <div class="tbody">
+                        {% for obj in object_list %}
+                            <div class="line {% if forloop.counter0|divisibleby:"2" %}odd{% else %}even{% endif %}">
+                                <form action="" method="POST">{% csrf_token %}
+
+                                    {% getobjectform model=obj %}
+
+                                </form>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div style="margin: 20px 0px;font-size: 1rem;color: white">
+                    <a class="btn" onclick="addslider();">新增幻灯</a>
+                </div>
+
+
+            </div>
+        </div>
+        <div style="display: none;" id="linetemplate">
+            <div class="line">
+                <form action="" method="POST">{% csrf_token %}
+                    <div class="item order"><input id="id_order" min="0" name="order" type="number" value=""></div>
+                    <div class="item show"><img src="&nbsp;"  style="width: 150px;"></div>
+                    <div class="item upload">目前:<a></a>
+                        <br>变更: <input id="id_url" name="url" type="file"></div>
+                    <div class="item enabled"><input checked="checked" id="id_enabled" name="enabled" type="checkbox">
+                    </div>
+                    <div class="item operate">
+                        <input name="id" value="" type="hidden">
+                        <input name="opertype" value="" type="hidden">
+                        <div class="del"><input type="submit" name="_delete" value="删除幻灯" style="background: #d78d8d">
+                        </div>
+                        <div style="height: 4px;width: 100%"></div>
+                        <div class="save"><input type="submit" name="_save" value="保存幻灯" style="background: #cde38b;">
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <script src="{% static "js/jquery.form.min.js" %}"></script>
+    <script language="JavaScript">
+        var TbRow = document.getElementById("tab-color");
+        if (TbRow != null) {
+            for (var i = 0; i < TbRow.rows.length; i++) {
+                if (TbRow.rows[i].rowIndex % 2 == 1) {
+                    TbRow.rows[i].style.backgroundColor = "#ffffff";
+                }
+                else {
+                    TbRow.rows[i].style.backgroundColor = "#f7f7f4";
+                }
+            }
+        }
+
+        var saveoptions = {
+            success: saveResponse,
+            url: '{% url "forum_slider_man" %}',
+            dataType: 'json'
+        }
+
+        $(".tbody").on("submit",'form',function(e) {
+            $(this).ajaxSubmit(saveoptions);
+            return false;
+        });
+
+        function saveResponse(e, statusText, xhr, $form) {
+            if (e.result == -1 || e.result==0) {
+                $form.parent().remove();
+            }
+            else if(e.result==-2) {
+                alert("删除幻灯出错，请联系管理员！");
+            }else if(e.result==-3){
+                alert("数据提交不完整！");
+            }else if(e.result==1){
+                $form.find(".show img").attr("src", e.showimg);
+                $form.find(".upload a").attr("href", e.showimg);
+                $form.find(".upload a").text(e.showname);
+                alert("保存幻灯成功！");
+            }else if(e.result==2){
+                $form.find(".show img").attr("src", e.showimg);
+                $form.find(".upload a").attr("href", e.showimg);
+                $form.find(".upload a").text(e.showname);
+                $form.find(".order input").val(e.id);
+                alert("保存幻灯成功！");
+            }
+        }
+
+        $(".tbody").on("click","input[name=_delete]",function(){
+            $(this).closest("form").find("input[name=opertype]").val("delete");
+        });
+
+        $(".tbody").on("click","input[name=_save]",function(){
+            $(this).closest("form").find("input[name=opertype]").val("save");
+        });
+
+        function addslider(){
+            $("#slidertable .tbody").append($("#linetemplate .line").clone());
+        }
+    </script>
+</article>
+
+</body>
+
+</html>

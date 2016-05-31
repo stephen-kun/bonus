@@ -1,0 +1,55 @@
+{% load forum_tags i18n %}
+{% load static %}
+<html>
+{% include "header.html" %}
+
+<link rel="stylesheet" href="{% static "forum/stylesheets/styles.all.min.css" %}">
+<style>
+    ul.paginator {
+        margin-top: 20px;
+        text-align: center;
+        width: 100%;
+    }
+
+    ul, li, input, select, textarea {
+        font: 16px STHeiti, "Microsoft YaHei", Arial, SimSun;
+    }
+</style>
+
+<script src="{% static "forum/scripts/all.min.js" %}"></script>
+
+<body>
+<article>
+    <section>
+        <div class="right_award_box">
+            <div class="award_box_title">{% if type == "delete" %}删除评论？{% elif type == "undelete" %}恢复评论{% endif %}</div>
+            <div class="admin_guanli_list admin_guanli_w1000">
+
+                <form action="." method="post" style="text-align: center;">
+                    {% csrf_token %}
+
+                    <input name="next" type="hidden" value="/manager/forum{{ comment.get_absolute_url }}">
+
+                    <input class="button" type="submit" name="post" value="确定"/>
+                </form>
+
+            </div>
+        </div>
+    </section>
+    <script language="JavaScript">
+        var TbRow = document.getElementById("tab-color");
+        if (TbRow != null) {
+            for (var i = 0; i < TbRow.rows.length; i++) {
+                if (TbRow.rows[i].rowIndex % 2 == 1) {
+                    TbRow.rows[i].style.backgroundColor = "#ffffff";
+                }
+                else {
+                    TbRow.rows[i].style.backgroundColor = "#f7f7f4";
+                }
+            }
+        }
+    </script>
+</article>
+</body>
+
+</html>
