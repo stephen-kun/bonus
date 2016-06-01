@@ -519,9 +519,8 @@ def consumer_is_dining(request):
 		is_admin = False
 
 	session_list = DiningSession.objects.filter(over_time__isnull=True)
-	print session_list
 	return render_to_response("manager/consumer/consumer_is_dining.html",
-							  {'current_user': current_user, 'is_admin': is_admin, 'session_list': session_list})
+			{'current_user': current_user, 'is_admin': is_admin, 'session_list': session_list})
 
 
 def dining_session_detail(request):

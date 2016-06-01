@@ -171,11 +171,10 @@ class DiningSession(models.Model):
 		start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
 		end_date = start_date + datetime.timedelta(1) 
 		for s in cls.objects.filter(over_time__range=(start_date, end_date)):
-			s.consumers=set()
-			for s in ConsumerSession.objects.filter(session=s).select_related('consumer'):
-				s.consumers.add(s.consumer)
-			sessions.add(s.session)
+			sessions.add(s)
 		return sessions
+	
+		
 		
 	@property
 	def update_session_info(self):
@@ -237,7 +236,11 @@ class DiningSession(models.Model):
 		
 	@property
 	def consumers(self):
-		return self.consumer_set.all()
+		consumers=set()
+		csessions=ConsumerSession.objects.filter(session=self)
+		for s in csessions:
+			consumers.add(s.consumer)
+		return consumers
 
 	@property
 	def consumer_number(self):
@@ -377,7 +380,7 @@ class Consumer(models.Model):
 	
 	@property
 	def own_ticket_list(self):
-		ticket_list = Ticket.objects.filter(consumer=self, is_valid=True).order_by('create_time').reverse()
+		ticket_list = Ticket.objects.filter(consumer=self, is_valid=True, is_consume=False).order_by('create_time').reverse()
 		return ticket_list
 
 	def save(self, *args, **kwargs):
