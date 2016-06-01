@@ -12,7 +12,7 @@ from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
 
 if __name__ != '__main__':
-	from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
+	from .models import DiningTable,Consumer,VirtualMoney, WalletMoney, ConsumerSession
 	from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 	from .utils import create_primary_key, log_print
 	from django.contrib.auth import get_user_model
@@ -111,6 +111,9 @@ def update_or_create_session(table, consumer):
 	consumer.save()
 	session.person_num += 1
 	session.save()
+	
+	#创建一条就餐记录
+	ConsumerSession.objects.create(session=session, consumer=consumer)
 	return session
 	
 class PostResponse():

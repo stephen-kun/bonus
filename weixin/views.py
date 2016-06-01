@@ -129,7 +129,9 @@ def get_auth_code(request):
 		data = {}
 		auth_code = create_primary_key(6)
 		data['auth_code'] = auth_code
-		AuthCode.objects.get_or_create(id_code=auth_code)
+		if not TEST_DEBUG:
+			AuthCode.objects.all().delete()
+		AuthCode.objects.create(id_code=auth_code)			
 		return HttpResponse(json.dumps(data), content_type="application/json")
 	except:
 		log_print(get_auth_code)
@@ -504,11 +506,7 @@ def display_self_bonus_list(open_id, request):
 	openid = open_id
 	try:
 		bonus_range = 1
-		consumer_list = Consumer.objects.filter(is_admin=False).order_by("rcv_bonus_num").reverse()
-		for consumer in consumer_list:
-			consumer.bonus_range = bonus_range
-			bonus_range += 1
-			consumer.save()
+		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("bonus_range")
 		oneself = Consumer.objects.get(open_id=openid)
 		top_consumer = consumer_list[0]
 		menu = _MenuUrl()

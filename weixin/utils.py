@@ -22,7 +22,7 @@ from django.utils import timezone
 
 from wzhifuSDK import *
 from .wx_config import *
-from weixin.tasks import task_charge_money, task_snd_person_bonus, task_create_ticket
+from weixin.tasks import task_charge_money, task_snd_person_bonus, task_create_ticket, task_flush_bonus_list
 
 class _GetedBonus():
 	def __init__(self, rcv_bonus):
@@ -383,7 +383,7 @@ def action_create_ticket(data):
 				ticket_value = int(ticket_value / price)*price
 				
 			#生成一条消费券记录
-			new_ticket = Ticket.objects.create(id_ticket=id_ticket, valid_time=timezone.now(), consumer=consumer, ticket_value=ticket_value)
+			new_ticket = Ticket.objects.create(id_ticket=id_ticket, valid_time=24, consumer=consumer, ticket_value=ticket_value)
 			
 			'''
 			#结算操作
@@ -546,41 +546,10 @@ def action_get_bonus(openid, request):
 	id_record=create_primary_key()
 	record_rcv_bonus = RecordRcvBonus.objects.create(id_record=id_record, consumer=consumer)	
 	
-	'''
-	#返回抢到的红包个数
-	bonus_num = 0			#统计抢到的红包个数
-	total_number = 0		#统计串串个数
-	total_money = 0 		#统计抢到的红包总额	
-	
-	#准备一条抢红包记录
-	record_rcv_bonus = RecordRcvBonus.objects.create(id_record=create_primary_key(), consumer=consumer)
-
-	#过滤能够抢的各类红包
-	common_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True, bonus_type=COMMON_BONUS).exclude(consumer=consumer)
-	random_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True, bonus_type=RANDOM_BONUS)
-	system_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True, bonus_type=SYS_BONUS)
-
-	#分配红包
-	param_list = [bonus_num, total_money, total_number]
-	param_list = get_bonus(consumer, consumer.session, record_rcv_bonus,common_bonus_list, param_list)
-	param_list = get_bonus(consumer, consumer.session, record_rcv_bonus,random_bonus_list, param_list)
-	param_list = get_bonus(consumer, consumer.session, record_rcv_bonus,system_bonus_list, param_list)
-	bonus_num = param_list[0]
-	total_money = param_list[1]
-	total_number = param_list[2]
-
-	if bonus_num:
-		#更新session信息
-		consumer.session.total_bonus += bonus_num
-		consumer.session.total_money += total_money
-		consumer.session.total_number += total_number
-		consumer.session.save()
-		consumer.rcv_bonus_num += total_number
-		consumer.rcv_bonus_value += total_money
-		consumer.save()
-
-	'''
 	bonus_num = consumer.rcv_qubaba_bonus(record_rcv_bonus)
+	
+	#更新排行榜
+	ret = task_flush_bonus_list.delay()
 	
 	if bonus_num:
 		#更新抢红包记录
