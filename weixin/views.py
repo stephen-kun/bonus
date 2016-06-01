@@ -14,9 +14,9 @@ import django.utils.timezone as timezone
 import json
 from .wechat import PostResponse, wechat, TOKEN, APPID, APPSECRET
 from .utils import  action_get_bonus, is_consumer_dining, handle_ajax_request, get_user_openid, decode_bonus_detail,create_bonus_dict
-from .utils import check_geted_bonus, decode_order_param, get_bonus_type_str, get_record_openid, is_enough_pay, log_print
+from .utils import check_geted_bonus, decode_order_param, get_bonus_type_str, get_record_openid, is_enough_pay, log_print,create_primary_key
 from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
-from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
+from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus, AuthCode
 from wzhifuSDK import *
 from .wx_config import *
 from .utils import gen_trade_no , snd_bonus_pay_weixin
@@ -115,32 +115,42 @@ def view_user_sex(request):
 
 #*********************餐行健对接接口*****************
 
-def _response_json(state, message):
+def _response_json(state, ticket_value, message):
 	data = {}
 	data['state'] = state
+	data['ticket_value'] = ticket_value
 	data['message'] =  message
 	return HttpResponse(json.dumps(data), content_type="application/json")
+
+#获取验证码	
+@csrf_exempt
+def get_auth_code(request):
+	try:
+		data = {}
+		auth_code = create_primary_key(6)
+		data['auth_code'] = auth_code
+		AuthCode.objects.get_or_create(id_code=auth_code)
+		return HttpResponse(json.dumps(data), content_type="application/json")
+	except:
+		log_print(get_auth_code)
+		return HttpResponseBadRequest("Invalid param!", content_type="application/json")
 
 #验券接口
 @csrf_exempt
 def check_consumer_code(request):
 	try:
-		print request.body
-		#data_dict = json.loads(request.body)
 		id_ticket = request.POST.get('ticket_code') 
-		print id_ticket
 		ticket = Ticket.objects.filter(id_ticket=id_ticket)
 		ticket_value = float(0)
-		response = {}
-		if len(ticket) and (ticket[0].is_consume):
-			return _response_json(1, "该券已使用")
-		elif len(ticket) and (ticket[0].is_consume == False):
+		if ticket and (ticket[0].is_consume):
+			return _response_json(1, 0,"该券已使用")
+		elif ticket and (ticket[0].is_consume == False):
 			ticket_value = ticket[0].ticket_value
 			ticket[0].is_consume = True
 			ticket[0].save()
-			return _response_json(0, "券可抵扣%d"%ticket_value)
+			return _response_json(0, ticket_value,"券可抵扣%d元"%ticket_value)
 		else:
-			return _response_json(2, "券码错误")
+			return _response_json(2, 0,"券码错误")
 
 	except Exception as e:
 		# 生成日志

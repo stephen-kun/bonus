@@ -105,6 +105,19 @@ input.datebk {
 	margin:0 .365em 0em .365em;
 	cursor:pointer;
 }
+input.coupon_value {
+	border:0px #e3ecf2 solid;
+	width:150px;
+	margin:0 .365em 0em .365em;
+	cursor:text;
+	border-radius:6px;
+	text-align:center;
+	color:#ff9c00;
+	font-family:lato;
+	font-size:1.5em;
+	height:1.3em;
+	background:#fcfff1;
+}
 /*=============按钮组====结束=======*/
 @font-face{font-family:lato;src:url(../../fonts/lato-light2.eot);src:url(../../fonts/lato-light2.eot?#font-spider)format("embedded-opentype"),url(../../fonts/lato-light2.woff)format("woff"),url(fonts/lato-light2.ttf)format("truetype"),url(../../fonts/lato-light2.svg)format("svg");font-weight:400;font-style:normal}
 .admin_bj {
@@ -1271,4 +1284,29 @@ table tr td span.table_new_head img {
 	box-shadow:#CCC 1px 1px 1px;
 	border:1px solid #ffffff;
 }
+.admin_guanli_w998 {
+	width:998px;
+}
 /*=============正在消费的顾客===结束========*/
+
+.admin_guanli_list_content ul li span.w430,.admin_guanli_list_tit ul li.admin_guanli_w430 {
+	width:430px;
+}
+.code {
+	background:#fcfff1;
+	margin:1em auto .5em auto;
+	width:1000px;
+	border-bottom:#e0ecb8 1px solid;
+	text-align:center;
+}
+.code h4 {
+	font-size:18px;
+	font-weight:normal;
+	padding:.5em 1.5em;
+}
+.code h4 span {
+	font-size:48px;
+	color:#dd343b;
+	font-family:lato;
+	padding:0 .5em 0 0;
+}

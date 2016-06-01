@@ -48,5 +48,5 @@ urlpatterns = [
 	url(r'^site_rcv_bonus',views.site_rcv_bonus, name='site_rcv_bonus'),
 	url(r'^site_settle_account', views.site_settle_account, name='site_settle_account'),
 	url(r'^site_user_account', views.site_user_account, name='site_user_account'),	
-	
+	url(r'^get_auth_code',views.get_auth_code, name='get_auth_code'),		
 ]
