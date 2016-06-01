@@ -168,11 +168,13 @@ def is_consumer_dining(openid):
 #生成唯一key id
 def create_primary_key(length=10):
 	now = datetime.datetime.now()
-	strs = None
+	strs = ''
 	if length == 10:
 		strs = now.strftime('%f') 
 	elif length == 24:
 		strs = now.strftime('%Y%m%d%H%M%S%f')
+	elif length == 6:
+		strs = now.strftime('%S')
 	chars = "0123456789"
 	ran = []
 	for x in range(4):

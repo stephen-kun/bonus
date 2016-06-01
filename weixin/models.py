@@ -120,11 +120,13 @@ def bonus_content_models_to_json(models_list):
 #生成唯一key id
 def create_primary_key(length=10):
 	now = datetime.datetime.now()
-	strs = None
+	strs = ''
 	if length == 10:
 		strs = now.strftime('%f') 
 	elif length == 24:
 		strs = now.strftime('%Y%m%d%H%M%S%f')
+	elif length == 6:
+		strs = now.strftime('%S')
 	chars = "0123456789"
 	ran = []
 	for x in range(4):
@@ -677,7 +679,7 @@ class Ticket(models.Model):
 	ticket_type = models.IntegerField(default=0)            #消费券类型：0-生成券，1-系统券
 	ticket_value = models.FloatField(default=0.0)			#券值
 	create_time = models.DateTimeField(default=timezone.now)					#消费券创建时间
-	valid_time = models.DateTimeField(null=True, blank=True)					#消费券有效时间
+	valid_time = models.IntegerField(default=12)					#消费券有效时间:小时
 	is_consume = models.BooleanField(default=False)                    #是否被使用
 	is_valid = models.BooleanField(default=True)								#是否有效
 	consume_time = models.DateTimeField(null=True, blank=True)					#消费使用时间

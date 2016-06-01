@@ -35,8 +35,8 @@ from manager.utils import *
 from manager.models import *
 
 
-def gen_id():
-	return utils.create_primary_key()
+def gen_id(length=10):
+	return utils.create_primary_key(length)
 
 
 def get_admin_account():
@@ -323,6 +323,8 @@ def check_ticket(request):
 		is_admin = True
 	else:
 		is_admin = False
+	auth_code = gen_id(length=6)
+	AuthCode.objects.get_or_create(id_code=auth_code)
 	return render_to_response("manager/basic/admin_check_ticket.html", locals())
 
 
