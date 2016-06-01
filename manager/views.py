@@ -196,7 +196,7 @@ def account(request):
 
 
 def bonus_rank_list(request):
-	consumer_list = Consumer.objects.exclude(open_id='0001').order_by("rcv_bonus_num").reverse()
+	consumer_list = Consumer.objects.filter(user__groups__name="consumer").order_by("rcv_bonus_num").reverse()
 	return render_to_response('manager/bonus/bonus_rank_list.html', {'consumer_list': consumer_list})
 
 

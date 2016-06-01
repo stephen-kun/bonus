@@ -304,7 +304,7 @@ def view_redirect_qubaba_forum(request):
 	return display_redirect_views(display_qubaba_forum_views,  request)		
 	
 def display_qubaba_forum_views(open_id, request):
-	url = 'http://wx.tonki.com.cn/wx/?open_id=%s'%(open_id)
+	url = SITE_FORUM_URL.replace('OPENID', open_id)
 	return HttpResponseRedirect(url)
 	
 def display_prompt_views(message):

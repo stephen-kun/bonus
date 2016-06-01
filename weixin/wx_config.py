@@ -34,6 +34,7 @@ REDIRECT_BR_URL = 'http://%s/weixin/view_redirect_bonus_rcv'%(ADDRESS_IP)
 REDIRECT_UT_URL = 'http://%s/weixin/view_redirect_user_ticket'%(ADDRESS_IP)
 REDIRECT_UI_URL = 'http://%s/weixin/view_redirect_user_info'%(ADDRESS_IP)
 REDIRECT_BD_URL = 'http://%s/weixin/view_redirect_bonus_detail'%(ADDRESS_IP)
+SITE_FORUM_URL = 'http://%s/wx/?open_id=OPENID'%(ADDRESS_IP)
 
 
 AJAX_REQUEST_POST_URL = 'http://%s/weixin/view_ajax_request'%(ADDRESS_IP)
