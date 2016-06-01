@@ -163,8 +163,7 @@ def check_consumer_code(request):
 @csrf_exempt
 def release_dining_table(request):		
 	try:
-		data_dict = json.loads(request.body)
-		index_table = str(data_dict['table'])
+		index_table = str(request.POST.get('table'))
 		table = DiningTable.objects.get(index_table=index_table)
 		if table.status:
 			consumer_list = Consumer.objects.filter(on_table=table)
@@ -174,11 +173,13 @@ def release_dining_table(request):
 				consumer.save()
 			table.status = False
 			table.save()
-		return HttpResponse('ok')	
+		response = dict(status='success')
+		return HttpResponse(json.dumps(response), content_type="application/json")	
 	except Exception as e:
 		# 生成日志
 		log_print(release_dining_table)
-		return HttpResponseBadRequest("Invalid param!")			
+		response = dict(status='fail', err_msg='Invalid param!')
+		return HttpResponseBadRequest(json.dumps(response), content_type="application/json")			
 
 #**************微信入口界面必须做认证，不能用session*******************
 @csrf_exempt
