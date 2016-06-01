@@ -55,7 +55,7 @@
                         <li>
                             <h4 class="w106">{{ session.table.index_table }}</h4>
                             <time>{{ session.begin_time|date:"Y-n-j H:i" }}</time>
-                            <h4 class="w106">{{ session.consumer_number }}</h4>
+                            <h4 class="w106">{{ session.person_num }}</h4>
                             <p class="w461">
                             	{% for consumer in  session.consumers %}
                                 <a href="{% url 'consumer_detail' %}?open_id={{ consumer.open_id }}" target="mainFrame">

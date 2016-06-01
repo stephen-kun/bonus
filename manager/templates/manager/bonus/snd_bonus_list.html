@@ -38,9 +38,13 @@
                     <td class="color_b">{{ bonus.bonus_num }}</td>
 
                     {% if bonus.to_table %}
-                    <td class="color_b">{{ bonus.to_table }}</td>
+                    	{% ifequal bonus.bonus_type 1 %}
+                    		<td class="color_b">所有人</td>
+                    	{% else %}
+                    		<td class="color_b">{{ bonus.to_table }}</td>
+                    	{% endifequal %}
                     {% else %}
-                    <td class="color_b">所有人</td>
+                    	<td class="color_b">所有人</td>
                     {% endif %}
 
                     <td><img src="/static/images/admin/edit.png" align="absmiddle">
