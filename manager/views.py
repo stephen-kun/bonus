@@ -82,7 +82,10 @@ def recv_bonus_list(request):
 
 
 def flying_bonus_list(request):
-	bonus_list = SndBonus.objects.filter(is_exhausted=False, create_time__date=datetime.datetime.today()).order_by(
+	time = datetime.datetime.today()
+	start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
+	end_date = start_date + datetime.timedelta(1) 
+	bonus_list = SndBonus.objects.filter(is_exhausted=False, create_time__range=(start_date, end_date)).order_by(
 		'create_time')
 	return render_to_response("manager/bonus/flying_bonus_list.html", {'bonus_list': bonus_list})
 
