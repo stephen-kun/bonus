@@ -327,7 +327,7 @@ class Consumer(models.Model):
 				user.is_staff = True
 				user.groups.add(Group.objects.get(id=2))
 				user.save()
-				cls.objects.filter(user=user).update(open_id=create_primary_key(), name=username)
+				cls.objects.filter(user=user).update(open_id=create_primary_key(), name=username, is_admin=True)
 				return True
 		except:
 			log_print('create_manager')

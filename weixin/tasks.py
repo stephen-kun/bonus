@@ -37,5 +37,22 @@ def task_create_ticket(consumer, ticket):
 	except:
 		log_print('task_create_ticket')
 		
+@app.task
+def task_flush_bonus_list():
+	try:
+		bonus_range = 1		
+		consumer_list = Consumer.objects.filter(is_admin=False).order_by("rcv_bonus_num").reverse()
+		for consumer in consumer_list:
+			consumer.bonus_range = bonus_range
+			bonus_range += 1
+			consumer.save()		
+	except:
+		log_print('task_flush_bonus_list')
+		
+@app.task
+def test_periodic_task():
+	print 'test'
+	return True
+		
 
 	

@@ -304,7 +304,7 @@ def view_redirect_qubaba_forum(request):
 	return display_redirect_views(display_qubaba_forum_views,  request)		
 	
 def display_qubaba_forum_views(open_id, request):
-	url = 'http://wx.tonki.com.cn/wx/?open_id=%s'%(open_id)
+	url = SITE_FORUM_URL.replace('OPENID', open_id)
 	return HttpResponseRedirect(url)
 	
 def display_prompt_views(message):
@@ -504,11 +504,7 @@ def display_self_bonus_list(open_id, request):
 	openid = open_id
 	try:
 		bonus_range = 1
-		consumer_list = Consumer.objects.filter(is_admin=False).order_by("rcv_bonus_num").reverse()
-		for consumer in consumer_list:
-			consumer.bonus_range = bonus_range
-			bonus_range += 1
-			consumer.save()
+		consumer_list = Consumer.objects.filter(is_admin=False).order_by("bonus_range")
 		oneself = Consumer.objects.get(open_id=openid)
 		top_consumer = consumer_list[0]
 		menu = _MenuUrl()
