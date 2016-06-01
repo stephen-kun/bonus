@@ -86,10 +86,6 @@ def periodic_task_flush_wallet():
 	for consumer in consumer_list:
 		consumer.flush_own_money
 		
-@app.task
-def test_periodic_task():
-	print 'test'
-	return True
 		
 
 	
