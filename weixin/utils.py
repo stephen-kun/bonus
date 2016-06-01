@@ -34,7 +34,8 @@ class _GetedBonus():
 		self.message = rcv_bonus.snd_bonus.to_message
 		self.datetime = rcv_bonus.datetime
 		self.title = rcv_bonus.snd_bonus.title
-		self.table = rcv_bonus.snd_bonus.consumer.on_table.index_table
+		if self.bonus_type != SYS_BONUS:
+			self.table = rcv_bonus.snd_bonus.consumer.on_table.index_table		
 		l_content = bonus_content_json_to_models(rcv_bonus.content)
 		self.content = l_content
 

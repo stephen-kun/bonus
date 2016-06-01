@@ -85,7 +85,7 @@ def flying_bonus_list(request):
 	time = datetime.datetime.today()
 	start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
 	end_date = start_date + datetime.timedelta(1) 
-	bonus_list = SndBonus.objects.filter(is_exhausted=False, create_time__range=(start_date, end_date)).order_by(
+	bonus_list = SndBonus.objects.filter(is_exhausted=False, create_time__range=(start_date, end_date), is_valid=True).order_by(
 		'create_time')
 	return render_to_response("manager/bonus/flying_bonus_list.html", {'bonus_list': bonus_list})
 
@@ -196,7 +196,7 @@ def account(request):
 
 
 def bonus_rank_list(request):
-	consumer_list = Consumer.objects.exclude(open_id='0001').order_by("rcv_bonus_num").reverse()
+	consumer_list = Consumer.objects.filter(user__groups__name="consumer").order_by("rcv_bonus_num").reverse()
 	return render_to_response('manager/bonus/bonus_rank_list.html', {'consumer_list': consumer_list})
 
 
@@ -519,9 +519,8 @@ def consumer_is_dining(request):
 		is_admin = False
 
 	session_list = DiningSession.objects.filter(over_time__isnull=True)
-	print session_list
 	return render_to_response("manager/consumer/consumer_is_dining.html",
-							  {'current_user': current_user, 'is_admin': is_admin, 'session_list': session_list})
+			{'current_user': current_user, 'is_admin': is_admin, 'session_list': session_list})
 
 
 def dining_session_detail(request):

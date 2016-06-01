@@ -17,15 +17,7 @@
                 <p>{{ bonus.to_message }}</p>
             </div>
             <div class="admin_detailed_list">
-                <p>发出{{ bonus.bonus_num }}个(
-                    {% for name,num in bonus.good_contents.items %}
-                    {{num}}x{{name}} {% if not forloop.last%},{% endif %}
-                    {% endfor %}
-                )&nbsp剩余{{ bonus.bonus_remain }}个(
-                    {% for name,num in bonus.remain_good_contents.items %}
-                    {{num}}x{{name}} {% if not forloop.last%},{% endif %}
-                    {% endfor %}
-                )</p>
+                <p>发出{{ bonus.bonus_num }}个&nbsp剩余{{ bonus.bonus_remain }}个</p>
                 <ul>
                     {% for recv_bonus in recv_bonus_list %}
                    
@@ -36,8 +28,8 @@
                    		<img src="{{ recv_bonus.consumer.picture }}" align="absmiddle">
                         <span>{{ recv_bonus.consumer.name }}</span>
                         </p>
-                        <p><font size="-1" color="#afacaa">{{ bonus.create_time|date:"Y-n-j H:i:s" }}</font></p>
-                        <p>串串<font color="orange">{{bonus.number}}</font>个&nbsp&nbsp<font size=2>({{ bonus.good_contents }})</font></p>
+                        <p><font size="-1" color="#afacaa">{{ recv_bonus.datetime|date:"Y-n-j H:i:s" }}</font></p>
+                        <p>串串<font color="orange">{{recv_bonus.number}}</font>个</p>
                          
                     </h4>
                     </li>

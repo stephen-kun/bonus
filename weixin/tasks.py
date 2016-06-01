@@ -10,6 +10,7 @@ sys.setdefaultencoding("utf-8")
 from bonus.celery import app
 import errno
 from celery.exceptions import Reject
+import django.utils.timezone as timezone
 
 from .models import *
 
@@ -31,7 +32,10 @@ def task_snd_person_bonus(consumer, bonus_info):
 def task_create_ticket(consumer, ticket):
 	try:
 		#结算操作
-		consumer.close_an_account(ticket)
+		ticket_value = consumer.close_an_account(ticket)
+		if ticket_value != ticket.ticket_value:
+			WalletMoney.objects.select_for_update().filter(ticket=ticket).update(ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+			Ticket.objects.filter(id=ticket.id).delete()
 		#关闭就餐会话
 		consumer.session.close_session()
 	except:
@@ -49,10 +53,39 @@ def task_flush_bonus_list():
 	except:
 		log_print('task_flush_bonus_list')
 		
+@app.task		
+def periodic_task_ticket_valid():
+	pass
+	
 @app.task
-def test_periodic_task():
-	print 'test'
-	return True
+def periodic_task_money_valid():
+	pass
+
+@app.task
+def periodic_task_bonus_valid():
+	#将所有未抢红包退回原有用户
+	snd_bonus_list = SndBonus.objects.filter(is_valid=True)
+	for snd_bonus in snd_bonus_list:
+		WalletMoney.objects.select_for_update().filter(snd_bonus=snd_bonus).update(is_send=False, snd_bonus=None)
+		RcvBonus.objects.select_for_update().filter(snd_bonus=snd_bonus, is_receive=False).update(is_valid=False)
+	#失效所有未抢红包
+	snd_bonus_list = SndBonus.objects.select_for_update().filter(is_valid=True).update(is_valid=False)
+	
+@app.task
+def periodic_task_session_valid():
+	session_list = DiningSession.objects.filter(over_time=None)
+	for session in session_list:
+		session.table.status=False
+		session.table.save()
+		Consumer.objects.select_for_update().filter(session=session).update(session=None, on_table=None)
+	DiningSession.objects.select_for_update().filter(over_time=None).update(over_time=timezone.now())
+	
+@app.task
+def periodic_task_flush_wallet():
+	consumer_list = Consumer.objects.filter(user__groups__name='consumer')
+	for consumer in consumer_list:
+		consumer.flush_own_money
+		
 		
 
 	

@@ -18,7 +18,7 @@
                 	<ul>
                         <li>
                             <h4 class="w106">验券</h4>
-                            <p class="w461"><input type="text" id="ticket_id" class="admin_pass"></p>
+                            <p class="w461"><input type="number" id="ticket_id" class="admin_pass"></p>
                             <span class="w430"><input type="button" id='ticket_value' class="coupon_value" value=""></span>
                         </li>
 						<li class="admin_guanli_w998">
@@ -30,6 +30,24 @@
             </div>
 			<div class="code">
             	<h4>验证码：<span id='auth_code'>{{auth_code}}</span></h4>
+            </div>
+			<div class="award_box_title">清桌</div>
+            <div class="admin_guanli_list admin_guanli_w1000">
+            	<div class="admin_guanli_list_tit">
+                	<ul>
+                        <li class="admin_guanli_w460">输入桌号</li>
+                        <li class="admin_guanli_w536">清桌</li>
+                    </ul>
+                </div>
+                <div class="admin_guanli_list_content">
+                	<ul>
+                        <li>
+                            <p class="w461"><input type="number" id='table' class="admin_pass"></p>
+                            <span class="w536"><input type="button" id='clean_table' class="admin_save" value="清桌"></span>
+                        </li>
+                        <div class="clear"></div>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>    
@@ -55,6 +73,26 @@
     else{
         Showbo.Msg.alert("输入出错")
     }
+});
+
+$("#clean_table").unbind('click').click(function(){
+	var table = $("#table").val()
+	
+	if(table)
+	{
+		$.post("{% url 'release_dining_table' %}", {"table":table}, 
+			function(data, status)
+			{
+				if(status == 'success')
+				{
+					Showbo.Msg.alert("已清桌")
+				}
+			}, "json");
+	}
+	else{
+		Showbo.Msg.alert("输入出错")
+	}
+	
 });
 
 $(document).ready(function(){
