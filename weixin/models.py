@@ -218,7 +218,7 @@ class DiningSession(models.Model):
 			is_enough = False
 			for bonus in rcv_bonus_list:
 				if is_enough:
-						WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+					WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
 				else:
 					money_list = WalletMoney.objects.filter(rcv_bonus=bonus).order_by('-id').reverse()
 					id_index = 0
@@ -230,8 +230,9 @@ class DiningSession(models.Model):
 						else:
 							ticket_value = sum
 							id_index = money.id
-						WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__lte=id_index).update(ticket=ticket, consumer=ticket.consumer)
-						WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__gt=id_index).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+					len1 = WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__lte=id_index).update(ticket=ticket, consumer=ticket.consumer)
+					len2 = WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__gt=id_index).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+					log_print('create_ticket__', log_level=1, message="==ticket_value:%s update:%s ===> %s=="%(str(ticket_value), str(len1), str(len2)))
 		return ticket_value
 		
 	@property
@@ -403,14 +404,20 @@ class Consumer(models.Model):
 		ticket_value = ticket.ticket_value
 		session_money = self.session.total_money
 		total_money = session_money + self.own_bonus_value
-		if(ticket_value <= session_money):
-			self.session.create_ticket(ticket, ticket_value)
+		sum = float(0)
+		if ticket_value <= session_money:
+			print 'ticket_value <= session_money'
+			sum = self.session.create_ticket(ticket, ticket_value)
 		elif ticket_value <= total_money:
-			self.session.create_ticket(ticket, session_money)
-			self.wallet_pay_ticket(ticket, (ticket_value - session_money))
+			print 'ticket_value <= total_money'			
+			sum += self.session.create_ticket(ticket, session_money)
+			sum += self.wallet_pay_ticket(ticket, (ticket_value - session_money))
 		else:
-			self.session.create_ticket(ticket, session_money)
-			self.wallet_pay_ticket(ticket, self.own_bonus_value)	
+			sum += self.session.create_ticket(ticket, session_money)
+			sum += self.wallet_pay_ticket(ticket, self.own_bonus_value)
+		log_print('close_an_account', log_level=1, message="==ticket_value:%s=="%(str(ticket_value)))
+		return sum
+			
 
 	def get_absolute_url(self):
 		return reverse('user:detail', kwargs={'pk': self.user.pk, 'slug': self.slug})
@@ -608,6 +615,9 @@ class Consumer(models.Model):
 					self.change_valid_good(c.good, 0, -number)
 					self.change_valid_good(c.good, 1, number)
 			total_good_num += number
+
+		bonus.number=total_good_num
+		bonus.save()
 
 		bonus.split_to_rcv_bonus(total_good_num)
 
