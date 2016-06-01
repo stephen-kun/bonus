@@ -1,5 +1,5 @@
 {% if next %}<input type="hidden" name="next" value="{{ next }}"/>{% endif %}
-{% if cform != 1 %}<input type="hidden" name="imagelist" value=""/>{% endif %}
+{% if cform != 1 %}<input type="hidden" name="imagelist" value="{% if imageids %}{{ imageids }}{% endif %}"/>{% endif %}
 {{ form.non_field_errors }}
 
 {% for field in form.hidden_fields %}

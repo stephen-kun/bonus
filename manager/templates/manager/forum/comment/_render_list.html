@@ -164,7 +164,7 @@
                             {% endif %}
 
                             {% if user.jf.is_moderator or c.user.pk == user.pk %}
-                                <li><a href="{% url "comment:update" pk=c.pk %}">{% trans "edit" %}</a></li>
+                                <li><a href="{% url "forum_comment_update" pk=c.pk %}">{% trans "edit" %}</a></li>
                             {% endif %}
 
                         {% endif %}
@@ -254,7 +254,7 @@
                     return;
                 }
                 var href = $(this).attr('data-href');
-                var openid = $(this).attr("open_id");
+                var openid = $(this).attr("openid");
                 var cid = $(this).attr("cid");
                 var tcid = $(this).attr("tcid");
                 var data = {'open_id': openid, 'action': "send_ticket", 'cid': cid, 'tcid': tcid};

@@ -1,6 +1,7 @@
 {% load i18n %}
-
-<form action="{% url "forum_comment_publish" topic_id %}" method="post" class="js-reply">
+{% load static %}
+<script src="{% static "js/jquery.form.min.js" %}"></script>
+<form action="{% url "forum_comment_publish" topic_id %}" method="post" class="js-reply" id="forum_comment_publish">
     {% csrf_token %}
     <input type="hidden" name="imagelist" value="" />
     {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
@@ -28,6 +29,27 @@
     $( document ).ready(function() {
 
         $( ".reply" ).find( "textarea" ).store( "comment-thread-{{ topic_id }}" );
+
+        var puboptions = {
+            success: saveResponse,
+            url: '{% url "forum_comment_publish" topic_id %}',
+            dataType: 'json'
+        };
+
+        $("#forum_comment_publish").submit(function(e) {
+            $(this).ajaxSubmit(puboptions);
+            return false;
+        });
+
+        function saveResponse(e, statusText, xhr, $form) {
+            if (e.result == -1) {
+                alert("请输入评论内容！");
+            }
+            else if(e.result==0){
+               parent.window.mainFrame.location = e.next;
+            }
+        }
+
 
 	});
 </script>

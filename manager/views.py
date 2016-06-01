@@ -13,14 +13,14 @@ from django.core.exceptions import ObjectDoesNotExist
 import json
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group
-from core.utils import markdown,paginator
+from core.utils import markdown,paginator,json_response
 from core.utils.decorators import moderator_required
 from djconfig import config
 
 from category.models import Category
 from comment.forms import CommentForm
 from comment.models import CommentImages, Comment
-from comment.utils import comment_posted
+from comment.utils import comment_posted,post_comment_update
 from core.utils.paginator import paginate, yt_paginate
 from core.utils.ratelimit.decorators import ratelimit
 from topic.forms import TopicForm
@@ -673,51 +673,51 @@ def forum_index(request):
 
 @ratelimit(rate='1/0s')
 def forum_new_topic(request):
-	current_user = request.user
-	if (current_user.username == "admin"):
-		print('admin')
-		is_admin = True
-	else:
-		is_admin = False
+    current_user = request.user
+    if (current_user.username == "admin"):
+        print('admin')
+        is_admin = True
+    else:
+        is_admin = False
 
-	get_object_or_404(Category.objects.visible(),
-					  pk=1)
+    get_object_or_404(Category.objects.visible(),
+                      pk=1)
 
-	if request.method == 'POST':
-		imagelist = request.POST.get("imagelist", "")
-		form = TopicForm(user=request.user, data=request.POST)
-		cform = CommentForm(user=request.user, data=request.POST)
+    if request.method == 'POST':
+        imagelist = request.POST.get("imagelist", "")
+        form = TopicForm(user=request.user, data=request.POST)
+        cform = CommentForm(user=request.user, data=request.POST)
 
-		if not request.is_limited and all([form.is_valid(), cform.is_valid()]):  #
-			# wrap in transaction.atomic?
-			topic = form.save(commit=False)
-			topic.category_id = 1
-			topic.save()
-			cform.topic = topic
-			comment = cform.save()
-			if imagelist:
-				for cmid in imagelist.split(","):
-					try:
-						cimage = CommentImages.objects.get(id=cmid)
-						cimage.comment = comment
-						cimage.save()
-					except Exception as ex:
-						print ex.args
-			comment_posted(comment=comment, mentions=cform.mentions)
-		return redirect('/manager/forum' + topic.get_absolute_url())
+        if not request.is_limited and all([form.is_valid(), cform.is_valid()]):  #
+            # wrap in transaction.atomic?
+            topic = form.save(commit=False)
+            topic.category_id = 1
+            topic.save()
+            cform.topic = topic
+            comment = cform.save()
+            if imagelist:
+                for cmid in imagelist.split(","):
+                    try:
+                        cimage = CommentImages.objects.get(id=cmid)
+                        cimage.comment = comment
+                        cimage.save()
+                    except Exception as ex:
+                        print ex.args
+            comment_posted(comment=comment, mentions=cform.mentions)
+            return redirect('/manager/forum' + topic.get_absolute_url())
 
-	else:
-		form = TopicForm(user=request.user, initial={'category': 1, })
-		cform = CommentForm()
 
-		context = {
-			'form': form,
-			'cform': cform,
-			'current_user': current_user,
-			'is_admin': is_admin
-		}
+    form = TopicForm(user=request.user, initial={'category': 1, })
+    cform = CommentForm()
 
-		return render(request, "manager/forum/newtopic.html", context)
+    context = {
+        'form': form,
+        'cform': cform,
+        'current_user': current_user,
+        'is_admin': is_admin
+    }
+
+    return render(request, "manager/forum/newtopic.html", context)
 
 
 def forum_topic_detail(request,pk,slug):
@@ -877,43 +877,46 @@ def forum_slider_man(request):
 @login_required
 @ratelimit(rate='1/0s')
 def forum_comment_publish(request, topic_id, pk=None):
-	topic = get_object_or_404(
-		Topic.objects.opened().for_access(request.user),
-		pk=topic_id
-	)
+    topic = get_object_or_404(
+        Topic.objects.opened().for_access(request.user),
+        pk=topic_id
+    )
 
-	if request.method == 'POST':
-		imagelist = request.POST.get("imagelist","")
-		form = CommentForm(user=request.user, topic=topic, data=request.POST)
+    if request.method == 'POST':
+        imagelist = request.POST.get("imagelist","")
+        form = CommentForm(user=request.user, topic=topic, data=request.POST)
 
-		if not request.is_limited and form.is_valid():
-			comment = form.save()
-			if imagelist:
-				for cmid in imagelist.split(","):
-					try:
-						cimage = CommentImages.objects.get(id=cmid)
-						cimage.comment = comment
-						cimage.save()
-					except Exception as ex:
-						print ex.args
-			comment_posted(comment=comment, mentions=form.mentions)
-			return redirect(request.POST.get('next', "/manager/forum"+comment.get_absolute_url()))
-	else:
-		initial = None
+        if not request.is_limited and form.is_valid():
+            comment = form.save()
+            if imagelist:
+                for cmid in imagelist.split(","):
+                    try:
+                        cimage = CommentImages.objects.get(id=cmid)
+                        cimage.comment = comment
+                        cimage.save()
+                    except Exception as ex:
+                        print ex.args
+            comment_posted(comment=comment, mentions=form.mentions)
+            # return redirect(request.POST.get('next', "/manager/forum"+comment.get_absolute_url()))
+            return json_response({'result':0,'next':request.POST.get('next', "/manager/forum"+comment.get_absolute_url())})
+        else:
+            return json_response({"result":-1})
+    else:
+        initial = None
 
-		if pk:
-			comment = get_object_or_404(Comment.objects.for_access(user=request.user), pk=pk)
-			quote = markdown.quotify(comment.comment, comment.user.username)
-			initial = {'comment': quote, }
+        if pk:
+            comment = get_object_or_404(Comment.objects.for_access(user=request.user), pk=pk)
+            quote = markdown.quotify(comment.comment, comment.user.username)
+            initial = {'comment': quote, }
 
-		form = CommentForm(initial=initial)
+        form = CommentForm(initial=initial)
 
-	context = {
-		'form': form,
-		'topic': topic
-	}
+    context = {
+        'form': form,
+        'topic': topic
+    }
 
-	return render(request, 'forum/comment/publish.html', context)
+    return render(request, 'forum/comment/publish.html', context)
 
 
 def forum_comment_find(request,pk):
@@ -945,3 +948,44 @@ def forum_comment_delete(request, pk, remove=True):
 	context = {'comment': comment, 'type':type2}
 
 	return render(request, 'manager/forum/comment/moderate.html', context)
+
+
+
+@login_required
+def forum_comment_update(request, pk):
+    comment = Comment.objects.for_update_or_404(pk, request.user)
+
+    if request.method == 'POST':
+        imagelist = request.POST.get("imagelist","")
+        form = CommentForm(data=request.POST, instance=comment)
+
+        if form.is_valid():
+            # pre_comment_update(comment=Comment.objects.get(pk=comment.pk))
+            comment = form.save()
+            if imagelist:
+                # try:
+                #     CommentImages.objects.filter(comment=comment).delete()
+                # except Exception as ex:
+                #     pass
+                for cmid in imagelist.split(","):
+                    try:
+                        cimage = CommentImages.objects.get(id=cmid)
+                        cimage.comment = comment
+                        cimage.save()
+                    except Exception as ex:
+                        print ex.args
+            post_comment_update(comment=comment)
+            # return redirect(request.POST.get('next', "/manager/forum"+comment.get_absolute_url()))
+            return json_response({'result':0,'next':request.POST.get('next', "/manager/forum"+comment.get_absolute_url())})
+        else:
+            return json_response({"result":-1})
+
+    else:
+        form = CommentForm(instance=comment)
+        imagelist = CommentImages.objects.filter(comment=comment)
+
+    context = {'form': form,
+               'imagelist':imagelist,'imageids':','.join([str(i) for i in imagelist.values_list('id',flat=True)]),
+               'comment':comment}
+
+    return render(request, 'manager/forum/comment/update.html', context)

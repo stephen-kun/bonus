@@ -74,6 +74,7 @@ urlpatterns = [
     url(r'^forum/comment/(?P<pk>\d+)/find/$',views.forum_comment_find,name='forum_comment_find'),
     url(r'^forum/comment/(?P<pk>\d+)/delete/$',views.forum_comment_delete,name='forum_comment_delete'),
     url(r'^forum/comment/(?P<pk>\d+)/undelete/$',views.forum_comment_delete,kwargs={'remove': False, },name='forum_comment_delete'),
+    url(r'^forum/comment/(?P<pk>\d+)/update/$',views.forum_comment_update,name='forum_comment_update'),
 
     url(r'.*', views.index, name='index'),
 ]
