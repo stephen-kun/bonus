@@ -170,9 +170,11 @@ class DiningSession(models.Model):
 		sessions=set()
 		start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
 		end_date = start_date + datetime.timedelta(1) 
-		for s in ConsumerSession.objects.filter(time__range=(start_date, end_date)).select_related('session'):
+		for s in cls.objects.filter(over_time__range=(start_date, end_date)):
+			s.consumers=set()
+			for s in ConsumerSession.objects.filter(session=s).select_related('consumer'):
+				s.consumers.add(s.consumer)
 			sessions.add(s.session)
-			print sessions
 		return sessions
 		
 	@property
