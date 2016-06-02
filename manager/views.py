@@ -342,6 +342,20 @@ def create_coupon(request):
 
 
 def send_coupon(request):
+	open_id=request.POST.get('open_id')
+	print open_id
+	admin = get_admin_account()
+	try:
+		consumer = Consumer.objects.get(open_id=open_id) 
+		coupons = Ticket.objects.filter(consumer=admin, ticket_type=1) 
+		if(coupons.count()>0):
+			Ticket.objects.filter(id_ticket=coupons[0].id_ticket).update(consumer=consumer)
+		else:
+		 	return _response_json(0, "没有足够的礼券!")
+				
+	except ObjectDoesNotExist:
+		return _response_json(0, "open_id错误!")
+			
 	return _response_json(0, "success!")
 
 

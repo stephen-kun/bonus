@@ -477,7 +477,7 @@ class Consumer(models.Model):
 	@property
 	def valid_tickets(self):
 		ticket_vn={}
-		tickets=self.ticket_set.filter(ticket_type=1,is_consume=False)
+		tickets=self.ticket_set.filter(consumer=self, ticket_type=1,is_consume=False)
 		for t in tickets:
 			if(ticket_vn.has_key(t.ticket_value)):
 				ticket_vn[t.ticket_value] += 1
