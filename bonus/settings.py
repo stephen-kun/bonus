@@ -168,7 +168,7 @@ STATICFILES_DIRS = [
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/www/media'
+MEDIA_ROOT = '/home/stephen/media'
 
 COMMENT_MAX_LEN = 140
 YT_PAGINATOR_PAGE_RANGE = 30

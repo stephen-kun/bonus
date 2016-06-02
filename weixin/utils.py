@@ -22,7 +22,7 @@ from django.utils import timezone
 
 from wzhifuSDK import *
 from .wx_config import *
-from weixin.tasks import task_charge_money, task_snd_person_bonus, task_create_ticket, task_flush_bonus_list
+from weixin.tasks import task_charge_money, task_snd_person_bonus, task_create_ticket, task_flush_bonus_list, task_charge_and_snd_bonus
 
 class _GetedBonus():
 	def __init__(self, rcv_bonus):
@@ -780,10 +780,19 @@ def action_weixin_pay(data, request):
 					response = dict(status=FAIL, err_msg='未知错误')
 					return json.dumps(response)
 				'''
+				'''
 				ret = task_charge_money.delay(new_recharge)
 				#支付成功业务
 				consumer_order = request.session['consumer_order']						
 				snd_bonus_pay_weixin(consumer_order)
+				'''
+				#支付成功业务				
+				consumer_order = request.session['consumer_order']	
+				order_info = decode_order_param(consumer_order)
+				bonus_info = order_info['bonus_info']	
+				ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)
+				
+				
 				response = dict(status=SUCCESS, result=SUCCESS)
 			else:
 				order_query = action_order_query(out_trade_no)
@@ -792,11 +801,18 @@ def action_weixin_pay(data, request):
 					if order_query.result['trade_state'] == SUCCESS:	
 						#充值进客户帐号
 						recharge.update(status=True, trade_state=order_query.result['trade_state'], total_fee=order_query.result['total_fee'])
+						'''
 						new_recharge.charge_money
 						
 						#支付成功业务
 						consumer_order = request.session['consumer_order']						
 						snd_bonus_pay_weixin(consumer_order)
+						'''
+						consumer_order = request.session['consumer_order']	
+						order_info = decode_order_param(consumer_order)
+						bonus_info = order_info['bonus_info']	
+						ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)		
+						
 						response = dict(status=SUCCESS, result=SUCCESS)
 					elif order_query.result['trade_state'] == USERPAYING:
 						response = dict(status=SUCCESS, result=USERPAYING)

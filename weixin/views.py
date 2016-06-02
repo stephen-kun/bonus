@@ -23,7 +23,7 @@ from .utils import gen_trade_no , snd_bonus_pay_weixin
 from lxml import etree
 import types
 
-from weixin.tasks import task_charge_money, task_snd_person_bonus
+from weixin.tasks import task_charge_money, task_snd_person_bonus, task_charge_and_snd_bonus
 
 class _MenuUrl():
 	get_bonus_url = GET_BONUS_URL
@@ -668,11 +668,16 @@ def view_pay_notify(request):
 				recharge.update(status=True, trade_state=notify.data['result_code'], total_fee=notify.data['total_fee'])
 				consumer = new_recharge.recharge_person
 				if notify.data['result_code'] == 'SUCCESS':
+					'''
 					#充值进客户账号
 					new_recharge.charge_money
 					if consumer.session:
 						#支付成功业务
 						snd_bonus_pay_weixin(consumer_order)
+					'''
+					order_info = decode_order_param(consumer_order)
+					bonus_info = order_info['bonus_info']	
+					ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)						
 				else:
 					#支付失败业务
 					pass						

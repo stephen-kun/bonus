@@ -27,6 +27,14 @@ def task_snd_person_bonus(consumer, bonus_info):
 		consumer.snd_person_bonus(bonus_info=bonus_info)
 	except:
 		log_print('snd_person_bonus')
+		
+@app.task
+def task_charge_and_snd_bonus(recharge, bonus_info):
+	try:
+		recharge.charge_money
+		recharge.recharge_person.snd_person_bonus(bonus_info)	
+	except:
+		log_print('task_charge_and_snd_bonus')	
 	
 @app.task
 def task_create_ticket(consumer, ticket):
