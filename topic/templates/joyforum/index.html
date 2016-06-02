@@ -94,8 +94,8 @@
         {% for topic in topics %}
             <div class="card facebook-card">
                 <div class="card-header no-border">
-                    <div class="facebook-avatar"><img class="img-circle" src="{{ topic.user.jf.picture }}" width="50"
-                                                      height="50">
+                    <div class="facebook-avatar"><img class="img-circle" src="{{ topic.user.jf.picture }}" width="40"
+                                                      height="40">
                     </div>
                     <div class="facebook-name"><a href="{{ topic.get_absolute_url|wxurl_wraper }}" class="external">{{ topic.user.jf.name }}</a>
                     </div>

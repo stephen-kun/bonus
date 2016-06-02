@@ -102,7 +102,7 @@ WSGI_APPLICATION = 'bonus.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'qubaba',
+        'NAME': 'koovox',
 			'USER': 'root',
 			'PASSWORD': 'youqiukun',
 			'HOST':'',
@@ -222,3 +222,7 @@ BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 CELERY_TASK_RESULT_EXPIRES=3600
+
+IMAGE_OPTIMIZE= 0.5
+IMAGE_QUALITY = 70
+MIN_COMPRESS_IMAGE_SIZE = 100*1024

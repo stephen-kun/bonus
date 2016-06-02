@@ -10,6 +10,7 @@ from wechat_sdk import WechatConf
 from wechat_sdk import WechatBasic
 from wechat_sdk.exceptions import ParseError
 from wechat_sdk import messages
+from weixin.tasks import task_flush_bonus_list
 
 if __name__ != '__main__':
 	from .models import DiningTable,Consumer,VirtualMoney, WalletMoney, ConsumerSession
@@ -143,6 +144,9 @@ class PostResponse():
 		table = DiningTable.objects.get_or_create(index_table=index_table)  	
 		#更新或创建就餐会话
 		update_or_create_session(table[0], consumer)	
+		
+		#刷新排行榜
+		ret = task_flush_bonus_list.delay()
 		# 返回选座信息    
 		return wechat.response_text(content =  u'您已入座%s号桌' %(index_table))
 
