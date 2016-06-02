@@ -12,6 +12,7 @@ from core import utils
 from core.utils.markdown import Markdown
 from topic.models import Topic
 from .models import Comment
+from PIL import Image
 
 
 class CommentForm(forms.ModelForm):
@@ -158,4 +159,30 @@ class CommentImageForm(forms.Form):
 
             file.close()
 
+        if file.size<settings.MIN_COMPRESS_IMAGE_SIZE:
+            return file
+
+        if file.size<1536*1024:
+            return self.resizeImage(file,os.path.join(media_path, file.name),upload_to)
+
+        return self.resizeImage(file,os.path.join(media_path, file.name),upload_to,0.4,40)
+
+
+    def resizeImage(self,file,path,upload_to,opitimize=None,quality=None):
+        ofile = os.path.splitext(path)
+        # ext = ofile[1][1:]
+        newfilepath = ofile[0]+"_opt"+ofile[1]
+        name = os.path.splitext(os.path.basename(path))[0]
+
+        newname = name+"_opt"+ofile[1]
+
+        im = Image.open(path)
+
+        width = im.size[0]*(opitimize or settings.IMAGE_OPTIMIZE)
+        height = im.size[0]*(opitimize or settings.IMAGE_OPTIMIZE)
+
+        im.resize((int(width),int(height)),Image.ANTIALIAS)
+        im.save(newfilepath,optimize=True,quality=quality or settings.IMAGE_QUALITY)
+        file.url = os.path.join(settings.MEDIA_URL, upload_to, newname ).replace("\\", "/")
+        file.name = newname
         return file
