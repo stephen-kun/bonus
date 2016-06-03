@@ -384,7 +384,10 @@ def action_create_ticket(data):
 				ticket_value = int(ticket_value / price)*price
 				
 			#生成一条消费券记录
-			new_ticket = Ticket.objects.create(id_ticket=id_ticket, valid_time=24, consumer=consumer, ticket_value=ticket_value)
+			now = timezone.now()
+			day = now.day + 1
+			valid_time = now.replace(day=day)
+			new_ticket = Ticket.objects.create(id_ticket=id_ticket, valid_time=valid_time, consumer=consumer, ticket_value=ticket_value)
 			
 			'''
 			#结算操作
