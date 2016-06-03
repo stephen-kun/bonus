@@ -17,12 +17,8 @@ from core.utils.timezone import TIMEZONE_CHOICES
 from core.utils.models import AutoSlugField
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
+from .wx_config import *
 
-
-COMMON_BONUS = 0
-RANDOM_BONUS = 1
-SYS_BONUS = 2
-#LIST_KEY_ID = u'串串'
 
 #日志存储
 def log_print(back_func, log_level=3, message=None):
@@ -443,7 +439,8 @@ class Consumer(models.Model):
 			good=VirtualMoney.objects.get(name=name)
 			l_money = []
 			for i in range(counter):
-				money = WalletMoney(id_money=create_primary_key(length=24), is_valid=True, consumer=self, recharge=charge, money=good)
+				valid_time = WalletMoney.money_valid_time()	
+				money = WalletMoney(id_money=create_primary_key(length=24), is_valid=True, valid_time=valid_time, consumer=self, recharge=charge, money=good)
 				l_money.append(money)
 			WalletMoney.objects.bulk_create(l_money)
 			self.change_valid_good(good, 0, counter)
@@ -663,7 +660,8 @@ class Recharge(models.Model):
 			v_money = VirtualMoney.objects.get(name='串串')
 			l_money = []
 			for x in range(self.number):
-				money = WalletMoney(id_money=create_primary_key(length=24),consumer=self.recharge_person, recharge=self, money=v_money)
+				valid_time = WalletMoney.money_valid_time()	
+				money = WalletMoney(id_money=create_primary_key(length=24), consumer=self.recharge_person, valid_time=valid_time, recharge=self, money=v_money)
 				l_money.append(money)
 			try:
 				WalletMoney.objects.bulk_create(l_money)
@@ -710,6 +708,12 @@ class Ticket(models.Model):
 		start_date = datetime.datetime(time.year,time.month,time.day,0,0,0,tzinfo=timezone.get_current_timezone())
 		end_date = start_date + datetime.timedelta(1) 
 		return Ticket.objects.filter(is_consume=True, consume_time__range=(start_date, end_date))
+		
+	@classmethod
+	def ticket_valid_time(cls):
+		now = timezone.now()
+		day = now.day + TICKET_VALID_TIME
+		valid_time = now.replace(day=day, hour=23, minute=59)		
 
 #接收红包记录
 class RecordRcvBonus(models.Model):
@@ -862,7 +866,8 @@ class WalletMoney(models.Model):
 	is_send = models.BooleanField(default=False)							#是否已发做红包
 	ticket = models.ForeignKey(Ticket, null=True, blank=True, on_delete=models.CASCADE)			#消费券唯一id
 	recharge = models.ForeignKey(Recharge, null=True, related_name='wallet_set', on_delete=models.CASCADE)	#充值记录id
-	create_time = models.DateTimeField(default=timezone.now)		#创建时间
+	create_time = models.DateTimeField(default=timezone.now)			#创建时间
+	valid_time = models.DateTimeField(null=True, blank=True)			#有效时间
 	rcv_bonus = models.ForeignKey(RcvBonus, null=True, blank=True, related_name="wallet_set", on_delete=models.CASCADE)		#抢到的红包唯一id
 	is_receive = models.BooleanField(default=False)						#是否已接收红包
 	money = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
@@ -872,4 +877,16 @@ class WalletMoney(models.Model):
 			return '%s WalletMoney %s'%(self.consumer.name, self.id_money)
 		else:
 			return 'WalletMoney %s'%(self.id_money)
+	
+	@classmethod
+	def money_valid_time(cls):
+		now = timezone.now()
+		day = now.day
+		month = now.month
+		if day < MONEY_VALID_TIME:
+			month += 1
+		else:
+			month += 2
+		valid_time = now.replace(day=MONEY_INVALID_TIME, month=month, hour=23, minute=59)	
+		return valid_time
 

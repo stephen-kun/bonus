@@ -11,7 +11,7 @@ from bonus.celery import app
 import errno
 from celery.exceptions import Reject
 import django.utils.timezone as timezone
-
+from .wx_config import *
 from .models import *
 
 @app.task
@@ -63,11 +63,13 @@ def task_flush_bonus_list():
 		
 @app.task		
 def periodic_task_ticket_valid():
-	pass
+	valid_time = timezone.now()
+	Ticket.objects.select_for_update().filter(valid_time__lt=valid_time).update(is_valid=False)
 	
 @app.task
 def periodic_task_money_valid():
-	pass
+	valid_time = timezone.now()
+	WalletMoney.objects.select_for_update().filter(valid_time__lt=valid_time).update(is_valid=False)
 
 @app.task
 def periodic_task_bonus_valid():
