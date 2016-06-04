@@ -14,6 +14,15 @@ import django.utils.timezone as timezone
 
 from .models import *
 
+from manager.utils import save_today_daily_detail
+
+@app.task
+def task_save_daily_record():
+	try:
+		save_today_daily_statistics()
+	except:
+		log_print('save_today_daily_detail')
+
 @app.task
 def task_charge_money(charge):
 	try:
