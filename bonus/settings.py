@@ -55,8 +55,8 @@ INSTALLED_APPS = [
     'comment.history',
     'comment.like',
     'user',
-    'user.auth',
-   # 'user.admin',
+    #'user.auth',
+    #'user.admin',
     'wx',
 ]
 

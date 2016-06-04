@@ -8,11 +8,9 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 from bonus.celery import app
-import errno
-from celery.exceptions import Reject
 import django.utils.timezone as timezone
-from .wx_config import *
-from .models import *
+from weixin.wx_config import *
+from weixin.models import WalletMoney,RcvBonus, SndBonus, Ticket,Consumer, Recharge, DiningSession, log_print
 
 @app.task
 def task_charge_money(charge):
