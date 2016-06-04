@@ -89,7 +89,7 @@ def view_user_address(request):
 def view_user_email(request):
 	try:
 		openid = request.session['openid']
-		title = '修改电话'
+		title = '修改邮箱'
 		static_url = settings.STATIC_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		user_info_url = USER_INFO_URL

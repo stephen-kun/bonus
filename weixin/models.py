@@ -282,6 +282,7 @@ class Consumer(models.Model):
 	phone_num = models.CharField(max_length=20, null=True, blank=True)  # 电话
 	address = models.CharField(max_length=30, null=True, blank=True)  # 地址
 	picture = models.URLField(null=True, blank=True)  # 头像地址
+	email = models.EmailField(null=True, blank=True)	#Email地址
 	bonus_range = models.IntegerField(default=0)  # 排行榜名次
 	snd_bonus_num = models.IntegerField(default=0)  # 发串串总数
 	rcv_bonus_num = models.IntegerField(default=0)  # 收串串总数
