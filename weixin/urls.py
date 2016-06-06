@@ -5,7 +5,7 @@ from . import views
 
 urlpatterns = [
 	url(r'^view_wechat_token',views.view_wechat_token, name='view_wechat_token'),
-	url(r'^view_snd_bonus',views.view_snd_bonus, name='view_snd_bonus'),
+	url(r'^view_snd_bonus/$',views.view_snd_bonus, name='view_snd_bonus'),
 	url(r'^view_rcv_bonus',views.view_rcv_bonus, name='view_rcv_bonus'),
 	url(r'^view_settle_account',views.view_settle_account, name='view_settle_account'),
 	url(r'^view_user_account',views.view_user_account, name='view_user_account'),	
@@ -18,12 +18,14 @@ urlpatterns = [
 	url(r'^view_self_rcv_bonus',views.view_self_rcv_bonus, name='view_self_rcv_bonus'),		
 	url(r'^view_self_snd_bonus',views.view_self_snd_bonus, name='view_self_snd_bonus'),	
 	url(r'^view_self_bonus_list',views.view_self_bonus_list, name='view_self_bonus_list'),		
+	url(r'^view_snd_bonus_list',views.view_snd_bonus_list, name='view_snd_bonus_list'),		
 	url(r'^wxpay/pay',views.view_weixin_pay, name='view_weixin_pay'),		
 	url(r'^view_redirect_settle_account',views.view_redirect_settle_account, name='view_redirect_settle_account'),		
 	url(r'^view_redirect_user_account',views.view_redirect_user_account, name='view_redirect_user_account'),	
 	url(r'^view_redirect_self_rcv_bonus',views.view_redirect_self_rcv_bonus, name='view_redirect_self_rcv_bonus'),		
 	url(r'^view_redirect_self_snd_bonus',views.view_redirect_self_snd_bonus, name='view_redirect_self_snd_bonus'),	
 	url(r'^view_redirect_self_bonus_list',views.view_redirect_self_bonus_list, name='view_redirect_self_bonus_list'),	
+	url(r'^view_redirect_snd_bonus_list',views.view_redirect_snd_bonus_list, name='view_redirect_snd_bonus_list'),		
 	url(r'^view_redirect_user_ticket',views.view_redirect_user_ticket, name='view_redirect_user_ticket'),	
 	url(r'^view_user_info',views.view_user_info, name='view_user_info'),		
 	url(r'^view_user_ticket',views.view_user_ticket, name='view_user_ticket'),	

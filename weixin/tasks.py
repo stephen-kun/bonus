@@ -40,6 +40,7 @@ def task_charge_and_snd_bonus(recharge, bonus_info):
 	try:
 		recharge.charge_money
 		recharge.recharge_person.snd_person_bonus(bonus_info)	
+		task_flush_snd_bonus_list()
 	except:
 		log_print('task_charge_and_snd_bonus')	
 	
@@ -67,6 +68,18 @@ def task_flush_bonus_list():
 			consumer.save()		
 	except:
 		log_print('task_flush_bonus_list')
+		
+@app.task
+def task_flush_snd_bonus_list():
+	try:
+		bonus_range = 1		
+		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("snd_bonus_num").reverse()
+		for consumer in consumer_list:
+			consumer.snd_range = bonus_range
+			bonus_range += 1
+			consumer.save()		
+	except:
+		log_print('task_flush_snd_bonus_list')		
 		
 @app.task		
 def periodic_task_ticket_valid():

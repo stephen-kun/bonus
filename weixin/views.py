@@ -523,12 +523,35 @@ def display_self_bonus_list(open_id, request):
 def view_redirect_self_bonus_list(request):
 	return display_redirect_views(display_self_bonus_list,  request)	
 	
-#check串串排行榜
+#抢串排行榜
 @csrf_exempt
 def view_self_bonus_list(request):
 	#print("========view_self_bonus_list =========\n")	
 	#return check_session_openid(request, REDIRECT_SBL_URL, display_self_bonus_list)
 	return view_redirect_func(REDIRECT_SBL_URL)
+
+def display_snd_bonus_list(open_id, request):
+	title = '放血琅琊榜'
+	static_url = settings.STATIC_URL
+	openid = open_id
+	try:
+		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("snd_range")
+		oneself = Consumer.objects.get(open_id=openid)
+		top_consumer = consumer_list[0]
+		menu = _MenuUrl()
+		return render_to_response('self_bonus_list.html', locals())
+	except:
+		log_print(display_snd_bonus_list) 
+		return HttpResponseBadRequest('Bad request')	
+
+@csrf_exempt
+def view_redirect_snd_bonus_list(request):
+	return display_redirect_views(display_snd_bonus_list,  request)		
+	
+#放血排行榜
+@csrf_exempt
+def view_snd_bonus_list(request):
+	return view_redirect_func(REDIRECT_RSBL_URL)
 	
 #页内发红包
 def site_snd_bonus(request):
