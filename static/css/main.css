@@ -60,13 +60,13 @@ input.green {
 	font-weight:normal;
 }
 input.gray {
-	height:2.5em;
+	height:2.2em;
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#a49e9e;
 	margin:1.5em .8em .5em .8em;
 	width:90%;
-	font-size:1em;
+	font-size:.8em;
 	color:#ffffff;
 	font-weight:normal;
 }
@@ -88,13 +88,13 @@ input.liuyan_zs {
 	color:#ffffff;
 }
 input.red {
-	height:2.5em;
+	height:2.2em;
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#d74f43;
 	margin:1.8em .8em .8em .8em;
 	width:90%;
-	font-size:1em;
+	font-size:.8em;
 	color:#ffffff;
 }
 
@@ -140,19 +140,19 @@ input.bule {
 }
 input.nichen {
 	width:70%;
-	height:1em;
+	height:1.2em;
 	border:0px #b6d554 solid;
 	border-bottom:1px #8bd554 solid;
 	font-weight: normal;
 	text-align:left;
-	font-size:.9em;
+	font-size:.8em;
 }
 input.baocun {
 	background:#8bd554;
 	border:0px #b6d554 solid;
 	font-size:.8em;
 	color:#ffffff;
-	padding:.3em .5em;
+	padding:.5em .8em;
 	border-radius:6px;
 	margin-left:.3em;
 }
@@ -169,6 +169,19 @@ input.code {
 	font-weight: normal;
 	text-align: left;
 	font-size:.9em;
+}
+input.Etnumber {
+	width:90%;
+	height:2.2em;
+	border:0px #b6b7b8 solid;
+	font-weight: normal;
+	text-align: center;
+	font-size:1em;
+	cursor:text;
+	border-radius:6px;
+}
+.font-green {
+	color:#b6d554;
 }
 
 .button-fasong {
@@ -778,7 +791,7 @@ input.code {
 
 .title_m ul li {
 	/*background: #ffffff;*/
-	border-bottom:#e7e8e9 1px solid;
+	border-bottom:#bdbec0 1px solid;
 	height:4.3em;
 	padding:.8em 0 0 0;
 	background-color: rgba(255,255,255,0.9);
@@ -1044,7 +1057,7 @@ input.code {
 .chch-list ul li h3 i {
 	font-size:.8em;
 	color:#bf8855;
-	padding:0 0 0 .5em;
+	padding:0 0 0 0em;
 }
 
 .chch-list ul li h5 {
@@ -1061,7 +1074,7 @@ input.code {
 .chch-list ul li h5 span {
 	border-left:1px solid #a5a99d;
 	display:block;
-	margin:0em 0 0 .5em;
+	margin:0em .3m 0 0;
 	width:6em;
 	overflow:hidden;
 }
@@ -1704,13 +1717,13 @@ input.liuyan_zs {
 	color:#ffffff;
 }
 input.red {
-	height:2.5em;
+	height:2.2em;
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#d74f43;
 	margin:1.5em .8em .8em .8em;
 	width:90%;
-	font-size:1em;
+	font-size:.8em;
 	color:#ffffff;
 }
 input.jin {
@@ -1755,19 +1768,19 @@ input.bule {
 }
 input.nichen {
 	width:70%;
-	height:1em;
+	height:1.2em;
 	border:0px #b6d554 solid;
 	border-bottom:1px #8bd554 solid;
 	font-weight: normal;
 	text-align:left;
-	font-size:.9em;
+	font-size:.8em;
 }
 input.baocun {
 	background:#8bd554;
 	border:0px #b6d554 solid;
-	font-size:.8em;
+	font-size:.7em;
 	color:#ffffff;
-	padding:.3em .5em;
+	padding:.8em .8em;
 	border-radius:6px;
 	margin-left:.3em;
 }
@@ -1784,6 +1797,19 @@ input.code {
 	font-weight: normal;
 	text-align: left;
 	font-size:.9em;
+}
+input.Etnumber {
+	width:90%;
+	height:2.2em;
+	border:0px #b6b7b8 solid;
+	font-weight: normal;
+	text-align: center;
+	font-size:1em;
+	cursor:text;
+	border-radius:6px;
+}
+.font-green {
+	color:#b6d554;
 }
 
 .button-fasong {
@@ -2397,7 +2423,7 @@ input.code {
 }
 .title_m ul li {
 	/*background: #ffffff;*/
-	border-bottom:#e7e8e9 1px solid;
+	border-bottom:#bdbec0 1px solid;
 	height:4.3em;
 	padding:.8em 0 0 0;
 	background-color: rgba(255,255,255,0.9);
@@ -2662,7 +2688,7 @@ input.code {
 .chch-list ul li h3 i {
 	font-size:.8em;
 	color:#bf8855;
-	padding:0 0 0 .5em;
+	padding:0 0 0 0em;
 }
 
 .chch-list ul li h5 {
@@ -2679,7 +2705,7 @@ input.code {
 .chch-list ul li h5 span {
 	border-left:1px solid #a5a99d;
 	display:block;
-	margin:0em 0 0 .5em;
+	margin:0em .3m 0 0;
 	width:6em;
 	overflow:hidden;
 }
@@ -3312,13 +3338,13 @@ input.liuyan_zs {
 	color:#ffffff;
 }
 input.red {
-	height:2.5em;
+	height:2.2em;
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#d74f43;
 	margin:1.8em .8em .8em .8em;
 	width:90%;
-	font-size:1em;
+	font-size:.8em;
 	color:#ffffff;
 }
 input.jin {
@@ -3363,19 +3389,19 @@ input.bule {
 }
 input.nichen {
 	width:70%;
-	height:1em;
+	height:1.2em;
 	border:0px #b6d554 solid;
 	border-bottom:1px #8bd554 solid;
 	font-weight: normal;
 	text-align:left;
-	font-size:.9em;
+	font-size:.7em;
 }
 input.baocun {
 	background:#8bd554;
 	border:0px #b6d554 solid;
-	font-size:.8em;
+	font-size:.7em;
 	color:#ffffff;
-	padding:.3em .5em;
+	padding:.5em .8em;
 	border-radius:6px;
 	margin-left:.3em;
 }
@@ -3392,6 +3418,19 @@ input.code {
 	font-weight: normal;
 	text-align: left;
 	font-size:.9em;
+}
+input.Etnumber {
+	width:90%;
+	height:2.2em;
+	border:0px #b6b7b8 solid;
+	font-weight: normal;
+	text-align: center;
+	font-size:1em;
+	cursor:text;
+	border-radius:6px;
+}
+.font-green {
+	color:#b6d554;
 }
 
 .button-fasong {
@@ -4002,7 +4041,7 @@ input.code {
 }
 .title_m ul li {
 	/*background: #ffffff;*/
-	border-bottom:#e7e8e9 1px solid;
+	border-bottom:#bdbec0 1px solid;
 	height:3.3em;
 	padding:.8em 0 0 0;
 	background-color: rgba(255,255,255,0.9);
@@ -4269,7 +4308,7 @@ input.code {
 .chch-list ul li h3 i {
 	font-size:.7em;
 	color:#bf8855;
-	padding:0 0 0 .5em;
+	padding:0 0 0 0em;
 }
 
 .chch-list ul li h5 {
@@ -4286,7 +4325,7 @@ input.code {
 .chch-list ul li h5 span {
 	border-left:1px solid #a5a99d;
 	display:block;
-	margin:0em 0 0 .5em;
+	margin:0em .3m 0 0;
 	width:90px;
 	overflow:hidden;
 }
@@ -4761,7 +4800,7 @@ input.code {
 	float:left;
 }
 .box-food ul li h3 {
-	padding:.5em;
+	padding:.5em .5em;
 	margin:0 0 .3em 0;
 	font-size:.7em;
 	font-weight:normal;
@@ -4930,13 +4969,13 @@ input.green {
 	font-weight:normal;
 }
 input.gray {
-	height:2.5em;
+	height:2.2em;
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#a49e9e;
 	margin:1.5em .8em .5em .8em;
 	width:90%;
-	font-size:1em;
+	font-size:.8em;
 	color:#ffffff;
 	font-weight:normal;
 }
@@ -4958,13 +4997,13 @@ input.liuyan_zs {
 	color:#ffffff;
 }
 input.red {
-	height:2.5em;
+	height:2.2em;
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#d74f43;
-	margin:1.8em .8em .8em .8em;
+	margin:1.5em .8em .8em .8em;
 	width:90%;
-	font-size:1em;
+	font-size:.8em;
 	color:#ffffff;
 }
 /*input.red:focus {
@@ -5015,19 +5054,19 @@ input.bule {
 }
 input.nichen {
 	width:70%;
-	height:1em;
+	height:1.2em;
 	border:0px #b6d554 solid;
 	border-bottom:1px #8bd554 solid;
 	font-weight: normal;
 	text-align:left;
-	font-size:.9em;
+	font-size:.8em;
 }
 input.baocun {
 	background:#8bd554;
 	border:0px #b6d554 solid;
-	font-size:.8em;
+	font-size:.7em;
 	color:#ffffff;
-	padding:.3em .5em;
+	padding:.5em .8em;
 	border-radius:6px;
 	margin-left:.3em;
 }
@@ -5047,7 +5086,19 @@ input.code {
 	text-align: left;
 	font-size:.9em;
 }
-
+input.Etnumber {
+	width:90%;
+	height:2.2em;
+	border:0px #b6b7b8 solid;
+	font-weight: normal;
+	text-align: center;
+	font-size:1em;
+	cursor:text;
+	border-radius:6px;
+}
+.font-green {
+	color:#b6d554;
+}
 
 
 .button-fasong {
@@ -5671,7 +5722,7 @@ input.code {
 }
 .title_m ul li {
 	/*background: #ffffff;*/
-	border-bottom:#e7e8e9 1px solid;
+	border-bottom:#bdbec0 1px solid;
 	height:3.3em;
 	padding:.8em 0 0 0;
 	background-color: rgba(255,255,255,0.8);
@@ -5975,7 +6026,7 @@ input.code {
 .chch-list ul li h3 i {
 	font-size:.7em;
 	color:#bf8855;
-	padding:0 0 0 .5em;
+	padding:0 0 0 0em;
 }
 
 .chch-list ul li h5 {
@@ -5992,7 +6043,7 @@ input.code {
 .chch-list ul li h5 span {
 	border-left:1px solid #a5a99d;
 	display:block;
-	margin:0em 0 0 .5em;
+	margin:0em .3m 0 0;
 	width:70px;
 	overflow:hidden;
 }
@@ -6447,7 +6498,7 @@ input.code {
 	float:left;
 }
 .box-food ul li h3 {
-	padding:.5em;
+	padding:.5em .5em;
 	margin:0 0 .3em 0;
 	font-size:.7em;
 	font-weight:normal;
@@ -6746,13 +6797,13 @@ input.green {
 	font-weight:normal;
 }
 input.gray {
-	height:2.5em;
+	height:2.2em;
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#a49e9e;
 	margin:1.5em .8em .5em .8em;
 	width:90%;
-	font-size:1em;
+	font-size:.8em;
 	color:#ffffff;
 	font-weight:normal;
 }
@@ -6770,13 +6821,13 @@ input.liuyan {
 	background:#f4e8d3;
 }
 input.red {
-	height:2.5em;
+	height:2.2em;
 	border-radius:10px;
 	border:#333 0px solid;
 	background:#d74f43;
 	margin:1.8em .8em .8em .8em;
 	width:90%;
-	font-size:1em;
+	font-size:.8em;
 	color:#ffffff;
 }
 input.jin {

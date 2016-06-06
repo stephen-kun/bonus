@@ -43,7 +43,7 @@ def get_admin_account():
 	return Consumer.objects.get(open_id='0001')
 
 
-@login_required(login_url='/manager/login/')
+@login_required(login_url='/test_wx/manager/login/')
 def index(request):
 	current_user = request.user
 	return render_to_response("manager/account/account.html")
@@ -52,11 +52,11 @@ def index(request):
 def logout(request):
 	auth.logout(request)
 	# Redirect to a success page.
-	return HttpResponseRedirect("/manager/account/")
+	return HttpResponseRedirect("/test_wx/manager/account/")
 
 
 # 红包统计信息
-@login_required(login_url='/manager/login/')
+@login_required(login_url='/test_wx/manager/login/')
 def bonus_info(request):
 	current_user = request.user
 	if (current_user.username == "admin"):
@@ -183,7 +183,7 @@ def sys_bonus_list(request):
 
 
 # 管理者信息
-@login_required(login_url='/manager/login/')
+@login_required(login_url='/test_wx/manager/login/')
 def account(request):
 	current_user = request.user
 	if (current_user.username == "admin"):
@@ -298,7 +298,7 @@ def set_bonus_limit(request):
 
 
 # 就餐信息
-@login_required(login_url='/manager/login/')
+@login_required(login_url='/test_wx/manager/login/')
 def dining(request):
 	current_user = request.user
 	return render_to_response("manager/dining/dining.html", {'current_user': current_user})
@@ -342,6 +342,20 @@ def create_coupon(request):
 
 
 def send_coupon(request):
+	open_id=request.POST.get('open_id')
+	print open_id
+	admin = get_admin_account()
+	try:
+		consumer = Consumer.objects.get(open_id=open_id) 
+		coupons = Ticket.objects.filter(consumer=admin, ticket_type=1) 
+		if(coupons.count()>0):
+			Ticket.objects.filter(id_ticket=coupons[0].id_ticket).update(consumer=consumer)
+		else:
+		 	return _response_json(0, "没有足够的礼券!")
+				
+	except ObjectDoesNotExist:
+		return _response_json(0, "open_id错误!")
+			
 	return _response_json(0, "success!")
 
 
@@ -459,7 +473,7 @@ def table_action(request):
 		return _response_json(1, u"错误操作!")
 
 
-@login_required(login_url='/manager/login/')
+@login_required(login_url='/test_wx/manager/login/')
 def consumer_index(request):
 	current_user = request.user
 	if (current_user.username == "admin"):
@@ -471,7 +485,7 @@ def consumer_index(request):
 	return render_to_response("manager/consumer/index.html", {'current_user': current_user, 'is_admin': is_admin})
 
 
-@login_required(login_url='/manager/login/')
+@login_required(login_url='/test_wx/manager/login/')
 def consumer_list(request):
 	current_user = request.user
 	if (current_user.username == "admin"):
@@ -509,7 +523,7 @@ def dining_list(request):
 							   'sessions': session_set})
 
 
-@login_required(login_url='/manager/login/')
+@login_required(login_url='/test_wx/manager/login/')
 def consumer_is_dining(request):
 	current_user = request.user
 	if (current_user.username == "admin"):
@@ -563,7 +577,7 @@ def consumer_bonus_list(request):
 								  {'consumer': consumer, 'bonus_list': bonus_list, 'bonus_num': bonus_num})
 
 
-@login_required(login_url='/manager/login/')
+@login_required(login_url='/test_wx/manager/login/')
 def statistics_index(request):
 	current_user = request.user
 	if (current_user.username == "admin"):
@@ -575,7 +589,7 @@ def statistics_index(request):
 	return render_to_response("manager/statistics/index.html", {'current_user': current_user, 'is_admin': is_admin})
 
 
-@login_required(login_url='/manager/login/')
+@login_required(login_url='/test_wx/manager/login/')
 def daily_statistics(request):
 	request_type = request.GET.get('type')
 	if request_type == "consumers":
@@ -596,7 +610,7 @@ def daily_statistics(request):
 	return render_to_response("manager/statistics/sys_daily_statistics.html", {'daily_statistics': daily_statistics})
 
 
-@login_required(login_url='/manager/login/')
+@login_required(login_url='/test_wx/manager/login/')
 def daily_detail(request):
 	request_type = request.GET.get('type')
 	if request_type == "consumers":
@@ -617,12 +631,12 @@ def daily_detail(request):
 	return render_to_response("manager/statistics/sys_daily_detail.html", {'daily_detail': daily_detail})
 
 
-@login_required(login_url='/manager/login/')
+@login_required(login_url='/test_wx/manager/login/')
 def monthly_coupon_statistics(request):
 	return render_to_response("manager/statistics/monthly_coupon_statistics.html")
 
 
-@login_required(login_url='/manager/login/')
+@login_required(login_url='/test_wx/manager/login/')
 def monthly_statistics(request):
 	request_type = request.GET.get('type')
 	if request_type == "consumers":
@@ -703,7 +717,7 @@ def forum_new_topic(request):
                     except Exception as ex:
                         print ex.args
             comment_posted(comment=comment, mentions=cform.mentions)
-            return redirect('/manager/forum' + topic.get_absolute_url())
+            return redirect('/test_wx/manager/forum' + topic.get_absolute_url())
 
 
     form = TopicForm(user=request.user, initial={'category': 1, })
@@ -896,8 +910,8 @@ def forum_comment_publish(request, topic_id, pk=None):
                     except Exception as ex:
                         print ex.args
             comment_posted(comment=comment, mentions=form.mentions)
-            # return redirect(request.POST.get('next', "/manager/forum"+comment.get_absolute_url()))
-            return json_response({'result':0,'next':request.POST.get('next', "/manager/forum"+comment.get_absolute_url())})
+            # return redirect(request.POST.get('next', "/test_wx/manager/forum"+comment.get_absolute_url()))
+            return json_response({'result':0,'next':request.POST.get('next', "/test_wx/manager/forum"+comment.get_absolute_url())})
         else:
             return json_response({"result":-1})
     else:
@@ -925,7 +939,7 @@ def forum_comment_find(request,pk):
 							comment_number,
 							config.comments_per_page,
 							'page')
-	return redirect("/manager/forum"+url)
+	return redirect("/test_wx/manager/forum"+url)
 
 
 @moderator_required
@@ -937,7 +951,7 @@ def forum_comment_delete(request, pk, remove=True):
 			.filter(pk=pk)\
 			.update(is_removed=remove)
 
-		return redirect("/manager/forum"+comment.get_absolute_url())
+		return redirect("/test_wx/manager/forum"+comment.get_absolute_url())
 
 	if remove:
 		type2 = 'delete'
@@ -974,8 +988,8 @@ def forum_comment_update(request, pk):
                     except Exception as ex:
                         print ex.args
             post_comment_update(comment=comment)
-            # return redirect(request.POST.get('next', "/manager/forum"+comment.get_absolute_url()))
-            return json_response({'result':0,'next':request.POST.get('next', "/manager/forum"+comment.get_absolute_url())})
+            # return redirect(request.POST.get('next', "/test_wx/manager/forum"+comment.get_absolute_url()))
+            return json_response({'result':0,'next':request.POST.get('next', "/test_wx/manager/forum"+comment.get_absolute_url())})
         else:
             return json_response({"result":-1})
 

@@ -55,8 +55,8 @@ INSTALLED_APPS = [
     'comment.history',
     'comment.like',
     'user',
-    'user.auth',
-   # 'user.admin',
+    #'user.auth',
+    #'user.admin',
     'wx',
 ]
 
@@ -102,7 +102,7 @@ WSGI_APPLICATION = 'bonus.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'qubaba',
+        'NAME': 'koovox',
 			'USER': 'root',
 			'PASSWORD': 'youqiukun',
 			'HOST':'',
