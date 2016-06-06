@@ -9,7 +9,6 @@ sys.setdefaultencoding("utf-8")
 
 from bonus.celery import app
 import django.utils.timezone as timezone
-from weixin.wx_config import *
 from weixin.models import WalletMoney,RcvBonus, SndBonus, Ticket,Consumer, Recharge, DiningSession, log_print
 
 from manager.utils import save_today_daily_detail
