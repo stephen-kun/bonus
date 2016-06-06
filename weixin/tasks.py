@@ -8,11 +8,18 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 from bonus.celery import app
-import errno
-from celery.exceptions import Reject
 import django.utils.timezone as timezone
+from weixin.wx_config import *
+from weixin.models import WalletMoney,RcvBonus, SndBonus, Ticket,Consumer, Recharge, DiningSession, log_print
 
-from .models import *
+from manager.utils import save_today_daily_detail
+
+@app.task
+def task_save_daily_record():
+	try:
+		save_today_daily_statistics()
+	except:
+		log_print('save_today_daily_detail')
 
 @app.task
 def task_charge_money(charge):
@@ -33,6 +40,7 @@ def task_charge_and_snd_bonus(recharge, bonus_info):
 	try:
 		recharge.charge_money
 		recharge.recharge_person.snd_person_bonus(bonus_info)	
+		task_flush_snd_bonus_list()
 	except:
 		log_print('task_charge_and_snd_bonus')	
 	
@@ -61,13 +69,27 @@ def task_flush_bonus_list():
 	except:
 		log_print('task_flush_bonus_list')
 		
+@app.task
+def task_flush_snd_bonus_list():
+	try:
+		bonus_range = 1		
+		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("snd_bonus_num").reverse()
+		for consumer in consumer_list:
+			consumer.snd_range = bonus_range
+			bonus_range += 1
+			consumer.save()		
+	except:
+		log_print('task_flush_snd_bonus_list')		
+		
 @app.task		
 def periodic_task_ticket_valid():
-	pass
+	valid_time = timezone.now()
+	Ticket.objects.select_for_update().filter(valid_time__lt=valid_time).update(is_valid=False)
 	
 @app.task
 def periodic_task_money_valid():
-	pass
+	valid_time = timezone.now()
+	WalletMoney.objects.select_for_update().filter(valid_time__lt=valid_time).update(is_valid=False)
 
 @app.task
 def periodic_task_bonus_valid():
