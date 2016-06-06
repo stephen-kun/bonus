@@ -7,6 +7,7 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 import random, string
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist 
 from .models import DiningTable,Consumer,VirtualMoney, WalletMoney, AuthCode
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
@@ -22,7 +23,7 @@ from django.utils import timezone
 
 from wzhifuSDK import *
 from .wx_config import *
-from weixin.tasks import task_charge_money, task_snd_person_bonus, task_create_ticket, task_flush_bonus_list, task_charge_and_snd_bonus
+from weixin.tasks import task_charge_money, task_snd_person_bonus, task_create_ticket, task_flush_bonus_list, task_flush_snd_bonus_list, task_charge_and_snd_bonus
 
 class _GetedBonus():
 	def __init__(self, rcv_bonus):
@@ -59,7 +60,7 @@ class _BonusContent():
 
 #日志存储
 def log_print(back_func, log_level=3, message=None):
-	path = './log/FILE.txt'.replace('FILE', back_func.__name__)
+	path = (settings.BASE_DIR + '/log/FILE.txt').replace('FILE', back_func.__name__)
 	f = open(path, 'a')
 	f.write(time.strftime('===============%Y-%m-%d %H:%M============\n', time.localtime(time.time())))
 	if log_level >= 3:
@@ -151,7 +152,34 @@ def get_user_openid(request, access_token_url):
 		return openid
 	except:
 		log_print(get_user_openid)
-		return None
+		return openid
+		
+	'''		
+	#检测access_token的有效性	
+	check_url = ACCESS_TOKEN_CHECK_URL.replace('OPENID',openid).replace('ACCESS_TOKEN', access_token)
+	at_request = urllib2.urlopen(check_url)
+	result = at_request.read().decode('utf-8')	
+	result = json.loads(result)
+	#print result
+	
+	if result['errcode'] == 0:
+		pass
+	else:
+		refresh_url = REFRESH_TOKEN_URL.replace('REFRESH_TOKEN', refresh_token)
+		rt_request = urllib2.urlopen(check_url)
+		result = rt_request.read().decode('utf-8')
+		result = json.loads(result)
+		print result
+		access_token = result['access_token']
+	'''
+	
+	log_print(get_user_openid, log_level=1, message="openid=%s ===> access_token=%s"%(openid, access_token))
+	#判断是否需要注册
+	if not Consumer.objects.filter(open_id=openid):
+		user_subscribe(openid, access_token)	
+		ret = task_flush_bonus_list.delay()
+		ret = task_flush_snd_bonus_list.delay()
+	return openid		
 
 
 #检测用户是否在就餐状态

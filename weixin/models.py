@@ -26,7 +26,7 @@ SYS_BONUS = 2
 
 #日志存储
 def log_print(back_func, log_level=3, message=None):
-	path = './log/FILE.txt'.replace('FILE', back_func)
+	path = (settings.BASE_DIR + '/log/FILE.txt').replace('FILE', back_func)
 	f = open(path, 'a')
 	f.write(time.strftime('===============%Y-%m-%d %H:%M============\n', time.localtime(time.time())))
 	if log_level >= 3:
@@ -287,6 +287,7 @@ class Consumer(models.Model):
 	address = models.CharField(max_length=30, null=True, blank=True)  # 地址
 	picture = models.URLField(null=True, blank=True)  # 头像地址
 	bonus_range = models.IntegerField(default=0)  # 排行榜名次
+	snd_range = models.IntegerField(default=0)    #放血排行榜
 	snd_bonus_num = models.IntegerField(default=0)  # 发串串总数
 	rcv_bonus_num = models.IntegerField(default=0)  # 收串串总数
 	snd_bonus_value = models.FloatField(default=0)  # 发串串金额
