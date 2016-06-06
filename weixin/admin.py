@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 
-from .models import DiningTable,Consumer,VirtualMoney, WalletMoney, AuthCode
+from .models import DiningTable,Consumer,VirtualMoney, WalletMoney, AuthCode, ConsumerSession
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
 
 class MoneyInline(admin.TabularInline):
@@ -38,6 +38,7 @@ admin.site.register(RcvBonus, RcvBonusWalletMoney)
 admin.site.register(Ticket, TicketWalletMoney)
 
 
+admin.site.register(ConsumerSession)
 admin.site.register(AuthCode)
 admin.site.register(DiningTable)
 admin.site.register(Consumer)
