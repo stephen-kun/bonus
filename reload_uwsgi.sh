@@ -1,6 +1,6 @@
 #!/bin/sh
 
-pids=`lsof | grep '\*\:8077' | awk '{print $2}'` 
+pids=`lsof | grep '\*\:8088' | awk '{print $2}'` 
 
 for pid in $pids 
 do

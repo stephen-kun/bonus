@@ -838,6 +838,7 @@ def action_weixin_order(data, request):
 		#发红包
 		#consumer.snd_person_bonus(bonus_info=bonus_info)
 		ret = task_snd_person_bonus.delay(consumer, bonus_info)
+		ret = task_flush_snd_bonus_list.delay()
 		response = dict(status=SUCCESS, result=SUCCESS, pay_type=WALLET_PAY)
 	else:
 		l_content = bonus_content_json_to_models(bonus_info.content)
@@ -903,7 +904,7 @@ def action_weixin_pay(data, request):
 				order_info = decode_order_param(consumer_order)
 				bonus_info = order_info['bonus_info']	
 				ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)
-				
+				ret = task_flush_snd_bonus_list.delay()
 				
 				response = dict(status=SUCCESS, result=SUCCESS)
 			else:
@@ -923,7 +924,8 @@ def action_weixin_pay(data, request):
 						consumer_order = request.session['consumer_order']	
 						order_info = decode_order_param(consumer_order)
 						bonus_info = order_info['bonus_info']	
-						ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)		
+						ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)	
+						ret = task_flush_snd_bonus_list.delay()
 						
 						response = dict(status=SUCCESS, result=SUCCESS)
 					elif order_query.result['trade_state'] == USERPAYING:
@@ -948,6 +950,7 @@ def snd_bonus_pay_weixin(data):
 	consumer = Consumer.objects.get(open_id=openid)
 	#consumer.snd_person_bonus(bonus_info=bonus_info)
 	ret = task_snd_person_bonus.delay(consumer, bonus_info)
+	ret = task_flush_snd_bonus_list.delay()
 	
 #选座入座	
 def action_choose_table(data):

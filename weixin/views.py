@@ -539,7 +539,7 @@ def display_snd_bonus_list(open_id, request):
 		oneself = Consumer.objects.get(open_id=openid)
 		top_consumer = consumer_list[0]
 		menu = _MenuUrl()
-		return render_to_response('self_bonus_list.html', locals())
+		return render_to_response('snd_bonus_list.html', locals())
 	except:
 		log_print(display_snd_bonus_list) 
 		return HttpResponseBadRequest('Bad request')	
@@ -704,7 +704,8 @@ def view_pay_notify(request):
 					'''
 					order_info = decode_order_param(consumer_order)
 					bonus_info = order_info['bonus_info']	
-					ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)						
+					ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)	
+					ret = task_flush_snd_bonus_list.delay()
 				else:
 					#支付失败业务
 					pass						

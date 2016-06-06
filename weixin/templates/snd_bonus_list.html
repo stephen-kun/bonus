@@ -1,0 +1,62 @@
+﻿<!-- 排行榜 -->
+{% extends "_bonus_base.html" %}
+
+{% block body %}
+<body class="title_bj bottom_40">
+
+{% block content %}
+<article>
+<section>
+  	<div class="title">
+    	<h4><img src="{{top_consumer.picture}}" align="absmiddle">{{top_consumer.name}}占您的榜首</h4>    
+    </div>
+	
+    <div class="ranking title_m">
+    	<ul>
+        	<li>
+            	<h6>&nbsp;</h6>
+                	<ul class="ranking_name">
+                    	<li>
+                        	<h2><img src="{{oneself.picture}}" align="absmiddle"></h2>
+                            <h4>
+                                <span>{{oneself.name}}</span>
+                                <p>第{{oneself.snd_range}}名</p>
+                            </h4>
+                        </li>
+                    </ul>
+                <h5>{{oneself.snd_bonus_num}}串</h5>
+            </li>
+  		</ul>
+    </div>
+
+    <div class="ranking title_m">
+    	<ul>
+		{% for  consumer in consumer_list %}
+        	<li>
+            	<h6>{{consumer.snd_range}}</h6>
+                	<ul class="ranking_name">
+                    	<li>
+                        	<h2><img src="{{consumer.picture}}" align="absmiddle"></h2>
+                            <h4 class="title_mw">
+                                <span>{{consumer.name}}</span>
+                            </h4>
+                        </li>
+                    </ul>
+                <h5>{{consumer.snd_bonus_num}}串</h5>
+            </li>		
+		{% endfor %}
+		</ul>
+	</div>
+	
+</section>
+</article>
+
+{% endblock %}
+
+{% block menu %}
+{% include '_menu.html' %}
+{% endblock %}
+
+</body>
+{% endblock %}
+
