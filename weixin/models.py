@@ -17,7 +17,7 @@ from core.utils.timezone import TIMEZONE_CHOICES
 from core.utils.models import AutoSlugField
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
-from .wx_config import *
+from weixin.wx_config import *
 
 
 #日志存储

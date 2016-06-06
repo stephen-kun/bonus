@@ -95,7 +95,7 @@ def periodic_task_bonus_valid():
 	#将所有未抢红包退回原有用户
 	snd_bonus_list = SndBonus.objects.filter(is_valid=True)
 	for snd_bonus in snd_bonus_list:
-		WalletMoney.objects.select_for_update().filter(snd_bonus=snd_bonus).update(is_send=False, snd_bonus=None)
+		WalletMoney.objects.select_for_update().filter(snd_bonus=snd_bonus).update(is_send=False, snd_bonus=None, is_receive=False)
 		RcvBonus.objects.select_for_update().filter(snd_bonus=snd_bonus, is_receive=False).update(is_valid=False)
 	#失效所有未抢红包
 	snd_bonus_list = SndBonus.objects.select_for_update().filter(is_valid=True).update(is_valid=False)
