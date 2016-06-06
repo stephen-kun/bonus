@@ -232,7 +232,7 @@ def view_redirect_bonus_snd(request):
 def display_snd_bonus_views(open_id, request):
 	openid = open_id
 	if is_consumer_dining(openid):	
-		title = '选择红包类型'
+		title = '放血'
 		static_url = settings.STATIC_URL
 		self_rcv_bonus_url = SELF_RCV_BONUS_URL
 		self_snd_bonus_url = SELF_SND_BONUS_URL
@@ -243,7 +243,7 @@ def display_snd_bonus_views(open_id, request):
 		return render_to_response('bonus_type.html', locals())
 	else:
 		prompt_message = '就餐用户独享抢红包！'
-		return display_prompt_views(prompt_message)	
+		return display_prompt_views(openid, SND_BONUS_URL)	
 		
 #抢红包界面
 @csrf_exempt
@@ -259,7 +259,7 @@ def display_rcv_bonus_views(open_id, request):
 	#检测用户是否在用餐状态
 	openid = open_id
 	if is_consumer_dining(openid):
-		title = '抢红包'
+		title = '抢串'
 		static_url = settings.STATIC_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		geted_bonus_url = GETED_BONUS_URL
@@ -267,8 +267,8 @@ def display_rcv_bonus_views(open_id, request):
 		menu = _MenuUrl()
 		return render_to_response('get_bonus.html', locals())
 	else:
-		prompt_message = '就餐用户独享抢红包！'
-		return display_prompt_views(prompt_message)
+		#prompt_message = '就餐用户独享抢红包！'
+		return display_prompt_views(openid, GET_BONUS_URL)
 	
 #结算界面
 @csrf_exempt
@@ -284,7 +284,7 @@ def display_settle_account_views(open_id, request):
 	openid = open_id
 	try:
 		if is_consumer_dining(openid):		
-			title = '结算'
+			title = '数签签'
 			static_url = settings.STATIC_URL
 			consumer = Consumer.objects.get(open_id=openid)
 			ajax_request_url = AJAX_REQUEST_POST_URL
@@ -292,7 +292,7 @@ def display_settle_account_views(open_id, request):
 			return render_to_response('close_an_account.html', locals())		
 		else:
 			prompt_message = '就餐用户独享抢红包！'
-			return display_prompt_views(prompt_message)	
+			return display_prompt_views(openid, SETTLE_ACCOUNTS_URL)	
 	except:
 		log_print(display_settle_account_views) 
 		return HttpResponseBadRequest('Bad request')
@@ -310,11 +310,14 @@ def display_qubaba_forum_views(open_id, request):
 	url = SITE_FORUM_URL.replace('OPENID', open_id)
 	return HttpResponseRedirect(url)
 	
-def display_prompt_views(message):
-	title = '提示'
+def display_prompt_views(open_id, url):
+	title = '请输入桌号'
 	static_url = settings.STATIC_URL
-	prompt_message = message
-	menu = _MenuUrl()
+	#prompt_message = message
+	ajax_request_url = AJAX_REQUEST_POST_URL
+	consumer = Consumer.objects.get(open_id=open_id)
+	url_go = url
+	#menu = _MenuUrl()
 	return render_to_response("user_prompt.html", locals())		
 
 #******************************************************************************	
@@ -379,7 +382,7 @@ def display_common_bonus_views(open_id, request):
 	if 'table' in request.GET:
 		table = request.GET.get('table')
 	try:
-		title = '普通红包'
+		title = '普通串'
 		static_url = settings.STATIC_URL
 		good_list = create_bonus_dict(request)
 		ajax_request_url = AJAX_REQUEST_POST_URL
@@ -403,7 +406,7 @@ def view_common_bonus(request):
 	
 def display_random_bonus_views(open_id, request):
 	try:
-		title = '手气红包'
+		title = '手气串'
 		static_url = settings.STATIC_URL	
 		good_list = create_bonus_dict(request)
 		choose_pay_url = WEIXIN_PAY_URL
@@ -502,7 +505,7 @@ def view_self_snd_bonus(request):
 	return check_session_openid(request, REDIRECT_SSB_URL, display_self_snd_bonus)
 
 def display_self_bonus_list(open_id, request):
-	title = '串串排行榜'
+	title = '抢串琅琊榜'
 	static_url = settings.STATIC_URL
 	openid = open_id
 	try:
@@ -524,7 +527,8 @@ def view_redirect_self_bonus_list(request):
 @csrf_exempt
 def view_self_bonus_list(request):
 	#print("========view_self_bonus_list =========\n")	
-	return check_session_openid(request, REDIRECT_SBL_URL, display_self_bonus_list)
+	#return check_session_openid(request, REDIRECT_SBL_URL, display_self_bonus_list)
+	return view_redirect_func(REDIRECT_SBL_URL)
 	
 #页内发红包
 def site_snd_bonus(request):
@@ -566,7 +570,7 @@ def view_geted_bonus(request):
 	if "id_record" in request.session:
 		try:
 			id_record = request.session['id_record']
-			title = '抢到的红包'
+			title = '抢到的串串'
 			static_url = settings.STATIC_URL
 			rcv_bonus_list = check_geted_bonus(id_record)
 			openid = get_record_openid(id_record)

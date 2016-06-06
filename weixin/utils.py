@@ -8,13 +8,18 @@ sys.setdefaultencoding("utf-8")
 
 import random, string
 from django.core.exceptions import ObjectDoesNotExist 
-from .models import DiningTable,Consumer,VirtualMoney, WalletMoney, AuthCode
+from .models import DiningTable,Consumer,VirtualMoney, WalletMoney, AuthCode, ConsumerSession
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
+User = get_user_model()
 
 import datetime
 import time
 import re
+import urllib
 import urllib2
+import urlparse
 import json
 import pytz
 import traceback
@@ -23,6 +28,26 @@ from django.utils import timezone
 from wzhifuSDK import *
 from .wx_config import *
 from weixin.tasks import task_charge_money, task_snd_person_bonus, task_create_ticket, task_flush_bonus_list, task_charge_and_snd_bonus
+
+class UserInfo():
+	def __init__(self, url):
+		self.url = url
+		response = urllib2.urlopen(self.url)
+		user_info = response.read().decode('utf-8')
+		self.user_info = json.loads(user_info)
+		#print url
+		#print user_info
+		
+		
+	def get_name(self):
+		return self.user_info['nickname']
+		
+	def get_sex(self):
+		return self.user_info['sex']
+		
+	def get_headimgurl(self):
+		return self.user_info['headimgurl']
+
 
 class _GetedBonus():
 	def __init__(self, rcv_bonus):
@@ -57,6 +82,57 @@ class _BonusContent():
 		self.unit = unit
 		self.number = number
 
+#用户关注注册
+def user_subscribe(openid, access_token):
+	open_id = openid
+	consumer = None
+	user = None
+	try:	
+		try:
+			user = User.objects.get(username=open_id)
+		except ObjectDoesNotExist:
+			user = User.objects.create(username=open_id, email="xxxx@xxx.com", is_staff=False)
+		user.groups.add(Group.objects.get(id=3))
+		
+		try:
+			consumer = Consumer.objects.get(open_id=open_id)
+			if consumer.subscribe == False:
+				consumer.subscribe = True	
+		except ObjectDoesNotExist:		
+			url = WX_USER_INFO_URL.replace('ACCESS_TOKEN', access_token)
+			url = url.replace('OPENID', open_id)
+			user_info = UserInfo(url)
+			name = user_info.get_name()
+			sex = user_info.get_sex()
+			headimgurl = user_info.get_headimgurl()		
+			consumer = Consumer(open_id=open_id, user=user, name=name, sex=sex, picture=headimgurl)	
+			consumer.subscribe = True
+		consumer.save()	
+	except:
+		User.objects.filter(username=open_id).delete()
+		log_print(user_subscribe)
+	return consumer
+	
+#更新或创建就餐会话
+def update_or_create_session(table, consumer):
+	session = None
+	if table.status:
+		consumer_list = Consumer.objects.filter(on_table=table)
+		session = consumer_list[0].session
+	else:
+		session = DiningSession.objects.create(table=table)
+		table.status = True
+		table.save()
+	consumer.on_table = table
+	consumer.session = session
+	consumer.save()
+	session.person_num += 1
+	session.save()
+	
+	#创建一条就餐记录
+	ConsumerSession.objects.create(session=session, consumer=consumer)
+	return session
+		
 #日志存储
 def log_print(back_func, log_level=3, message=None):
 	path = './log/FILE.txt'.replace('FILE', back_func.__name__)
@@ -141,17 +217,48 @@ def check_ajax_params(src_keys, dest_dict):
 
 #获取用户openid
 def get_user_openid(request, access_token_url):
+	openid = None
+	access_token = None
+	refresh_token = None
 	try:
 		code = request.GET.get(u'code')
 		url = access_token_url.replace('CODE', code)
 		response = urllib2.urlopen(url)
 		content = response.read()
-		access_token = json.loads(content)
-		openid = access_token['openid']
-		return openid
+		weixin_token = json.loads(content)
+		openid = weixin_token['openid']
+		access_token = weixin_token["access_token"]
+		refresh_token = weixin_token["refresh_token"]
+		#print weixin_token
 	except:
 		log_print(get_user_openid)
-		return None
+		return openid
+		
+	#检测access_token的有效性	
+	check_url = ACCESS_TOKEN_CHECK_URL.replace('OPENID',openid).replace('ACCESS_TOKEN', access_token)
+	at_request = urllib2.urlopen(check_url)
+	result = at_request.read().decode('utf-8')	
+	result = json.loads(result)
+	#print result
+	
+	'''
+	if result['errcode'] == 0:
+		pass
+	else:
+		refresh_url = REFRESH_TOKEN_URL.replace('REFRESH_TOKEN', refresh_token)
+		rt_request = urllib2.urlopen(check_url)
+		result = rt_request.read().decode('utf-8')
+		result = json.loads(result)
+		print result
+		access_token = result['access_token']
+	'''
+	
+	log_print(get_user_openid, log_level=1, message="openid=%s ===> access_token=%s"%(openid, access_token))
+	#判断是否需要注册
+	if not Consumer.objects.filter(open_id=openid):
+		user_subscribe(openid, access_token)	
+		ret = task_flush_bonus_list.delay()
+	return openid		
 
 
 #检测用户是否在就餐状态
@@ -838,6 +945,19 @@ def snd_bonus_pay_weixin(data):
 	#consumer.snd_person_bonus(bonus_info=bonus_info)
 	ret = task_snd_person_bonus.delay(consumer, bonus_info)
 	
+#选座入座	
+def action_choose_table(data):
+	openid = data['openid']
+	consumer = Consumer.objects.get(open_id=openid)
+	index_table = data['table']
+	response = {}
+	table = DiningTable.objects.filter(index_table=index_table)
+	if table:
+		update_or_create_session(table[0], consumer)
+		response = dict(result=SUCCESS)
+	else:
+		response = dict(result=FAIL)
+	return json.dumps(response)
 	
 #ajax请求处理函数
 def handle_ajax_request(action, data, request):
@@ -865,6 +985,8 @@ def handle_ajax_request(action, data, request):
 			return action_modify_name(data)
 		elif action == AJAX_MODIFY_SEX:
 			return action_modify_sex(data)
+		elif action == AJAX_CHOOSE_TABLE:
+			return action_choose_table(data)
 	else:
 		return "faild"
 

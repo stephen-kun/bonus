@@ -6,19 +6,63 @@
 
 {% block content %}
 <article class="issue-bj stanson">
-<section>
-  <div class="tip-box">
-  	<div class="tip">
-    	<h4>{{prompt_message}}<br>请先就餐！</h4>
+  <section>
+    <div class="issue-top Angel-voucher-mt">
+    	<h4>{{consumer.name}}</h4>
+        <div class="Angel Angel-voucher-img">
+        	<div class="blades">
+                <div class="Angel-baby Angel-voucher130"></div>
+            </div>
+            <h2><img src="{{consumer.picture}}"></h2>
+        </div>
+
+        <h3><font class="font-green">请输入您所在桌号</font></h3>
+        <style type="text/css">
+			.blades{animation: spin 100s linear infinite;}
+		</style>
     </div>
-  </div>
-</section>
+    <form action="zhifu.html" method="get">
+    <div class="queding">
+        <input type="number" class="Etnumber" id="table">
+    </div>
+    <div class="queding">
+        <span><input type="button" id="choose_table" class="green" value="确认"></span>
+    </div>
+    </form>
+  </section>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#choose_table").unbind('click').click(function(){
+		var table = $("#table").val();
+		if(!table){
+			alert("请输入桌号");
+			return;
+		}
+		var url = '{{ajax_request_url}}';
+		var openid = '{{consumer.open_id}}';
+		var url_go = '{{url_go}}';
+		
+		var request_data = '{"openid":"OPENID","table":"TABLE", "action":"ajax_choose_table"}';
+		request_data = request_data.replace(/OPENID/, openid).replace(/TABLE/, table);			
+		$.post(url, request_data, function(data, status){
+			var response = JSON.parse(data);
+			if(status == 'success'){
+				if(response.result == 'SUCCESS'){
+					alert("您已入座" + table + "号桌");
+					window.location.href = url_go;	
+				}else{
+					alert("您输入的桌台不存在！");
+				}			
+			}else{
+				alert("网络异常！")
+			}
+		});
+	});
+});
+</script>
 </article>
 {% endblock %}
 
-{% block menu %}
-{% include '_menu.html' %}
-{% endblock %}
 
 </body>
 
