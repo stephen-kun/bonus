@@ -2,10 +2,6 @@
 
 function unified_order(url, url_go, openid, bonus_type, pay_suc_url)
 {
-	if(order_flag){
-		return;
-	}
-	order_flag =true;
 	var sum = 0;
 	var table = $('input').filter("[name='table']").val();
 	var bonus_num = $('input').filter("[name='bonus_num']").val();
@@ -68,6 +64,16 @@ function unified_order(url, url_go, openid, bonus_type, pay_suc_url)
 		alert("红包个数必须大于0！");
 		return;			
 	}
+	
+	if(sum > 1000){
+		alert("亲，最多发999串哦");
+		return;
+	}
+	
+	if(order_flag){
+		return;
+	}
+	order_flag =true;	
 	
 	var input_str = $("input").map(function(){
 		var str = '';

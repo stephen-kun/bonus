@@ -2,7 +2,7 @@
 {% extends "_bonus_base.html" %}
 
 {% block body %}
-<body class="bottom_40">
+<body class="qubaba_hsbj bottom_40">
 
 {% block content %}
 <article id="Heightauto">
@@ -23,7 +23,7 @@
     </div>
     <form action="zhifu.html" method="get">
     <div class="queding">
-        <input type="number" class="Etnumber" id="table">
+        <input type="number" class="Etnumber" id="table" oninput="if(value.length>2)value=value.slice(0,2)">
     </div>
     <div class="queding">
         <span><input type="button" id="choose_table" class="green" value="确认"></span>

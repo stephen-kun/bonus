@@ -33,6 +33,7 @@ function action_create_ticket(openid, total_money, wallet_money, url){
 		return;
 	}
 	
+	
 	if(ticket_flag){
 		return;
 	}
