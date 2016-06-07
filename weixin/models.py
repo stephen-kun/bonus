@@ -331,6 +331,8 @@ class Consumer(models.Model):
 				user.is_staff = True
 				user.groups.add(Group.objects.get(id=2))
 				user.save()
+				user.jf.is_moderator = True
+				user.jf.save()
 				headimgurl = 'http://wx.tonki.com.cn/static/images/admin.png'
 				cls.objects.filter(user=user).update(open_id=create_primary_key(), name=username, picture=headimgurl, is_admin=True)
 				return True

@@ -16,9 +16,9 @@
                 {% block bonus %}<li><a href="{% url 'bonus_info' %}">红包</a></li>{% endblock %}
                 {% block consumer %}<li><a href="{% url 'consumer' %}">顾客</a></li>{% endblock %}
                 {% block statistics %}<li><a href="{% url 'statistics' %}">统计</a></li>{% endblock %}
-                {% if current_user.is_superuser%}
+                {% ifequal current_user.username 'admin'%}
                 {% block account %}<li><a href="{% url 'account' %}">店长</a></li>{% endblock %}
-                {% endif %}
+                {% endifequal %}
                 <li><a href="{% url 'forum_index' %}">论坛</a></li>
             </ul>
     </nav>
