@@ -854,7 +854,7 @@ def action_weixin_order(data, request):
 			wx_order=UnifiedOrder_pub()
 			wx_order.setParameter("out_trade_no", out_trade_no)
 			wx_order.setParameter("body", order_detail)
-			wx_order.setParameter('total_fee', '1')
+			wx_order.setParameter('total_fee', total_fee)
 			wx_order.setParameter('openid', openid)
 			wx_order.setParameter('spbill_create_ip', request.META['REMOTE_ADDR'])
 			prepay_id=wx_order.getPrepayId()			

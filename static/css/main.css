@@ -1399,13 +1399,16 @@ input.Etnumber {
 }
 /*=====弹出层======样式2016.04.08===结束=======*/
 .popup{ 
-	height:auto;
 	position:absolute;
-	z-index:0;
-	left:0;
-	bottom:.8em;
+	z-index:10;
+	left:50%;
+	top:4.5em;
 	display:none;
-	width:100%;
+	width:12em;
+	border-radius:100%;
+	background:rgba(182,213,84,0.8);
+	height:12em;
+	margin:0 0 0 -6em;
 }
 .tch-share { border-radius: 0; bottom:.8em; left: 0; /*position: fixed;*/ text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 3s /*infinite*/;animation-delay:.5s;/*Safari and Chrome*/-webkit-animation:mymove 3s /*infinite*/;-webkit-animation-delay:.5s; width: 100%; z-index:0; }
 
@@ -1413,13 +1416,13 @@ input.Etnumber {
 .tch-modal-out { z-index: 888; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%) }
 
 .tch-share-title {
-	background:#b6d554;
+	/*background:#b6d554;*/
 	color: #ffffff;
 	font-weight: normal;
 	margin:0 auto;
-	padding:.2em 0 0 0;
+	padding:.9em 0 0 0;
 	text-align: center;
-	font-size:1.975em;
+	font-size:1.575em;
 	border-radius:4em 4em 0em 0em;
 	height:3em;
 	width: auto;
@@ -1444,7 +1447,7 @@ input.Etnumber {
 	margin:0 auto;
 	text-align:center;
 	position:relative;
-	top:-3em; 
+	top:2em; 
 	display: block;}
 .tch-share-sns li {
 	display: block;
@@ -3025,26 +3028,29 @@ input.Etnumber {
 }
 /*=====弹出层======样式2016.04.08===结束=======*/
 .popup{ 
-	height:auto;
 	position:absolute;
-	z-index:0;
-	left:0;
-	bottom:.4em;
+	z-index:10;
+	left:50%;
+	top:17.5em;
 	display:none;
-	width:100%;
+	width:12em;
+	border-radius:100%;
+	background:rgba(182,213,84,0.8);
+	height:12em;
+	margin:0 0 0 -6em;
 }
 .tch-share { border-radius: 0; bottom:.4em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 2s /*infinite*/;animation-delay:.5s;/*Safari and Chrome*/-webkit-animation:mymove 2s /*infinite*/;-webkit-animation-delay:.5s;  width: 100%; z-index:0; }
 .tch-modal-active { transform: translateY(0px);  -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0) }
 .tch-modal-out { z-index: 888; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%) }
 
 .tch-share-title {
-	background:#b6d554;
+	/*background:#b6d554;*/
 	color: #ffffff;
 	font-weight: normal;
 	margin:0 auto;
-	padding:.2em 0 0 0;
+	padding:.9em 0 0 0;
 	text-align: center;
-	font-size:1.975em;
+	font-size:1.575em;
 	border-radius:4em 4em 0em 0em;
 	height:3em;
 	width: auto;
@@ -3069,7 +3075,7 @@ input.Etnumber {
 	margin:0 auto;
 	text-align:center;
 	position:relative;
-	top:-3em; 
+	top:2em; 
 	display: block;}
 .tch-share-sns li {
 	display: block;
@@ -4673,26 +4679,29 @@ input.Etnumber {
 }
 /*=====弹出层======样式2016.04.08===结束=======*/
 .popup{ 
-	height:auto;
 	position:absolute;
-	z-index:0;
-	left:0;
-	bottom:.85em;
+	z-index:10;
+	left:50%;
+	top:8.0em;
 	display:none;
-	width:100%;
+	width:10em;
+	border-radius:100%;
+	background:rgba(182,213,84,0.8);
+	height:10em;
+	margin:0 0 0 -5em; 
 }
 .tch-share { border-radius: 0; bottom:.85em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 3s /*infinite*/;animation-delay:1s;/*Safari and Chrome*/-webkit-animation:mymove 3s /*infinite*/;-webkit-animation-delay:1s; width: 100%; z-index:0;  }
 .tch-modal-active { transform: translateY(0px);  -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0) }
 .tch-modal-out { z-index: 888; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%) }
 
 .tch-share-title {
-	background:#b6d554;
+	/*background:#b6d554;*/
 	color: #ffffff;
 	font-weight: normal;
 	margin:0 auto;
-	padding:.2em 0 0 0;
+	padding:.8em 0 0 0;
 	text-align: center;
-	font-size:.975em;
+	font-size:1.375em;
 	border-radius:4em 4em 0em 0em;
 	height:3em;
 	width: auto;
@@ -4717,7 +4726,7 @@ input.Etnumber {
 	margin:0 auto;
 	text-align:center;
 	position:relative;
-	top:-1.5em; 
+	top:1.5em; 
 	display: block;}
 .tch-share-sns li {
 	display: block;
@@ -6382,19 +6391,20 @@ input.Etnumber {
 	transition: transform 1.2s ease-in;
 }
 /*=====弹出层======样式2016.04.08===结束=======*/
+
 .popup{ 
-	height:auto;
 	position:absolute;
-	z-index:0;
-	left:0;
-	bottom:.95em;
+	z-index:10;
+	left:50%;
+	top:7.2em;
 	display:none;
-	width:100%;
-	border-radius:4em 4em 0em 0em;
-	background:#b6d554;
-	height:4em;
+	width:8em;
+	border-radius:100%;
+	background:rgba(182,213,84,0.8);
+	height:8em;
+	margin:0 0 0 -4em; 
 }
-.tch-share { border-radius: 0; bottom:.85em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); /*-webkit-transition: -webkit-transform 300ms; transition: transform 300ms ;*/animation:mymove 3s /*infinite*/;animation-delay:1s;/*Safari and Chrome*/-webkit-animation:mymove 3s /*infinite*/;-webkit-animation-delay:1s; width: 100%; z-index:0; }
+.tch-share { border-radius: 0; bottom:.85em; left: 0; position: fixed; text-align: center; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%); animation:mymove 3s ;animation-delay:1s;-webkit-animation:mymove 3s ;-webkit-animation-delay:1s; width: 100%; z-index:0; }
 .tch-modal-active { transform: translateY(0px);  -webkit-transform: translateY(0); -ms-transform: translateY(0); transform: translateY(0) }
 .tch-modal-out { z-index: 888; -webkit-transform: translateY(100%); -ms-transform: translateY(100%); transform: translateY(100%) }
 
@@ -6402,9 +6412,9 @@ input.Etnumber {
 	color: #ffffff;
 	font-weight: normal;
 	margin:0 auto;
-	padding:.2em 0 0 0;
+	padding:1em 0 0 0;
 	text-align: center;
-	font-size:.875em;
+	font-size:1.275em;
 	height:1.2em;
 	width: auto;
 	line-height:1.2em;
@@ -6422,7 +6432,7 @@ input.Etnumber {
 	zoom:1;
 	margin:0 auto;
 	text-align:center;
-	top:.2em;
+	top:2em;
 	display: block;
 	position:relative;
 	z-index:12;
@@ -6437,6 +6447,7 @@ input.Etnumber {
 .tch-share-sns a:hover {
 	color:#ffffff;
 }
+
 /*=====抢红包效果=======按钮==结束=======*/
 			
 /*=====抢红包效果==结束始=======*/

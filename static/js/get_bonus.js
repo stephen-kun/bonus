@@ -23,11 +23,11 @@ function click_get_bonus(url, openid){
 			if(JSONObject.status == '0')
 			{
 				if(JSONObject.number == '0'){
-					$("#rcv_bonus").html('<font class="f_huangse">手慢了，红包已抢完</font>');
+					$("#rcv_bonus").html('<font class="f_huangse">手慢了,串串已抢完</font>');
 					$("#link1").hide();
 				}
 				else{
-					var html = '恭喜您！抢到<font class="f_huangse">NUMBER</font>红包！';
+					var html = '恭喜您<br>抢到<font class="f_huangse">NUMBER</font>个串串';
 					html = html.replace(/NUMBER/, JSONObject.number);
 					$("#rcv_bonus").html(html);
 					$("#link2").hide();
