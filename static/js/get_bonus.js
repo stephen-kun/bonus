@@ -11,7 +11,7 @@ function tc_center(){
 	$(".popup").css({bottom:_bottom,left:_left});
 }	
 
-function click_get_bonus(url, openid){
+function click_get_bonus(url, openid, url_go){
 	var data = '{"action":"ACTION", "openid":"OPENID", "timestamp":"TIMESTAMP"}';
 	var curr_time = new Date();
 	data = data.replace(/ACTION/, 'ajax_get_bonus').replace(/OPENID/,openid).replace(/TIMESTAMP/, curr_time);
@@ -25,12 +25,17 @@ function click_get_bonus(url, openid){
 				if(JSONObject.number == '0'){
 					$("#rcv_bonus").html('<font class="f_huangse">手慢了,串串已抢完</font>');
 					$("#link1").hide();
+					
+					// 控制结果样式弹出
+					$("#popup").fadeIn(1500);//查找ID为popup的DIV fadeIn()显示弹出时间
+					tc_center();					
 				}
 				else{
-					var html = '恭喜您<br>抢到<font class="f_huangse">NUMBER</font>个串串';
-					html = html.replace(/NUMBER/, JSONObject.number);
-					$("#rcv_bonus").html(html);
-					$("#link2").hide();
+					//var html = '恭喜您<br>抢到<font class="f_huangse">NUMBER</font>个串串';
+					//html = html.replace(/NUMBER/, JSONObject.number);
+					//$("#rcv_bonus").html(html);
+					//$("#link2").hide();
+					window.location.href = url_go;						
 				}				
 			}
 			else
@@ -38,9 +43,7 @@ function click_get_bonus(url, openid){
 				alert(JSONObject.error_msg);
 			}
 			
-			// 控制结果样式弹出
-			$("#popup").fadeIn(1500);//查找ID为popup的DIV fadeIn()显示弹出时间
-			tc_center();
+
 		}
 	});	
 

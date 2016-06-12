@@ -150,7 +150,9 @@ def check_consumer_code(request):
 		elif ticket and (ticket[0].is_consume == False):
 			ticket_value = ticket[0].ticket_value
 			ticket[0].is_consume = True
+			ticket[0].consume_time = timezone.now()
 			ticket[0].save()
+			WalletMoney.objects.select_for_update().filter(ticket=ticket[0]).update(is_used=True)
 			return _response_json(0, ticket_value,"券可抵扣%d元"%ticket_value)
 		else:
 			return _response_json(2, 0,"券码错误")
@@ -707,7 +709,7 @@ def view_pay_notify(request):
 					'''
 					order_info = decode_order_param(consumer_order)
 					bonus_info = order_info['bonus_info']	
-					ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)	
+					ret = task_charge_and_snd_bonus(new_recharge, bonus_info)	
 					#ret = task_flush_snd_bonus_list.delay()
 				else:
 					#支付失败业务

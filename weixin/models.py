@@ -718,7 +718,8 @@ class Ticket(models.Model):
 	def ticket_valid_time(cls):
 		now = timezone.now()
 		day = now.day + TICKET_VALID_TIME
-		valid_time = now.replace(day=day, hour=23, minute=59)		
+		valid_time = now.replace(day=day, hour=23, minute=59)	
+		return valid_time
 
 #接收红包记录
 class RecordRcvBonus(models.Model):

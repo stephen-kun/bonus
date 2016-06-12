@@ -515,7 +515,7 @@ def action_create_ticket(data):
 			new_consumer = Consumer.objects.get(open_id=openid)	
 			new_consumer.flush_own_money
 			'''
-			ret = task_create_ticket.delay(consumer, new_ticket)
+			ret = task_create_ticket(consumer, new_ticket)
 
 			#返回消费券码以及券值
 			id_ticket = str(new_ticket.id_ticket)
@@ -837,7 +837,7 @@ def action_weixin_order(data, request):
 	if is_enough_pay(consumer, int(total_money)):
 		#发红包
 		#consumer.snd_person_bonus(bonus_info=bonus_info)
-		ret = task_snd_person_bonus.delay(consumer, bonus_info)
+		ret = task_snd_person_bonus(consumer, bonus_info)
 		#ret = task_flush_snd_bonus_list.delay()
 		response = dict(status=SUCCESS, result=SUCCESS, pay_type=WALLET_PAY)
 	else:
@@ -903,7 +903,7 @@ def action_weixin_pay(data, request):
 				consumer_order = request.session['consumer_order']	
 				order_info = decode_order_param(consumer_order)
 				bonus_info = order_info['bonus_info']	
-				ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)
+				ret = task_charge_and_snd_bonus(new_recharge, bonus_info)
 				#ret = task_flush_snd_bonus_list.delay()
 				
 				response = dict(status=SUCCESS, result=SUCCESS)
@@ -924,7 +924,7 @@ def action_weixin_pay(data, request):
 						consumer_order = request.session['consumer_order']	
 						order_info = decode_order_param(consumer_order)
 						bonus_info = order_info['bonus_info']	
-						ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)	
+						ret = task_charge_and_snd_bonus(new_recharge, bonus_info)	
 						#ret = task_flush_snd_bonus_list.delay()
 						
 						response = dict(status=SUCCESS, result=SUCCESS)
@@ -949,7 +949,7 @@ def snd_bonus_pay_weixin(data):
 	openid = data['openid']
 	consumer = Consumer.objects.get(open_id=openid)
 	#consumer.snd_person_bonus(bonus_info=bonus_info)
-	ret = task_snd_person_bonus.delay(consumer, bonus_info)
+	ret = task_snd_person_bonus(consumer, bonus_info)
 	#ret = task_flush_snd_bonus_list.delay()
 	
 #选座入座	
