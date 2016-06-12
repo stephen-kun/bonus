@@ -150,7 +150,9 @@ def check_consumer_code(request):
 		elif ticket and (ticket[0].is_consume == False):
 			ticket_value = ticket[0].ticket_value
 			ticket[0].is_consume = True
+			ticket[0].consume_time = timezone.now()
 			ticket[0].save()
+			WalletMoney.objects.select_for_update().filter(ticket=ticket[0]).update(is_used=True)
 			return _response_json(0, ticket_value,"券可抵扣%d元"%ticket_value)
 		else:
 			return _response_json(2, 0,"券码错误")
