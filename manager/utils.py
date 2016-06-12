@@ -69,14 +69,14 @@ def get_today_daily_detail(is_admin):
 		wallet_list=WalletMoney.objects.filter(ticket=ticket)
 		content=[]
 		for wallet in wallet_list:
-			if(is_admin and wallet.recharge.rechage_type==1):
+			if(is_admin and wallet.recharge.recharge_type==1):
 				source = u"%s的充值"%(wallet.recharge.recharge_person.name)
 				daily_detail = DailyDetail(consumer=wallet.consumer, time=ticket.consume_time, action=-1,source=source, value=wallet.money.price)
 				ddc = DailyDetailContent(good=wallet.money, number=1, daily_detail=daily_detail )
 				content.append(ddc)
 				daily_detail.content=content
 				daily_detail_list.append(daily_detail)
-			elif(not is_admin and wallet.recharge.rechage_type==0):
+			elif(not is_admin and wallet.recharge.recharge_type==0):
 				source = u"%s的充值"%(wallet.recharge.recharge_person.name)
 				daily_detail = DailyDetail(consumer=wallet.consumer, time=ticket.consume_time, action=-1,source=source, value=wallet.money.price)
 				ddc = DailyDetailContent(good=wallet.money, number=1, daily_detail=daily_detail )
