@@ -56,28 +56,38 @@ def task_create_ticket(consumer, ticket):
 		log_print('task_create_ticket')
 		
 @app.task
-def task_flush_bonus_list():
+def task_flush_bonus_list(openid):
 	try:
 		bonus_range = 1		
+		oneself = None		
 		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("rcv_bonus_num").reverse()
 		for consumer in consumer_list:
 			consumer.bonus_range = bonus_range
 			bonus_range += 1
-			consumer.save()		
+			if consumer.open_id == openid:
+				oneself = consumer			
+			#consumer.save()	
+		return consumer_list, oneself
 	except:
 		log_print('task_flush_bonus_list')
+		return None
 		
 @app.task
-def task_flush_snd_bonus_list():
+def task_flush_snd_bonus_list(openid):
 	try:
 		bonus_range = 1		
+		oneself = None
 		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("snd_bonus_num").reverse()
 		for consumer in consumer_list:
 			consumer.snd_range = bonus_range
 			bonus_range += 1
-			consumer.save()		
+			if consumer.open_id == openid:
+				oneself = consumer
+			#consumer.save()	
+		return consumer_list, oneself
 	except:
-		log_print('task_flush_snd_bonus_list')		
+		log_print('task_flush_snd_bonus_list')	
+		return None
 		
 @app.task		
 def periodic_task_ticket_valid():

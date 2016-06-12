@@ -260,8 +260,8 @@ def get_user_openid(request, access_token_url):
 	#判断是否需要注册
 	if not Consumer.objects.filter(open_id=openid):
 		user_subscribe(openid, access_token)	
-		ret = task_flush_bonus_list.delay()
-		ret = task_flush_snd_bonus_list.delay()
+		#ret = task_flush_bonus_list.delay()
+		#ret = task_flush_snd_bonus_list.delay()
 	return openid		
 
 
@@ -662,7 +662,7 @@ def action_get_bonus(openid, request):
 	bonus_num = consumer.rcv_qubaba_bonus(record_rcv_bonus)
 	
 	#更新排行榜
-	ret = task_flush_bonus_list.delay()
+	#ret = task_flush_bonus_list.delay()
 	
 	if bonus_num:
 		#更新抢红包记录
@@ -838,7 +838,7 @@ def action_weixin_order(data, request):
 		#发红包
 		#consumer.snd_person_bonus(bonus_info=bonus_info)
 		ret = task_snd_person_bonus.delay(consumer, bonus_info)
-		ret = task_flush_snd_bonus_list.delay()
+		#ret = task_flush_snd_bonus_list.delay()
 		response = dict(status=SUCCESS, result=SUCCESS, pay_type=WALLET_PAY)
 	else:
 		l_content = bonus_content_json_to_models(bonus_info.content)
@@ -904,7 +904,7 @@ def action_weixin_pay(data, request):
 				order_info = decode_order_param(consumer_order)
 				bonus_info = order_info['bonus_info']	
 				ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)
-				ret = task_flush_snd_bonus_list.delay()
+				#ret = task_flush_snd_bonus_list.delay()
 				
 				response = dict(status=SUCCESS, result=SUCCESS)
 			else:
@@ -925,7 +925,7 @@ def action_weixin_pay(data, request):
 						order_info = decode_order_param(consumer_order)
 						bonus_info = order_info['bonus_info']	
 						ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)	
-						ret = task_flush_snd_bonus_list.delay()
+						#ret = task_flush_snd_bonus_list.delay()
 						
 						response = dict(status=SUCCESS, result=SUCCESS)
 					elif order_query.result['trade_state'] == USERPAYING:
@@ -950,7 +950,7 @@ def snd_bonus_pay_weixin(data):
 	consumer = Consumer.objects.get(open_id=openid)
 	#consumer.snd_person_bonus(bonus_info=bonus_info)
 	ret = task_snd_person_bonus.delay(consumer, bonus_info)
-	ret = task_flush_snd_bonus_list.delay()
+	#ret = task_flush_snd_bonus_list.delay()
 	
 #选座入座	
 def action_choose_table(data):

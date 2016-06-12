@@ -23,7 +23,7 @@ from .utils import gen_trade_no , snd_bonus_pay_weixin
 from lxml import etree
 import types
 
-from weixin.tasks import task_charge_money, task_snd_person_bonus, task_charge_and_snd_bonus
+from weixin.tasks import task_charge_money, task_snd_person_bonus, task_charge_and_snd_bonus, task_flush_snd_bonus_list, task_flush_bonus_list
 
 class _MenuUrl():
 	get_bonus_url = GET_BONUS_URL
@@ -33,6 +33,7 @@ class _MenuUrl():
 	user_info_url = USER_INFO_URL
 	user_ticket_url = USER_TICKET_URL
 	self_bonus_list_url = SELF_BONUS_LIST_URL
+	snd_bonus_list_url = SND_BONUS_LIST_URL
 	self_snd_bonus_url = SELF_SND_BONUS_URL
 	self_rcv_bonus_url = SELF_RCV_BONUS_URL
 	
@@ -242,7 +243,7 @@ def display_snd_bonus_views(open_id, request):
 		menu = _MenuUrl()		
 		return render_to_response('bonus_type.html', locals())
 	else:
-		prompt_message = '就餐用户独享抢红包！'
+		#prompt_message = '就餐用户独享抢红包！'
 		return display_prompt_views(openid, SND_BONUS_URL)	
 		
 #抢红包界面
@@ -510,8 +511,9 @@ def display_self_bonus_list(open_id, request):
 	openid = open_id
 	try:
 		bonus_range = 1
-		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("bonus_range")
-		oneself = Consumer.objects.get(open_id=openid)
+		#consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("bonus_range")
+		#oneself = Consumer.objects.get(open_id=openid)
+		consumer_list, oneself = task_flush_bonus_list(openid)
 		top_consumer = consumer_list[0]
 		menu = _MenuUrl()
 		return render_to_response('self_bonus_list.html', locals())
@@ -535,8 +537,9 @@ def display_snd_bonus_list(open_id, request):
 	static_url = settings.STATIC_URL
 	openid = open_id
 	try:
-		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("snd_range")
-		oneself = Consumer.objects.get(open_id=openid)
+		#consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("snd_range")
+		#oneself = Consumer.objects.get(open_id=openid)
+		consumer_list, oneself = task_flush_snd_bonus_list(openid)		
 		top_consumer = consumer_list[0]
 		menu = _MenuUrl()
 		return render_to_response('snd_bonus_list.html', locals())
@@ -705,7 +708,7 @@ def view_pay_notify(request):
 					order_info = decode_order_param(consumer_order)
 					bonus_info = order_info['bonus_info']	
 					ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)	
-					ret = task_flush_snd_bonus_list.delay()
+					#ret = task_flush_snd_bonus_list.delay()
 				else:
 					#支付失败业务
 					pass						
