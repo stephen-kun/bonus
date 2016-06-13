@@ -225,7 +225,6 @@ def _response_json(state, message):
 @csrf_exempt
 def action(request):
 	action = request.POST.get("action")
-	log_print('action', log_level=1, message="%s"%(reqeust.body))	
 	if (action == "register"):
 		username = request.POST.get("username")
 		password = request.POST.get("password")
