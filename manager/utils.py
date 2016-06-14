@@ -66,23 +66,23 @@ def get_today_daily_detail(is_admin):
 	ticket_list = Ticket.objects.filter(is_consume=True, ticket_type=0, consume_time__range=(start_date, end_date))
 	#ticket_list = Ticket.objects.filter(is_consume=True)
 	for ticket in ticket_list:
-		wallet_list=WalletMoney.objects.filter(ticket=ticket)
+		wallets=WalletMoney.objects.filter(ticket=ticket)
+		wallets_number=0
 		content=[]
-		for wallet in wallet_list:
-			if(is_admin and wallet.recharge.recharge_type==1):
-				source = u"%s的充值"%(wallet.recharge.recharge_person.name)
-				daily_detail = DailyDetail(consumer=wallet.consumer, time=ticket.consume_time, action=-1,source=source, value=wallet.money.price)
-				ddc = DailyDetailContent(good=wallet.money, number=1, daily_detail=daily_detail )
-				content.append(ddc)
-				daily_detail.content=content
-				daily_detail_list.append(daily_detail)
-			elif(not is_admin and wallet.recharge.recharge_type==0):
-				source = u"%s的充值"%(wallet.recharge.recharge_person.name)
-				daily_detail = DailyDetail(consumer=wallet.consumer, time=ticket.consume_time, action=-1,source=source, value=wallet.money.price)
-				ddc = DailyDetailContent(good=wallet.money, number=1, daily_detail=daily_detail )
-				content.append(ddc)
-				daily_detail.content=content
-				daily_detail_list.append(daily_detail)
+
+		for w in wallets:
+			if (not is_admin) and w.recharge.recharge_type==0:
+					source = u"用户充值"
+					wallets_number += 1 
+			elif is_admin and w.recharge.recharge_type==1:
+					source = u"系统红包"
+					wallets_number += 1
+		if wallets_number>0:
+			daily_detail = DailyDetail(consumer=wallets[0].consumer, time=ticket.consume_time, action=-1,source=source, value=wallets[0].money.price*wallets_number)
+			ddc = DailyDetailContent(good=wallets[0].money, number=wallets_number, daily_detail=daily_detail )
+			content.append(ddc)
+			daily_detail.content=content
+			daily_detail_list.append(daily_detail)
 
 	daily_detail_list=sorted(daily_detail_list, key=lambda x: x.time)
 	return daily_detail_list

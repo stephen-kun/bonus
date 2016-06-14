@@ -17,23 +17,23 @@
                         <li class="admin_guanli_w130">顾客</li>
                         <li>券号</li>
                         <li class="admin_guanli_w130">价值</li>
-                        <li class="admin_guanli_w130">来源</li>
+                        <li class="admin_guanli_w130" style="width:350px;">来源</li>
                     </ul>
                 </div>
                 <div class="admin_guanli_list_content">
                 	<ul>
-                    	{% for ticket in consume_tickets %}
+                    	{% for ticket in consumed_tickets %}
                         <li>
 			    <time>{{ ticket.consume_time|date:"Y-n-j H:i" }}</time>
-			    <td class="color_a">
-			    <span class="new_head"><img src="{{ ticket.consumer.picture }}" align="absmiddle"></span>{{ticket.consumer.name}}</td> 
-                            <h4 class="w106">{{ ticket.id_ticket }}</h4>
-                            <h4 class="w106">{{ ticket.ticket_value }}元</h4>
-                            <p class="w461">
-			    {% ifequal ticket.type 0 %}
-                            <h4 class="w106">生成券</h4>
+				<h4 class="w106" style="width:129px;">
+			    <span><img src="{{ ticket.consumer.picture }}" align="absmiddle" style="border-radius:1.972em;overflow:hidden;width:1.972em;height:1.972em;margin-right:.2em">{{ticket.consumer.name}}</span></h4>
+                            <h4 class="w106" style="width:190px;">{{ ticket.id_ticket }}</h4>
+                            <h4 class="w106" style="width:130px;">{{ ticket.ticket_value }}元</h4>
+                            <p class="w461" style="width:350px;">
+			    {% ifequal ticket.ticket_type 0 %}
+                            <h4 class="w106" style="width:350px;border-right:#000 0px solid;">生成券</h4>
 			    {% else %}
-                            <h4 class="w106">系统券</h4>
+                            <h4 class="w106" style="width:350px;border-right:#000 0px solid;">系统券</h4>
 			    {% endifequal %}
                             </p>
                         </li>
@@ -47,7 +47,7 @@
 <script language="JavaScript">
 function change(){
     var x = document.getElementById("date").value
-    window.location.href="{% url 'dining_list'%}?date="+x;
+    window.location.href="{% url 'ticket_consume_record'%}?date="+x;
 }
 </script>    
 </article>
