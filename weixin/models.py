@@ -80,6 +80,42 @@ def get_random_bonus(money_num, bonus_num):
 		bonus_num -= 1
 		money_num -= money
 	return l_money
+	
+def get_valid_time(valid_day):
+	big_month = [1,3,5,7,8,10,12]
+	mid_month = [4,6,9,11]
+	now = timezone.now()
+	day = now.day
+	month = now.month
+	year = now.year
+	max_day = 0
+	if month in big_month:
+		max_day = 31
+	elif month in mid_month:
+		max_day = 30
+	else:
+		if year%4 == 0:
+			if year % 100 == 0:
+				if year%400 == 0:
+					max_day = 29
+				else:
+					max_day = 28
+			else:
+				max_day = 29
+		else:
+			max_day = 28
+	
+	if day + valid_day > max_day:
+		if month == 12:
+			month = 1
+			year += 1
+		else:
+			month += 1
+		day += valid_day - max_day
+	else:
+		day += valid_day
+	valid_time = now.replace(year=year, day=day, month=month, hour=23, minute=59)	
+	return valid_time
 
 #VirtualMoney 转换为红包内容
 def virtual_money_to_bonus_content():
@@ -716,10 +752,7 @@ class Ticket(models.Model):
 		
 	@classmethod
 	def ticket_valid_time(cls):
-		now = timezone.now()
-		day = now.day + TICKET_VALID_TIME
-		valid_time = now.replace(day=day, hour=23, minute=59)
-		return valid_time		
+		return get_valid_time(TICKET_VALID_TIME)		
 		
 #接收红包记录
 class RecordRcvBonus(models.Model):
@@ -886,13 +919,5 @@ class WalletMoney(models.Model):
 	
 	@classmethod
 	def money_valid_time(cls):
-		now = timezone.now()
-		day = now.day
-		month = now.month
-		if day < MONEY_VALID_TIME:
-			month += 1
-		else:
-			month += 2
-		valid_time = now.replace(day=MONEY_INVALID_TIME, month=month, hour=23, minute=59)	
-		return valid_time
+		return get_valid_time(MONEY_VALID_TIME)
 
