@@ -901,7 +901,7 @@ class WalletMoney(models.Model):
 	is_valid = models.BooleanField(default=True)					#是否有效
 	is_used = models.BooleanField(default=False)					#是否已用
 	consumer = models.ForeignKey(Consumer, null=True, related_name="wallet_set", on_delete=models.CASCADE)		#钱包拥有着
-	snd_bonus = models.ForeignKey(SndBonus, null=True, related_name="wallet_set", on_delete=models.CASCADE)		#红包唯一id
+	snd_bonus = models.ForeignKey(SndBonus, null=True, blank=True, related_name="wallet_set", on_delete=models.CASCADE)		#红包唯一id
 	is_send = models.BooleanField(default=False)							#是否已发做红包
 	ticket = models.ForeignKey(Ticket, null=True, blank=True, on_delete=models.CASCADE)			#消费券唯一id
 	recharge = models.ForeignKey(Recharge, null=True, related_name='wallet_set', on_delete=models.CASCADE)	#充值记录id
