@@ -115,6 +115,9 @@ def periodic_task_session_valid():
 	for session in session_list:
 		session.table.status=False
 		session.table.save()
+		rcv_list = RcvBonus.objects.filter(session=session)
+		for rcv_bonus in rcv_list:
+			WalletMoney.objects.select_for_update().filter(rcv_bonus=rcv_bonus).update(consumer=rcv_bonus.consumer, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
 		Consumer.objects.select_for_update().filter(session=session).update(session=None, on_table=None)
 	DiningSession.objects.select_for_update().filter(over_time=None).update(over_time=timezone.now())
 	
