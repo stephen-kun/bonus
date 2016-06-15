@@ -21,7 +21,10 @@ from wzhifuSDK import *
 from .wx_config import *
 from .utils import gen_trade_no , snd_bonus_pay_weixin
 from lxml import etree
+from topic.models import SliderImage, Topic
+from comment.models import CommentImages, Comment
 import types
+import pytz
 
 from weixin.tasks import task_charge_money, task_snd_person_bonus, task_charge_and_snd_bonus, task_flush_snd_bonus_list, task_flush_bonus_list
 
@@ -45,6 +48,57 @@ class _UserInfoUrl():
 	email = 'http://%s/weixin/view_user_email'%(ADDRESS_IP)	
 	
 # Create your views here.
+
+
+#*****************大堂显示views************************
+@csrf_exempt
+def get_slideimages(request):
+	data = {}
+	image_list = SliderImage.objects.filter(enabled=True)
+	image_url = []
+	for image in image_list:
+		image_url.append(dict(url=str(image.url)))
+	data['state'] = 0
+	data['image_url'] = image_url
+	return HttpResponse(json.dumps(data), content_type="application/json")
+	
+@csrf_exempt
+def get_forums(request):
+	data = {}
+	topics_len = Topic.objects.order_by('-is_globally_pinned', '-is_pinned', '-last_active').count()
+	if topics_len > 10:
+		topic_list = Topic.objects.order_by('-is_globally_pinned', '-is_pinned', '-last_active')[0:10]
+	else:
+		topic_list = Topic.objects.order_by('-is_globally_pinned', '-is_pinned', '-last_active')
+	topics = []
+	for topic in topic_list:
+		comments = Comment.objects.for_topic(topic=topic).order_by('date')
+		comment = comments[0].comment
+		imagelist = CommentImages.objects.filter(comment = comments[0])
+		if imagelist:
+			image = imagelist[0].imageurl
+			has_image = 1
+		else:
+			has_image = 0
+		date_time = topic.date.replace(tzinfo=pytz.utc).astimezone(pytz.timezone("Asia/Shanghai")).strftime('%m-%d %H:%M')
+		consumer = Consumer.objects.filter(user=topic.user)[0]
+		topics.append(dict(date_time=date_time, name=consumer.name, picture=str(consumer.picture), comment=comment, has_image=has_image, image=str(image)))
+	data['state'] = 0
+	data['topics'] = topics
+	return HttpResponse(json.dumps(data), content_type="application/json")
+		
+@csrf_exempt
+def has_bonus(request):
+	data = {}
+	snd_bonus_list = SndBonus.objects.filter(is_valid=True, is_exhausted=False)
+	if snd_bonus_list:
+		data['has_bonus'] = 1
+	else:
+		data['has_bonus'] = 0
+	data['state'] = 0
+	return HttpResponse(json.dumps(data), content_type="application/json")
+	
+		
 
 #*********************个人信息修改views*****************
 @csrf_exempt
