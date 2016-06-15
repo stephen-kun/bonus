@@ -25,6 +25,7 @@ from topic.models import SliderImage, Topic
 from comment.models import CommentImages, Comment
 import types
 import pytz
+import random, string
 
 from weixin.tasks import task_charge_money, task_snd_person_bonus, task_charge_and_snd_bonus, task_flush_snd_bonus_list, task_flush_bonus_list
 
@@ -98,7 +99,47 @@ def has_bonus(request):
 	data['state'] = 0
 	return HttpResponse(json.dumps(data), content_type="application/json")
 	
+@csrf_exempt
+def bonus_remain(request):
+	data = {}
+	length = SndBonus.objects.filter(is_valid=True, is_exhausted=False).count()
+	snd_bonus_list = SndBonus.objects.filter(is_valid=True, is_exhausted=False)
+	if length:
+		rand = random.randint(0, length-1)
+		data['has_bonus'] = 1
+		data['type'] = snd_bonus_list[rand].bonus_type
+		data['table'] = snd_bonus_list[rand].to_table
+		data['name'] = snd_bonus_list[rand].consumer.name
+		data['picture'] = str(snd_bonus_list[rand].consumer.picture)
+		data['number'] = snd_bonus_list[rand].number
+		remain = 0
+		for rcv_bonus in RcvBonus.objects.filter(snd_bonus=snd_bonus_list[rand], is_receive=False):
+			remain += rcv_bonus.number
+		data['remain'] = remain
+	else:
+		data['has_bonus'] = 0
+	data['state'] = 0
+	return HttpResponse(json.dumps(data), content_type="application/json")
+	
+@csrf_exempt
+def qubaba_bonus_list(request):
+	data = {}
+	consumers = []
+	bonus_range = 1		
+	length = Consumer.objects.filter(user__groups__name='consumer').count()
+	if length > 8:
+		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("rcv_bonus_num").reverse()[0:7]
+	else:
+		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("rcv_bonus_num").reverse()
 		
+	for consumer in consumer_list:
+		consumers.append(dict(range=bonus_range, name=consumer.name, picture=str(consumer.picture), number=consumer.rcv_bonus_num))
+		bonus_range += 1
+	data['state'] = 0
+	data['consumers'] = consumers
+	return HttpResponse(json.dumps(data), content_type="application/json")
+	
+	
 
 #*********************个人信息修改views*****************
 @csrf_exempt

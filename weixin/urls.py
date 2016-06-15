@@ -53,5 +53,7 @@ urlpatterns = [
 	url(r'^get_auth_code',views.get_auth_code, name='get_auth_code'),		
 	url(r'^get_slideimages',views.get_slideimages, name='get_slideimages'),	
 	url(r'^get_forums',views.get_forums, name='get_forums'),		
-	url(r'^has_bonus',views.has_bonus, name='has_bonus'),		
+	url(r'^has_bonus',views.has_bonus, name='has_bonus'),	
+	url(r'^bonus_remain',views.bonus_remain, name='bonus_remain'),		
+	url(r'^qubaba_bonus_list',views.qubaba_bonus_list, name='qubaba_bonus_list'),	
 ]
