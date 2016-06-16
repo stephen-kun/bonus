@@ -66,11 +66,11 @@ def get_slideimages(request):
 @csrf_exempt
 def get_forums(request):
 	data = {}
-	topics_len = Topic.objects.order_by('-is_globally_pinned', '-is_pinned', '-last_active').count()
+	topics_len = Topic.objects.filter(is_removed=False).order_by('-is_globally_pinned', '-is_pinned', '-last_active').count()
 	if topics_len > 10:
-		topic_list = Topic.objects.order_by('-is_globally_pinned', '-is_pinned', '-last_active')[0:10]
+		topic_list = Topic.objects.filter(is_removed=False).order_by('-is_globally_pinned', '-is_pinned', '-last_active')[0:10]
 	else:
-		topic_list = Topic.objects.order_by('-is_globally_pinned', '-is_pinned', '-last_active')
+		topic_list = Topic.objects.filter(is_removed=False).order_by('-is_globally_pinned', '-is_pinned', '-last_active')
 	topics = []
 	for topic in topic_list:
 		comments = Comment.objects.for_topic(topic=topic).order_by('date')
