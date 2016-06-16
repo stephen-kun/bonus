@@ -84,7 +84,7 @@ def get_random_bonus(money_num, bonus_num):
 def get_valid_time(valid_day):
 	big_month = [1,3,5,7,8,10,12]
 	mid_month = [4,6,9,11]
-	now = timezone.now()
+	now = datetime.datetime.now()
 	day = now.day
 	month = now.month
 	year = now.year
