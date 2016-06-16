@@ -8,6 +8,7 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 from bonus.celery import app
+import datetime
 import django.utils.timezone as timezone
 from weixin.models import WalletMoney,RcvBonus, SndBonus, Ticket,Consumer, Recharge, DiningSession, log_print
 
@@ -91,12 +92,12 @@ def task_flush_snd_bonus_list(openid):
 		
 @app.task		
 def periodic_task_ticket_valid():
-	valid_time = timezone.now()
+	valid_time = datetime.datetime.now()
 	Ticket.objects.select_for_update().filter(valid_time__lt=valid_time).update(is_valid=False)
 	
 @app.task
 def periodic_task_money_valid():
-	valid_time = timezone.now()
+	valid_time = datetime.datetime.now()
 	WalletMoney.objects.select_for_update().filter(valid_time__lt=valid_time).update(is_valid=False)
 
 @app.task
