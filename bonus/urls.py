@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^comment/', include("comment.urls", namespace='comment')),
     url(r'^user/',include("user.urls",namespace='user')),
     url(r'^wx/',include("wx.urls",namespace='wx')),
+    url(r'^qubaba/',include("qubaba.urls",namespace='qubaba')),
 
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.MEDIA_ROOT}),
 ]
