@@ -7,8 +7,6 @@
 */
 var ticket_flag = false;
 function action_create_ticket(openid, total_money, wallet_money, url){
-	var auth_code ;
-	auth_code = $("#auth_code").val();
 	var ticket_value = Number($("#ticket_value").val());
 	var sum = Number(total_money) + Number(wallet_money);
 	
@@ -23,11 +21,6 @@ function action_create_ticket(openid, total_money, wallet_money, url){
 		return;
 	}
 	
-	if(!auth_code){
-		alert("请输入6位验证码！");
-		return;
-	}
-
 	if(!sum){
 		alert("没有串串");
 		return;
@@ -39,8 +32,8 @@ function action_create_ticket(openid, total_money, wallet_money, url){
 	}
 	ticket_flag = true;	
 	
-	var data = '{"openid":"OPENID", "action":"ajax_create_ticket", "user_wallet":"USER_WALLET", "total_money":"TOTAL_MONEY","ticket_value":"TICKET_VALUE","auth_code":"AUTH_CODE"}';
-	data = data.replace(/OPENID/, openid).replace(/USER_WALLET/, wallet_money).replace(/TOTAL_MONEY/,total_money).replace(/TICKET_VALUE/,ticket_value).replace(/AUTH_CODE/, auth_code);
+	var data = '{"openid":"OPENID", "action":"ajax_create_ticket", "user_wallet":"USER_WALLET", "total_money":"TOTAL_MONEY","ticket_value":"TICKET_VALUE"}';
+	data = data.replace(/OPENID/, openid).replace(/USER_WALLET/, wallet_money).replace(/TOTAL_MONEY/,total_money).replace(/TICKET_VALUE/,ticket_value);
 
 	$.post(url, data, function(data, status){
 		if(status == 'success'){

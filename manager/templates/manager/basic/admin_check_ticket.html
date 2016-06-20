@@ -28,9 +28,7 @@
                     </ul>
                 </div>
             </div>
-			<div class="code">
-            	<h4>验证码：<span id='auth_code'>{{auth_code}}</span></h4>
-            </div>
+
 			<div class="award_box_title">清桌</div>
             <div class="admin_guanli_list admin_guanli_w1000">
             	<div class="admin_guanli_list_tit">
@@ -93,17 +91,6 @@ $("#clean_table").unbind('click').click(function(){
 		Showbo.Msg.alert("输入出错")
 	}
 	
-});
-
-$(document).ready(function(){
-	var timer = setInterval(function(){
-		$.post("{% url 'get_auth_code' %}",function(data, status){
-			if(status == 'success'){
-				var data = JSON.parse(data);
-				$('#auth_code').text(data.auth_code);
-			}
-		});
-	}, 120000);
 });
 
 </script>

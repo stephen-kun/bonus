@@ -51,8 +51,6 @@ def task_create_ticket(consumer, ticket):
 		if ticket_value != ticket.ticket_value:
 			WalletMoney.objects.select_for_update().filter(ticket=ticket).update(ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
 			Ticket.objects.filter(id=ticket.id).delete()
-		#关闭就餐会话
-		consumer.session.close_session()
 	except:
 		log_print('task_create_ticket')
 		
