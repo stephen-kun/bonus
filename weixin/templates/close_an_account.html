@@ -27,7 +27,7 @@
 	<div class="box-food qbbaise box-food-mt">
 		<ul>
 			<li>
-				<h4><span class="rfloat"><font class="qbred">{{consumer.session.total_money}}串</font></span>抢到的串串</h4>
+				<h4><span class="rfloat"><font class="qbred">{{total_num}}串</font></span>抢到的串串</h4>
 			</li>
 			<li>
 				<h4>
@@ -35,9 +35,6 @@
 			</li>
 			<li>
 				<h4>券面值：<input type="number" id="ticket_value" class="code" oninput="if(value.length>6)value=value.slice(0,6)" placeholder="设置消费券面值"></h4>			
-			</li>
-			<li>
-				<h4>验证码：<input type="number" id="auth_code" class="code" oninput="if(value.length>6)value=value.slice(0,6)" placeholder="输入验证码"></h4>
 			</li>
 		</ul>
 	</div>	
@@ -59,7 +56,7 @@ $(document).ready(function(){
 	$("#create_ticket").unbind('click').click(function(){
 		var name = $("#create_ticket").val();
 		if(name == '生成券'){
-			action_create_ticket('{{consumer.open_id}}', '{{consumer.session.total_money}}', '{{consumer.own_bonus_value}}', '{{ajax_request_url}}');		
+			action_create_ticket('{{consumer.open_id}}', '{{total_num}}', '{{consumer.own_bonus_value}}', '{{ajax_request_url}}');		
 		}else{
 			check_ticket_code();
 		}

@@ -264,7 +264,7 @@ class DiningSession(models.Model):
 							id_index = money.id
 					len1 = WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__lte=id_index).update(ticket=ticket, consumer=ticket.consumer)
 					len2 = WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__gt=id_index).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
-					log_print('create_ticket__', log_level=1, message="==ticket_value:%s update:%s ===> %s=="%(str(ticket_value), str(len1), str(len2)))
+					log_print('create_ticket', log_level=1, message="==ticket_value:%s update:%s ===> %s=="%(str(ticket_value), str(len1), str(len2)))
 		return ticket_value
 		
 	@property
@@ -376,7 +376,37 @@ class Consumer(models.Model):
 			log_print('create_manager')
 			return False
 
+	def session_bonus_num(self):
+		rcv_bonus_list = RcvBonus.objects.filter(session=self.session, consumer=self, is_refuse=False, is_receive=True)
+		total_num = 0
+		for rcv_bonus in rcv_bonus_list:
+			total_num += rcv_bonus.number
+		return total_num
 		
+	def create_ticket(self, ticket, total_money):
+		ticket_value = float(0)
+		if total_money:
+			rcv_bonus_list = RcvBonus.objects.filter(session=self.session, consumer=self, is_refuse=False, is_receive=True)
+			sum = float(0)
+			is_enough = False
+			for bonus in rcv_bonus_list:
+				if is_enough:
+					WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus).update(ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+				else:
+					money_list = WalletMoney.objects.filter(rcv_bonus=bonus).order_by('-id').reverse()
+					id_index = 0
+					for money in money_list:
+						sum += money.money.price
+						if sum > total_money:
+							is_enough = True
+							break
+						else:
+							ticket_value = sum
+							id_index = money.id
+					len1 = WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__lte=id_index).update(ticket=ticket)
+					len2 = WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__gt=id_index).update(ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+					log_print('create_ticket', log_level=1, message="==ticket_value:%s update:%s ===> %s=="%(str(ticket_value), str(len1), str(len2)))
+		return ticket_value
 
 	@property
 	def own_money_list(self):
@@ -439,20 +469,18 @@ class Consumer(models.Model):
 	#结算
 	def close_an_account(self, ticket):
 		ticket_value = ticket.ticket_value
-		session_money = self.session.total_money
+		session_money = self.session_bonus_num()
 		total_money = session_money + self.own_bonus_value
 		sum = float(0)
+
 		if ticket_value <= session_money:
-			print 'ticket_value <= session_money'
-			sum = self.session.create_ticket(ticket, ticket_value)
-		elif ticket_value <= total_money:
-			print 'ticket_value <= total_money'			
-			sum += self.session.create_ticket(ticket, session_money)
+			sum = self.create_ticket(ticket, ticket_value)
+		elif ticket_value <= total_money:		
+			sum += self.create_ticket(ticket, session_money)
 			sum += self.wallet_pay_ticket(ticket, (ticket_value - session_money))
 		else:
-			sum += self.session.create_ticket(ticket, session_money)
+			sum += self.create_ticket(ticket, session_money)
 			sum += self.wallet_pay_ticket(ticket, self.own_bonus_value)
-		log_print('close_an_account', log_level=1, message="==ticket_value:%s=="%(str(ticket_value)))
 		return sum
 			
 
@@ -586,6 +614,12 @@ class Consumer(models.Model):
 						RcvBonus.objects.select_for_update().filter(id=id_rcv).update(consumer = self, content=content, datetime = timezone.now(), session = self.session, record_rcv_bonus = record_rcv_bonus, is_receive = True)
 					except:
 						return 0
+						
+					try:
+						WalletMoney.objects.select_for_update().filter(rcv_bonus=remain_bonus[rand]).update(consumer=self)
+					except:
+						return 0
+						
 					is_exhausted = False
 					over_time = None
 					is_valid = True
