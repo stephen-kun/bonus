@@ -729,10 +729,9 @@ def view_test_wxpay(request):
 	return render_to_response('test_weixin_pay.html', locals())
 
 #支付页面
-@csrf_exempt	
-def view_weixin_pay(request):
+def display_weixin_pay_views(open_id, request):
 	try:
-		openid = request.session['openid']
+		openid = open_id
 		consumer = Consumer.objects.get(open_id=openid)
 		title = '支付'
 		static_url = settings.STATIC_URL
@@ -752,8 +751,16 @@ def view_weixin_pay(request):
 			pay_param = jsapi_pub.getParameters()				
 			return render_to_response('weixin_pay.html', locals())			
 	except:
-		log_print(view_weixin_pay) 
+		log_print(display_weixin_pay_views) 
 		return HttpResponseBadRequest('Bad request')	
+
+@csrf_exempt	
+def view_redirect_weixin_pay(request):
+	return display_redirect_views(display_weixin_pay_views, request)
+	
+@csrf_exempt	
+def view_weixin_pay(request):
+	return view_redirect_func(REDIRECT_WP_URL)
 	
 @csrf_exempt
 def view_wechat_token(request):
@@ -778,7 +785,6 @@ def view_wechat_token(request):
 
 @csrf_exempt
 def view_pay_notify(request):
-	log_print(view_pay_notify, log_level=1, message="%s"%(request.body))
 	notify=Notify_pub()
 	try:
 		notify.saveData(request.body)

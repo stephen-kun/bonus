@@ -648,7 +648,7 @@ def action_get_bonus(openid, request):
 	if rcv_bonus:
 		if has_geted == HAS_GETED:
 			request.session['id_bonus'] = rcv_bonus.snd_bonus.id_bonus
-			response = dict(status=0, result=has_geted, number=rcv_bonus.number)
+			response = dict(status=0, result=has_geted, number=rcv_bonus.number, id_bonus=rcv_bonus.snd_bonus.id_bonus)
 		else:
 			request.session['id_record'] = rcv_bonus.id_bonus
 			response = dict(status=0, result=has_geted)

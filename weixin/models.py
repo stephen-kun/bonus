@@ -389,7 +389,7 @@ class Consumer(models.Model):
 				wallet_list = WalletMoney.objects.filter(consumer=self, is_geted=True).order_by('-id').reverse()
 				index = int(total_money / price)
 				id = wallet_list[index].id
-				WalletMoney.objects.select_for_update().filter(consumer=self, is_geted=True, id__lt=id_index).update(ticket=ticket)
+				WalletMoney.objects.select_for_update().filter(consumer=self, is_geted=True, id__lt=id).update(ticket=ticket)
 				ticket_value = total_money
 			else:
 				WalletMoney.objects.select_for_update().filter(consumer=self, is_geted=True).update(ticket=ticket)
