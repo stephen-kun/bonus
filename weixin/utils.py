@@ -653,9 +653,6 @@ def action_get_bonus(openid, request):
 	
 	bonus_num = consumer.rcv_qubaba_bonus(record_rcv_bonus)
 	
-	#更新排行榜
-	#ret = task_flush_bonus_list.delay()
-	
 	if bonus_num:
 		#更新抢红包记录
 		record_rcv_bonus.bonus_num = bonus_num
