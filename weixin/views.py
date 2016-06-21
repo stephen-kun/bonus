@@ -802,7 +802,7 @@ def view_pay_notify(request):
 					'''
 					order_info = decode_order_param(consumer_order)
 					bonus_info = order_info['bonus_info']	
-					ret = task_charge_and_snd_bonus.delay(new_recharge, bonus_info)	
+					ret = task_charge_and_snd_bonus(new_recharge, bonus_info)	
 					#ret = task_flush_snd_bonus_list.delay()
 				else:
 					#支付失败业务
