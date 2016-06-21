@@ -469,25 +469,17 @@ def bonus_snd_back(rcv_bonus_list):
 
 #创建消费券事件
 def action_create_ticket(data):
-	src_keys = ['openid', 'user_wallet', 'total_money','ticket_value', 'auth_code']
+	src_keys = ['openid', 'user_wallet', 'total_money','ticket_value']
 	if check_ajax_params(src_keys, data):
 		openid = data['openid']
 		consumer = Consumer.objects.get(open_id=openid)
 		ticket_value = float(data['ticket_value'])
-		auth_code = data['auth_code']
-		code = AuthCode.objects.filter(id_code=auth_code)
-		if len(code) == 0:
-			return dict(status=2, error_message="验证码错误，请重新输入！")
 		id_ticket = create_primary_key()
 		try:
-			#释放桌台
-			consumer.on_table.status = False
-			consumer.on_table.save()
-			
 			#判断是否能够生成足额的券值
 			price = VirtualMoney.objects.get(name='串串').price
 			own_money = consumer.own_bonus_value
-			rcv_money = consumer.session.total_money
+			rcv_money = consumer.session_bonus_num()
 			
 			if ticket_value >= (own_money + rcv_money):
 				ticket_value = own_money + rcv_money
@@ -660,9 +652,6 @@ def action_get_bonus(openid, request):
 	record_rcv_bonus = RecordRcvBonus.objects.create(id_record=id_record, consumer=consumer)	
 	
 	bonus_num = consumer.rcv_qubaba_bonus(record_rcv_bonus)
-	
-	#更新排行榜
-	#ret = task_flush_bonus_list.delay()
 	
 	if bonus_num:
 		#更新抢红包记录

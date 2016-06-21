@@ -51,8 +51,6 @@ def task_create_ticket(consumer, ticket):
 		if ticket_value != ticket.ticket_value:
 			WalletMoney.objects.select_for_update().filter(ticket=ticket).update(ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
 			Ticket.objects.filter(id=ticket.id).delete()
-		#关闭就餐会话
-		consumer.session.close_session()
 	except:
 		log_print('task_create_ticket')
 		
@@ -61,6 +59,7 @@ def task_flush_bonus_list(openid):
 	try:
 		bonus_range = 1		
 		oneself = None		
+		length = Consumer.objects.filter(user__groups__name='consumer').count()
 		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("rcv_bonus_num").reverse()
 		for consumer in consumer_list:
 			consumer.bonus_range = bonus_range
@@ -68,6 +67,8 @@ def task_flush_bonus_list(openid):
 			if consumer.open_id == openid:
 				oneself = consumer			
 			#consumer.save()	
+		if length > 50:
+			consumer_list = consumer_list[0:50]	
 		return consumer_list, oneself
 	except:
 		log_print('task_flush_bonus_list')
@@ -78,6 +79,7 @@ def task_flush_snd_bonus_list(openid):
 	try:
 		bonus_range = 1		
 		oneself = None
+		length = Consumer.objects.filter(user__groups__name='consumer').count()		
 		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("snd_bonus_num").reverse()
 		for consumer in consumer_list:
 			consumer.snd_range = bonus_range
@@ -85,6 +87,8 @@ def task_flush_snd_bonus_list(openid):
 			if consumer.open_id == openid:
 				oneself = consumer
 			#consumer.save()	
+		if length > 50:
+			consumer_list = consumer_list[0:50]				
 		return consumer_list, oneself
 	except:
 		log_print('task_flush_snd_bonus_list')	

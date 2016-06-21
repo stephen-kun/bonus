@@ -257,18 +257,15 @@ def check_consumer_code(request):
 		log_print(check_consumer_code)
 		return _response_json(3, "错误")
 
-#请桌接口
+#清桌接口
 @csrf_exempt
 def release_dining_table(request):		
 	try:
 		index_table = str(request.POST.get('table'))
 		table = DiningTable.objects.get(index_table=index_table)
 		if table.status:
-			consumer_list = Consumer.objects.filter(on_table=table)
-			for consumer in consumer_list:
-				consumer.on_table = None
-				consumer.session = None
-				consumer.save()
+			consumer = Consumer.objects.filter(on_table=table)[0]
+			consumer.session.close_session()
 			table.status = False
 			table.save()
 		response = dict(status='success')
@@ -385,6 +382,7 @@ def display_settle_account_views(open_id, request):
 			title = '数签签'
 			static_url = settings.STATIC_URL
 			consumer = Consumer.objects.get(open_id=openid)
+			total_num = consumer.session_bonus_num()
 			ajax_request_url = AJAX_REQUEST_POST_URL
 			menu = _MenuUrl()
 			return render_to_response('close_an_account.html', locals())		

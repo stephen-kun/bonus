@@ -264,7 +264,7 @@ class DiningSession(models.Model):
 							id_index = money.id
 					len1 = WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__lte=id_index).update(ticket=ticket, consumer=ticket.consumer)
 					len2 = WalletMoney.objects.select_for_update().filter(rcv_bonus=bonus, id__gt=id_index).update(consumer=ticket.consumer, ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
-					log_print('create_ticket__', log_level=1, message="==ticket_value:%s update:%s ===> %s=="%(str(ticket_value), str(len1), str(len2)))
+					log_print('create_ticket', log_level=1, message="==ticket_value:%s update:%s ===> %s=="%(str(ticket_value), str(len1), str(len2)))
 		return ticket_value
 		
 	@property
@@ -376,11 +376,29 @@ class Consumer(models.Model):
 			log_print('create_manager')
 			return False
 
+	def session_bonus_num(self):
+		return WalletMoney.objects.filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_geted=True).count()
 		
+	def create_ticket(self, ticket, total_money):
+		ticket_value = float(0)
+		price = VirtualMoney.objects.all()[0].price
+		if total_money:
+			number = WalletMoney.objects.filter(consumer=self, is_geted=True).count()
+			geted_money = number*price
+			if geted_money > total_money:
+				wallet_list = WalletMoney.objects.filter(consumer=self, is_geted=True).order_by('-id').reverse()
+				index = int(total_money / price)
+				id = wallet_list[index].id
+				WalletMoney.objects.select_for_update().filter(consumer=self, is_geted=True, id__lt=id_index).update(ticket=ticket)
+				ticket_value = total_money
+			else:
+				WalletMoney.objects.select_for_update().filter(consumer=self, is_geted=True).update(ticket=ticket)
+				ticket_value = geted_money
+		return ticket_value
 
 	@property
 	def own_money_list(self):
-		return WalletMoney.objects.filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False)
+		return WalletMoney.objects.filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, is_geted=False)
 		
 	@property
 	def flush_own_money(self):
@@ -438,21 +456,20 @@ class Consumer(models.Model):
 		
 	#结算
 	def close_an_account(self, ticket):
+		price = VirtualMoney.objects.all()[0].price
 		ticket_value = ticket.ticket_value
-		session_money = self.session.total_money
+		session_money = price*self.session_bonus_num()
 		total_money = session_money + self.own_bonus_value
 		sum = float(0)
+
 		if ticket_value <= session_money:
-			print 'ticket_value <= session_money'
-			sum = self.session.create_ticket(ticket, ticket_value)
-		elif ticket_value <= total_money:
-			print 'ticket_value <= total_money'			
-			sum += self.session.create_ticket(ticket, session_money)
+			sum = self.create_ticket(ticket, ticket_value)
+		elif ticket_value <= total_money:		
+			sum += self.create_ticket(ticket, session_money)
 			sum += self.wallet_pay_ticket(ticket, (ticket_value - session_money))
 		else:
-			sum += self.session.create_ticket(ticket, session_money)
+			sum += self.create_ticket(ticket, session_money)
 			sum += self.wallet_pay_ticket(ticket, self.own_bonus_value)
-		log_print('close_an_account', log_level=1, message="==ticket_value:%s=="%(str(ticket_value)))
 		return sum
 			
 
@@ -541,12 +558,12 @@ class Consumer(models.Model):
 				number = int(self.own_bonus_value / price)
 			id_money = money_list[number - 1].id	
 			ticket_value = number*price
-			WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, id__lte=id_money).update(ticket=ticket)
+			WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, is_geted=False, id__lte=id_money).update(ticket=ticket)
 		return ticket_value
 	
 	def wallet_pay_bonus(self, snd_bonus):
-		money_list = WalletMoney.objects.filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False).order_by("-id").reverse()
-		length = WalletMoney.objects.filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False).count()
+		money_list = self.own_money_list.order_by("-id").reverse()
+		length = self.own_money_list.count()
 		id_money = 0
 		if length < snd_bonus.number:
 			return False
@@ -554,11 +571,10 @@ class Consumer(models.Model):
 			id_money = money_list[snd_bonus.number - 1].id
 			
 		try:
-			WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, id__lte=id_money).update(snd_bonus=snd_bonus, is_send=True)
+			WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_send=False, is_geted=False, id__lte=id_money).update(snd_bonus=snd_bonus, is_send=True)
 		except:
 			log_print('wallet_pay_bonus')
 			return False
-		log_print('wallet_pay_bonus', log_level=1, message="id:%s length:%s===>number:%s update:%s"%(str(id_money),str(length), str(snd_bonus.number), str(WalletMoney.objects.filter(snd_bonus=snd_bonus, is_send=True).count())))					
 		return True
 		
 	def rcv_qubaba_bonus(self, record_rcv_bonus):
@@ -585,7 +601,16 @@ class Consumer(models.Model):
 					try:
 						RcvBonus.objects.select_for_update().filter(id=id_rcv).update(consumer = self, content=content, datetime = timezone.now(), session = self.session, record_rcv_bonus = record_rcv_bonus, is_receive = True)
 					except:
+						log_print('rcv_qubaba_bonus')
 						return 0
+						
+					try:
+						rcv_bonus = RcvBonus.objects.get(id=id_rcv)
+						WalletMoney.objects.select_for_update().filter(rcv_bonus=rcv_bonus).update(consumer=self, is_geted=True)
+					except:
+						log_print('rcv_qubaba_bonus')
+						return 0
+							
 					is_exhausted = False
 					over_time = None
 					is_valid = True
@@ -599,6 +624,7 @@ class Consumer(models.Model):
 						SndBonus.objects.select_for_update().filter(id=id_snd).update(is_exhausted=is_exhausted, over_time=over_time, is_valid=is_valid, bonus_remain=bonus_remain, bonus_exhausted=bonus_exhausted)
 					except:
 						RcvBonus.objects.select_for_update().filter(id=id_rcv).update(consumer=None, datetime=None, session=None, record_rcv_bonus=None, is_receive=False)
+						log_print('rcv_qubaba_bonus')
 						return 0
 						
 			#更新session信息
@@ -612,6 +638,7 @@ class Consumer(models.Model):
 						
 				self.save()
 		except:
+			log_print('rcv_qubaba_bonus')
 			return 0 
 		return bonus_num
 		
@@ -811,9 +838,9 @@ class SndBonus(models.Model):
 		try:
 			RcvBonus.objects.bulk_create(bulk_rcv_bonus)
 		except:
+			log_print('split_to_rcv_bonus')
 			return False
 		
-		log_print('split_to_rcv_bonus', log_level=1, message='rcv_bonus_len:%s ====> money_num:%s %s'%(str(len(bulk_rcv_bonus)),str(WalletMoney.objects.filter(snd_bonus=self).count()), str(WalletMoney.objects.filter(snd_bonus=self, is_receive=False).count())))
 		rcv_bonus_list = RcvBonus.objects.filter(snd_bonus=self)
 		for rcv_bonus in rcv_bonus_list:
 			id_money = WalletMoney.objects.filter(snd_bonus=self, is_receive=False).order_by('-id').reverse()[rcv_bonus.number - 1].id
@@ -821,6 +848,7 @@ class SndBonus(models.Model):
 				WalletMoney.objects.select_for_update().filter(snd_bonus=self, is_receive=False, id__lte=id_money).update(rcv_bonus=rcv_bonus, is_receive=True)
 			except:
 				RcvBonus.objects.filter(snd_bonus=self).delete()
+				log_print('split_to_rcv_bonus')
 				return False
 		return True
 		
@@ -874,7 +902,7 @@ class RcvBonus(models.Model):
 	
 	#婉拒
 	def bonus_refuse(self):
-		WalletMoney.objects.select_for_update().filter(rcv_bonus=self).update(consumer=self.snd_bonus.consumer, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+		WalletMoney.objects.select_for_update().filter(rcv_bonus=self).update(consumer=self.snd_bonus.consumer, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None, is_geted=False)
 		self.consumer.rcv_bonus_num -= self.number
 		self.consumer.flush_own_money
 		RcvBonus.objects.select_for_update().filter(id=self.id).update(is_refuse=True, is_valid=False)
@@ -909,6 +937,7 @@ class WalletMoney(models.Model):
 	valid_time = models.DateTimeField(null=True, blank=True)			#有效时间
 	rcv_bonus = models.ForeignKey(RcvBonus, null=True, blank=True, related_name="wallet_set", on_delete=models.CASCADE)		#抢到的红包唯一id
 	is_receive = models.BooleanField(default=False)						#是否已接收红包
+	is_geted = models.BooleanField(default=False)						#是否红包所得
 	money = models.ForeignKey(VirtualMoney, on_delete=models.CASCADE)	#虚拟货币
 
 	def __unicode__(self):
