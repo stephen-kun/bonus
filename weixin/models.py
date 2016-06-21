@@ -377,22 +377,26 @@ class Consumer(models.Model):
 			return False
 
 	def session_bonus_num(self):
-		return WalletMoney.objects.filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_geted=True).count()
+		return self.session_wallet_list.count()
+	
+	@property	
+	def session_wallet_list(self):
+		return WalletMoney.objects.filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_geted=True)
 		
 	def create_ticket(self, ticket, total_money):
 		ticket_value = float(0)
 		price = VirtualMoney.objects.all()[0].price
 		if total_money:
-			number = WalletMoney.objects.filter(consumer=self, is_geted=True).count()
+			number = self.session_bonus_num()
 			geted_money = number*price
 			if geted_money > total_money:
-				wallet_list = WalletMoney.objects.filter(consumer=self, is_geted=True).order_by('-id').reverse()
+				wallet_list = self.session_wallet_list.order_by('-id').reverse()
 				index = int(total_money / price)
 				id = wallet_list[index].id
-				WalletMoney.objects.select_for_update().filter(consumer=self, is_geted=True, id__lt=id).update(ticket=ticket)
+				WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_geted=True, id__lt=id).update(ticket=ticket)
 				ticket_value = total_money
 			else:
-				WalletMoney.objects.select_for_update().filter(consumer=self, is_geted=True).update(ticket=ticket)
+				WalletMoney.objects.select_for_update().filter(consumer=self, ticket=None, is_used=False, is_valid=True, is_geted=True).update(ticket=ticket)
 				ticket_value = geted_money
 		return ticket_value
 
