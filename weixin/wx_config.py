@@ -89,5 +89,10 @@ AJAX_WEIXIN_ORDER = 'ajax_weixin_order'
 AJAX_CHOOSE_TABLE = 'ajax_choose_table'
 
 TICKET_VALID_TIME = 1
-MONEY_VALID_TIME = 7
+MONEY_VALID_TIME = 15
+
+GET_BONUS = 2
+HAS_GETED = 1
+NO_BONUS = 0
+
 

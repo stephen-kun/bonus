@@ -66,11 +66,11 @@ def get_slideimages(request):
 @csrf_exempt
 def get_forums(request):
 	data = {}
-	topics_len = Topic.objects.filter(is_removed=False).order_by('-is_globally_pinned', '-is_pinned', '-last_active').count()
+	topics_len = Topic.objects.order_by('-is_globally_pinned', '-is_pinned', '-last_active').count()
 	if topics_len > 10:
-		topic_list = Topic.objects.filter(is_removed=False).order_by('-is_globally_pinned', '-is_pinned', '-last_active')[0:10]
+		topic_list = Topic.objects.order_by('-is_globally_pinned', '-is_pinned', '-last_active')[0:10]
 	else:
-		topic_list = Topic.objects.filter(is_removed=False).order_by('-is_globally_pinned', '-is_pinned', '-last_active')
+		topic_list = Topic.objects.order_by('-is_globally_pinned', '-is_pinned', '-last_active')
 	topics = []
 	for topic in topic_list:
 		comments = Comment.objects.for_topic(topic=topic).order_by('date')
@@ -257,15 +257,18 @@ def check_consumer_code(request):
 		log_print(check_consumer_code)
 		return _response_json(3, "错误")
 
-#清桌接口
+#请桌接口
 @csrf_exempt
 def release_dining_table(request):		
 	try:
 		index_table = str(request.POST.get('table'))
 		table = DiningTable.objects.get(index_table=index_table)
 		if table.status:
-			consumer = Consumer.objects.filter(on_table=table)[0]
-			consumer.session.close_session()
+			consumer_list = Consumer.objects.filter(on_table=table)
+			for consumer in consumer_list:
+				consumer.on_table = None
+				consumer.session = None
+				consumer.save()
 			table.status = False
 			table.save()
 		response = dict(status='success')
@@ -357,6 +360,7 @@ def display_rcv_bonus_views(open_id, request):
 		title = '抢串'
 		static_url = settings.STATIC_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
+		bonus_detail_url = BONUS_DETAIL_URL
 		geted_bonus_url = GETED_BONUS_URL
 		get_bonus_url = GET_BONUS_URL
 		menu = _MenuUrl()
@@ -382,7 +386,6 @@ def display_settle_account_views(open_id, request):
 			title = '数签签'
 			static_url = settings.STATIC_URL
 			consumer = Consumer.objects.get(open_id=openid)
-			total_num = consumer.session_bonus_num()
 			ajax_request_url = AJAX_REQUEST_POST_URL
 			menu = _MenuUrl()
 			return render_to_response('close_an_account.html', locals())		
@@ -693,8 +696,7 @@ def view_geted_bonus(request):
 			id_record = request.session['id_record']
 			title = '抢到的串串'
 			static_url = settings.STATIC_URL
-			rcv_bonus_list = check_geted_bonus(id_record)
-			openid = get_record_openid(id_record)
+			bonus, openid = check_geted_bonus(id_record)
 			common_bonus_url = CREATE_COMMON_BONUS_URL
 			ajax_request_url = AJAX_REQUEST_POST_URL
 			menu = _MenuUrl()

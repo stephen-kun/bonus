@@ -303,14 +303,10 @@ def count_total_money_on_table(openid):
 
 #查看抢到的红包
 def check_geted_bonus(id_record):
-	#print('*******check_geted_bonus********')
-	record_rcv_bonus = RecordRcvBonus.objects.get(id_record=id_record)
-	rcv_bonus_list = RcvBonus.objects.filter(record_rcv_bonus=record_rcv_bonus).order_by('datetime')
-	rcv_bonus = []
-	for bonus in rcv_bonus_list:
-		geted_bonus = _GetedBonus(bonus)
-		rcv_bonus.append(geted_bonus)
-	return rcv_bonus
+	rcv_bonus = RcvBonus.objects.get(id_bonus=id_record)
+	geted_bonus = _GetedBonus(rcv_bonus)
+	openid = rcv_bonus.consumer.open_id
+	return geted_bonus, openid
 
 #获取红包类型字符串
 def get_bonus_type_str(bonus_type):
@@ -647,23 +643,17 @@ def action_get_bonus(openid, request):
 
 	consumer = Consumer.objects.get(open_id=openid)
 	
-	#准备一条抢红包记录
-	id_record=create_primary_key()
-	record_rcv_bonus = RecordRcvBonus.objects.create(id_record=id_record, consumer=consumer)	
+	rcv_bonus, has_geted = consumer.rcv_qubaba_bonus()
 	
-	bonus_num = consumer.rcv_qubaba_bonus(record_rcv_bonus)
-	
-	if bonus_num:
-		#更新抢红包记录
-		record_rcv_bonus.bonus_num = bonus_num
-		record_rcv_bonus.save()
-		
-		#存储django session
-		request.session['id_record'] = record_rcv_bonus.id_record
+	if rcv_bonus:
+		if has_geted == HAS_GETED:
+			request.session['id_bonus'] = rcv_bonus.snd_bonus.id_bonus
+			response = dict(status=0, result=has_geted, number=rcv_bonus.number)
+		else:
+			request.session['id_record'] = rcv_bonus.id_bonus
+			response = dict(status=0, result=has_geted)
 	else:
-		RecordRcvBonus.objects.filter(id_record=id_record).delete()
-	
-	response = dict(status=0, number=bonus_num)
+		response = dict(status=0, result=has_geted)
 	return json.dumps(response)
 
 #生成虚拟货币
