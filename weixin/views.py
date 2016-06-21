@@ -66,11 +66,11 @@ def get_slideimages(request):
 @csrf_exempt
 def get_forums(request):
 	data = {}
-	topics_len = Topic.objects.filter(is_removed=False).order_by('-is_globally_pinned', '-is_pinned', '-last_active').count()
+	topics_len = Topic.objects.order_by('-is_globally_pinned', '-is_pinned', '-last_active').count()
 	if topics_len > 10:
-		topic_list = Topic.objects.filter(is_removed=False).order_by('-is_globally_pinned', '-is_pinned', '-last_active')[0:10]
+		topic_list = Topic.objects.order_by('-is_globally_pinned', '-is_pinned', '-last_active')[0:10]
 	else:
-		topic_list = Topic.objects.filter(is_removed=False).order_by('-is_globally_pinned', '-is_pinned', '-last_active')
+		topic_list = Topic.objects.order_by('-is_globally_pinned', '-is_pinned', '-last_active')
 	topics = []
 	for topic in topic_list:
 		comments = Comment.objects.for_topic(topic=topic).order_by('date')
@@ -257,15 +257,18 @@ def check_consumer_code(request):
 		log_print(check_consumer_code)
 		return _response_json(3, "错误")
 
-#清桌接口
+#请桌接口
 @csrf_exempt
 def release_dining_table(request):		
 	try:
 		index_table = str(request.POST.get('table'))
 		table = DiningTable.objects.get(index_table=index_table)
 		if table.status:
-			consumer = Consumer.objects.filter(on_table=table)[0]
-			consumer.session.close_session()
+			consumer_list = Consumer.objects.filter(on_table=table)
+			for consumer in consumer_list:
+				consumer.on_table = None
+				consumer.session = None
+				consumer.save()
 			table.status = False
 			table.save()
 		response = dict(status='success')
@@ -685,6 +688,8 @@ def view_ajax_request(request):
 	except:
 		log_print(view_ajax_request) 
 		return HttpResponseBadRequest('Bad request')
+		
+		
 	
 #抢到的红包界面
 @csrf_exempt
@@ -729,10 +734,9 @@ def view_test_wxpay(request):
 	return render_to_response('test_weixin_pay.html', locals())
 
 #支付页面
-@csrf_exempt	
-def view_weixin_pay(request):
+def display_weixin_pay_views(open_id, request):
 	try:
-		openid = request.session['openid']
+		openid = open_id
 		consumer = Consumer.objects.get(open_id=openid)
 		title = '支付'
 		static_url = settings.STATIC_URL
@@ -752,8 +756,16 @@ def view_weixin_pay(request):
 			pay_param = jsapi_pub.getParameters()				
 			return render_to_response('weixin_pay.html', locals())			
 	except:
-		log_print(view_weixin_pay) 
+		log_print(display_weixin_pay_views) 
 		return HttpResponseBadRequest('Bad request')	
+
+@csrf_exempt	
+def view_redirect_weixin_pay(request):
+	return display_redirect_views(display_weixin_pay_views, request)
+	
+@csrf_exempt	
+def view_weixin_pay(request):
+	return view_redirect_func(REDIRECT_WP_URL)
 	
 @csrf_exempt
 def view_wechat_token(request):
@@ -778,7 +790,6 @@ def view_wechat_token(request):
 
 @csrf_exempt
 def view_pay_notify(request):
-	log_print(view_pay_notify, log_level=1, message="%s"%(request.body))
 	notify=Notify_pub()
 	try:
 		notify.saveData(request.body)

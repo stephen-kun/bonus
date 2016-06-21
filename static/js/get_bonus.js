@@ -32,6 +32,9 @@ function click_get_bonus(url, openid, url_go){
 				}
 				else if(JSONObject.result == '1'){
 					$("#rcv_bonus").html('<font class="f_huangse">已抢过,抢到NUMBER串</font>'.replace(/NUMBER/, JSONObject.number));
+					var url = $("#detail_url").attr('href');
+					url = url.replace(/ID_BONUS/, JSONObject.id_bonus);
+					$("#detail_url").attr('href', url);
 					$("#link2").hide();
 					
 					// 控制结果样式弹出
