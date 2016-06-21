@@ -10,8 +10,8 @@ QUBABA_APPID = 'wx966e11eecf374549'
 QUBABA_APPSECRET = '7e1388fedef3a80bc9a3b1f4134ba674'
 
 TOKEN = 'token'
-APPID = KOOVOX_APPID
-APPSECRET = KOOVOX_APPSECRET
+APPID = QUBABA_APPID
+APPSECRET = QUBABA_APPSECRET
 
 ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=CODE&grant_type=authorization_code'%(APPID,APPSECRET)
 OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=REDIRECT_URL&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect"%(APPID)
@@ -19,8 +19,8 @@ OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redire
 WX_USER_INFO_URL = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN"
 
 #ADDRESS_IP = '127.0.0.1:8000'
-ADDRESS_IP = 'wx.tonki.com.cn/test_wx'
-
+ADDRESS_IP = 'wx.tonki.com.cn'
+#ADDRESS_IP = '120.76.122.53'
 
 REDIRECT_SSB_URL = 'http://%s/weixin/view_redirect_self_snd_bonus'%(ADDRESS_IP)
 REDIRECT_SRB_URL = 'http://%s/weixin/view_redirect_self_rcv_bonus'%(ADDRESS_IP)
@@ -57,7 +57,7 @@ USER_TICKET_URL = 'http://%s/weixin/view_user_ticket'%(ADDRESS_IP)
 SETTLE_ACCOUNTS_URL = 'http://%s/weixin/site_settle_account'%(ADDRESS_IP)
 BONUS_DETAIL_URL = 'http://%s/weixin/view_bonus_detail'%(ADDRESS_IP)
 
-TEST_DEBUG = True 
+TEST_DEBUG = False 
 
 COMMON_BONUS = 0
 RANDOM_BONUS = 1
