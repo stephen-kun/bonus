@@ -357,6 +357,7 @@ def display_rcv_bonus_views(open_id, request):
 		title = '抢串'
 		static_url = settings.STATIC_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
+		bonus_detail_url = BONUS_DETAIL_URL
 		geted_bonus_url = GETED_BONUS_URL
 		get_bonus_url = GET_BONUS_URL
 		menu = _MenuUrl()
@@ -693,8 +694,7 @@ def view_geted_bonus(request):
 			id_record = request.session['id_record']
 			title = '抢到的串串'
 			static_url = settings.STATIC_URL
-			rcv_bonus_list = check_geted_bonus(id_record)
-			openid = get_record_openid(id_record)
+			bonus, openid = check_geted_bonus(id_record)
 			common_bonus_url = CREATE_COMMON_BONUS_URL
 			ajax_request_url = AJAX_REQUEST_POST_URL
 			menu = _MenuUrl()

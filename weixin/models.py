@@ -577,16 +577,21 @@ class Consumer(models.Model):
 			return False
 		return True
 		
-	def rcv_qubaba_bonus(self, record_rcv_bonus):
+	def rcv_qubaba_bonus(self):
 		bonus_num = 0
 		total_money = 0
 		total_number = 0	
+		has_rcv_bonus = False
+		has_geted = NO_BONUS
+		rcv_bonus = None
 		try:
 			snd_bonus_list = SndBonus.objects.filter(is_exhausted=False, is_valid=True)
-		
 			for snd_bonus in snd_bonus_list:
+				if bonus_num:
+					break
 				is_receive = RcvBonus.objects.filter(snd_bonus=snd_bonus, consumer=self)
 				if is_receive:
+					has_rcv_bonus = True
 					continue
 				id_snd = snd_bonus.id
 				remain_bonus = RcvBonus.objects.filter(snd_bonus=snd_bonus).exclude(is_receive=True)
@@ -598,18 +603,24 @@ class Consumer(models.Model):
 					total_number += remain_bonus[rand].number				
 					id_rcv = remain_bonus[rand].id
 					content = bonus_content_detail(bonus=remain_bonus[rand], type='rcv')
+					
+					id_record=create_primary_key()
+					record_rcv_bonus = RecordRcvBonus.objects.create(id_record=id_record, consumer=self)	
+					
 					try:
 						RcvBonus.objects.select_for_update().filter(id=id_rcv).update(consumer = self, content=content, datetime = timezone.now(), session = self.session, record_rcv_bonus = record_rcv_bonus, is_receive = True)
 					except:
 						log_print('rcv_qubaba_bonus')
-						return 0
+						RecordRcvBonus.objects.filter(id_record=id_record).delete()
+						return None, 0
 						
 					try:
 						rcv_bonus = RcvBonus.objects.get(id=id_rcv)
 						WalletMoney.objects.select_for_update().filter(rcv_bonus=rcv_bonus).update(consumer=self, is_geted=True)
 					except:
 						log_print('rcv_qubaba_bonus')
-						return 0
+						RecordRcvBonus.objects.filter(id_record=id_record).delete()
+						return None, 0
 							
 					is_exhausted = False
 					over_time = None
@@ -624,8 +635,9 @@ class Consumer(models.Model):
 						SndBonus.objects.select_for_update().filter(id=id_snd).update(is_exhausted=is_exhausted, over_time=over_time, is_valid=is_valid, bonus_remain=bonus_remain, bonus_exhausted=bonus_exhausted)
 					except:
 						RcvBonus.objects.select_for_update().filter(id=id_rcv).update(consumer=None, datetime=None, session=None, record_rcv_bonus=None, is_receive=False)
+						RecordRcvBonus.objects.filter(id_record=id_record).delete()
 						log_print('rcv_qubaba_bonus')
-						return 0
+						return None, 0
 						
 			#更新session信息
 			if bonus_num:
@@ -634,13 +646,20 @@ class Consumer(models.Model):
 				total_bonus = self.session.total_bonus + bonus_num
 				total_money = self.session.total_money + total_money
 				total_number = self.session.total_number + total_number
-				DiningSession.objects.select_for_update().filter(id=self.session.id).update(total_bonus=total_bonus, total_money=total_money, total_number=total_number)
-						
+				DiningSession.objects.select_for_update().filter(id=self.session.id).update(total_bonus=total_bonus, total_money=total_money, total_number=total_number)		
 				self.save()
+				
+				
 		except:
 			log_print('rcv_qubaba_bonus')
-			return 0 
-		return bonus_num
+			return None, 0
+		
+		if bonus_num:
+			has_geted = GET_BONUS
+		elif has_rcv_bonus:
+			rcv_bonus = RcvBonus.objects.filter(consumer=self).order_by('datetime').last()
+			has_geted = HAS_GETED
+		return rcv_bonus, has_geted
 		
 	def snd_person_bonus(self, bonus_info):
 		id_bonus=create_primary_key()

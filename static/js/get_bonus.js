@@ -22,7 +22,7 @@ function click_get_bonus(url, openid, url_go){
 			var JSONObject = JSON.parse(data);
 			if(JSONObject.status == '0')
 			{
-				if(JSONObject.number == '0'){
+				if(JSONObject.result == '0'){
 					$("#rcv_bonus").html('<font class="f_huangse">手慢了,串串已抢完</font>');
 					$("#link1").hide();
 					
@@ -30,11 +30,15 @@ function click_get_bonus(url, openid, url_go){
 					$("#popup").fadeIn(1500);//查找ID为popup的DIV fadeIn()显示弹出时间
 					tc_center();					
 				}
-				else{
-					//var html = '恭喜您<br>抢到<font class="f_huangse">NUMBER</font>个串串';
-					//html = html.replace(/NUMBER/, JSONObject.number);
-					//$("#rcv_bonus").html(html);
-					//$("#link2").hide();
+				else if(JSONObject.result == '1'){
+					$("#rcv_bonus").html('<font class="f_huangse">已抢过,抢到NUMBER串</font>'.replace(/NUMBER/, JSONObject.number));
+					$("#link2").hide();
+					
+					// 控制结果样式弹出
+					$("#popup").fadeIn(1500);//查找ID为popup的DIV fadeIn()显示弹出时间
+					tc_center();										
+				}	
+				else if(JSONObject.result == '2'){
 					window.location.href = url_go;						
 				}				
 			}

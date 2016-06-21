@@ -7,7 +7,7 @@
 {% block content %}
 <article>
 <section>
-{% for bonus in rcv_bonus_list %}
+
 	{% ifequal bonus.bonus_type 2%}
     <div class="head">
 		<h2><img src={{bonus.picture}}></h2>
@@ -75,7 +75,7 @@
         <span class="wj"><a href="{{common_bonus_url}}/?table={{bonus.table}}" target="_blank">回赠</a></span>	
 	</div>	
 	{% endifequal %}
-{% endfor %}
+
 
 	<section>
 		<div class="am-share">
