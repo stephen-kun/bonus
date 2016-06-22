@@ -19,6 +19,7 @@ from .models import DiningTable,Consumer,VirtualMoney, WalletMoney
 from .models import DiningSession,Ticket, RcvBonus,SndBonus,Recharge, RecordRcvBonus, AuthCode
 from wzhifuSDK import *
 from .wx_config import *
+from .qubaba_str import *
 from .utils import gen_trade_no , snd_bonus_pay_weixin
 from lxml import etree
 from topic.models import SliderImage, Topic
@@ -159,7 +160,7 @@ def view_user_phone(request):
 def view_user_name(request):
 	try:
 		openid = request.session['openid']
-		title = '修改昵称'
+		title = TITLE_MODIFY_NAME
 		static_url = settings.STATIC_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		user_info_url = USER_INFO_URL
@@ -172,7 +173,7 @@ def view_user_name(request):
 def view_user_address(request):
 	try:
 		openid = request.session['openid']
-		title = '修改地址'
+		title = TITLE_MODIFY_ADDR
 		static_url = settings.STATIC_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		user_info_url = USER_INFO_URL
@@ -185,7 +186,7 @@ def view_user_address(request):
 def view_user_email(request):
 	try:
 		openid = request.session['openid']
-		title = '修改邮箱'
+		title = TITLE_MODIFY_EMAIL
 		static_url = settings.STATIC_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		user_info_url = USER_INFO_URL
@@ -198,7 +199,7 @@ def view_user_email(request):
 def view_user_sex(request):
 	try:
 		openid = request.session['openid']
-		title = '修改性别'
+		title = TITLE_MODIFY_SEX
 		static_url = settings.STATIC_URL
 		consumer = Consumer.objects.get(open_id=openid)
 		ajax_request_url = AJAX_REQUEST_POST_URL
@@ -301,7 +302,7 @@ def view_redirect_user_account(request):
 	
 def display_user_account_views(open_id, request):
 	try:
-		title = '我'
+		title = TITLE_USER_SELF
 		openid = open_id
 		static_url = settings.STATIC_URL	
 		consumer = Consumer.objects.get(open_id=openid)
@@ -327,7 +328,7 @@ def view_redirect_bonus_snd(request):
 def display_snd_bonus_views(open_id, request):
 	openid = open_id
 	if is_consumer_dining(openid):	
-		title = '放血'
+		title = TITLE_SND_BONUS
 		static_url = settings.STATIC_URL
 		self_rcv_bonus_url = SELF_RCV_BONUS_URL
 		self_snd_bonus_url = SELF_SND_BONUS_URL
@@ -354,7 +355,7 @@ def display_rcv_bonus_views(open_id, request):
 	#检测用户是否在用餐状态
 	openid = open_id
 	if is_consumer_dining(openid):
-		title = '抢串'
+		title = TITLE_RCV_BONUS
 		static_url = settings.STATIC_URL
 		ajax_request_url = AJAX_REQUEST_POST_URL
 		bonus_detail_url = BONUS_DETAIL_URL
@@ -363,7 +364,6 @@ def display_rcv_bonus_views(open_id, request):
 		menu = _MenuUrl()
 		return render_to_response('get_bonus.html', locals())
 	else:
-		#prompt_message = '就餐用户独享抢红包！'
 		return display_prompt_views(openid, GET_BONUS_URL)
 	
 #结算界面
@@ -380,7 +380,7 @@ def display_settle_account_views(open_id, request):
 	openid = open_id
 	try:
 		if is_consumer_dining(openid):		
-			title = '数签签'
+			title = TITLE_CREATE_TICKET
 			static_url = settings.STATIC_URL
 			consumer = Consumer.objects.get(open_id=openid)
 			total_num = consumer.session_bonus_num()
@@ -388,7 +388,6 @@ def display_settle_account_views(open_id, request):
 			menu = _MenuUrl()
 			return render_to_response('close_an_account.html', locals())		
 		else:
-			prompt_message = '就餐用户独享抢红包！'
 			return display_prompt_views(openid, SETTLE_ACCOUNTS_URL)	
 	except:
 		log_print(display_settle_account_views) 
@@ -408,7 +407,7 @@ def display_qubaba_forum_views(open_id, request):
 	return HttpResponseRedirect(url)
 	
 def display_prompt_views(open_id, url):
-	title = '请输入桌号'
+	title = TITLE_CHOOSE_TABLE
 	static_url = settings.STATIC_URL
 	#prompt_message = message
 	ajax_request_url = AJAX_REQUEST_POST_URL
@@ -429,7 +428,7 @@ def check_session_openid(request, redirect_uri, redirect_func):
 	
 def display_user_info(open_id, request):
 	try:
-		title = '个人信息'
+		title = TITLE_USER_INFO
 		openid = open_id
 		static_url = settings.STATIC_URL	
 		consumer = Consumer.objects.get(open_id=openid)
@@ -452,7 +451,7 @@ def view_user_info(request):
 	
 def display_user_ticket(open_id, request):
 	try:
-		title = '我的消费券'
+		title = TITLE_USER_TICKET
 		openid = open_id
 		static_url = settings.STATIC_URL	
 		consumer = Consumer.objects.get(open_id=openid)
@@ -479,7 +478,7 @@ def display_common_bonus_views(open_id, request):
 	if 'table' in request.GET:
 		table = request.GET.get('table')
 	try:
-		title = '普通串'
+		title = TITLE_COMMON_BONUS
 		static_url = settings.STATIC_URL
 		good_list = create_bonus_dict(request)
 		ajax_request_url = AJAX_REQUEST_POST_URL
@@ -503,7 +502,7 @@ def view_common_bonus(request):
 	
 def display_random_bonus_views(open_id, request):
 	try:
-		title = '手气串'
+		title = TITLE_RANDOM_BONUS
 		static_url = settings.STATIC_URL	
 		good_list = create_bonus_dict(request)
 		choose_pay_url = WEIXIN_PAY_URL
@@ -528,7 +527,7 @@ def view_random_bonus(request):
 	
 def display_bonus_detail(open_id, request):
 	try:
-		title = '串串明细'
+		title = TITLE_BONUS_DETAIL
 		openid = open_id	
 		id_bonus = request.session['id_bonus']
 		static_url = settings.STATIC_URL	
@@ -554,7 +553,7 @@ def view_bonus_detail(request):
 	
 def display_self_rcv_bonus(open_id, request):
 	try:
-		title = '收到的串串'
+		title = TITLE_CHECK_RCV_BONUS
 		openid = open_id
 		static_url = settings.STATIC_URL
 		consumer = Consumer.objects.get(open_id=openid)
@@ -578,7 +577,7 @@ def view_self_rcv_bonus(request):
 	
 def display_self_snd_bonus(open_id, request):
 	try:
-		title = '发出的串串'
+		title = TITLE_CHECK_SND_BONUS
 		openid = open_id
 		static_url = settings.STATIC_URL
 		consumer = Consumer.objects.get(open_id=openid)
@@ -602,7 +601,7 @@ def view_self_snd_bonus(request):
 	return check_session_openid(request, REDIRECT_SSB_URL, display_self_snd_bonus)
 
 def display_self_bonus_list(open_id, request):
-	title = '抢串琅琊榜'
+	title = TITLE_RCV_BONUS_LIST
 	static_url = settings.STATIC_URL
 	openid = open_id
 	try:
@@ -629,7 +628,7 @@ def view_self_bonus_list(request):
 	return view_redirect_func(REDIRECT_SBL_URL)
 
 def display_snd_bonus_list(open_id, request):
-	title = '放血琅琊榜'
+	title = TITLE_SND_BONUS_LIST
 	static_url = settings.STATIC_URL
 	openid = open_id
 	try:
@@ -692,7 +691,7 @@ def view_geted_bonus(request):
 	if "id_record" in request.session:
 		try:
 			id_record = request.session['id_record']
-			title = '抢到的串串'
+			title = TITLE_CHECK_BONUS
 			static_url = settings.STATIC_URL
 			bonus, openid = check_geted_bonus(id_record)
 			common_bonus_url = CREATE_COMMON_BONUS_URL
@@ -733,7 +732,7 @@ def display_weixin_pay_views(open_id, request):
 	try:
 		openid = open_id
 		consumer = Consumer.objects.get(open_id=openid)
-		title = '支付'
+		title = TITLE_WEIXIN_PAY
 		static_url = settings.STATIC_URL
 		data_dict = request.session['consumer_order']
 		result_dir = decode_order_param(data_dict)
