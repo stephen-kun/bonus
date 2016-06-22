@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{{title}}</title>
+<link href="{{static_url}}css/cctv-index.css" rel="stylesheet" type="text/css">
+<link href="{{static_url}}css/common.css" rel="stylesheet" type="text/css">
+<meta name="keywords" content="东启湘厨-论坛">
+<meta name="description" content="东启湘厨-论坛">
+<script type="text/javascript" src="{{static_url}}js/jquery.js"></script>
+<script type="text/javascript" src="{{static_url}}js/awardRotate.js"></script>
+<script src="{{static_url}}js/sweet-alert.min.js"></script>
+<script type="text/javascript" src="{{static_url}}js/ThreeCanvas.js"></script>
+<script type="text/javascript" src="{{static_url}}js/Snow.js"></script>
+<script type="text/javascript" src="{{static_url}}js/prompt_get_bonus.js"></script>
+</head>
+
+<body class="sizewh cc_bbs cc_bunch" id="body" onLoad="init()">
+<article class="start_top">
+	<div class="start_box">
+    	<div class="start_list">
+        	<div class="blades">
+                <div class="start_list_bj"></div>
+            </div>
+            <h2><img src="{{static_url}}images/open-2k.png"></h2>
+        </div>
+    </div>
+		
+</article>
+
+<article class="rob_box">
+	<div class="rob_box_left">
+    	<div class="blades">
+        	<div class="rob_bj"></div>
+        </div>
+        <h2 class="twinkoo" ID="soccer"><img src="{{static_url}}images/rob236-2k.png"></h2>
+    </div>
+    <div class="rob_box_right">
+    	<div class="blades">
+        	<div class="rob_bj_two"></div>
+        </div>
+        <h2 class="twinkoo"><img id="imgid" src="{{static_url}}images/bunch400-2k.png"></h2>
+    </div>
+</article>
+
+<article class="start_bottom">
+	<div class="start_box">
+        <div class="start_list">
+        	<div class="blades">
+                <div class="start_list_bj"></div>
+            </div>
+            <h2><img src="{{static_url}}images/begin-2k.png"></h2>
+        </div>
+    </div>
+		
+</article>
+<script type="text/javascript" src="{{static_url}}js/qubaba.js"></script>
+<script>
+$(document).ready(function(){
+	soccerOnload();
+	show(); 
+	setTimeout('goto_views("{{views_bonus_remain_url}}")', 2000);
+});
+
+</script>
+<style type="text/css">
+			.blades{animation: spin 100s linear infinite;}
+		</style>
+<embed src="{{static_url}}sound/2016Rift_walking.mp3" autostart="true" hidden="true"></embed>
+
+
+
+
+</body>
+</html>

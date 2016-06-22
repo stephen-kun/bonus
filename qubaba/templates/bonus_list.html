@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{{title}}</title>
+<link href="{{static_url}}css/cctv-index.css" rel="stylesheet" type="text/css">
+<link href="{{static_url}}css/common.css" rel="stylesheet" type="text/css">
+<meta name="keywords" content="东启湘厨-论坛">
+<meta name="description" content="东启湘厨-论坛">
+</head>
+
+<body class="sizewh cc_bbs cc_strand">
+<article class="cc_box">
+	<div class="cc_left">
+    	<div class="cc_left_strand">
+        	<div class="blades">
+                <div class="cc_left_strand_bj"></div>
+            </div>
+            <h2><img src="{{static_url}}images/strand-2k.png"></h2>
+        </div>
+        <div class="cc_left_strand cc_left_strandtwo">
+        	<div class="blades">
+                <div class="cc_left_strand_bj cc_left_strand_bj_two"></div>
+            </div>
+            <h2><img src="{{static_url}}images/strand-2k.png"></h2>
+        </div>
+        <div class="cc_seal">
+        	<div class="blades">
+                <div class="cc_seal_bj"></div>
+            </div>
+            <h2><img src="{{static_url}}images/seal-2k.png"></h2>
+        </div>
+        <div class="cc_seal cc_god">
+        	<div class="blades">
+                <div class="cc_seal_bj"></div>
+            </div>
+            <h2><img src="{{static_url}}images/god-2k.png"></h2>
+        </div>
+        <div class="cc_lists">
+        	<div class="blades">
+                <div class="cc_lists_bj"></div>
+            </div>
+            <h2><img src="{{static_url}}images/lists-2k.png"></h2>
+        </div>
+        <style type="text/css">
+			.blades{animation: spin 100s linear infinite;}
+		</style>
+    </div>
+    <div class="cc_right">
+    	<div class="cc_right_c">
+        	<div class="godlist">
+            	<ul>
+				{% for consumer in consumer_list %}
+					{% ifequal consumer.bonus_range 1 %}
+					<li class="color_green_bj"><span class="color_yellow">{{consumer.rcv_bonus_num}}</span><h2><i class="color_yellow">1</i><img src="{{consumer.{{consumer.picture}}}}" align="absmiddle"></h2><h4 class="color_yellow">{{consumer.{{consumer.name}}}}</h4></li>
+					{% else %}
+					{% ifequal consumer.bonus_range 2 %}
+					<li class="color_yellow_bj"><span class="color_brown">{{consumer.rcv_bonus_num}}</span><h2><i class="color_brown">2</i><img src="{{consumer.picture}}" align="absmiddle"></h2><h4 class="color_dark_gray">{{consumer.name}}</h4></li>
+					{% else %}
+					{% ifequal consumer.bonus_range 3 %}
+					<li class="color_yellowish_bj"><span class="color_orange">{{consumer.rcv_bonus_num}}</span><h2><i class="color_orange">3</i><img src="{{consumer.picture}}" align="absmiddle"></h2><h4 class="color_dark_gray">{{consumer.name}}</h4></li>
+					{% else %}
+					<li><span>{{consumer.rcv_bonus_num}}</span><h2><i>{{consumer.bonus_range}}</i><img src="{{consumer.picture}}" align="absmiddle"></h2><h4>{{consumer.name}}</h4></li>
+					{% endifequal %}					
+					{% endifequal %}					
+					{% endifequal %}
+				{% endfor %}
+                </ul>
+            </div>
+            	
+        </div>
+    </div>
+	<script type="text/javascript" src="{{static_url}}js/jquery.js"></script>	
+	<script type="text/javascript" src="{{static_url}}js/qubaba.js"></script>		
+	<script>
+		$(document).ready(function(){	
+			setTimeout('goto_views("{{views_slideimages_url}}")', 30000);	
+			timer_has_bonus('{{ajax_has_bonus_url}}', '{{views_prompt_bonus_url}}');				
+		});
+		
+	</script>		
+</article>
+</body>
+</html>

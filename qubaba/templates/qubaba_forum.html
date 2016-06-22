@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{{title}}</title>
+<link href="{{static_url}}css/cctv-index.css" rel="stylesheet" type="text/css">
+<link href="{{static_url}}css/common.css" rel="stylesheet" type="text/css">
+<meta name="keywords" content="东启湘厨-论坛">
+<meta name="description" content="东启湘厨-论坛">
+</head>
+
+<body class="sizewh cc_bbs">
+<article class="cc_box">
+	<div class="cc_left">
+    	<div class="cc_left_box">
+        	<div class="blades">
+                <div class="cc_bbs_z"></div>
+            </div>
+            <h2><img src="{{static_url}}images/bbs-2k.png"></h2>
+        </div>
+        <div class="cc_bbs_eight">
+        	<div class="blades">
+                <div class="cc_bbs_eight_bj"></div>
+            </div>
+            <h2><img src="{{static_url}}images/eight-2k.png"></h2>
+        </div>
+        <div class="cc_bbs_eight">
+        	<div class="blades">
+                <div class="cc_bbs_eight_bj"></div>
+            </div>
+            <h2><img src="{{static_url}}images/eight-2k.png"></h2>
+        </div>
+        <div class="cc_left_box">
+        	<div class="blades">
+                <div class="cc_bbs_z"></div>
+            </div>
+            <h2><img src="{{static_url}}images/bbs_tan-2k.png"></h2>
+        </div>
+        <style type="text/css">
+			.blades{animation: spin 100s linear infinite;}
+		</style>
+    </div>
+    <div class="cc_right">
+    	<div class="cc_right_c">
+        	<div class="bbs_list" id="con">
+            	
+            	<ul id="downpaly">
+				{% for topic in topics %}
+                    <li>
+                    	<h2><img src="{{topic.picture}}" align="absmiddle"></h2>
+                        <h4>
+							{% ifequal topic.name 'admin' %}
+							趣八八
+							{% else %}
+							{{topic.name}}
+							{% endifequal %}
+							<span>{{topic.date_time}}</span>
+                        </h4>
+                        <p>{{topic.comment}}</p>
+                        <h5>
+							{% if topic.has_image %}
+                        	<img src="{{topic.image}}">
+							{% endif %}
+                        </h5>
+                    </li>				
+				{% endfor %}
+                </ul>
+                <div class="clear"></div>
+
+            </div>
+        </div>
+    </div>
+    <!--jQuery-->
+	<script type="text/javascript" src="{{static_url}}js/jquery.js"></script>
+    <!--jQuery动画暂停插件-->
+    <script type="text/javascript" src="{{static_url}}js/jquery.pause.min.js"></script>
+    <!--滚动效果js-->
+    <script type="text/javascript" src="{{static_url}}js/weiboscroll.js"></script>
+	<script type="text/javascript" src="{{static_url}}js/qubaba.js"></script>
+	<script>
+		$(document).ready(function(){	
+			setTimeout('goto_views("{{views_slideimages_url}}")', 60000);
+			timer_has_bonus('{{ajax_has_bonus_url}}', '{{views_prompt_bonus_url}}');
+		});
+		
+	</script>		
+</article>
+</body>
+</html>

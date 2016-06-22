@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     #'user.auth',
     #'user.admin',
     'wx',
+	'qubaba',
 ]
 
 MIDDLEWARE_CLASSES = [

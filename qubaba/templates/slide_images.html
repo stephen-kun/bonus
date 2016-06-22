@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{{title}}</title>
+<link href="{{static_url}}css/cctv-index.css" rel="stylesheet" type="text/css">
+<link href="{{static_url}}css/common.css" rel="stylesheet" type="text/css">
+<meta name="keywords" content="东启湘厨-论坛">
+<meta name="description" content="东启湘厨-论坛">
+</head>
+
+<body class="sizewh cc_bbs">
+    <div class="rob_box_among">
+    	<div class="rob_box_among_c">
+            <div id="focus" class="focus">
+                <ul id="slides">
+				{% for image in image_list %}
+					<li><img src="{{image.url}}"/></li>
+				{% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="{{static_url}}js/jquery-1.11.2.min.js"></script>
+    <script src="{{static_url}}js/qubaba.js"></script>	
+	<script>
+		$(document).ready(function(){	
+			//一个页面设计多个ID切换
+			$(function() {
+				$('#focus').slideFocus();
+			});	
+			
+			setTimeout('goto_views("{{views_forum_url}}")', 60000);	
+			timer_has_bonus('{{ajax_has_bonus_url}}', '{{views_prompt_bonus_url}}');	
+		});
+	</script>		
+</body>
+</html>
