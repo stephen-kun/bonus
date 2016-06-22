@@ -479,6 +479,9 @@ def action_create_ticket(data):
 			new_consumer.flush_own_money
 			'''
 			ret = task_create_ticket(consumer, new_ticket)
+			
+			if not ret:
+				return dict(status=3, error_message="内部错误")
 
 			#返回消费券码以及券值
 			id_ticket = str(new_ticket.id_ticket)

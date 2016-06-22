@@ -10,7 +10,7 @@ sys.setdefaultencoding("utf-8")
 from bonus.celery import app
 import datetime
 import django.utils.timezone as timezone
-from weixin.models import WalletMoney,RcvBonus, SndBonus, Ticket,Consumer, Recharge, DiningSession, log_print
+from weixin.models import WalletMoney,RcvBonus, SndBonus, Ticket,Consumer, Recharge, DiningSession, log_print, VirtualMoney
 
 from manager.utils import save_today_daily_detail
 
@@ -48,11 +48,17 @@ def task_create_ticket(consumer, ticket):
 	try:
 		#½áËã²Ù×÷
 		ticket_value = consumer.close_an_account(ticket)
+		price = VirtualMoney.objects.all()[0].price
+		number = WalletMoney.objects.filter(ticket=ticket).count()
+		ticket_value = price*number
 		if ticket_value != ticket.ticket_value:
-			WalletMoney.objects.select_for_update().filter(ticket=ticket).update(ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+			WalletMoney.objects.select_for_update().filter(ticket=ticket).update(ticket=None)
 			Ticket.objects.filter(id=ticket.id).delete()
+			return False
+		return True
 	except:
 		log_print('task_create_ticket')
+		return False
 		
 @app.task
 def task_flush_bonus_list(openid):
