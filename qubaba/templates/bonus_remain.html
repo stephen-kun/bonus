@@ -5,6 +5,7 @@
 <title>{{title}}</title>
 <link href="{{static_url}}css/cctv-index.css" rel="stylesheet" type="text/css">
 <link href="{{static_url}}css/common.css" rel="stylesheet" type="text/css">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="keywords" content="东启湘厨-论坛">
 <meta name="description" content="东启湘厨-论坛">
 </head>
@@ -40,7 +41,6 @@
         	<script src="{{static_url}}js/jquery.min.js"></script>
         	<script src="{{static_url}}js/qubaba.js"></script>			
             <script type="text/javascript">
-				
 				$(document).ready(function(){
 					var timer =setInterval(function(){
 							get_remain_bonus(timer, '{{ajax_bonus_remain_url}}', '{{views_bonus_list_url}}');

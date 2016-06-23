@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <title>{{title}}</title>
+<meta name="format-detection" content="telephone=no">
+<meta name="msapplication-tap-highlight" content="no">
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
 <link href="{{static_url}}css/cctv-index.css" rel="stylesheet" type="text/css">
 <link href="{{static_url}}css/common.css" rel="stylesheet" type="text/css">
 <meta name="keywords" content="东启湘厨-论坛">
@@ -77,7 +81,20 @@
     <!--滚动效果js-->
     <script type="text/javascript" src="{{static_url}}js/weiboscroll.js"></script>
 	<script type="text/javascript" src="{{static_url}}js/qubaba.js"></script>
+	<script type="text/javascript" src="{{static_url}}js/cordova.js"></script>	
 	<script>
+		document.addEventListener("deviceready", onDeviceReady, false);
+		function onDeviceReady() {
+			console.log(StatusBar);
+			StatusBar.hide();
+			if(StatusBar.isVisible){
+				console.log("isVisible");
+			}
+			else{
+				console.log("isHide");
+			}
+		}
+		
 		$(document).ready(function(){	
 			setTimeout('goto_views("{{views_slideimages_url}}")', 60000);
 			timer_has_bonus('{{ajax_has_bonus_url}}', '{{views_prompt_bonus_url}}');

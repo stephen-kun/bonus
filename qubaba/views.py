@@ -16,7 +16,7 @@ from comment.models import CommentImages, Comment
 import random, string, json, pytz
 import datetime
 
-ADDRESS_IP = 'wx.tonki.com.cn'
+ADDRESS_IP = 'wx.tonki.com.cn/test_wx'
 VIEWS_FORUM_URL = 'http://%s/qubaba/get_forums'%(ADDRESS_IP)
 VIEWS_SLIDEIMAGES_URL = 'http://%s/qubaba/get_slideimages'%(ADDRESS_IP)
 VIEWS_BONUS_REMAIN_URL = 'http://%s/qubaba/bonus_remain'%(ADDRESS_IP)
