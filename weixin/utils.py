@@ -230,38 +230,13 @@ def get_user_openid(request, access_token_url):
 		openid = weixin_token['openid']
 		access_token = weixin_token["access_token"]
 		refresh_token = weixin_token["refresh_token"]
-		#print weixin_token
 	except:
 		log_print(get_user_openid)
 		return openid
-		
-
-	'''		
-
-	#检测access_token的有效性	
-	check_url = ACCESS_TOKEN_CHECK_URL.replace('OPENID',openid).replace('ACCESS_TOKEN', access_token)
-	at_request = urllib2.urlopen(check_url)
-	result = at_request.read().decode('utf-8')	
-	result = json.loads(result)
-	#print result
 	
-	if result['errcode'] == 0:
-		pass
-	else:
-		refresh_url = REFRESH_TOKEN_URL.replace('REFRESH_TOKEN', refresh_token)
-		rt_request = urllib2.urlopen(check_url)
-		result = rt_request.read().decode('utf-8')
-		result = json.loads(result)
-		print result
-		access_token = result['access_token']
-	'''
-	
-	log_print(get_user_openid, log_level=1, message="openid=%s ===> access_token=%s"%(openid, access_token))
 	#判断是否需要注册
 	if not Consumer.objects.filter(open_id=openid):
 		user_subscribe(openid, access_token)	
-		#ret = task_flush_bonus_list.delay()
-		#ret = task_flush_snd_bonus_list.delay()
 	return openid		
 
 
@@ -503,7 +478,10 @@ def action_create_ticket(data):
 			new_consumer = Consumer.objects.get(open_id=openid)	
 			new_consumer.flush_own_money
 			'''
-			ret = task_create_ticket.delay(consumer, new_ticket)
+			ret = task_create_ticket(consumer, new_ticket)
+			
+			if not ret:
+				return dict(status=3, error_message="内部错误")
 
 			#返回消费券码以及券值
 			id_ticket = str(new_ticket.id_ticket)

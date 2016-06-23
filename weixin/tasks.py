@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ï»¿# -*- coding: utf-8 -*-
 # tasks.py
 # Create your tasks here.
 from __future__ import absolute_import
@@ -10,7 +10,7 @@ sys.setdefaultencoding("utf-8")
 from bonus.celery import app
 import datetime
 import django.utils.timezone as timezone
-from weixin.models import WalletMoney,RcvBonus, SndBonus, Ticket,Consumer, Recharge, DiningSession, log_print
+from weixin.models import WalletMoney,RcvBonus, SndBonus, Ticket,Consumer, Recharge, DiningSession, log_print, VirtualMoney
 
 from manager.utils import save_today_daily_detail
 
@@ -46,13 +46,19 @@ def task_charge_and_snd_bonus(recharge, bonus_info):
 @app.task
 def task_create_ticket(consumer, ticket):
 	try:
-		#½áËã²Ù×÷
+		#ç»“ç®—æ“ä½œ
 		ticket_value = consumer.close_an_account(ticket)
+		price = VirtualMoney.objects.all()[0].price
+		number = WalletMoney.objects.filter(ticket=ticket).count()
+		ticket_value = price*number
 		if ticket_value != ticket.ticket_value:
-			WalletMoney.objects.select_for_update().filter(ticket=ticket).update(ticket=None, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
+			WalletMoney.objects.select_for_update().filter(ticket=ticket).update(ticket=None)
 			Ticket.objects.filter(id=ticket.id).delete()
+			return False
+		return True
 	except:
 		log_print('task_create_ticket')
+		return False
 		
 @app.task
 def task_flush_bonus_list(openid):
@@ -106,12 +112,12 @@ def periodic_task_money_valid():
 
 @app.task
 def periodic_task_bonus_valid():
-	#½«ËùÓĞÎ´ÇÀºì°üÍË»ØÔ­ÓĞÓÃ»§
+	#å°†æ‰€æœ‰æœªæŠ¢çº¢åŒ…é€€å›åŸæœ‰ç”¨æˆ·
 	snd_bonus_list = SndBonus.objects.filter(is_valid=True)
 	for snd_bonus in snd_bonus_list:
 		WalletMoney.objects.select_for_update().filter(snd_bonus=snd_bonus).update(is_send=False, snd_bonus=None, is_receive=False)
 		RcvBonus.objects.select_for_update().filter(snd_bonus=snd_bonus, is_receive=False).update(is_valid=False)
-	#Ê§Ğ§ËùÓĞÎ´ÇÀºì°ü
+	#å¤±æ•ˆæ‰€æœ‰æœªæŠ¢çº¢åŒ…
 	snd_bonus_list = SndBonus.objects.select_for_update().filter(is_valid=True).update(is_valid=False)
 	
 @app.task

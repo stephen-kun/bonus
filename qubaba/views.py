@@ -84,12 +84,19 @@ def get_forums(request):
 def has_bonus(request):
 	data = {}
 	snd_bonus_list = SndBonus.objects.filter(is_valid=True, is_exhausted=False)
+	has_geted = 0
 	if snd_bonus_list:
 		data['has_bonus'] = 1
 	else:
-		data['has_bonus'] = 0
+		data['has_bonus'] = 0	
+	for snd_bonus in snd_bonus_list:
+		if snd_bonus.bonus_exhausted:
+			has_geted = 1
+			break
+	data['has_geted'] = has_geted
 	data['state'] = 0
 	return HttpResponse(json.dumps(data), content_type="application/json")
+
 	
 @csrf_exempt
 def bonus_remain(request):
