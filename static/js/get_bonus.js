@@ -23,7 +23,7 @@ function click_get_bonus(url, openid, url_go){
 			if(JSONObject.status == '0')
 			{
 				if(JSONObject.result == '0'){
-					$("#rcv_bonus").html('<font class="f_huangse">手慢了,串串已抢完</font>');
+					$("#rcv_bonus").html('手慢了</font>');
 					$("#link1").hide();
 					
 					// 控制结果样式弹出
@@ -31,7 +31,7 @@ function click_get_bonus(url, openid, url_go){
 					tc_center();					
 				}
 				else if(JSONObject.result == '1'){
-					$("#rcv_bonus").html('<font class="f_huangse">已抢过,抢到NUMBER串</font>'.replace(/NUMBER/, JSONObject.number));
+					$("#rcv_bonus").html('已抢到<font color="#ff4800">NUMBER</font>串'.replace(/NUMBER/, JSONObject.number));
 					var url = $("#detail_url").attr('href');
 					url = url.replace(/ID_BONUS/, JSONObject.id_bonus);
 					$("#detail_url").attr('href', url);

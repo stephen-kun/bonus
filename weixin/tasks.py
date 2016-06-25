@@ -12,14 +12,14 @@ import datetime
 import django.utils.timezone as timezone
 from weixin.models import WalletMoney,RcvBonus, SndBonus, Ticket,Consumer, Recharge, DiningSession, log_print, VirtualMoney
 
-from manager.utils import save_today_daily_detail
+from manager.utils import save_today_daily_statistics
 
 @app.task
 def task_save_daily_record():
 	try:
 		save_today_daily_statistics()
 	except:
-		log_print('save_today_daily_detail')
+		log_print('save_today_daily_statistics')
 
 @app.task
 def task_charge_money(charge):
