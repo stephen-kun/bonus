@@ -1421,11 +1421,11 @@ input.Etnumber {
 	color: #ffffff;
 	font-weight: normal;
 	margin:0 auto;
-	padding:.9em 0 0 0;
+	padding:2.5em 0 0 0;
 	text-align: center;
 	font-size:1.575em;
 	border-radius:4em 4em 0em 0em;
-	height:3em;
+	height:1.5em;
 	width: auto;
 	line-height:1.5em;
 }
@@ -1448,7 +1448,7 @@ input.Etnumber {
 	margin:0 auto;
 	text-align:center;
 	position:relative;
-	top:2em; 
+	top:1.5em; 
 	display: block;}
 .tch-share-sns li {
 	display: block;
@@ -3050,11 +3050,11 @@ input.Etnumber {
 	color: #ffffff;
 	font-weight: normal;
 	margin:0 auto;
-	padding:.9em 0 0 0;
+	padding:2.5em 0 0 0;
 	text-align: center;
 	font-size:1.575em;
 	border-radius:4em 4em 0em 0em;
-	height:3em;
+	height:1.5em;
 	width: auto;
 	line-height:1.5em;
 }
@@ -3077,7 +3077,7 @@ input.Etnumber {
 	margin:0 auto;
 	text-align:center;
 	position:relative;
-	top:2em; 
+	top:1.5em; 
 	display: block;}
 .tch-share-sns li {
 	display: block;
@@ -4703,11 +4703,11 @@ input.Etnumber {
 	color: #ffffff;
 	font-weight: normal;
 	margin:0 auto;
-	padding:.8em 0 0 0;
+	padding:2.8em 0 0 0;
 	text-align: center;
 	font-size:1.375em;
 	border-radius:4em 4em 0em 0em;
-	height:3em;
+	height:1.5em;
 	width: auto;
 	line-height:1.5em;
 }
@@ -4730,7 +4730,7 @@ input.Etnumber {
 	margin:0 auto;
 	text-align:center;
 	position:relative;
-	top:1.5em; 
+	top:0.5em; 
 	display: block;}
 .tch-share-sns li {
 	display: block;
@@ -6417,7 +6417,7 @@ input.Etnumber {
 	color: #ffffff;
 	font-weight: normal;
 	margin:0 auto;
-	padding:1em 0 0 0;
+	padding:2.5em 0 0 0;
 	text-align: center;
 	font-size:1.275em;
 	height:1.2em;
@@ -6437,7 +6437,7 @@ input.Etnumber {
 	zoom:1;
 	margin:0 auto;
 	text-align:center;
-	top:2em;
+	top:0.8em;
 	display: block;
 	position:relative;
 	z-index:12;

@@ -23,7 +23,7 @@ function click_get_bonus(url, openid, url_go){
 			if(JSONObject.status == '0')
 			{
 				if(JSONObject.result == '0'){
-					$("#rcv_bonus").html('手慢了</font>');
+					$("#rcv_bonus").html('手慢了');
 					$("#link1").hide();
 					
 					// 控制结果样式弹出
