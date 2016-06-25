@@ -2,6 +2,8 @@
 from django.contrib.auth.models import Group
 from category.models import Category
 from weixin.models import *
+import re
+
 
 User = get_user_model()
 
@@ -19,16 +21,19 @@ def init_db():
 	user.groups.add(Group.objects.get(id=2))	
 	#初始化主题
 	Category.objects.create(id=1, showimage='', title='default', slug='default', description='', is_global=1, is_closed=0, is_removed=0, parent_id=None)
-	#初始化验证码
-	AuthCode.objects.create(id_code='123456')
-	AuthCode.objects.create(id_code='666666')
-	AuthCode.objects.create(id_code='888888')
+
 	#初始化串串
 	VirtualMoney.objects.create()
+	
 	#初始化桌台
-	DiningTable.objects.create(index_table='1')
-	DiningTable.objects.create(index_table='2')
-	DiningTable.objects.create(index_table='3')
-	DiningTable.objects.create(index_table='4')
-	DiningTable.objects.create(index_table='5')	
+	qubaba_table_create(201, 21)
+	
+def qubaba_table_create(start_table, table_num):
+	index_table = start_table
+	for x in range(table_num):
+		DiningTable.objects.create(index_table=index_table)
+		index_table += 1
+		if re.search('4', str(index_table), flags=0):
+			index_table += 1
+	
 	

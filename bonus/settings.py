@@ -103,7 +103,8 @@ WSGI_APPLICATION = 'bonus.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'qubaba',
+        #'NAME': 'qubaba',
+        'NAME': 'test_qubaba',
 			'USER': 'root',
 			'PASSWORD': 'youqiukun',
 			'HOST':'',
