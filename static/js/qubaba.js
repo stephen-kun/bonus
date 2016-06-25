@@ -1,5 +1,5 @@
 ﻿function goto_views(url){
-	window.open(url, "_blank","resizable=yes;status=yes;toolbar=no;location=no;menubar=no;directories=no;scrollbars=no;"); 
+	window.location.href = url;
 }
 
 function flush_circle() {
@@ -50,7 +50,7 @@ function timer_has_bonus(url, url_go){
 				if(data.state == 0){
 					if(data.has_bonus == 1){
 						clearInterval(timer);
-						window.open(url_go, "_blank","resizable=yes;status=yes;toolbar=no;location=no;menubar=no;directories=no;scrollbars=no;"); 
+						window.location.href = url_go;
 					}
 				}
 			}, "json");
