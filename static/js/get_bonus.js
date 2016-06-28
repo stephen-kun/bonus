@@ -43,7 +43,15 @@ function click_get_bonus(url, openid, url_go){
 				}	
 				else if(JSONObject.result == '2'){
 					window.location.href = url_go;						
-				}				
+				}
+				else if(JSONObject.result == '3'){
+					$("#rcv_bonus").html('不是本桌串串');
+					$("#link1").hide();
+					
+					// 控制结果样式弹出
+					$("#popup").fadeIn(1500);//查找ID为popup的DIV fadeIn()显示弹出时间
+					tc_center();					
+				}
 			}
 			else
 			{

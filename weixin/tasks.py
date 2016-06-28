@@ -8,7 +8,6 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 from bonus.celery import app
-import datetime
 import django.utils.timezone as timezone
 from weixin.models import WalletMoney,RcvBonus, SndBonus, Ticket,Consumer, Recharge, DiningSession, log_print, VirtualMoney
 
@@ -55,6 +54,7 @@ def task_create_ticket(consumer, ticket):
 			WalletMoney.objects.select_for_update().filter(ticket=ticket).update(ticket=None)
 			Ticket.objects.filter(id=ticket.id).delete()
 			return False
+		consumer.flush_own_money
 		return True
 	except:
 		log_print('task_create_ticket')
@@ -102,12 +102,12 @@ def task_flush_snd_bonus_list(openid):
 		
 @app.task		
 def periodic_task_ticket_valid():
-	valid_time = datetime.datetime.now()
+	valid_time = timezone.now()
 	Ticket.objects.select_for_update().filter(valid_time__lt=valid_time).update(is_valid=False)
 	
 @app.task
 def periodic_task_money_valid():
-	valid_time = datetime.datetime.now()
+	valid_time = timezone.now()
 	WalletMoney.objects.select_for_update().filter(valid_time__lt=valid_time).update(is_valid=False)
 
 @app.task
@@ -115,7 +115,9 @@ def periodic_task_bonus_valid():
 	#将所有未抢红包退回原有用户
 	snd_bonus_list = SndBonus.objects.filter(is_valid=True)
 	for snd_bonus in snd_bonus_list:
-		WalletMoney.objects.select_for_update().filter(snd_bonus=snd_bonus).update(is_send=False, snd_bonus=None, is_receive=False)
+		rcv_bonus_list = RcvBonus.objects.filter(snd_bonus=snd_bonus, is_receive=False)
+		for rcv_bonus in rcv_bonus_list:
+			WalletMoney.objects.select_for_update().filter(rcv_bonus=rcv_bonus).update(consumer=snd_bonus.consumer, is_send=False, snd_bonus=None, is_receive=False, rcv_bonus=None)
 		RcvBonus.objects.select_for_update().filter(snd_bonus=snd_bonus, is_receive=False).update(is_valid=False)
 	#失效所有未抢红包
 	snd_bonus_list = SndBonus.objects.select_for_update().filter(is_valid=True).update(is_valid=False)
@@ -126,9 +128,6 @@ def periodic_task_session_valid():
 	for session in session_list:
 		session.table.status=False
 		session.table.save()
-		rcv_list = RcvBonus.objects.filter(session=session)
-		for rcv_bonus in rcv_list:
-			WalletMoney.objects.select_for_update().filter(rcv_bonus=rcv_bonus).update(consumer=rcv_bonus.consumer, is_send=False, is_receive=False, snd_bonus=None, rcv_bonus=None)
 		Consumer.objects.select_for_update().filter(session=session).update(session=None, on_table=None)
 	DiningSession.objects.select_for_update().filter(over_time=None).update(over_time=timezone.now())
 	

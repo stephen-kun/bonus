@@ -119,7 +119,10 @@ def update_or_create_session(table, consumer):
 	session = None
 	if table.status:
 		consumer_list = Consumer.objects.filter(on_table=table)
-		session = consumer_list[0].session
+		if consumer_list:
+			session = consumer_list[0].session
+		else:
+			session = DiningSession.objects.create(table=table)
 	else:
 		session = DiningSession.objects.create(table=table)
 		table.status = True
@@ -811,7 +814,8 @@ def action_weixin_order(data, request):
 			wx_order=UnifiedOrder_pub()
 			wx_order.setParameter("out_trade_no", out_trade_no)
 			wx_order.setParameter("body", order_detail)
-			wx_order.setParameter('total_fee', total_fee)
+			#wx_order.setParameter('total_fee', total_fee)
+			wx_order.setParameter('total_fee', '1')
 			wx_order.setParameter('openid', openid)
 			wx_order.setParameter('spbill_create_ip', request.META['REMOTE_ADDR'])
 			prepay_id=wx_order.getPrepayId()			

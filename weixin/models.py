@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import json
 import time
 import datetime
+import pytz
 import traceback
 from manager.datatype import *
 from django.utils.translation import ugettext_lazy as _
@@ -84,7 +85,7 @@ def get_random_bonus(money_num, bonus_num):
 def get_valid_time(valid_day):
 	big_month = [1,3,5,7,8,10,12]
 	mid_month = [4,6,9,11]
-	now = datetime.datetime.now()
+	now = timezone.now()
 	day = now.day
 	month = now.month
 	year = now.year
@@ -114,7 +115,7 @@ def get_valid_time(valid_day):
 		day += valid_day - max_day
 	else:
 		day += valid_day
-	valid_time = now.replace(year=year, day=day, month=month, hour=23, minute=59)	
+	valid_time = now.replace(year=year, day=day, month=month, hour=23, minute=59, tzinfo=pytz.timezone("Asia/Shanghai"))	
 	return valid_time
 
 #VirtualMoney 转换为红包内容
@@ -593,6 +594,9 @@ class Consumer(models.Model):
 			for snd_bonus in snd_bonus_list:
 				if bonus_num:
 					break
+				if (snd_bonus.bonus_type == COMMON_BONUS) and (self.on_table.index_table != snd_bonus.to_table):
+					has_geted = CANNT_GETED
+					continue					
 				is_receive = RcvBonus.objects.filter(snd_bonus=snd_bonus, consumer=self)
 				if is_receive:
 					has_rcv_bonus = True
