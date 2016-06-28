@@ -119,7 +119,10 @@ def update_or_create_session(table, consumer):
 	session = None
 	if table.status:
 		consumer_list = Consumer.objects.filter(on_table=table)
-		session = consumer_list[0].session
+		if consumer_list:
+			session = consumer_list[0].session
+		else:
+			session = DiningSession.objects.create(table=table)
 	else:
 		session = DiningSession.objects.create(table=table)
 		table.status = True

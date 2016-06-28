@@ -135,7 +135,7 @@ def qubaba_bonus_list(request):
 	bonus_range = 1		
 	length = Consumer.objects.filter(user__groups__name='consumer').count()
 	if length > 8:
-		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("rcv_bonus_num").reverse()[0:7]
+		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("rcv_bonus_num").reverse()[0:8]
 	else:
 		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("rcv_bonus_num").reverse()
 		
