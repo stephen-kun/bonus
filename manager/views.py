@@ -196,7 +196,15 @@ def account(request):
 
 
 def bonus_rank_list(request):
-	consumer_list = Consumer.objects.filter(user__groups__name="consumer").order_by("rcv_bonus_num").reverse()
+	number = Consumer.objects.filter(user__groups__name="consumer").count()
+	if number > 100:
+		consumer_list = Consumer.objects.filter(user__groups__name="consumer").order_by("rcv_bonus_num").reverse()[0:100]
+	else:
+		consumer_list = Consumer.objects.filter(user__groups__name="consumer").order_by("rcv_bonus_num").reverse()
+	bonus_range = 1
+	for consumer in consumer_list:
+		consumer.bonus_range = bonus_range
+		bonus_range += 1
 	return render_to_response('manager/bonus/bonus_rank_list.html', {'consumer_list': consumer_list})
 
 

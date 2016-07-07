@@ -23,7 +23,21 @@
     </div>
     <script src="{{static_url}}js/jquery-1.11.2.min.js"></script>
     <script src="{{static_url}}js/qubaba.js"></script>	
+	<script type="text/javascript" src="{{static_url}}js/cordova.js"></script>	
 	<script>
+		document.addEventListener("deviceready", onDeviceReady, false);
+		function onDeviceReady() {
+			console.log("slide_images onDeviceReady");
+			
+			StatusBar.hide();
+			if(StatusBar.isVisible){
+				console.log("isVisible");
+			}
+			else{
+				console.log("isHide");
+			}			
+		}
+		
 		$(document).ready(function(){	
 			//一个页面设计多个ID切换
 			$(function() {

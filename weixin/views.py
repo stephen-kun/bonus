@@ -134,8 +134,8 @@ def qubaba_bonus_list(request):
 	consumers = []
 	bonus_range = 1		
 	length = Consumer.objects.filter(user__groups__name='consumer').count()
-	if length > 8:
-		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("rcv_bonus_num").reverse()[0:8]
+	if length > 7:
+		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("rcv_bonus_num").reverse()[0:7]
 	else:
 		consumer_list = Consumer.objects.filter(user__groups__name='consumer').order_by("rcv_bonus_num").reverse()
 		
@@ -385,16 +385,13 @@ def view_redirect_settle_account(request):
 def display_settle_account_views(open_id, request):	
 	openid = open_id
 	try:
-		if is_consumer_dining(openid):		
-			title = TITLE_CREATE_TICKET
-			static_url = settings.STATIC_URL
-			consumer = Consumer.objects.get(open_id=openid)
-			total_num = consumer.session_bonus_num()
-			ajax_request_url = AJAX_REQUEST_POST_URL
-			menu = _MenuUrl()
-			return render_to_response('close_an_account.html', locals())		
-		else:
-			return display_prompt_views(openid, SETTLE_ACCOUNTS_URL)	
+		title = TITLE_CREATE_TICKET
+		static_url = settings.STATIC_URL
+		consumer = Consumer.objects.get(open_id=openid)
+		total_num = consumer.session_bonus_num()
+		ajax_request_url = AJAX_REQUEST_POST_URL
+		menu = _MenuUrl()
+		return render_to_response('close_an_account.html', locals())		
 	except:
 		log_print(display_settle_account_views) 
 		return HttpResponseBadRequest('Bad request')

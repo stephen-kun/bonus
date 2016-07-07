@@ -77,7 +77,21 @@
     <!--滚动效果js-->
     <script type="text/javascript" src="{{static_url}}js/weiboscroll.js"></script>
 	<script type="text/javascript" src="{{static_url}}js/qubaba.js"></script>
+	<script type="text/javascript" src="{{static_url}}js/cordova.js"></script>	
 	<script>
+		document.addEventListener("deviceready", onDeviceReady, false);
+		function onDeviceReady() {
+			console.log("qubaba_forum onDeviceReady");
+			
+			StatusBar.hide();
+			if(StatusBar.isVisible){
+				console.log("isVisible");
+			}
+			else{
+				console.log("isHide");
+			}			
+		}
+		
 		$(document).ready(function(){	
 			setTimeout('goto_views("{{views_slideimages_url}}")', 60000);
 			timer_has_bonus('{{ajax_has_bonus_url}}', '{{views_prompt_bonus_url}}');
