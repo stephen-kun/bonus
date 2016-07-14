@@ -6,6 +6,7 @@ from django.conf import settings
 import django.utils.timezone as timezone
 import string, random
 from django.core.exceptions import ObjectDoesNotExist
+import os
 import json
 import time
 import datetime
@@ -23,6 +24,9 @@ from weixin.wx_config import *
 
 #日志存储
 def log_print(back_func, log_level=3, message=None):
+	dir = settings.BASE_DIR + '/log/'
+	if not os.path.exists(dir):
+		os.mkdir(dir)
 	path = (settings.BASE_DIR + '/log/FILE.txt').replace('FILE', back_func)
 	f = open(path, 'a')
 	f.write(time.strftime('===============%Y-%m-%d %H:%M============\n', time.localtime(time.time())))

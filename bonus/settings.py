@@ -104,10 +104,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'qubaba',
-        #'NAME': 'test_qubaba',
 			'USER': 'root',
-			'PASSWORD': 'youqiukun',
-			'HOST':'',
+			'PASSWORD': 'a12345',
+			'HOST':'127.0.0.1',
 			'PORT':'3306'
     }
 }
@@ -170,7 +169,7 @@ STATICFILES_DIRS = [
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/home/stephen/media'
+MEDIA_ROOT = '/opt/qubaba/media'
 
 COMMENT_MAX_LEN = 140
 YT_PAGINATOR_PAGE_RANGE = 30
@@ -215,7 +214,7 @@ CASE_INSENSITIVE_EMAILS = True
 # SESSION_EXPIRE_AT_BROWSER_CLOSE=False
 # SESSION_COOKIE_DOMAIN = ['*',]
 
-TICKET_URL = "wx.tonki.com.cn/manager/account/send_coupon/"
+TICKET_URL = "wx.qubaba88.com/manager/account/send_coupon/"
 
 import djcelery
 djcelery.setup_loader()

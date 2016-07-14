@@ -15,7 +15,7 @@ def init_db():
 	Group.objects.create(id=3, name='consumer')
 	#初始化管理员
 	user = User.objects.get(username='admin')
-	headimgurl = 'http://wx.tonki.com.cn/static/images/admin.png'
+	headimgurl = 'http://wx.qubaba88.com/static/images/admin.png'
 	comsumer = Consumer.objects.filter(user=user).update(open_id='0001', name='admin', picture=headimgurl, is_admin=True)
 	user.groups.add(Group.objects.get(id=1))
 	user.groups.add(Group.objects.get(id=2))	

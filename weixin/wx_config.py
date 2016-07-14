@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
 
-STEPHEN_APPID = 'wxc32d7686c0827f2a'
-STEPHEN_APPSECRET = '1981cab986e85ea0aa8e6c13fa2ea59d'
-
-KOOVOX_APPID = 'wxd4dd9f440f125088'
-KOOVOX_APPSECRET = '8405baf42ccb5b066393bc93b92a1efd'
-
 QUBABA_APPID = 'wx966e11eecf374549'
 QUBABA_APPSECRET = '7e1388fedef3a80bc9a3b1f4134ba674'
 
@@ -18,9 +12,9 @@ OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redire
 #WX_USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN"
 WX_USER_INFO_URL = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN"
 
-#ADDRESS_IP = '127.0.0.1:8000'
-ADDRESS_IP = 'wx.tonki.com.cn'
-#ADDRESS_IP = '120.76.122.53'
+
+ADDRESS_IP = 'wx.qubaba88.com'
+
 
 REDIRECT_SSB_URL = 'http://%s/weixin/view_redirect_self_snd_bonus'%(ADDRESS_IP)
 REDIRECT_SRB_URL = 'http://%s/weixin/view_redirect_self_rcv_bonus'%(ADDRESS_IP)
