@@ -60,8 +60,13 @@ def get_slideimages(request):
 	image_url = []
 	for image in image_list:
 		image_url.append(dict(url=str(image.url)))
+
 	data['state'] = 0
 	data['image_url'] = image_url
+	if image_list:
+		data['has_image'] = 1
+	else:
+		data['has_image'] = 0	
 	return HttpResponse(json.dumps(data), content_type="application/json")
 	
 @csrf_exempt
@@ -87,6 +92,10 @@ def get_forums(request):
 		topics.append(dict(date_time=date_time, name=consumer.name, picture=str(consumer.picture), comment=comment, has_image=has_image, image=str(image)))
 	data['state'] = 0
 	data['topics'] = topics
+	if topic_list:
+		data['has_topic'] = 1
+	else:
+		data['has_topic'] = 0
 	return HttpResponse(json.dumps(data), content_type="application/json")
 		
 @csrf_exempt
