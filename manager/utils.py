@@ -39,7 +39,7 @@ def get_today_daily_detail(is_admin):
 		charge_list = Recharge.objects.filter(recharge_time__range=(start_date, end_date), recharge_type=1 )
 		source='管理员充值'
 	else:
-		charge_list = Recharge.objects.filter(recharge_time__range=(start_date, end_date), recharge_type=0 )
+		charge_list = Recharge.objects.filter(recharge_time__range=(start_date, end_date), recharge_type=0, status=True )
 		source='自己充值'
 
 
@@ -92,7 +92,7 @@ def get_today_statistics_list():
 	#charge_list = Recharge.objects.filter(recharge_time__day=datetime.date.today().strftime('%d')).order_by('recharge_time')
 
 	good_list = VirtualMoney.objects.all()
-	charge_list = Recharge.objects.all()
+	charge_list = Recharge.objects.filter(status=True)
 
 	total_content_list=[]
 	for g in good_list:

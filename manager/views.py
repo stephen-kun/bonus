@@ -267,16 +267,20 @@ def action(request):
 		u.save()
 		return _response_json(0, u"修改密码成功!")
 	elif (action == "limit_bonus"):
-		good_list = VirtualMoney.objects.all()
-		admin = get_admin_account()
-		kw = {}
-		for good in good_list:
-			counter = int(request.POST.get(good.name))
-			kw[good.name] = counter
+		try:
+			good_list = VirtualMoney.objects.all()
+			admin = get_admin_account()
+			kw = {}
+			for good in good_list:
+				counter = int(request.POST.get(good.name))
+				kw[good.name] = counter
 
-		admin.account_charge(kw)
+			admin.account_charge(kw)
 
-		return _response_json(0, u"设置成功!")
+			return _response_json(0, u"设置成功!")
+		except:
+			log_print('limit_bonus')
+			return _response_json(1, u"内部错误！")
 	elif (action == "limit_coupon"):
 		admin = get_admin_account()
 		counter = int(request.POST.get('counter'))

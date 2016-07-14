@@ -500,7 +500,8 @@ class Consumer(models.Model):
 			total_value = total_value + counter*good.price
 
 		recharge_type = 1 if self.is_admin else 0
-		charge=Recharge.objects.create(recharge_value=total_value, recharge_type=recharge_type, recharge_person=self )
+		unique_key = create_primary_key()
+		charge=Recharge.objects.create(recharge_value=total_value, recharge_type=recharge_type, recharge_person=self, prepay_id=unique_key , out_trade_no=unique_key)
 
 		for name,counter in kw.items():
 			good=VirtualMoney.objects.get(name=name)
