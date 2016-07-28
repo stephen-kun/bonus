@@ -651,6 +651,10 @@ class Consumer(models.Model):
 						RecordRcvBonus.objects.filter(id_record=id_record).delete()
 						log_print('rcv_qubaba_bonus')
 						return None, 0
+				else:
+					over_time = timezone.now()
+					bonus_exhausted = snd_bonus.bonus_num
+					SndBonus.objects.select_for_update().filter(id=id_snd).update(is_exhausted=True, over_time=over_time, is_valid=False, bonus_remain=0, bonus_exhausted=bonus_exhausted)
 						
 			#更新session信息
 			if bonus_num:
@@ -845,7 +849,7 @@ class SndBonus(models.Model):
 	over_time = models.DateTimeField(null=True, blank=True)		#抢完时间
 	user_time = models.DateTimeField(null=True, blank=True)		#抢完花费时间
 	consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)	#发送红包者
-	session = models.ForeignKey(DiningSession, null=True, on_delete=models.CASCADE)	#就餐会话
+	session = models.ForeignKey(DiningSession, null=True, blank=True, on_delete=models.CASCADE)	#就餐会话
 
 	def __unicode__(self):
 		return '%s SndBonus %s'%(self.consumer.name, self.id_bonus)
